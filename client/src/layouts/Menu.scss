@@ -1,0 +1,65 @@
+@import "../styles.scss";
+
+$fa-twitter: #55acee;
+
+.menu {
+    margin-left: 50px;
+    margin-top: 180px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 20px;
+    background-color: $background;
+    width: 240px;
+        
+    hr {
+        border: 0;
+        border-top: 1px solid $font-inactive-color;
+        width: 88%;
+        position: relative;
+        left: 50%; 
+        transform: translateX(-50%);
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+
+    .menu-list li a {
+        color: $font-inactive-color;
+        border-radius: 10px;
+        height: 46px;
+        font-size: 14px;
+        font-weight: 600;
+
+        .icon {
+            font-size: 16px;
+            top: 3px;
+            position: relative;
+            margin-right: 5px;
+        }
+    }
+
+    .menu-list li a:hover {
+        background-color: $primary;
+        color: $background-invert;
+    }
+
+    .social {
+        text-align: center;
+        * {
+            margin: 5px;
+            &.fa-twitter {
+                color: #1C9DEB;
+            }
+            &.fa-discord { 
+                color: #6F85D4; 
+            }
+            &.fa-telegram { 
+                color: #2CA0DB; 
+            }
+            &.fa-github { 
+                color: $font-inactive-color; 
+            }
+        }
+    }
+}

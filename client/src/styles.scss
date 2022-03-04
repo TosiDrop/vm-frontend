@@ -1,0 +1,23 @@
+@import "../node_modules/bulma/sass/utilities/initial-variables";
+@import "../node_modules/bulma/sass/utilities/functions";
+
+$background: #181c1e;
+$background-invert: findColorInvert($background);
+$background-button: #2C2E3B;
+$background-button-invert: findColorInvert($background-button);
+$font-color: #515355;
+$font-inactive-color: #9b9b9c;
+$font-family: #000;
+
+
+$primary: #2a4b73;
+$primary-invert: findColorInvert($primary);
+
+@import "../node_modules/bulma/sass/utilities/derived-variables";
+$addColors: (
+  "background":($background, $background-invert),
+  "background-button": ($background-button, $background-button-invert)
+);
+$colors: map-merge($colors, $addColors);
+
+@import "../node_modules/bulma/bulma";

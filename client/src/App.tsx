@@ -1,18 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
-import { LayoutBody } from './layouts/LayoutBody';
-import { LayoutFooter } from './layouts/LayoutFooter';
-import { LayoutHeader } from './layouts/LayoutHeader';
+import './App.scss';
+import { Header } from './layouts/Header';
+import { Menu } from './layouts/Menu';
+import { Page } from './layouts/Page';
+import 'bulma/css/bulma.min.css';
 
 function App() {
   return (
-    <div>
-      <LayoutHeader>
-      </LayoutHeader>
-      <LayoutBody>
-      </LayoutBody>
-      <LayoutFooter>
-      </LayoutFooter>
+    <div className='body'>
+      <Header>
+      </Header>
+      <div className="columns">
+        <div className="column is-one-quarter">
+          <Menu>
+          </Menu>
+        </div>
+        <div className="column">
+          <Page>
+          </Page>
+        </div>
+      </div>
     </div>
   );
 }

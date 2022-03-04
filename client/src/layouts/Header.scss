@@ -1,0 +1,23 @@
+@import "../styles.scss";
+
+.header {
+    height: 120px;
+    padding-top: 30px;
+}
+
+.buttons button {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.anetabtc {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+    padding-left: 50px !important;
+}
+
+.logo {
+    position: relative;
+    top: 9px;
+}
