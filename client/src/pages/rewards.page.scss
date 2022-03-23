@@ -1,0 +1,106 @@
+@import "../variables.scss";
+
+.rewards {
+    margin-right: 30px;
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .content {
+        padding: 23px 30px;
+        border-radius: 20px;
+        background-color: $background;
+        display: flex;
+        flex-direction: column;
+        margin-top: 30px;
+
+        &.check {    
+            p {
+                font-size: 15px;
+                flex: 1;
+            }
+
+            input {
+                background-color: transparent;
+                border-radius: 5px;
+                border: 1px solid $font-inactive-color;
+                height: 30px;
+                color: $font-highlight;
+            }
+
+            .content-button {
+                display: flex;
+
+                .tosi-button {
+                    flex: 1;
+                    margin-top: 20px;
+                }
+
+                .fill {
+                    flex: 5;
+                }
+            }
+        }
+
+        &.staked {
+            flex-direction: row;
+
+            .stake-pool-logo {
+                margin-right: 10px;
+            }
+        }
+
+        &.claim {
+            flex-direction: row;
+
+            .text {
+                flex: 1;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    .claim-list {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+
+        .claim-item {
+            padding: 14px 18px;
+            border-radius: 20px;
+            background-color: $background;
+            display: flex;
+            flex-direction: column;
+            min-width: 300px;
+
+            .selection {
+                display: flex;
+                align-items: center;
+                font-size: 12px;
+
+                input {
+                    margin-right: 10px;
+                }
+            }
+
+            .token-info {
+                margin-top: 20px;
+            }
+
+            .claim-token {
+                display: flex;
+                margin-top: 20px;
+
+                .tosi-button {
+                    flex: 1;
+                }
+            }
+        }
+    }
+}
+
+.hidden {
+    display: none !important;
+}

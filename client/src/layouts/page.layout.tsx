@@ -1,9 +1,9 @@
 import React from 'react';
-import { Rewards } from '../pages/Rewards';
-import { RewardsHistory } from '../pages/RewardsHistory';
-import { Dashboard } from '../pages/Dashboard';
-import { Feedback } from '../pages/Feedback';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Dashboard from '../pages/dashboard';
+import Rewards from '../pages/rewards.page';
+import RewardsHistory from '../pages/rewards-history';
+import Feedback from '../pages/feedback';
 
 export class Page extends React.Component {
     render() {

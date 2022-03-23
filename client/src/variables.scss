@@ -1,0 +1,13 @@
+$background: #181c1e;
+$background-invert: findColorInvert($background);
+$background-button: #2C2E3B;
+$background-button-invert: findColorInvert($background-button);
+$font-color: #515355;
+$font-inactive-color: #9b9b9c;
+$font-highlight: #e6e7f4;
+$font-family: #000;
+$gradient-button: linear-gradient(90deg, rgba(66,63,168,1) 0%, rgba(51,78,167,1) 50%, rgba(32,98,167,1) 100%);
+$gradient-button-default: rgb(66,63,168);
+
+$primary: #2a4b73;
+$primary-invert: findColorInvert($primary);

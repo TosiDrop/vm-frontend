@@ -1,23 +1,45 @@
 @import "../node_modules/bulma/sass/utilities/initial-variables";
 @import "../node_modules/bulma/sass/utilities/functions";
+@import "http://fonts.cdnfonts.com/css/avenir-next-cyr";
 
-$background: #181c1e;
-$background-invert: findColorInvert($background);
-$background-button: #2C2E3B;
-$background-button-invert: findColorInvert($background-button);
-$font-color: #515355;
-$font-inactive-color: #9b9b9c;
-$font-family: #000;
-
-
-$primary: #2a4b73;
-$primary-invert: findColorInvert($primary);
+@import "./variables.scss";
 
 @import "../node_modules/bulma/sass/utilities/derived-variables";
 $addColors: (
-  "background":($background, $background-invert),
-  "background-button": ($background-button, $background-button-invert)
+    "background":($background, $background-invert),
+    "background-button": ($background-button, $background-button-invert)
 );
 $colors: map-merge($colors, $addColors);
 
 @import "../node_modules/bulma/bulma";
+
+* {
+    font-family: 'Avenir Next Cyr Medium', sans-serif;
+    font-size: 14px;
+}
+
+#root {
+    margin: 0px;
+    background: #0a3169;
+    background: radial-gradient(circle, #0a3169 0%, #20426d 100%);
+}
+
+body {
+    background: radial-gradient(circle, #0a3169 0%, #20426d 100%);
+}
+
+.tosi-button {
+    background: $gradient-button-default;
+    background: $gradient-button;
+    height: 40px;
+    box-shadow: none;
+    border: 0;
+    border-radius: 10px;
+    color: $font-highlight;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.body {
+    color: white;
+}

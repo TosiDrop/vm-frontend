@@ -1,4 +1,4 @@
-@import "../styles.scss";
+@import "../variables.scss";
 
 $fa-twitter: #55acee;
 
@@ -22,6 +22,7 @@ $fa-twitter: #55acee;
         transform: translateX(-50%);
         margin-top: 1px;
         margin-bottom: 1px;
+        height: 1px;
     }
 
     .menu-list li a {
@@ -39,9 +40,11 @@ $fa-twitter: #55acee;
         }
     }
 
-    .menu-list li a:hover {
-        background-color: $primary;
-        color: $background-invert;
+    .menu-list li {
+        a.selected, a:hover {
+            background-color: $primary;
+            color: $font-highlight;
+        }
     }
 
     .social {
