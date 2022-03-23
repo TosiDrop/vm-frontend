@@ -1,6 +1,4 @@
-import { Button, Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import './modal.component.scss';
 
 export enum ModalTypes {
@@ -23,7 +21,7 @@ function ModalComponent({ modalVisible, setModalVisible, modalContent, modalType
     const renderSwitch = () => {
         switch (modalType) {
             case ModalTypes.info:
-                return <FontAwesomeIcon icon={faInfoCircle} />;
+                return <FontAwesomeIcon icon='info-circle' />;
             default:
                 return '';
         }

@@ -9,11 +9,11 @@ const g_api_token = '2c261c243e1bdf5946caf902b124de4dabaa6905a367bbef010467a7e64
 const app = express();
 app.use(cors());
 
-async function get(params: string) {
+async function get(params) {
     return await axios.get(`https://vmtest.adaseal.eu/api.php?token=${g_api_token}&action=${params}`);
 }
 
-app.get("/sanitizeaddr", async (req: any, res: any) => {
+app.get("/sanitizeaddr", async (req, res) => {
     const queryObject = url.parse(req.url, true).query;
     if (queryObject.address) {
         const stakingAddressResponse = await get(`sanitize_address&address=${queryObject.address}`);
@@ -23,9 +23,9 @@ app.get("/sanitizeaddr", async (req: any, res: any) => {
     }
 });
 
-app.get("/getrewards", async (req: any, res: any) => {
+app.get("/getrewards", async (req, res) => {
     const queryObject = url.parse(req.url, true).query;
-    const stakeAddress: string = queryObject.staking_address;
+    const stakeAddress = queryObject.staking_address;
     if (stakeAddress && stakeAddress.startsWith('stake1')) {
         const getRewardsResponse = await get(`get_rewards&staking_address=${stakeAddress}`);
         res.send(getRewardsResponse.data);
@@ -33,15 +33,6 @@ app.get("/getrewards", async (req: any, res: any) => {
         res.send({ error: 'Address seems invalid' });
     }
 });
-
-// app.get("/getpools", async (req, res) => {
-//     res.send(await get(`get_pools`));
-// });
-
-// app.get("/gettokens", async (req, res) => {
-//     const res2 = await get(`get_tokens`);
-//     res.json(res2.data);
-// });
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
