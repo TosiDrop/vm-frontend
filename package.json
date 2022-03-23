@@ -35,7 +35,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "clean": "rm -rf serve/*",
+    "build": "npm install && react-scripts build && cp -a build/* serve",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start-sv": "node --inspect index.js"

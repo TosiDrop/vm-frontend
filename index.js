@@ -34,7 +34,7 @@ app.get("/getrewards", async (req, res) => {
     }
 });
 
-app.use(express.static('public'))
+app.use(express.static('serve'))
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
