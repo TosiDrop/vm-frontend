@@ -10,5 +10,5 @@ export interface GetRewards {
 }
 
 export interface Assets {
-    lovelace: number;
+    [key: string]: number;
 }

@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import './modal.component.scss';
 
 export enum ModalTypes {
@@ -8,11 +9,11 @@ export enum ModalTypes {
 export interface ModalComponentProps {
     modalVisible: boolean;
     setModalVisible: any;
-    modalContent: string;
+    modalText: string;
     modalType: ModalTypes;
 }
 
-function ModalComponent({ modalVisible, setModalVisible, modalContent, modalType }: ModalComponentProps) {
+function ModalComponent({ modalVisible, setModalVisible, modalText, modalType }: ModalComponentProps) {
 
     const hideModal = () => {
         setModalVisible(false);
@@ -21,7 +22,7 @@ function ModalComponent({ modalVisible, setModalVisible, modalContent, modalType
     const renderSwitch = () => {
         switch (modalType) {
             case ModalTypes.info:
-                return <FontAwesomeIcon icon='info-circle' />;
+                return <FontAwesomeIcon icon={faInfoCircle} />;
             default:
                 return '';
         }
@@ -36,7 +37,7 @@ function ModalComponent({ modalVisible, setModalVisible, modalContent, modalType
                         {renderSwitch()}
                     </div>
                     <div className='text-content'>
-                        {modalContent}
+                        {modalText}
                     </div>
                     <div className='modal-buttons'>
                         <button className="button is-background is-small" onClick={hideModal}>Ok</button>

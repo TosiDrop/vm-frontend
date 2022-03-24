@@ -5,16 +5,15 @@ import Rewards from '../pages/rewards.page';
 import RewardsHistory from '../pages/rewards-history';
 import Feedback from '../pages/feedback';
 
-export class Page extends React.Component {
-    render() {
-        return <Router>
+function Page() {
+    return <Router>
         <Routes>
-          <Route path="/" element={<Rewards />} />
-          <Route path="/history" element={<RewardsHistory />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/feedback" element={<Feedback />} />
+            <Route path="/" element={<Rewards />} />
+            <Route path="/history" element={<RewardsHistory />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/feedback" element={<Feedback />} />
         </Routes>
-      </Router>;
-    }
+    </Router>
 }
-        
+
+export default Page;
