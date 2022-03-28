@@ -28,12 +28,11 @@ app.get("/sanitizeaddr", async (req, res) => {
 app.get("/getrewards", async (req, res) => {
     const queryObject = url.parse(req.url, true).query;
     const stakeAddress = queryObject.staking_address;
-    if (stakeAddress && stakeAddress.startsWith('stake')) {
-        const getRewardsResponse = await get(`get_rewards&staking_address=${stakeAddress}`);
+    get(`get_rewards&staking_address=${stakeAddress}`).then(getRewardsResponse => {
         res.send(getRewardsResponse.data);
-    } else {
-        res.send({ error: 'Address seems invalid' });
-    }
+    }).catch(error => {
+        res.send(error);
+    })
 });
 
 app.use(express.static('serve'))
