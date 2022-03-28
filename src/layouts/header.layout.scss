@@ -51,7 +51,10 @@ $slide-bg: #030b13;
         }
     }
 
-    .buttons .button {
-        color: $font-highlight;
+    .buttons.last {
+        text-align: end;
+        .button {
+            color: $font-highlight;
+        }
     }
 }

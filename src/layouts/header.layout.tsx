@@ -4,14 +4,7 @@ import logo from '../assets/logo.png';
 import './header.layout.scss';
 import "../variables.scss";
 
-function Header({ wallet, setWalletSelected, address }: any) {
-    const addressClick = () => {
-        if (wallet) {
-            wallet.enable().then((_: any) => {
-                setWalletSelected('nami');
-            });
-        }
-    }
+function Header() {
 
     return <div className='columns header'>
         <div className='column is-three-quarters title'>
@@ -26,8 +19,7 @@ function Header({ wallet, setWalletSelected, address }: any) {
                 </button>
             </div>
         </div>
-        <div className='column buttons'>
-            <button className="button is-background-button" onClick={addressClick}>{address}</button>
+        <div className='column buttons last'>            
             <button className="button is-background-button">
                 <FontAwesomeIcon icon={faCircleQuestion} />
             </button>
