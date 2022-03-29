@@ -1,6 +1,8 @@
 import { useEffect, useState, KeyboardEvent } from 'react';
 import ModalComponent, { ModalTypes } from '../components/modal.component';
+import { ClaimableToken } from '../entities/vm.entities';
 import { getRewards } from '../services/http.services';
+import { getNameFromHex, truncAmount } from '../services/utils.services';
 import "../variables.scss";
 import './rewards.page.scss';
 
@@ -14,7 +16,7 @@ function Rewards() {
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
     const [hideSendAdaInfo, setHideSendAdaInfo] = useState(true);
-    const [tokensToClaim, setTokensToClaim] = useState<Reward[]>([]);
+    const [tokensToClaim, setTokensToClaim] = useState<ClaimableToken[]>([]);
     const [searchAddress, setSearchAddress] = useState<string>('');
     const [modalText, setModalText] = useState<string>('');
 
@@ -23,11 +25,7 @@ function Rewards() {
             const rewards = await getRewards(searchAddress);
 
             if (rewards && rewards.consolidated_promises) {
-                const keys = Object.keys(rewards.consolidated_promises);
-                if (keys.length > 0) {
-                    const rewardsArray: Reward[] = keys.map((key): Reward => ({ assetId: key, amount: rewards.consolidated_promises[key] }));
-                    setTokensToClaim(rewardsArray);
-                }
+                setTokensToClaim(rewards.claimableTokens);
             } else {
                 setModalText('Error');
                 setModalVisible(true);
@@ -39,11 +37,6 @@ function Rewards() {
         setHideCheck(true);
         setHideStakingInfo(true);
         setHideSendAdaInfo(false);
-    }
-
-    interface Reward {
-        assetId: string;
-        amount: number;
     }
 
     useEffect(() => {
@@ -77,11 +70,11 @@ function Rewards() {
                         return <div className='claim-item'>
                             <div className='selection'>
                                 <input type="checkbox"></input>
-                                {token.amount} available
+                                {truncAmount(token.amount, token.decimals)} available
                             </div>
                             <div className='token-info'>
-                                <div>LOGO</div>
-                                <div>{token.assetId}</div>
+                                <img alt='' src={token.logo}></img>
+                                <div>{token.assetId.split('.').length > 1 ? getNameFromHex(token.assetId.split('.')[1]) : getNameFromHex(token.assetId.split('.')[0])}</div>
                             </div>
                             <div className='claim-token'>
                                 <button className='tosi-button' onClick={claimRewards}>Claim my rewards</button>

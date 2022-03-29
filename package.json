@@ -32,6 +32,7 @@
     "react-router-dom": "^6.2.2",
     "react-scripts": "5.0.0",
     "sass": "^1.49.9",
+    "ts-node": "^10.7.0",
     "typescript": "^4.5.5",
     "web-vitals": "^2.1.4"
   },
@@ -41,7 +42,7 @@
     "build": "npm install && react-scripts build && cp -a build/* serve",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start-sv": "node --inspect index.js"
+    "start-sv": "node --inspect -r ts-node/register index.ts"
   },
   "proxy": "http://localhost:3001",
   "eslintConfig": {
@@ -61,5 +62,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12"
   }
 }
