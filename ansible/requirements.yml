@@ -1,0 +1,7 @@
+# Collections
+collections:
+  - name: community.general
+# From Galaxy
+roles:
+  - src: geerlingguy.docker
+    version: 4.1.1

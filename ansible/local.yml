@@ -1,0 +1,35 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: true
+  tasks:
+    - name: nodePlaybook | Update apt cache
+      apt:
+        update_cache: true
+        cache_valid_time: '{{ 60 * 60 * 24 }}'
+      tags:
+        - always
+
+    - name: nodePlaybook | Include geerlingguy.docker role
+      include_role:
+        name: geerlingguy.docker
+        apply:
+          tags:
+            - docker
+      vars:
+        docker_apt_arch: "{{ { 'aarch64': 'arm64', 'x86_64': 'amd64' }[ansible_facts.architecture] }}"
+        docker_compose_version: "v2.2.3"
+        docker_users: "{{ DOCKER_USERS | default(['ubuntu']) }}"
+        docker_daemon_options:
+          log-driver: "local"
+      tags:
+        - always
+
+    - name: nodePlaybook | include vm_frontend role
+      include_role:
+        name: vm_frontend
+        apply:
+          tags:
+            - vm_frontend
+      tags:
+        - always
