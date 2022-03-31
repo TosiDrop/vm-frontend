@@ -8,8 +8,8 @@ require('dotenv').config()
 
 const PORT = process.env.PORT || 3001;
 const VM_API_TOKEN = process.env.VM_API_TOKEN;
-const VM_URL = process.env.VM_URL_TESTNET;
-const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET;
+const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
+const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 
 const app = express();
 app.use(cors());
