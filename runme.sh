@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__repo=$(cd $(dirname ${BASH_SOURCE[0]})/..; pwd -P)
+__repo=$(cd $(dirname ${BASH_SOURCE[0]}); pwd -P)
 VM_BRANCH=${VM_BRANCH:-master}
 
 ###
@@ -14,11 +14,6 @@ cd ${__repo}
 if test -e ${__repo}/.env; then
 	: # We have a config, assuming it's good
 else
-	# If not running interactively, don't do anything
-	case $- in
-		*i*) ;;
-		*) echo "Use ${__repo}/runme.sh or configure ${__repo}/.env manually"; exit 1; ;;
-	esac
 	echo "Configuring .env"
 	read -p "Cardano network (mainnet/testnet):" CARDANO_NETWORK
 	read -p "VM API token:" VM_API_TOKEN
@@ -40,8 +35,17 @@ else
 	echo "VM_API_TOKEN=${VM_API_TOKEN}" >> ${__repo}/.env
 fi
 
+if [[ $(lsb_release -si) == Ubuntu ]]; then
+	if dpkg -L python3.8-venv >/dev/null 2>&1; then
+		: # We have venv
+	else
+		sudo apt-get update && sudo apt-get install -y python3.8-venv
+	fi
+fi
+
+set -e
 python3 -m venv ${__repo}/.venv
 . ${__repo}/.venv/bin/activate
 pip install ansible==5.1.0 docker requests
 ansible-galaxy install -r ${__repo}/ansible/requirements.yml
-ansible-playbook ${__repo}/ansible/local.yml -e REPO=${__repo} --diff -c local --limit localhost
+ansible-playbook ${__repo}/ansible/local.yml -e REPO=${__repo} --diff -c local --inventory 127.0.0.1, -e ansible_python_interpreter=${__repo}/.venv/bin/python3

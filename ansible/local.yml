@@ -1,6 +1,6 @@
 ---
-- hosts: localhost
-  gather_facts: false
+- hosts: all
+  gather_facts: true
   become: true
   tasks:
     - name: nodePlaybook | Update apt cache
