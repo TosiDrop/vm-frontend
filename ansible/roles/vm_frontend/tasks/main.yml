@@ -16,7 +16,7 @@
     working_dir: /app
 
 - name: Cron job to run Ansible
-  cron:
+  ansible.builtin.cron:
     name: Run Ansible
     cron_file: run-ansible
     user: root
