@@ -5,9 +5,12 @@ $background-button-invert: findColorInvert($background-button);
 $font-color: #515355;
 $font-inactive-color: #9b9b9c;
 $font-highlight: #e6e7f4;
+$font-warn: #c35724;
 $font-family: #000;
 $gradient-button: linear-gradient(90deg, rgba(66,63,168,1) 0%, rgba(51,78,167,1) 50%, rgba(32,98,167,1) 100%);
-$gradient-button-default: rgb(66,63,168);
+$gradient-button-default: #2360a7;
+$gradient-button-disabled: linear-gradient(90deg, #12234d 0%, #0c2548 50%, #052744 100%);
+$avenir-font-light: "Avenir Next Cyr Light", sans-serif;
 
 $primary: #2a4b73;
 $primary-invert: findColorInvert($primary);

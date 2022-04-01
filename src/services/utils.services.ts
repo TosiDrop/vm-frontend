@@ -1,7 +1,14 @@
 export function formatTokens(amount: string, decimals: number | undefined, decimalsToShow: number | undefined = decimals): string {
     decimals = decimals === null ? 6 : decimals;
     if (decimals && decimalsToShow && decimals > 0) {
-        return amount.substring(0, amount.length - decimals) + '.' + amount.substring(amount.length - decimalsToShow);
+        if (amount.length > decimals) {
+            const decimalPart = amount.substring(amount.length - decimals);
+            return amount.substring(0, amount.length - decimals) + '.' + decimalPart.substring(0, decimalsToShow);
+        } else {
+            const newAmount = amount.padStart(decimals + 1, '0');
+            const decimalPart = newAmount.substring(decimals + 1 - amount.length);
+            return newAmount.substring(0, newAmount.length - decimals) + '.' + decimalPart.substring(0, decimalsToShow);
+        }
     }
     else {
         return amount;

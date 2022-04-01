@@ -49,21 +49,3 @@ function ModalComponent({ modalVisible, setModalVisible, modalText, modalType }:
 }
 
 export default ModalComponent;
-
-    //     <div>
-    //     <Modal show={modalVisible} centered={true}>
-    //         <Modal.Body>
-    //             <div className='modal-icon'>
-    //                 {renderSwitch()}
-    //             </div>
-    //             <div className='text-content'>
-    //                 {modalContent}
-    //             </div>
-    //         </Modal.Body>
-    //         <Modal.Footer>
-    //             <Button variant="primary" onClick={hideModal}>
-    //                 Ok
-    //             </Button>
-    //         </Modal.Footer>
-    //     </Modal>
-    // </div>

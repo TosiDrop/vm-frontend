@@ -1,10 +1,14 @@
+import { faXmark, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState, KeyboardEvent } from 'react';
-import ModalComponent, { ModalTypes } from '../components/modal.component';
-import { ClaimableToken } from '../entities/vm.entities';
+import ModalComponent, { ModalTypes } from '../components/modal/modal.component';
+import { ClaimableToken, GetRewards } from '../entities/vm.entities';
 import { getRewards } from '../services/http.services';
-import { getNameFromHex, truncAmount } from '../services/utils.services';
+import { formatTokens, getNameFromHex, truncAmount } from '../services/utils.services';
+import { CircleLoader } from 'react-spinners';
 import "../variables.scss";
 import './rewards.page.scss';
+import { PaymentStatus } from '../entities/common.entities';
 
 declare global {
     interface Window {
@@ -16,16 +20,35 @@ function Rewards() {
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
     const [hideSendAdaInfo, setHideSendAdaInfo] = useState(true);
-    const [tokensToClaim, setTokensToClaim] = useState<ClaimableToken[]>([]);
-    const [searchAddress, setSearchAddress] = useState<string>('');
+    const [rewards, setRewards] = useState<GetRewards>();
+    const [searchAddress, setSearchAddress] = useState<string>('stake_test1up7pxv6u7lf67v6kg08qkzdf6xjtazw7qkz9fae9m3vjyec3nk6yc');
     const [modalText, setModalText] = useState<string>('');
+    const [loadingRewards, setLoadingRewards] = useState(false);
+    const [checkedState, setCheckedState] = useState(new Array<boolean>());
+    const [checkedCount, setCheckedCount] = useState(0);
+    const [adaToSend, setAdaToSend] = useState(0);
+    const [paymentStatus, setPaymentStatus] = useState(PaymentStatus.Awaiting);
 
+    const handleOnChange = (position: number) => {
+        const updatedCheckedState = checkedState.map((item, index) =>
+            index === position ? !item : item
+        );
+
+        setCheckedState(updatedCheckedState);
+
+        const updatedCheckedCount = updatedCheckedState.filter(check => check).length;
+        setCheckedCount(updatedCheckedCount);
+    };
+
+    // TEST ADDRESS = stake_test1up7pxv6u7lf67v6kg08qkzdf6xjtazw7qkz9fae9m3vjyec3nk6yc
     const checkRewards = async () => {
         if (searchAddress) {
+            setLoadingRewards(true);
             const rewards = await getRewards(searchAddress);
 
             if (rewards && rewards.consolidated_promises) {
-                setTokensToClaim(rewards.claimableTokens);
+                setRewards(rewards);
+                setLoadingRewards(false);
             } else {
                 setModalText('Error');
                 setModalVisible(true);
@@ -33,17 +56,71 @@ function Rewards() {
         }
     }
 
-    const claimRewards = () => {
-        setHideCheck(true);
-        setHideStakingInfo(true);
-        setHideSendAdaInfo(false);
+    const claimRewardsChecked = async () => {
+        if (checkedCount > 0) {
+            let tokens: ClaimableToken[] = [];
+            checkedState.forEach((check, i) => {
+                if (check && rewards?.claimable_tokens[i]) {
+                    tokens.push(rewards.claimable_tokens[i]);
+                }
+            });
+            claimRewards(tokens);
+        }
+    }
+
+    const backRewards = async () => {
+        setRewards(undefined);
+        setSearchAddress('');
+    }
+
+    const claimRewards = (tokens: ClaimableToken[]) => {
+        if (rewards) {
+            const tokenValue = 300000;
+            const updatedAdaToSend = rewards.min_balance + tokenValue + tokens.length * tokenValue;
+            const falseArray = new Array(checkedState.length).fill(false);
+            tokens.forEach((t: any, i) => falseArray[i] = true);
+            setCheckedState(falseArray);
+            setCheckedCount(tokens.length);
+            setAdaToSend(updatedAdaToSend);
+            setHideCheck(true);
+            setHideStakingInfo(true)
+            setHideSendAdaInfo(false);
+        }
+    }
+
+    const renderStakeInfo = () => {
+        if (rewards?.pool_info) {
+            return (<>
+                {rewards?.pool_info?.delegated_pool_logo ? <img className='pool-logo' src={rewards?.pool_info?.delegated_pool_logo} alt='' /> : ''}
+                <div className='pool-info'>Currently staking&nbsp;<b>{rewards?.pool_info?.total_balance} ADA</b>&nbsp;with&nbsp;<b className='no-break'>{rewards?.pool_info?.delegated_pool}</b></div>
+            </>)
+        } else {
+            return (<>Unregisted</>);
+        }
+    }
+
+    const renderPaymentStatus = () => {
+        switch (paymentStatus) {
+            case PaymentStatus.Awaiting:
+                return (<>
+                    Awaiting payment
+                </>);
+            case PaymentStatus.Completed:
+                return (<>
+                    Withdraw completed
+                </>);
+        }
     }
 
     useEffect(() => {
-        if (tokensToClaim.length) {
+        if (rewards?.claimable_tokens.length) {
+            setCheckedState(new Array(rewards.claimable_tokens.length).fill(false));
             setHideStakingInfo(false);
+        } else {
+            setCheckedState(new Array());
+            setHideStakingInfo(true);
         }
-    }, [tokensToClaim]);
+    }, [rewards?.claimable_tokens]);
 
     return (
         <div className='rewards'>
@@ -52,49 +129,90 @@ function Rewards() {
 
             <div className={'content check' + (hideCheck ? ' hidden' : '')}>
                 <p>Enter your wallet/stake address or $handle to view your rewards</p>
-                <input type="text" value={searchAddress} onInput={(e: KeyboardEvent<HTMLInputElement>) => setSearchAddress((e.target as HTMLInputElement).value)}></input>
+                <input className='transparent-input' type="text" value={searchAddress} onInput={(e: KeyboardEvent<HTMLInputElement>) => setSearchAddress((e.target as HTMLInputElement).value)}></input>
                 <div className='content-button'>
-                    <button className='tosi-button is-one-fifth' onClick={checkRewards}>Check my rewards</button>
+                    <button className='tosi-button' disabled={!hideStakingInfo} onClick={checkRewards}>Check my rewards</button>
+                    <button className={'tosi-cancel-button' + (hideStakingInfo ? ' hidden-transition' : '')} onClick={backRewards}>
+                        <div className='tosi-cancel-icon'><FontAwesomeIcon icon={faXmark} /></div>
+                        <div className='tosi-cancel-text'>Cancel</div>
+                    </button>
+                    <div className='loading'>
+                        <CircleLoader color='#73badd' loading={loadingRewards} size={25} />
+                    </div>
                     <div className='fill'></div>
                 </div>
             </div>
 
-            <div className={'content staked' + (hideStakingInfo ? ' hidden' : '')}>
-                <div className="stake-pool-logo">LOGO</div>
-                Currently staking 1200 ADA with [NETA2] anetaBTC LISO stake pool
+            <div className={'staking-info' + (hideStakingInfo ? ' hidden' : '')}>
+                <div className={'content staked'}>
+                    {renderStakeInfo()}
+                </div>
+
+                <div className={'claim-list'}>
+                    {
+                        rewards?.claimable_tokens?.map((token, index) => {
+                            return <div className='claim-item' key={index}>
+                                <div className='selection'>
+                                    <input
+                                        type="checkbox"
+                                        id={`custom-checkbox-${index}`}
+                                        name={token.ticker}
+                                        value={token.ticker}
+                                        checked={checkedState[index]}
+                                        onChange={() => handleOnChange(index)}
+                                    />
+                                    {truncAmount(token.amount, token.decimals)} available
+                                </div>
+                                <div className='token-info'>
+                                    <img alt='' src={token.logo}></img>
+                                    <div>{token.assetId.split('.').length > 1 ? getNameFromHex(token.assetId.split('.')[1]) : getNameFromHex(token.assetId.split('.')[0])}</div>
+                                </div>
+                                <div className='claim-token'>
+                                    <button className='tosi-button' onClick={() => { return claimRewards([token]) }}>Claim token</button>
+                                </div>
+                            </div>
+                        })
+                    }
+                </div>
+
+                <div className={'content claim'}>
+                    <div className='text'>Selected {checkedCount} token</div>
+                    <button className='tosi-button' disabled={checkedCount === 0} onClick={claimRewardsChecked}>Claim my rewards</button>
+                </div>
             </div>
 
-            <div className={'claim-list' + (hideStakingInfo ? ' hidden' : '')}>
-                {
-                    tokensToClaim.map(token => {
-                        return <div className='claim-item'>
-                            <div className='selection'>
-                                <input type="checkbox"></input>
-                                {truncAmount(token.amount, token.decimals)} available
-                            </div>
-                            <div className='token-info'>
-                                <img alt='' src={token.logo}></img>
-                                <div>{token.assetId.split('.').length > 1 ? getNameFromHex(token.assetId.split('.')[1]) : getNameFromHex(token.assetId.split('.')[0])}</div>
-                            </div>
-                            <div className='claim-token'>
-                                <button className='tosi-button' onClick={claimRewards}>Claim my rewards</button>
-                            </div>
+            <div className={'status-step' + (hideSendAdaInfo ? ' hidden' : '')}>
+                <div className={'content claim-status-head'}>
+                    Claim status: <p className='payment-status'>{renderPaymentStatus()}</p>
+                </div>
+                <div className={'content claim-status-body'}>
+                    <div className="icon-input">
+                        <div className='icon'>
+                            <FontAwesomeIcon icon={faCopy} />
                         </div>
-                    })
-                }
-            </div>
+                        <input className='transparent-input' type="text" disabled={true} value={rewards?.vending_address} />
+                    </div>
+                    <img className='qr-address' alt='' src='https://www.business2community.com/wp-content/uploads/2012/04/Picture-21.png' />
+                    <div className='complete-info'>Complete the withdrawal process by sending <b>{formatTokens(adaToSend.toString(), 6, 1)} ADA</b> to the above address</div>
+                    <div className='complete-send-info'><small>Please only send {formatTokens(adaToSend.toString(), 6, 1)} ADA. Any other amount will be considered an error and refunded in aproximately 72 hours</small></div>
+                </div>
 
-            <div className={'content claim' + (hideStakingInfo ? ' hidden' : '')}>
-                <div className='text'>Selected 1 token</div>
-                <button className='tosi-button' onClick={claimRewards}>Claim my rewards</button>
-            </div>
-
-            <div className={'content claim-status' + (hideSendAdaInfo ? ' hidden' : '')}>
-                Claim status
-            </div>
-
-            <div className={'content tx-details' + (hideSendAdaInfo ? ' hidden' : '')}>
-                Transaction details
+                <div className={'content tx-details-head'}>
+                    <div>Transaction Details</div>
+                    <div></div>
+                </div>
+                <div className={'content tx-details-body'}>
+                    <div>Selected Rewards</div>
+                    <div>({checkedCount})&nbsp;&nbsp;{formatTokens((checkedCount * 300000).toString(), 6, 1)} ADA</div>
+                </div>
+                <div className={'content tx-details-body'}>
+                    <div>Payment Amount</div>
+                    <div>{formatTokens(((rewards?.min_balance || 0) + 300000).toString(), 6, 1)} ADA</div>
+                </div>
+                <div className={'content tx-details-footer'}>
+                    <div>Total Cost</div>
+                    <div>{formatTokens(adaToSend.toString(), 6, 1)} ADA</div>
+                </div>
             </div>
         </div>
     );

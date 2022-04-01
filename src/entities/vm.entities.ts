@@ -9,8 +9,13 @@ export interface GetRewards {
     min_balance: number;
     vending_address: string;
     withdrawal_fee: string;
-    claimableTokens: ClaimableToken[];
-    poolInfo: AccountPoolInfo;
+    claimable_tokens: ClaimableToken[];
+    pool_info: {
+        delegated_pool: string;
+        total_balance: string;
+        delegated_pool_ticker: string;
+        delegated_pool_logo: string;
+    };
 }
 
 export interface SanitizeAddress {

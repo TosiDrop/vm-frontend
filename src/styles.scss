@@ -54,6 +54,36 @@ body {
     font-weight: 600;
     font-size: 15px;
     cursor: pointer;
+    
+    &:disabled {
+        background: $gradient-button-disabled !important;
+        cursor: initial;
+        opacity: 0.8;
+    }
+}
+
+.tosi-cancel-button {
+    background: transparent;
+    height: 40px;
+    box-shadow: none;
+    border: 1px solid $gradient-button-default;
+    border-radius: 10px;
+    color: $font-highlight;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    -moz-transition: all .8s linear;
+    -o-transition: all .8s linear;
+    -webkit-transition: all .8s linear;
+    transition: all .8s linear;
+}
+
+.transparent-input {
+    background-color: transparent;
+    border-radius: 5px;
+    border: 1px solid $font-inactive-color;
+    height: 30px;
+    color: $font-highlight;
 }
 
 .body {

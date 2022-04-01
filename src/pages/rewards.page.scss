@@ -2,6 +2,7 @@
 
 .rewards {
     margin-right: 30px;
+    margin-bottom: 30px;
 
     h1 {
         font-size: 24px;
@@ -21,24 +22,40 @@
                 flex: 1;
             }
 
-            input {
-                background-color: transparent;
-                border-radius: 5px;
-                border: 1px solid $font-inactive-color;
-                height: 30px;
-                color: $font-highlight;
-            }
-
             .content-button {
                 display: flex;
 
                 .tosi-button {
-                    flex: 1;
+                    width: 280px;
                     margin-top: 20px;
+                    margin-right: 20px;
+                }
+                
+                .tosi-cancel-button {
+                    width: 200px;
+                    margin-top: 20px;
+                    margin-right: 20px;
+
+                    .tosi-cancel-icon {
+                        display: inline-block;
+                    
+                        svg {
+                            font-size: 16px;
+                        }
+                    }
+
+                    .tosi-cancel-text {
+                        display: inline-block;
+                        width: 50%;
+                    }
+                }
+
+                .loading {
+                    margin-top: 28px;
                 }
 
                 .fill {
-                    flex: 5;
+                    flex: 10;
                 }
             }
         }
@@ -46,8 +63,22 @@
         &.staked {
             flex-direction: row;
 
-            .stake-pool-logo {
+            .pool-logo {
                 margin-right: 10px;
+                width: 40px;
+            }
+
+            .pool-info {
+                display: flex;
+                align-items: center;
+                width: 95%;
+
+                .no-break {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    flex: 1;
+                }
             }
         }
 
@@ -60,12 +91,123 @@
                 align-items: center;
             }
         }
+
+        &.claim-status-head {
+            border-radius: 20px 20px 0px 0px;
+            display: flex;
+            flex-direction: row;
+            border-bottom: 1px solid $font-inactive-color;
+            margin-bottom: 0px;
+
+            .payment-status {
+                margin-left: 30px;
+                color: $font-inactive-color;
+                font-family: $avenir-font-light;
+            }
+        }
+
+        &.claim-status-body {
+            border-radius: 0px 0px 20px 20px;
+            display: flex;
+            margin-top: 0px;
+            align-items: center;
+            gap: 20px;
+
+            .icon-input {
+                position: relative;
+                border: 1px solid $font-inactive-color;
+                border-radius: 5px;
+                width: 100%;
+
+                .icon {
+                    height: 1.5rem;
+                    width: 2.5rem;;
+                    position: absolute;
+                    top: 3px;
+                    cursor: pointer;
+
+                    svg {
+                        color: $font-inactive-color;
+                    }
+                }
+
+                .transparent-input {
+                    border: 0;
+                    padding-left: 2.5rem;;
+                    width: 100%;
+                    cursor: text;
+                    color: $font-inactive-color;
+                }
+            }
+
+            .qr-address {
+                width: 180px;
+            }
+
+            .complete-info {
+                font-family: $avenir-font-light;
+            }
+
+            .complete-send-info {
+                font-family: $avenir-font-light;
+                color: $font-warn;
+            }
+        }
+
+        &.tx-details-head {
+            border-radius: 20px 20px 0px 0px;
+            border-bottom: 1px solid $font-inactive-color;
+            margin-bottom: 0px;
+        }
+
+        &.tx-details-body {
+            border-radius: 0px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            border-bottom: 1px solid $font-inactive-color;
+            padding: 10px 16px;
+            text-align: end;
+            display: flex;
+            flex-direction: row;
+
+            div:first-child {
+                flex: 6;
+            }
+
+            div:last-child {
+                flex: 1;
+                font-family: $avenir-font-light;
+            }
+        }
+
+        &.tx-details-footer {
+            border-radius: 0px 0px 20px 20px;
+            margin-top: 0px;
+            padding: 10px 16px;
+            text-align: end;
+            display: flex;
+            flex-direction: row;
+
+            div:first-child {
+                flex: 6;
+            }
+
+            div:last-child {
+                flex: 1;
+                font-family: $avenir-font-light;
+            }
+        }
+    }
+
+    .staking-info {
+        max-height: 1000px;
     }
 
     .claim-list {
         display: flex;
         flex-direction: row;
         gap: 20px;
+        flex-wrap: wrap;
 
         .claim-item {
             padding: 14px 18px;
@@ -108,4 +250,29 @@
 
 .hidden {
     display: none !important;
+}
+
+.hidden-transition {
+    opacity: 0;
+    width: 0px !important;
+    
+    div {
+        visibility: hidden;
+        width: 0 !important;
+
+        -moz-transition: width .2s ease-in-out;
+        -o-transition: width .2s ease-in-out;
+        -webkit-transition: width .2s ease-in-out;
+        transition: width .1s ease-in-out;
+    }
+
+    -moz-transition: opacity .3s ease-in-out;
+    -o-transition: opacity .3s ease-in-out;
+    -webkit-transition: opacity .3s ease-in-out;
+    transition: opacity .3s ease-in-out;
+
+    -moz-transition: width .2s linear;
+    -o-transition: width .2s linear;
+    -webkit-transition: width .2s linear;
+    transition: width .2s linear;
 }
