@@ -15,6 +15,17 @@ const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 
 const app = express();
 app.use(cors());
+app.use(express.static('serve'))
+
+const server = app.listen(PORT, () => {
+    console.log(`Server listening on ${PORT}`);
+});
+
+process.on('SIGTERM', () => {
+    server.close(() => {
+        console.log('Server shutting down')
+    })
+})
 
 async function getFromVM<T>(params: any) {
     return (await axios.get<T>(`${VM_URL}/api.php?token=${VM_API_TOKEN}&action=${params}`)).data;
@@ -56,6 +67,12 @@ async function postPoolInfo(pools: string[]) {
 async function getTokens() {
     return getFromVM<GetTokens>('get_tokens');
 }
+
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "UP"
+    })
+})
 
 app.get("/sanitizeaddr", async (req: any, res: any) => {
     const queryObject = url.parse(req.url, true).query;
@@ -110,12 +127,6 @@ app.get("/getrewards", async (req: any, res: any) => {
             res.send(error);
         });
     }
-});
-
-app.use(express.static('serve'))
-
-app.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`);
 });
 
 async function getRewards(stakeAddress: string) {
