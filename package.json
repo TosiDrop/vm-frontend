@@ -40,12 +40,12 @@
   "scripts": {
     "start": "react-scripts start",
     "clean": "rm -rf serve/*",
-    "build": "npm install && react-scripts build && cp -a build/* serve",
+    "build": "npm install && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start-sv": "node --inspect -r ts-node/register index.ts"
   },
-  "proxy": "http://localhost:3001",
+  "proxy": "http://localhost:3000",
   "eslintConfig": {
     "extends": [
       "react-app",
