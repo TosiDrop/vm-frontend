@@ -8,6 +8,7 @@ import { ExtendedMetadata, Metadata } from './src/entities/common.entities'
 import { formatTokens } from './src/services/utils.services'
 require('dotenv').config()
 
+const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const PORT = process.env.PORT || 3000;
 const VM_API_TOKEN = process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
 const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
@@ -68,11 +69,31 @@ async function getTokens() {
     return getFromVM<GetTokens>('get_tokens');
 }
 
-app.get("/health", (req, res) => {
+app.get("/health", (req: any, res: any) => {
     res.status(200).json({
         status: "UP"
     })
-})
+});
+
+app.get("/healthz", async (req: any, res: any) => {
+    if (CLOUDFLARE_PSK) {
+        if (req.headers['x-cloudflare-psk']) {
+            const myPsk = req.headers['x-cloudflare-psk'];
+            if (myPsk == CLOUDFLARE_PSK) {
+                const authResponse = await getFromVM('is_authenticated');
+                res.send(authResponse);
+            } else {
+                res.send({ error: 'PSK invalid' });
+            }
+        } else {
+            res.send({ error: 'PSK missing' });
+        }
+    } else {
+        res.status(200).json({
+            status: "UP"
+        })
+    }
+});
 
 app.get("/sanitizeaddr", async (req: any, res: any) => {
     const queryObject = url.parse(req.url, true).query;

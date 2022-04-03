@@ -15,8 +15,9 @@ if test -e ${__repo}/.env; then
 	. ${__repo}/.env # source our config
 else
 	echo "Configuring .env"
-	read -p "Cardano network (mainnet/testnet):" CARDANO_NETWORK
-	read -p "VM API token:" VM_API_TOKEN
+	read -p "Cardano network (mainnet/testnet): " CARDANO_NETWORK
+	read -p "VM API token: " VM_API_TOKEN
+	read -p "Cloudflare Pre-Shared Key: " CLOUDFLARE_PSK
 	if test -z "${CARDANO_NETWORK}"; then
 		CARDANO_NETWORK=testnet
 	fi
@@ -33,6 +34,9 @@ else
 	echo "KOIOS_URL=${KOIOS_URL}" > ${__repo}/.env
 	echo "VM_URL=${VM_URL}" >> ${__repo}/.env
 	echo "VM_API_TOKEN=${VM_API_TOKEN}" >> ${__repo}/.env
+	if test -n "${CLOUDFLARE_PSK}"; then
+		echo "CLOUDFLARE_PSK=${CLOUDFLARE_PSK}" >> ${__repo}/.env
+	fi
 	. ${__repo}/.env # source our config
 fi
 
