@@ -20,8 +20,6 @@
 .env.test.local
 .env.production.local
 .venv
-/serve
-!/serve/.keep
 /logs
 !/logs/.keep
 

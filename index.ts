@@ -8,14 +8,14 @@ import { ExtendedMetadata, Metadata } from './src/entities/common.entities'
 import { formatTokens } from './src/services/utils.services'
 require('dotenv').config()
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const VM_API_TOKEN = process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
 const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
 const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 
 const app = express();
 app.use(cors());
-app.use(express.static('serve'))
+app.use(express.static('build'))
 
 const server = app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
@@ -25,7 +25,7 @@ process.on('SIGTERM', () => {
     server.close(() => {
         console.log('Server shutting down')
     })
-})
+});
 
 async function getFromVM<T>(params: any) {
     return (await axios.get<T>(`${VM_URL}/api.php?token=${VM_API_TOKEN}&action=${params}`)).data;

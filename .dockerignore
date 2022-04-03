@@ -1,4 +1,8 @@
+.dockerignore
+.git
 .github
+Dockerfile
+/ansible
 /build
 /node_modules
 /serve/*
