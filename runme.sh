@@ -38,11 +38,11 @@ fi
 
 # Install python3-virtualenv on debian-likes
 if [[ $(type -P dpkg) ]]; then
-	if dpkg -L python3-virtualenv >/dev/null 2>&1; then
-		echo "Package python3-virtualenv found"
+	if dpkg -L python3-venv >/dev/null 2>&1; then
+		echo "Package python3-venv found"
 	else
-		echo "Installing python3-virtualenv"
-		sudo apt-get update && sudo apt-get install -y python3-virtualenv
+		echo "Installing python3-venv"
+		sudo apt-get update && sudo apt-get install -y python3-venv
 	fi
 fi
 
