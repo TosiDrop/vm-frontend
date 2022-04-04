@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import Header from './layouts/header.layout';
 import { Menu } from './layouts/menu.layout';
 import Page from './layouts/page.layout';
