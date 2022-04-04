@@ -10,6 +10,8 @@ require('dotenv').config()
 
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const PORT = process.env.PORT || 3000;
+const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
+const REDIS_PORT = process.env.REDIS_PORT || 6379;
 const VM_API_TOKEN = process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
 const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
 const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
