@@ -41,7 +41,7 @@
     "start": "react-scripts start",
     "clean": "rm -rf serve/*",
     "build": "npm install && react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
     "start-sv": "node --inspect -r ts-node/register index.ts"
   },
