@@ -14,7 +14,7 @@ export class Menu extends React.Component {
                 <li><Link to="/dashboard"><p className="icon"><FontAwesomeIcon icon={faChartColumn} /></p>Dashboard</Link></li>
                 <hr />
                 <li><Link to="/feedback"><p className="icon"><FontAwesomeIcon icon={faMessage} /></p>Feedback</Link></li>
-                <li><a target='_blank' href="http://medium.com"><p className="icon"><FontAwesomeIcon icon={faBook} /></p>Docs <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></a></li>
+                <li><a target='_blank' rel="noreferrer" href="http://medium.com"><p className="icon"><FontAwesomeIcon icon={faBook} /></p>Docs <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></a></li>
             </ul>
             <div className="social">
                 <FontAwesomeIcon icon={faTwitter} />

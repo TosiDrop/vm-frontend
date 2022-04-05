@@ -2,8 +2,7 @@ name: publish
 
 on:
   push:
-    # branches: ['release']
-    branches: ['master']
+    branches: ['master','release']
 
 env:
   REGISTRY: ghcr.io

@@ -27,7 +27,7 @@ function Rewards() {
     const [checkedState, setCheckedState] = useState(new Array<boolean>());
     const [checkedCount, setCheckedCount] = useState(0);
     const [adaToSend, setAdaToSend] = useState(0);
-    const [paymentStatus, setPaymentStatus] = useState(PaymentStatus.Awaiting);
+    const [paymentStatus, setPaymentStatus] = useState(PaymentStatus.Awaiting); // eslint-disable-line @typescript-eslint/no-unused-vars
 
     const handleOnChange = (position: number) => {
         const updatedCheckedState = checkedState.map((item, index) =>
@@ -117,7 +117,7 @@ function Rewards() {
             setCheckedState(new Array(rewards.claimable_tokens.length).fill(false));
             setHideStakingInfo(false);
         } else {
-            setCheckedState(new Array());
+            setCheckedState([]);
             setHideStakingInfo(true);
         }
     }, [rewards?.claimable_tokens]);
