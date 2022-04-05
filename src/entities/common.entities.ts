@@ -5,6 +5,14 @@ export interface ExtendedMetadata {
     "when-satured-then-recommend": MyPoolIDS;
 }
 
+export interface Metadata {
+    name: string;
+    description: string;
+    ticker: string;
+    homepage: string;
+    extended: string;
+}
+
 export interface Info {
     url_png_icon_64x64: string;
     url_png_logo: string;
@@ -31,17 +39,4 @@ export interface Itn {
 
 export interface MyPoolIDS {
     [key: string]: string;
-}
-
-export interface Metadata {
-    name: string;
-    description: string;
-    ticker: string;
-    homepage: string;
-    extended: string;
-}
-
-export enum PaymentStatus {
-    Awaiting,
-    Completed
 }

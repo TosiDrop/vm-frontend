@@ -1,6 +1,9 @@
-FROM node:16
-
+FROM node:16 AS base
 WORKDIR /app
+
+FROM base AS builder
 COPY . .
+
 RUN npm run build
-CMD ["npm", "run", "start-sv"]
+RUN npm run build-client
+CMD ["npm", "run", "start"]

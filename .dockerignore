@@ -2,9 +2,9 @@
 .git
 .github
 Dockerfile
-/ansible
-/build
-/node_modules
-/serve/*
+ansible
+client/build
+client/node_modules
+node_modules
 .env
 .venv

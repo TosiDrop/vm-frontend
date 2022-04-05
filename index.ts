@@ -18,7 +18,7 @@ const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 
 const app = express();
 app.use(cors());
-app.use(express.static('build'))
+app.use(express.static('client/build'))
 
 const server = app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
