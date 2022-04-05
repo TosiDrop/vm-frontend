@@ -1,4 +1,5 @@
 ---
+redis_enabled: true
 vm_frontend_version: 'master'
 vm_frontend_image: 'ghcr.io/tosidrop/vm-frontend:{{ vm_frontend_version }}'
 vm_frontend_port: 3000
