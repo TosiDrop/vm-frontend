@@ -11,10 +11,10 @@ export interface GetRewards {
     withdrawal_fee: string;
     claimable_tokens: ClaimableToken[];
     pool_info: {
-        delegated_pool: string;
-        total_balance: string;
-        delegated_pool_ticker: string;
-        delegated_pool_logo: string;
+	delegated_pool: string;
+	total_balance: string;
+	delegated_pool_ticker: string;
+	delegated_pool_logo: string;
     };
 }
 
@@ -48,3 +48,4 @@ export interface TokenInfo {
     visible: string,
     info: string
 }
+

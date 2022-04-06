@@ -3,10 +3,10 @@ name: Docker CI
 on:
   push:
     branches: [ master ]
-    paths: [ 'Dockerfile','public/**','src/**','*.ts','*.json', '.github/workflows/ci-docker.yml' ]
+    paths: [ 'Dockerfile','client/**','public/**','src/**','*.ts','*.json','.github/workflows/ci-docker.yml' ]
   pull_request:
     branches: [ master ]
-    paths: [ 'Dockerfile','public/**','src/**','*.ts','*.json', '.github/workflows/ci-docker.yml' ]
+    paths: [ 'Dockerfile','client','public/**','src/**','*.ts','*.json','.github/workflows/ci-docker.yml' ]
 
 env:
   REGISTRY: ghcr.io

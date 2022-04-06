@@ -3,10 +3,10 @@ name: Ansible CI
 on:
   push:
     branches: [ master ]
-    paths: [ 'ansible/**','runme.sh', '.github/workflows/ci-ansible.yml' ]
+    paths: [ 'ansible/**','runme.sh','.github/workflows/ci-ansible.yml' ]
   pull_request:
     branches: [ master ]
-    paths: [ 'ansible/**','runme.sh', '.github/workflows/ci-ansible.yml' ]
+    paths: [ 'ansible/**','runme.sh','.github/workflows/ci-ansible.yml' ]
 
 jobs:
   ansible:
