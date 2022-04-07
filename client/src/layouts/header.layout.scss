@@ -5,13 +5,15 @@ $slide-bg: #030b13;
 .header {
     height: 120px;
     padding-top: 30px;
+    flex-direction: row !important;
+    display: flex;
 
     .title {
         font-size: 1.8rem;
         font-weight: 500;
         color: white;
-        padding-left: 50px !important;
         display: flex;
+        min-width: 360px;
     
         .logo {
             position: relative;
@@ -26,8 +28,12 @@ $slide-bg: #030b13;
             font-weight: 500;
         }
 
+        .spacer {
+            flex: 1;
+            max-width: 30px;
+        }
+
         .buttons {
-            margin-left: 30px;
             background-color: $background;
             padding: 5px;
             border-radius: 15px;
@@ -53,8 +59,20 @@ $slide-bg: #030b13;
 
     .buttons.last {
         text-align: end;
+        min-width: 185px;
+
         .button {
             color: $font-highlight;
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .header {
+        padding-top: 5px;
+        
+        .title-text {
+            display: none !important;
         }
     }
 }

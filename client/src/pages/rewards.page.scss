@@ -290,3 +290,9 @@
     -webkit-transition: width .2s linear;
     transition: width .2s linear;
 }
+
+@media screen and (max-width: 1024px) {
+    .rewards {
+        margin-right: 0;
+    }
+}

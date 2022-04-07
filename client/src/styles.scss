@@ -41,6 +41,31 @@ body {
 
 .columns {
     width: 100%;
+
+    .column-menu {
+        flex: none;
+        width: 20%;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .columns {
+        flex-direction: column;
+        margin: 0px;
+        height: 80px;
+        
+        &:not(:last-child) {
+            margin-bottom: 0;
+        }
+
+        .column {
+            width: 100%;
+        }
+
+        .column-menu {
+            padding: 0;
+        }
+    }
 }
 
 .tosi-button {

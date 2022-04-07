@@ -9,7 +9,7 @@ function App() {
         <div className='body'>
             <Header />
             <div className="columns">
-                <div className="column is-one-fifth">
+                <div className="column column-menu">
                     <Menu />
                 </div>
                 <div className="column">

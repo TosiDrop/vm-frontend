@@ -8,8 +8,10 @@ function Header() {
 
     return <div className='columns header'>
         <div className='column is-three-quarters title'>
+            <div className="spacer"></div>
             <img src={logo} className="logo" alt=''></img>
             <p className='title-text'>Tosidrop</p>
+            <div className="spacer"></div>
             <div className="buttons">
                 <button className="claim button is-selected">
                     Claim

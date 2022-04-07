@@ -77,3 +77,51 @@ $fa-twitter: #55acee;
         }
     }
 }
+
+@media screen and (max-width: 1024px) {
+    .menu-fill-hor {
+        display: none;
+    }
+
+    .menu {
+        .menu-fill-ver {
+            display: none;
+        }
+
+        .menu-content {
+            border-radius: 0;
+            
+            .social {
+                display: none;
+            }
+        }
+    }
+
+    .menu-list {
+        display: flex;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 20px;
+
+        li {
+            flex: 1;
+            text-align: center;
+
+            a {
+                display: inline-flex;
+                align-items: center;
+                height: 20px !important;
+            }
+        }
+
+        hr {
+            display: none;
+        }
+
+        .icon {
+            display: none;
+        }
+    }
+}
