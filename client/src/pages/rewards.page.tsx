@@ -5,7 +5,7 @@ import ModalComponent, { ModalTypes } from '../components/modal/modal.component'
 import { ClaimableToken, GetRewards } from '../entities/vm.entities';
 import { getRewards } from '../services/http.services';
 import { formatTokens, getNameFromHex, truncAmount } from '../services/utils.services';
-import { CircleLoader } from 'react-spinners';
+import { HashLoader } from 'react-spinners';
 import "../variables.scss";
 import './rewards.page.scss';
 import { PaymentStatus } from '../entities/common.entities';
@@ -27,6 +27,7 @@ function Rewards() {
     const [checkedState, setCheckedState] = useState(new Array<boolean>());
     const [checkedCount, setCheckedCount] = useState(0);
     const [adaToSend, setAdaToSend] = useState(0);
+    const [aproxReturn, setAproxReturn] = useState(0);
     const [paymentStatus, setPaymentStatus] = useState(PaymentStatus.Awaiting); // eslint-disable-line @typescript-eslint/no-unused-vars
 
     const handleOnChange = (position: number) => {
@@ -78,10 +79,12 @@ function Rewards() {
             const tokenValue = 300000;
             const updatedAdaToSend = rewards.min_balance + tokenValue + tokens.length * tokenValue;
             const falseArray = new Array(checkedState.length).fill(false);
+            const updatedAproxReturn = updatedAdaToSend - 168000 - 20000 * tokens.length;
             tokens.forEach((t: any, i) => falseArray[i] = true);
             setCheckedState(falseArray);
             setCheckedCount(tokens.length);
             setAdaToSend(updatedAdaToSend);
+            setAproxReturn(updatedAproxReturn);
             setHideCheck(true);
             setHideStakingInfo(true)
             setHideSendAdaInfo(false);
@@ -137,7 +140,7 @@ function Rewards() {
                         <div className='tosi-cancel-text'>Cancel</div>
                     </button>
                     <div className='loading'>
-                        <CircleLoader color='#73badd' loading={loadingRewards} size={25} />
+                        <HashLoader color='#73badd' loading={loadingRewards} size={25} />
                     </div>
                     <div className='fill'></div>
                 </div>
@@ -202,16 +205,28 @@ function Rewards() {
                     <div></div>
                 </div>
                 <div className={'content tx-details-body'}>
-                    <div>Selected Rewards</div>
-                    <div>({checkedCount})&nbsp;&nbsp;{formatTokens((checkedCount * 300000).toString(), 6, 1)} ADA</div>
+                    <div>Selected {checkedCount} tokens</div>
+                    <div>{formatTokens(((checkedCount * 300000)).toString(), 6, 1)} ADA</div>
                 </div>
                 <div className={'content tx-details-body'}>
-                    <div>Payment Amount</div>
+                    <div>Withdraw Fees</div>
+                    <div>{formatTokens(rewards?.withdrawal_fee, 6, 1)} ADA</div>
+                </div>
+                <div className={'content tx-details-body'}>
+                    <div>Base Deposit</div>
                     <div>{formatTokens(((rewards?.min_balance || 0) + 300000).toString(), 6, 1)} ADA</div>
                 </div>
-                <div className={'content tx-details-footer'}>
-                    <div>Total Cost</div>
+                <div className={'content tx-details-body'}>
+                    <div>You Send</div>
                     <div>{formatTokens(adaToSend.toString(), 6, 1)} ADA</div>
+                </div>
+                <div className={'content tx-details-body'}>
+                    <div>You'll get back (Depends on amount of tokens)</div>
+                    <div>~{formatTokens(aproxReturn.toString(), 6, 1)} ADA</div>
+                </div>
+                <div className={'content tx-details-footer'}>
+                    <div className="deposit-info"></div>
+                    <div>You will pay a deposit, we will discount the withdraw fees and the tx fees (variable depending amount and size of tokens). Usually it'll cost no more than 0.5 ADA</div>
                 </div>
             </div>
         </div>

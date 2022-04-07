@@ -1,6 +1,6 @@
-export function formatTokens(amount: string, decimals: number | undefined, decimalsToShow: number | undefined = decimals): string {
+export function formatTokens(amount: string | undefined, decimals: number | undefined, decimalsToShow: number | undefined = decimals): string {
     decimals = decimals === null ? 6 : decimals;
-    if (decimals && decimalsToShow && decimals > 0) {
+    if (amount && decimals && decimalsToShow && decimals > 0) {
         if (amount.length > decimals) {
             const decimalPart = amount.substring(amount.length - decimals);
             return amount.substring(0, amount.length - decimals) + '.' + decimalPart.substring(0, decimalsToShow);
@@ -11,7 +11,7 @@ export function formatTokens(amount: string, decimals: number | undefined, decim
         }
     }
     else {
-        return amount;
+        return amount || '0';
     }
 }
 

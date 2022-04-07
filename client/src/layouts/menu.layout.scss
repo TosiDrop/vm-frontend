@@ -2,66 +2,77 @@
 
 $fa-twitter: #55acee;
 
+.menu-fill-hor {
+    height: 40px;
+}
+
 .menu {
-    margin-left: 50px;
-    margin-top: 180px;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    border-radius: 20px;
-    background-color: $background;
-    width: 240px;
-        
-    hr {
-        border: 0;
-        border-top: 1px solid $font-inactive-color;
-        width: 88%;
-        position: relative;
-        left: 50%; 
-        transform: translateX(-50%);
-        margin-top: 1px;
-        margin-bottom: 1px;
-        height: 1px;
+    display: flex;
+
+    .menu-fill-ver {
+        flex: 1;
     }
 
-    .menu-list li a {
-        color: $font-inactive-color;
-        border-radius: 10px;
-        height: 46px;
-        font-size: 14px;
-        font-weight: 600;
-
-        .icon {
-            font-size: 16px;
-            top: 3px;
+    .menu-content {
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        border-radius: 20px;
+        background-color: $background;
+        min-width: 210px;
+        flex: 5;
+            
+        hr {
+            border: 0;
+            border-top: 1px solid $font-inactive-color;
+            width: 88%;
             position: relative;
-            margin-right: 5px;
+            left: 50%; 
+            transform: translateX(-50%);
+            margin-top: 1px;
+            margin-bottom: 1px;
+            height: 1px;
         }
-    }
 
-    .menu-list li {
-        a.selected, a:hover {
-            background-color: $primary;
-            color: $font-highlight;
+        .menu-list li a {
+            color: $font-inactive-color;
+            border-radius: 10px;
+            height: 46px;
+            font-size: 14px;
+            font-weight: 600;
+
+            .icon {
+                font-size: 16px;
+                top: 3px;
+                position: relative;
+                margin-right: 5px;
+            }
         }
-    }
 
-    .social {
-        text-align: center;
-        * {
-            margin: 5px;
-            &.fa-twitter {
-                color: #1C9DEB;
+        .menu-list li {
+            a.selected, a:hover {
+                background-color: $primary;
+                color: $font-highlight;
             }
-            &.fa-discord { 
-                color: #6F85D4; 
-            }
-            &.fa-telegram { 
-                color: #2CA0DB; 
-            }
-            &.fa-github { 
-                color: $font-inactive-color; 
+        }
+
+        .social {
+            text-align: center;
+            * {
+                margin: 5px;
+                &.fa-twitter {
+                    color: #1C9DEB;
+                }
+                &.fa-discord { 
+                    color: #6F85D4; 
+                }
+                &.fa-telegram { 
+                    color: #2CA0DB; 
+                }
+                &.fa-github { 
+                    color: $font-inactive-color; 
+                }
             }
         }
     }
