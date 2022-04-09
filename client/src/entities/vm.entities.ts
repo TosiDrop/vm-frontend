@@ -1,5 +1,3 @@
-import { AccountPoolInfo } from "./koios.entities";
-
 export interface GetRewards {
     total_rewards: number;
     consolidated_promises: Assets;
@@ -11,10 +9,11 @@ export interface GetRewards {
     withdrawal_fee: string;
     claimable_tokens: ClaimableToken[];
     pool_info: {
-	delegated_pool: string;
-	total_balance: string;
-	delegated_pool_ticker: string;
-	delegated_pool_logo: string;
+        delegated_pool_name: string;
+        delegated_pool_description: string;
+        total_balance: string;
+        delegated_pool_ticker: string;
+        delegated_pool_logo: string;
     };
 }
 
@@ -48,4 +47,3 @@ export interface TokenInfo {
     visible: string,
     info: string
 }
-
