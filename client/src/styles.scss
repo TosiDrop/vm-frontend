@@ -6,66 +6,29 @@
 
 @import "../node_modules/bulma/sass/utilities/derived-variables";
 $addColors: (
-    "background":($background, $background-invert),
-    "background-button": ($background-button, $background-button-invert)
+    "background":($background, $background-invert)
 );
 $colors: map-merge($colors, $addColors);
 
 @import "../node_modules/bulma/bulma";
 
 * {
-    font-family: 'Avenir Next Cyr Medium', sans-serif;
+    font-family: $avenir-font-medium;
     font-size: 14px;
     margin: 0px;
 }
 
-html {
-    width: 100%;
-    height: 100%;
-    display: table;
-}
-
-body {
-    width: 100%;
-    display: table-cell;
-}
-
-html, body {
+html, body, #root, .body {
+    width: 100vw;
+    height: 100vh;
     margin: 0;
     padding: 0;
 }
 
-body {
+.body {
     background: linear-gradient(180deg, rgba(0, 68, 105, 0) 55.42%, rgba(0, 0, 0, 0.45) 102.55%), linear-gradient(237.69deg, rgba(45, 45, 45, 0) 30.63%, rgba(188, 212, 242, 0.2) 125.87%), linear-gradient(120.81deg, rgba(133, 133, 133, 0) 31.32%, rgba(255, 215, 138, 0.2) 123.21%), linear-gradient(122.33deg, rgba(0, 44, 105, 0.5) 0%, rgba(134, 134, 134, 0) 69.38%), linear-gradient(238.28deg, rgba(39, 54, 133, 0.65) 0%, rgba(130, 130, 130, 0) 68.22%), #002C69; 
-}
-
-.columns {
-    width: 100%;
-
-    .column-menu {
-        flex: none;
-        width: 20%;
-    }
-}
-
-@media screen and (max-width: 1024px) {
-    .columns {
-        flex-direction: column;
-        margin: 0px;
-        height: 80px;
-        
-        &:not(:last-child) {
-            margin-bottom: 0;
-        }
-
-        .column {
-            width: 100%;
-        }
-
-        .column-menu {
-            padding: 0;
-        }
-    }
+    overflow-x: hidden;
+    padding: 20px;
 }
 
 .tosi-button {
@@ -109,8 +72,4 @@ body {
     border: 1px solid $font-inactive-color;
     height: 30px;
     color: $font-highlight;
-}
-
-.body {
-    color: white;
 }

@@ -95,7 +95,18 @@ function Rewards() {
         if (rewards?.pool_info) {
             return (<>
                 {rewards?.pool_info?.delegated_pool_logo ? <img className='pool-logo' src={rewards?.pool_info?.delegated_pool_logo} alt='' /> : ''}
-                <div className='pool-info'>Currently staking&nbsp;<b>{rewards?.pool_info?.total_balance} ADA</b>&nbsp;with&nbsp;<b className='no-break'>{rewards?.pool_info?.delegated_pool}</b></div>
+                <div className='pool-info'>
+                    <div className='staking-info'>
+                        Currently staking&nbsp;<b>{rewards?.pool_info?.total_balance} ADA</b>&nbsp;with&nbsp;
+                        <b className='no-break'>
+                            [{rewards?.pool_info?.delegated_pool_name}]&nbsp;
+                            {rewards?.pool_info?.delegated_pool_description}
+                        </b>
+                        <b className='no-break-mobile'>
+                            [{rewards?.pool_info?.delegated_pool_name}]
+                        </b>
+                    </div>
+                </div>
             </>)
         } else {
             return (<>Unregisted</>);
@@ -130,24 +141,23 @@ function Rewards() {
             {<ModalComponent modalVisible={modalVisible} setModalVisible={setModalVisible} modalText={modalText} modalType={ModalTypes.info} />}
             <h1>Claim your rewards</h1>
 
-            <div className={'content check' + (hideCheck ? ' hidden' : '')}>
+            <div className={'content-reward check' + (hideCheck ? ' hidden' : '')}>
                 <p>Enter your wallet/stake address or $handle to view your rewards</p>
                 <input className='transparent-input' type="text" value={searchAddress} onInput={(e: KeyboardEvent<HTMLInputElement>) => setSearchAddress((e.target as HTMLInputElement).value)}></input>
                 <div className='content-button'>
                     <button className='tosi-button' disabled={!hideStakingInfo} onClick={checkRewards}>Check my rewards</button>
-                    <button className={'tosi-cancel-button' + (hideStakingInfo ? ' hidden-transition' : '')} onClick={backRewards}>
+                    <button className={'tosi-cancel-button' + (hideStakingInfo ? ' hidden' : '')} onClick={backRewards}>
                         <div className='tosi-cancel-icon'><FontAwesomeIcon icon={faXmark} /></div>
                         <div className='tosi-cancel-text'>Cancel</div>
                     </button>
-                    <div className='loading'>
+                    <div className={'loading' + (!loadingRewards ? ' hidden' : '')}>
                         <HashLoader color='#73badd' loading={loadingRewards} size={25} />
                     </div>
-                    <div className='fill'></div>
                 </div>
             </div>
 
             <div className={'staking-info' + (hideStakingInfo ? ' hidden' : '')}>
-                <div className={'content staked'}>
+                <div className={'content-reward staked'}>
                     {renderStakeInfo()}
                 </div>
 
@@ -166,11 +176,11 @@ function Rewards() {
                                     />
                                     {truncAmount(token.amount, token.decimals)} available
                                 </div>
-                                <div className='token-info'>
-                                    <img alt='' src={token.logo}></img>
-                                    <div>{token.assetId.split('.').length > 1 ? getNameFromHex(token.assetId.split('.')[1]) : getNameFromHex(token.assetId.split('.')[0])}</div>
-                                </div>
-                                <div className='claim-token'>
+                                <div className='token-drop'>
+                                    <div className='token-info'>
+                                        <img alt='' src={token.logo}></img>
+                                        <div>{token.assetId.split('.').length > 1 ? getNameFromHex(token.assetId.split('.')[1]) : getNameFromHex(token.assetId.split('.')[0])}</div>
+                                    </div>
                                     <button className='tosi-button' onClick={() => { return claimRewards([token]) }}>Claim token</button>
                                 </div>
                             </div>
@@ -178,17 +188,17 @@ function Rewards() {
                     }
                 </div>
 
-                <div className={'content claim'}>
+                <div className={'content-reward claim'}>
                     <div className='text'>Selected {checkedCount} token</div>
                     <button className='tosi-button' disabled={checkedCount === 0} onClick={claimRewardsChecked}>Claim my rewards</button>
                 </div>
             </div>
 
             <div className={'status-step' + (hideSendAdaInfo ? ' hidden' : '')}>
-                <div className={'content claim-status-head'}>
+                <div className={'content-reward claim-status-head'}>
                     Claim status: <p className='payment-status'>{renderPaymentStatus()}</p>
                 </div>
-                <div className={'content claim-status-body'}>
+                <div className={'content-reward claim-status-body'}>
                     <div className="icon-input">
                         <div className='icon'>
                             <FontAwesomeIcon icon={faCopy} />
@@ -200,33 +210,32 @@ function Rewards() {
                     <div className='complete-send-info'><small>Please only send {formatTokens(adaToSend.toString(), 6, 1)} ADA. Any other amount will be considered an error and refunded in aproximately 72 hours</small></div>
                 </div>
 
-                <div className={'content tx-details-head'}>
+                <div className={'content-reward tx-details-head'}>
                     <div>Transaction Details</div>
                     <div></div>
                 </div>
-                <div className={'content tx-details-body'}>
+                <div className={'content-reward tx-details-body'}>
                     <div>Selected {checkedCount} tokens</div>
                     <div>{formatTokens(((checkedCount * 300000)).toString(), 6, 1)} ADA</div>
                 </div>
-                <div className={'content tx-details-body'}>
+                <div className={'content-reward tx-details-body'}>
                     <div>Withdraw Fees</div>
                     <div>{formatTokens(rewards?.withdrawal_fee, 6, 1)} ADA</div>
                 </div>
-                <div className={'content tx-details-body'}>
+                <div className={'content-reward tx-details-body'}>
                     <div>Base Deposit</div>
                     <div>{formatTokens(((rewards?.min_balance || 0) + 300000).toString(), 6, 1)} ADA</div>
                 </div>
-                <div className={'content tx-details-body'}>
+                <div className={'content-reward tx-details-body'}>
                     <div>You Send</div>
                     <div>{formatTokens(adaToSend.toString(), 6, 1)} ADA</div>
                 </div>
-                <div className={'content tx-details-body'}>
-                    <div>You'll get back (Depends on amount of tokens)</div>
+                <div className={'content-reward tx-details-body'}>
+                    <div>You'll get back (Aprox)</div>
                     <div>~{formatTokens(aproxReturn.toString(), 6, 1)} ADA</div>
                 </div>
-                <div className={'content tx-details-footer'}>
-                    <div className="deposit-info"></div>
-                    <div>You will pay a deposit, we will discount the withdraw fees and the tx fees (variable depending amount and size of tokens). Usually it'll cost no more than 0.5 ADA</div>
+                <div className={'content-reward tx-details-footer'}>
+                    <div className="deposit-info">You will pay a deposit, we will discount the withdraw fees and the tx fees (variable depending amount and size of tokens). Usually it'll cost no more than 0.5 ADA</div>
                 </div>
             </div>
         </div>

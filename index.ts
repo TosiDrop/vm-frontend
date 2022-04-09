@@ -2,10 +2,10 @@ import express from "express";
 import url from 'url';
 import axios from 'axios';
 import cors from 'cors';
-import { AccountInfo, AccountRewards, EpochInfo, PoolInfo } from './src/entities/koios.entities'
-import { ClaimableToken, GetRewards, GetTokens, SanitizeAddress } from './src/entities/vm.entities'
-import { ExtendedMetadata, Metadata } from './src/entities/common.entities'
-import { formatTokens } from './src/services/utils.services'
+import { AccountInfo, PoolInfo } from './client/src/entities/koios.entities'
+import { ClaimableToken, GetRewards, GetTokens, SanitizeAddress } from './client/src/entities/vm.entities'
+import { ExtendedMetadata, Metadata } from './client/src/entities/common.entities'
+import { formatTokens } from './client/src/services/utils.services'
 require('dotenv').config()
 
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
@@ -131,7 +131,8 @@ app.get("/getrewards", async (req: any, res: any) => {
                                     }
                                 }
                                 getRewardsResponse.pool_info = {
-                                    delegated_pool: `[${poolInfo.meta_json.name}] ${poolInfo.meta_json.description}`,
+                                    delegated_pool_name: poolInfo.meta_json.name,
+                                    delegated_pool_description: poolInfo.meta_json.description,
                                     total_balance: formatTokens(accountInfo.total_balance, 6, 2),
                                     delegated_pool_logo: logo,
                                     delegated_pool_ticker: poolInfo.meta_json.ticker
