@@ -27,7 +27,7 @@ function Rewards() {
     const [checkedCount, setCheckedCount] = useState(0);
     const [adaToSend, setAdaToSend] = useState(0);
     const [aproxReturn, setAproxReturn] = useState(0);
-    const [paymentStatus, _] = useState(PaymentStatus.Awaiting);
+    const [paymentStatus] = useState(PaymentStatus.Awaiting);
     const [showTooltip, setShowTooltip] = useState(false);
 
     const handleOnChange = (position: number) => {
