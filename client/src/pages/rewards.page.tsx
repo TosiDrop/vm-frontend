@@ -190,7 +190,10 @@ function Rewards() {
 
                 <div className={'content-reward claim'}>
                     <div className='text'>Selected {checkedCount} token</div>
-                    <button className='tosi-button' disabled={checkedCount === 0} onClick={claimRewardsChecked}>Claim my rewards</button>
+                    <button className='tosi-button' disabled={checkedCount === 0} onClick={claimRewardsChecked}>
+                        <img className='down-to-something' src="/img/down-to-something.svg" />
+                        Claim my rewards
+                    </button>
                 </div>
             </div>
 

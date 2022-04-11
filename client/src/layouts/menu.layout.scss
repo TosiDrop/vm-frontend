@@ -16,13 +16,13 @@ $fa-twitter: #55acee;
             padding-top: 8px;
             padding-bottom: 8px;
             border-radius: 20px;
-            background-color: $background;
+            background-color: var(--primary);
             min-width: 210px;
             flex: 5;
                 
             hr {
                 border: 0;
-                border-top: 1px solid $font-inactive-color;
+                border-top: 1px solid var(--font-inactive-color);
                 width: 88%;
                 position: relative;
                 left: 50%; 
@@ -33,7 +33,7 @@ $fa-twitter: #55acee;
             }
     
             .menu-list li a {
-                color: $font-inactive-color;
+                color: var(--font-inactive-color);
                 border-radius: 10px;
                 height: 46px;
                 font-size: 14px;
@@ -44,8 +44,8 @@ $fa-twitter: #55acee;
     
             .menu-list li {
                 a.selected, a:hover {
-                    background-color: $primary;
-                    color: $font-highlight;
+                    background-color: var(--hover-color);
+                    color: var(--font-highlight);
                 }
             }
 
@@ -67,7 +67,7 @@ $fa-twitter: #55acee;
                         color: #2CA0DB; 
                     }
                     &.fa-github { 
-                        color: $font-inactive-color; 
+                        color: var(--font-inactive-color); 
                     }
                 }
             }
@@ -84,7 +84,7 @@ $fa-twitter: #55acee;
         padding: 0;
         width: 280px;
         height: 100vh;
-        background-color: $background;
+        background-color: var(--primary);
         top: 0;
         left: 0;
         z-index: 2;

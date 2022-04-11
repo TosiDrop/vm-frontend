@@ -25,31 +25,8 @@ $slide-bg: #030b13;
             display: flex;
             align-items: center;
             font-size: 20px;
-            font-weight: 500;
-        }
-
-        .type-buttons {
-            background-color: $background;
-            padding: 5px;
-            border-radius: 15px;
-            height: 45px;
-            margin-left: 20px;
-
-            .button {
-                width: 100px;
-                height: 35px;
-                border-radius: 10px;
-                background-color: $background;
-                border: 0px;
-                color: $font-inactive-color;
-                font-weight: 500;
-
-                &.is-selected {
-                    background: $gradient-button-default;
-                    background: $gradient-button;
-                    color: $font-highlight;
-                }
-            }
+            font-weight: 600;
+            color: var(--font-highlight);
         }
 
         .header-filler {
@@ -64,7 +41,9 @@ $slide-bg: #030b13;
         padding-right: 30px;
 
         .button {
-            color: $font-highlight;
+            color: var(--font-highlight);
+            background-color: var(--primary);
+            border: 0;
         }
     }
 }
@@ -83,11 +62,6 @@ $slide-bg: #030b13;
                 .light-button {
                     display: none;
                 }
-            }
-
-            .type-buttons {
-                order: 1;
-                margin-left: 10px;
             }
 
             .header-filler {

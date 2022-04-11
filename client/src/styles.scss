@@ -5,10 +5,6 @@
 @import "./variables.scss";
 
 @import "../node_modules/bulma/sass/utilities/derived-variables";
-$addColors: (
-    "background":($background, $background-invert)
-);
-$colors: map-merge($colors, $addColors);
 
 @import "../node_modules/bulma/bulma";
 
@@ -26,25 +22,25 @@ html, body, #root, .body {
 }
 
 .body {
-    background: linear-gradient(180deg, rgba(0, 68, 105, 0) 55.42%, rgba(0, 0, 0, 0.45) 102.55%), linear-gradient(237.69deg, rgba(45, 45, 45, 0) 30.63%, rgba(188, 212, 242, 0.2) 125.87%), linear-gradient(120.81deg, rgba(133, 133, 133, 0) 31.32%, rgba(255, 215, 138, 0.2) 123.21%), linear-gradient(122.33deg, rgba(0, 44, 105, 0.5) 0%, rgba(134, 134, 134, 0) 69.38%), linear-gradient(238.28deg, rgba(39, 54, 133, 0.65) 0%, rgba(130, 130, 130, 0) 68.22%), #002C69; 
+    background: var(--body-background); 
     overflow-x: hidden;
     padding: 20px;
 }
 
 .tosi-button {
-    background: $gradient-button-default;
-    background: $gradient-button;
+    background: var(--gradient-button-default);
+    background: var(--gradient-button);
     height: 40px;
     box-shadow: none;
     border: 0;
     border-radius: 10px;
-    color: $font-highlight;
+    color: var(--font-highlight);
     font-weight: 600;
     font-size: 15px;
     cursor: pointer;
     
     &:disabled {
-        background: $gradient-button-disabled !important;
+        background: var(--gradient-button-disabled) !important;
         cursor: initial;
         opacity: 0.8;
     }
@@ -54,9 +50,9 @@ html, body, #root, .body {
     background: transparent;
     height: 40px;
     box-shadow: none;
-    border: 1px solid $gradient-button-default;
+    border: 1px solid var(--gradient-button-default);
     border-radius: 10px;
-    color: $font-highlight;
+    color: var(--font-highlight);
     font-weight: 600;
     font-size: 15px;
     cursor: pointer;
@@ -69,7 +65,7 @@ html, body, #root, .body {
 .transparent-input {
     background-color: transparent;
     border-radius: 5px;
-    border: 1px solid $font-inactive-color;
+    border: 1px solid var(--font-inactive-color);
     height: 30px;
-    color: $font-highlight;
+    color: var(--font-highlight);
 }
