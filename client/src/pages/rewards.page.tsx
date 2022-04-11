@@ -200,7 +200,7 @@ function Rewards() {
                 <div className={'content-reward claim'}>
                     <div className='text'>Selected {checkedCount} token</div>
                     <button className='tosi-button' disabled={checkedCount === 0} onClick={claimRewardsChecked}>
-                        <div className='down-arrow'></div>
+                        <div className='down-arrow' ></div>
                         Claim my rewards
                     </button>
                 </div>
