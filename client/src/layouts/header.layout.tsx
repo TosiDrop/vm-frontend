@@ -16,7 +16,9 @@ function Header({ toggleMenu, toggleTheme }: Params) {
                 <img src={logo} className="logo" alt=''></img>
             </div>
             <p className='title-text'>Tosidrop</p>
-            <TypeButtons />
+            <div className='header-type-buttons'>
+                <TypeButtons />
+            </div>
             <div className='header-filler'></div>
             <div className='last'>
                 <button className="button light-button" onClick={toggleTheme}>

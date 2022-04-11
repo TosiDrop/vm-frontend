@@ -27,3 +27,13 @@ export function getNameFromHex(str1: string) {
     }
     return str === '' ? 'ADA' : str;
 }
+
+export function copyContent(content_txt: string) {
+    const selBox = document.createElement('textarea');
+    selBox.value = content_txt;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+}

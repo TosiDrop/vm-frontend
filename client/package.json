@@ -23,6 +23,7 @@
     "react-native": "^0.67.4",
     "react-router-dom": "^6.2.2",
     "react-scripts": "5.0.0",
+    "react-simple-tooltip": "^2.6.3",
     "react-spinners": "^0.11.0",
     "sass": "^1.49.9",
     "ts-node": "^10.7.0",
