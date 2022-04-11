@@ -6,20 +6,24 @@
     margin-left: 270px;
     flex: 1;
     padding-top: 20px;
-    color: $font-highlight;
+    color: var(--font-highlight);
 
     h1 {
         font-size: 24px;
-        color: $font-highlight;
+        color: var(--font-highlight);
     }
 
     .content-reward {
         padding: 23px 30px;
         border-radius: 20px;
-        background-color: $background;
+        background-color: var(--primary);
         display: flex;
         flex-direction: column;
         margin-top: 10px;
+
+        .transparent-input {
+            margin-top: 15px;
+        }
 
         &.check {    
             p {
@@ -116,12 +120,12 @@
             border-radius: 20px 20px 0px 0px;
             display: flex;
             flex-direction: row;
-            border-bottom: 1px solid $font-inactive-color;
+            border-bottom: 1px solid var(--font-inactive-color);
             margin-bottom: 0px;
 
             .payment-status {
                 margin-left: 30px;
-                color: $font-inactive-color;
+                color: var(--font-inactive-color);
                 font-family: $avenir-font-light;
             }
         }
@@ -135,7 +139,7 @@
 
             .icon-input {
                 position: relative;
-                border: 1px solid $font-inactive-color;
+                border: 1px solid var(--font-inactive-color);
                 border-radius: 5px;
                 width: 100%;
 
@@ -147,7 +151,7 @@
                     cursor: pointer;
 
                     svg {
-                        color: $font-inactive-color;
+                        color: var(--font-inactive-color);
                     }
                 }
 
@@ -156,7 +160,7 @@
                     padding-left: 2.5rem;;
                     width: 100%;
                     cursor: text;
-                    color: $font-inactive-color;
+                    color: var(--font-inactive-color);
                 }
             }
 
@@ -170,13 +174,13 @@
 
             .complete-send-info {
                 font-family: $avenir-font-light;
-                color: $font-warn;
+                color: var(--font-color);
             }
         }
 
         &.tx-details-head {
             border-radius: 20px 20px 0px 0px;
-            border-bottom: 1px solid $font-inactive-color;
+            border-bottom: 1px solid var(--font-inactive-color);
             margin-bottom: 0px;
         }
 
@@ -184,7 +188,7 @@
             border-radius: 0px;
             margin-top: 0px;
             margin-bottom: 0px;
-            border-bottom: 1px solid $font-inactive-color;
+            border-bottom: 1px solid var(--font-inactive-color);
             padding: 10px 16px;
             text-align: end;
             display: flex;
@@ -210,7 +214,7 @@
             flex-direction: row;
 
             .deposit-info {
-                color: $font-warn;
+                color: var(--font-color);
                 font-size: 0.875em;
                 font-weight: 600;
             }
@@ -242,7 +246,7 @@
         .claim-item {
             padding: 14px 18px;
             border-radius: 20px;
-            background-color: $background;
+            background-color: var(--primary);
             display: flex;
             flex-direction: column;
             min-width: 300px;
@@ -251,7 +255,7 @@
                 display: flex;
                 align-items: center;
                 font-size: 12px;
-                color: $font-highlight;
+                color: var(--font-highlight);
 
                 input {
                     margin-right: 10px;
@@ -261,16 +265,27 @@
             .token-info {
                 margin-top: 20px;
                 text-align: center;
-                color: $font-highlight;
+                color: var(--font-highlight);
                 
                 img {
                     width: 80px;
+                }
+
+                button {
+                    margin-top: 20px;
                 }
             }
 
             .tosi-button {
                 flex: 1;
                 width: 100%;
+                align-items: center;
+                padding: 0px 10px;
+
+                .down-to-something {
+                    width: 16px;
+                    margin-right: 10px;
+                }
             }
         }
     }
@@ -320,6 +335,10 @@
     
                 img {
                     width: 40px !important;
+                }
+
+                button {
+                    margin-top: 0;
                 }
             }
 

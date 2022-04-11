@@ -16,6 +16,11 @@
     .modal-buttons {
         text-align: center;
         margin-top: 20px;
+
+        .is-background {
+            background-color: var(--primary);
+            border: 0;
+        }
     }
 
     .modal-footer {
