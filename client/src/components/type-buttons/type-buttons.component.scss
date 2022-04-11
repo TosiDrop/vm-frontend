@@ -20,6 +20,12 @@
             background: var(--gradient-button);
             color: var(--font-highlight);
         }
+        
+        &:not(.is-selected):hover {
+            background: var(--gradient-button-hover-default);
+            background: var(--gradient-button-hover);
+            color: var(--font-highlight);
+        }
     }
 }
 

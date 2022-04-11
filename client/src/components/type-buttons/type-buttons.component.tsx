@@ -1,6 +1,6 @@
 import './type-buttons.component.scss';
 
-function TypeButtons() {
+function TypeButtonsComponent() {
     return <div className='type-buttons'>
         <button className="claim button is-selected">
             Claim
@@ -11,4 +11,4 @@ function TypeButtons() {
     </div>
 }
 
-export default TypeButtons;
+export default TypeButtonsComponent;

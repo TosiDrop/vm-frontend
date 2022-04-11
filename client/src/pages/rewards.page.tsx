@@ -9,11 +9,6 @@ import { HashLoader } from 'react-spinners';
 import { PaymentStatus } from '../entities/common.entities';
 import './rewards.page.scss';
 
-declare global {
-    interface Window {
-        cardano: any;
-    }
-}
 function Rewards() {
     const [modalVisible, setModalVisible] = useState(false);
     const [hideCheck, setHideCheck] = useState(false);
