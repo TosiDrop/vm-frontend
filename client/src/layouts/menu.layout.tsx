@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWallet, faClockRotateLeft, faChartColumn, faMessage, faBook, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faDiscord, faTelegram, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom';
+import TypeButtons from '../components/type-buttons/type-buttons.component';
 import './menu.layout.scss';
 
 interface Params {
@@ -14,6 +15,9 @@ function Menu({ showMenu, setShowMenu }: Params) {
         <div className={'menu-container' + (!showMenu ? ' menu-hidden' : '')}>
             <div className='menu'>
                 <div className='menu-content'>
+                    <div className='menu-type-buttons'>
+                        <TypeButtons />
+                    </div>
                     <ul className='menu-list'>
                         <li><Link to="/"><p className="icon"><FontAwesomeIcon icon={faWallet} /></p>Rewards</Link></li>
                         <li><Link to="/history"><p className="icon"><FontAwesomeIcon icon={faClockRotateLeft} /></p>History</Link></li>

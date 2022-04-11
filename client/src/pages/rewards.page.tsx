@@ -4,11 +4,10 @@ import { useEffect, useState, KeyboardEvent } from 'react';
 import ModalComponent, { ModalTypes } from '../components/modal/modal.component';
 import { ClaimableToken, GetRewards } from '../entities/vm.entities';
 import { getRewards } from '../services/http.services';
-import { formatTokens, getNameFromHex, truncAmount } from '../services/utils.services';
+import { copyContent, formatTokens, getNameFromHex, truncAmount } from '../services/utils.services';
 import { HashLoader } from 'react-spinners';
-import "../variables.scss";
-import './rewards.page.scss';
 import { PaymentStatus } from '../entities/common.entities';
+import './rewards.page.scss';
 
 declare global {
     interface Window {
@@ -28,7 +27,8 @@ function Rewards() {
     const [checkedCount, setCheckedCount] = useState(0);
     const [adaToSend, setAdaToSend] = useState(0);
     const [aproxReturn, setAproxReturn] = useState(0);
-    const [paymentStatus, setPaymentStatus] = useState(PaymentStatus.Awaiting); // eslint-disable-line @typescript-eslint/no-unused-vars
+    const [paymentStatus] = useState(PaymentStatus.Awaiting);
+    const [showTooltip, setShowTooltip] = useState(false);
 
     const handleOnChange = (position: number) => {
         const updatedCheckedState = checkedState.map((item, index) =>
@@ -126,6 +126,13 @@ function Rewards() {
         }
     }
 
+    const triggerTooltip = () => {
+        setShowTooltip(true);
+        setTimeout(() => {
+            setShowTooltip(false);
+        }, 1000);
+    }
+
     useEffect(() => {
         if (rewards?.claimable_tokens.length) {
             setCheckedState(new Array(rewards.claimable_tokens.length).fill(false));
@@ -166,15 +173,17 @@ function Rewards() {
                         rewards?.claimable_tokens?.map((token, index) => {
                             return <div className='claim-item' key={index}>
                                 <div className='selection'>
-                                    <input
-                                        type="checkbox"
-                                        id={`custom-checkbox-${index}`}
-                                        name={token.ticker}
-                                        value={token.ticker}
-                                        checked={checkedState[index]}
-                                        onChange={() => handleOnChange(index)}
-                                    />
-                                    {truncAmount(token.amount, token.decimals)} available
+                                    <label className='noselect'>
+                                        <input
+                                            type="checkbox"
+                                            id={`custom-checkbox-${index}`}
+                                            name={token.ticker}
+                                            value={token.ticker}
+                                            checked={checkedState[index]}
+                                            onChange={() => handleOnChange(index)}
+                                        />
+                                        {truncAmount(token.amount, token.decimals)} available
+                                    </label>
                                 </div>
                                 <div className='token-drop'>
                                     <div className='token-info'>
@@ -191,7 +200,7 @@ function Rewards() {
                 <div className={'content-reward claim'}>
                     <div className='text'>Selected {checkedCount} token</div>
                     <button className='tosi-button' disabled={checkedCount === 0} onClick={claimRewardsChecked}>
-                        <img className='down-to-something' src="/img/down-to-something.svg" />
+                        <div className='down-arrow'></div>
                         Claim my rewards
                     </button>
                 </div>
@@ -203,7 +212,11 @@ function Rewards() {
                 </div>
                 <div className={'content-reward claim-status-body'}>
                     <div className="icon-input">
-                        <div className='icon'>
+                        <div className={'tooltip-icon' + (showTooltip ? '' : ' hidden')}>Address copied</div>
+                        <div className='icon' onClick={() => {
+                            copyContent(rewards ? rewards.vending_address : '');
+                            triggerTooltip();
+                        }}>
                             <FontAwesomeIcon icon={faCopy} />
                         </div>
                         <input className='transparent-input' type="text" disabled={true} value={rewards?.vending_address} />
