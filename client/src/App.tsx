@@ -23,28 +23,24 @@ function App() {
         setTheme(theme => theme === Themes.dark ? Themes.light : Themes.dark);
     }
 
-    const connectWallet = async (walletKey: WalletKeys) => {
-        if (connectedWallet) {
-            await connectedWallet.enable(walletKey).then(async (_api) => {
-                if (_api) {
-                    const connectedWalletUpdate: CIP0030Wallet = {
-                        ...window.cardano[WalletKeys[walletKey]],
-                        api: _api
-                    };
-                    const walletApi = await getWalletApi(connectedWalletUpdate);
-                    setConnectedWallet(walletApi);
-                }
-                // const walletApi = await getWalletApi(_api);
-                // setWalletApi(walletApi);
-    
-                // const address1: string = await walletApi.getAddress();
-                // if (address1.length) {
-                //     setSearchAddressAbbr(abbreviateAddress(address1));
-                //     const balance = await walletApi.getBalance();
-                //     const totalWalletValueAda = formatTokensToNumbers(balance.lovelace, 6);
-                //     setTotalWalletValueAda(truncAmount(totalWalletValueAda, 2));
-                // }
-            });
+    const connectWallet = async (walletKey?: WalletKeys) => {
+        if (walletKey) {
+            if (connectedWallet) {
+                await connectedWallet.enable(walletKey).then(async (_api) => {
+                    if (_api) {
+                        const connectedWalletUpdate: CIP0030Wallet = {
+                            ...window.cardano[WalletKeys[walletKey]],
+                            api: _api
+                        };
+                        const walletApi = await getWalletApi(connectedWalletUpdate);
+                        setConnectedWallet(walletApi);
+                    }
+                });
+            }
+        } else {
+            if (connectedWallet) {
+                setConnectedWallet(await getWalletApi());
+            }
         }
     }
 
@@ -71,7 +67,7 @@ function App() {
             <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
             <div className='body'>
                 <Header connectedWallet={connectedWallet} connectWallet={connectWallet} toggleMenu={toggleMenu} toggleTheme={toggleTheme} />
-                <Page />
+                <Page connectedWallet={connectedWallet} />
             </div>
         </div>
     );

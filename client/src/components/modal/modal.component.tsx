@@ -40,7 +40,7 @@ function ModalComponent({ modalVisible, setModalVisible, modalText, modalType }:
                         {modalText}
                     </div>
                     <div className='modal-buttons'>
-                        <button className="button is-background is-small" onClick={hideModal}>Ok</button>
+                        <button className="tosi-button button is-small" onClick={hideModal}>Ok</button>
                     </div>
                 </div>
             </div>

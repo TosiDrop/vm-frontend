@@ -1,6 +1,6 @@
 // export default null;
 class Loader {
-    _wasm: any;
+    _wasm: typeof import("@emurgo/cardano-serialization-lib-asmjs") | undefined;
 
     async load() {
         if (this._wasm) return;

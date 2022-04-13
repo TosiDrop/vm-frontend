@@ -5,7 +5,7 @@ export interface ModalComponentProps {
     modalVisible: boolean;
     setModalVisible: any;
     connectedWallet: WalletApi | undefined;
-    connectWallet: (walletKey: WalletKeys) => void;
+    connectWallet: (walletKey?: WalletKeys) => void;
 }
 
 function WalletSelectorModalComponent({ modalVisible, setModalVisible, connectedWallet, connectWallet }: ModalComponentProps) {
@@ -34,7 +34,7 @@ function WalletSelectorModalComponent({ modalVisible, setModalVisible, connected
                                     const walletKey = key as WalletKeys;
                                     return (
                                         <div className={'wallet-modal-body-row' + (window.cardano[key] ? '' : ' hidden')} onClick={() => connectWallet(walletKey)}>
-                                            <p>{key}</p>
+                                            <p>{key.charAt(0).toUpperCase() + key.slice(1)}</p>
                                             <img src={window.cardano[key].icon} alt='wallet'></img>
                                         </div>
                                     );

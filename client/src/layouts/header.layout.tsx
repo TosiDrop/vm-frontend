@@ -9,7 +9,7 @@ import './header.layout.scss';
 interface Params {
     toggleMenu: () => void;
     toggleTheme: () => void;
-    connectWallet: (walletKey: WalletKeys) => void;
+    connectWallet: (walletKey?: WalletKeys) => void;
     connectedWallet: WalletApi | undefined;
 }
 function Header({ toggleMenu, toggleTheme, connectWallet, connectedWallet }: Params) {

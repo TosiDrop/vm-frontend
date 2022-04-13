@@ -2,12 +2,12 @@ import './type-buttons.component.scss';
 
 function TypeButtonsComponent() {
     return <div className='type-buttons'>
-        <button className="claim button is-selected">
+        <div className="claim is-selected">
             Claim
-        </button>
-        <button className="airdrop button">
+        </div>
+        <div className="airdrop">
             Airdrop
-        </button>
+        </div>
     </div>
 }
 

@@ -1,7 +1,7 @@
 .modal {
     .modal-content {
         max-width: 450px;
-        
+
         .box {
             display: flex;
             flex-direction: column;
@@ -14,10 +14,13 @@
                 .wallet-text-content { 
                     flex: 1;
                     font-size: 16px;
+                    color: var(--font-highlight);
                 }
     
                 .wallet-modal-buttons {    
                     .is-wallet-background {
+                        color: var(--font-highlight);
+                        background-color: var(--primary);
                         border: 0;
                     }
                 }
@@ -35,7 +38,7 @@
                     cursor: pointer;
                     border-radius: 7px;
                     border-bottom: 1px solid var(--font-inactive-color);
-
+                    color: var(--font-highlight);
 
                     &:first-child {
                         border-radius: 7px 7px 0px 0px;

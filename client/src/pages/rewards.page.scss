@@ -210,6 +210,10 @@
                 font-family: $avenir-font-light;
             }
 
+            button {
+                min-width: 150px;
+            }
+
             .complete-send-info {
                 font-family: $avenir-font-light;
                 color: var(--font-warn);
@@ -232,6 +236,15 @@
             display: flex;
             flex-direction: row;
 
+            &.small-body {
+                border-bottom: 0px;
+                padding: 0px 16px;
+            }
+
+            &.small-body-last {
+                padding: 0px 16px;
+            }
+
             div:first-child {
                 flex: 6;
             }
@@ -239,7 +252,7 @@
             div:last-child {
                 flex: inherit;
                 font-family: $avenir-font-light;
-                width: 80px;
+                width: 110px;
             }
         }
 

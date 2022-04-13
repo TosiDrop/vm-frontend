@@ -3,17 +3,25 @@
 .type-buttons {
     background-color: var(--primary);
     padding: 5px;
-    border-radius: 15px;
+    border-radius: 8px;
     height: 45px;
+    display: flex;
 
-    .button {
+    div {
         width: 100px;
         height: 35px;
-        border-radius: 10px;
-        background-color: var(--primary);
+        border-radius: 6px;
         border: 0px;
         color: var(--font-inactive-color);
         font-weight: 500;
+        cursor: pointer;
+        justify-content: center;
+        padding-bottom: calc(0.5em - 1px);
+        padding-left: 1em;
+        padding-right: 1em;
+        padding-top: calc(0.5em - 1px);
+        text-align: center;
+        white-space: nowrap;
 
         &.is-selected {
             background: var(--gradient-button-default);
@@ -22,8 +30,7 @@
         }
         
         &:not(.is-selected):hover {
-            background: var(--gradient-button-hover-default);
-            background: var(--gradient-button-hover);
+            background: var(--primary-hover);
             color: var(--font-highlight);
         }
     }
