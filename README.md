@@ -9,7 +9,8 @@ for the frontend, and a React UI which is built into static assets.
 This is intended for use via Docker.
 
 Within this repository is an Ansible playbook to install Docker on the local
-machine and run the containers.
+machine and run the containers. You can disable installing Docker by setting
+`MANAGE_DOCKER=false` in `.env`.
 
 ## Usage
 

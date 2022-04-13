@@ -24,6 +24,7 @@
           log-driver: "local"
       tags:
         - always
+      when: "{{ MANAGE_DOCKER | default('true') }} == 'true'"
 
     - name: nodePlaybook | include vm_frontend role
       include_role:
