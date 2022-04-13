@@ -9,6 +9,7 @@
         cache_valid_time: '{{ 60 * 60 * 24 }}'
       tags:
         - always
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
     - name: nodePlaybook | Include geerlingguy.docker role
       include_role:
