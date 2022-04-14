@@ -2,6 +2,8 @@
 - hosts: all
   gather_facts: true
   become: true
+  vars:
+    manage_docker: "{{ MANAGE_DOCKER | default('true') }}"
   tasks:
     - name: nodePlaybook | Update apt cache
       apt:
@@ -25,7 +27,7 @@
           log-driver: "local"
       tags:
         - always
-      when: "{{ MANAGE_DOCKER | default('true') }} == 'true'"
+      when: manage_docker | bool
 
     - name: nodePlaybook | include vm_frontend role
       include_role:
