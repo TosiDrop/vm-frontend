@@ -71,3 +71,11 @@ ansible-playbook ${__repo}/ansible/local.yml \
 	--diff \
 	-c local \
 	--inventory 127.0.0.1, # this trailing comma is required
+
+# Don't fail on errors, we're going to clean container images, there may be none
+set +e
+# Find images from our repo tagged as <none> (orphaned layers)
+echo "Cleaning up leftover Docker images"
+docker images | grep '<none>' | grep 'ghcr.io/tosidrop/vm-frontend' | awk '{print $3}' | xargs docker rmi
+# Don't exit w/ 1 if above fails
+exit 0
