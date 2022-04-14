@@ -52,15 +52,21 @@ async function getFromVM<T>(params: any, cacheKey?: any, timeout?: any) {
         let cachedResult = await redisClient.get('vm:' + cacheKey)
         if (cachedResult) {
 	    console.log("DEBUG: cachedResult = " + cachedResult);
-	    // return cachedResult;
+	    // return JSON.parse(cachedResult);
 	};
         // Cache miss, hit the API
-        console.log("DEBUG: cache miss for cacheKey=" + cacheKey);
-    };
-    console.log("DEBUG: hitting VM API");
-    let data = await axios.get<T>(`${VM_URL}/api.php?token=${VM_API_TOKEN}&action=${params}`);
-    console.log("DEBUG: VM result = " + JSON.stringify(data.data));
-    if (cacheKey) {
+	//console.log("DEBUG: cache miss for cacheKey=" + cacheKey);
+
+        console.log("DEBUG: hitting VM API");
+        let data = await axios.get<T>(`${VM_URL}/api.php?token=${VM_API_TOKEN}&action=${params}`);
+        console.log("DEBUG: VM result = " + JSON.stringify(data.data));
+
+        console.log("DEBUG: comparing VM to cache");
+        if (cachedResult && JSON.parse(cachedResult) == data.data) {
+            console.log("DEBUG: VM data and cache data match");
+        } else {
+            console.log("DEBUG: RAW VM data and JSON.parse'd cache data do NOT match");
+        };
         let cacheTimeout = 60;
         if (timeout) {
             cacheTimeout = timeout;
@@ -69,8 +75,13 @@ async function getFromVM<T>(params: any, cacheKey?: any, timeout?: any) {
         // Cache result
         console.log("DEBUG: adding data to cache for cacheKey=" + cacheKey);
         await redisClient.set('vm:' + cacheKey, JSON.stringify(data.data));
-	await redisClient.disconnect();
+        await redisClient.expire('vm:' + cacheKey, cacheTimeout);
+        await redisClient.disconnect();
+        return data.data
     }
+    console.log("DEBUG: hitting VM API");
+    let data = await axios.get<T>(`${VM_URL}/api.php?token=${VM_API_TOKEN}&action=${params}`);
+    console.log("DEBUG: VM result = " + JSON.stringify(data.data));
     return data.data;
 }
 
