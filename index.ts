@@ -2,6 +2,7 @@ import express from "express";
 import url from 'url';
 import axios from 'axios';
 import cors from 'cors';
+import { createClient } from '@node-redis/client';
 import { AccountInfo, PoolInfo } from './client/src/entities/koios.entities'
 import { ClaimableToken, GetRewards, GetTokens, SanitizeAddress } from './client/src/entities/vm.entities'
 import { ExtendedMetadata, Metadata } from './client/src/entities/common.entities'
@@ -10,11 +11,19 @@ require('dotenv').config()
 
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const PORT = process.env.PORT || 3000;
-const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
-const REDIS_PORT = process.env.REDIS_PORT || 6379;
 const VM_API_TOKEN = process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
 const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
 const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
+
+const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
+const REDIS_PORT = process.env.REDIS_PORT || 6379;
+const redisUrl = 'redis://' + REDIS_HOST + ':' + REDIS_PORT;
+export const redisClient = createClient({
+    url:  redisUrl
+});
+export type RedisClientType = typeof redisClient;
+redisClient.on('error', (err) => console.error('ERROR: Unable to connect to Redis - ', err));
+redisClient.on('ready', () => console.log('Connected to Redis: ' + REDIS_HOST + ':' + REDIS_PORT));
 
 const app = express();
 app.use(cors());
@@ -24,14 +33,45 @@ const server = app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
 });
 
+process.on('SIGINT', () => {
+    server.close(() => {
+        console.log('Server shutting down')
+    })
+});
+
 process.on('SIGTERM', () => {
     server.close(() => {
         console.log('Server shutting down')
     })
 });
 
-async function getFromVM<T>(params: any) {
-    return (await axios.get<T>(`${VM_URL}/api.php?token=${VM_API_TOKEN}&action=${params}`)).data;
+async function getFromVM<T>(params: any, cacheKey?: any, timeout?: any) {
+    if (cacheKey) {
+        await redisClient.connect();
+        console.log("DEBUG: cacheKey = " + cacheKey);
+        let cachedResult = await redisClient.get('vm:' + cacheKey)
+        if (cachedResult) {
+	    console.log("DEBUG: cachedResult = " + cachedResult);
+	    // return cachedResult;
+	};
+        // Cache miss, hit the API
+        console.log("DEBUG: cache miss for cacheKey=" + cacheKey);
+    };
+    console.log("DEBUG: hitting VM API");
+    let data = await axios.get<T>(`${VM_URL}/api.php?token=${VM_API_TOKEN}&action=${params}`);
+    console.log("DEBUG: VM result = " + JSON.stringify(data.data));
+    if (cacheKey) {
+        let cacheTimeout = 60;
+        if (timeout) {
+            cacheTimeout = timeout;
+            console.log("DEBUG: timeout = " + cacheTimeout);
+        }
+        // Cache result
+        console.log("DEBUG: adding data to cache for cacheKey=" + cacheKey);
+        await redisClient.set('vm:' + cacheKey, JSON.stringify(data.data));
+	await redisClient.disconnect();
+    }
+    return data.data;
 }
 
 async function getExtendedMetadata(metadataUrl: string): Promise<ExtendedMetadata | undefined> {
@@ -68,7 +108,7 @@ async function postPoolInfo(pools: string[]) {
 }
 
 async function getTokens() {
-    return getFromVM<GetTokens>('get_tokens');
+    return getFromVM<GetTokens>('get_tokens', 'tokens', 600);
 }
 
 app.get("/health", (req: any, res: any) => {
