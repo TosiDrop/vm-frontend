@@ -8,11 +8,12 @@ import WalletApi from '../services/connectors/wallet.connector';
 
 interface Params {
     connectedWallet: WalletApi | undefined;
+    showModal: (text: string) => void;
 }
 
-function Page({ connectedWallet }: Params) {
+function Page({ connectedWallet, showModal }: Params) {
     return <Routes>
-        <Route path="/" element={<Rewards connectedWallet={connectedWallet} />} />
+        <Route path="/" element={<Rewards connectedWallet={connectedWallet} showModal={showModal} />} />
         <Route path="/history" element={<RewardsHistory />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/feedback" element={<Feedback />} />

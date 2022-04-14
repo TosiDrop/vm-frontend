@@ -203,14 +203,18 @@
 
             .qr-address {
                 width: 180px;
-                display: none;
+                height: 180px;
             }
 
             .complete-info {
                 font-family: $avenir-font-light;
             }
 
-            button {
+            .tosi-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
                 min-width: 150px;
             }
 

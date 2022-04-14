@@ -1,35 +1,42 @@
 .modal {
-    .box {
-        background-color: var(--primary);
+    .modal-content {
+        max-width: 450px;
 
-        .modal-icon {
+        .box {
+            background-color: var(--primary);
 
-            svg {
-                font-size: 30px;
-                display: block;
-                margin: auto;
+            .modal-icon {
+
+                svg {
+                    font-size: 30px;
+                    display: block;
+                    margin: auto;
+                    color: var(--font-highlight);
+                }
+            }
+
+            .text-content {
+                margin-top: 20px;
+                text-align: center;
                 color: var(--font-highlight);
             }
-        }
 
-        .text-content {
-            margin-top: 20px;
-            text-align: center;
-            color: var(--font-highlight);
-        }
+            .modal-buttons {
+                text-align: center;
+                margin-top: 20px;
 
-        .modal-buttons {
-            text-align: center;
-            margin-top: 20px;
+                .tosi-button {
+                    min-width: 80px;
+                }
+            }
 
-            .is-background {
-                background-color: var(--primary);
-                border: 0;
+            .modal-footer {
+                justify-content: center !important;
             }
         }
+    }
 
-        .modal-footer {
-            justify-content: center !important;
-        }
+    &.text-modal {
+        z-index: 50 !important;
     }
 }

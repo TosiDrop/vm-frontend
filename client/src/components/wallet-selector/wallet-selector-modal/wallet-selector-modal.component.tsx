@@ -15,7 +15,7 @@ function WalletSelectorModalComponent({ modalVisible, setModalVisible, connected
     }
 
     return (
-        <div className={'modal' + (modalVisible ? ' is-active' : '')}>
+        <div className={'wallet-modal modal' + (modalVisible ? ' is-active' : '')}>
             <div className="modal-background"></div>
             <div className="modal-content">
                 <div className='box'>

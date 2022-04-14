@@ -145,7 +145,7 @@ app.get("/getrewards", async (req: any, res: any) => {
                 }
                 res.send(getRewardsResponse);
             } else {
-                res.send({ error: 'Address not found' });
+                res.sendStatus(404);
             }
         }).catch(error => {
             res.send(error);

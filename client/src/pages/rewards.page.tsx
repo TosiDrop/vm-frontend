@@ -1,27 +1,25 @@
 import { faXmark, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState, KeyboardEvent } from 'react';
-import ModalComponent, { ModalTypes } from '../components/modal/modal.component';
 import { ClaimableToken, GetRewards } from '../entities/vm.entities';
 import { getRewards } from '../services/http.services';
 import { copyContent, formatTokens, getNameFromHex, truncAmount } from '../services/utils.services';
 import { HashLoader } from 'react-spinners';
 import { PaymentStatus } from '../entities/common.entities';
-import './rewards.page.scss';
 import WalletApi from '../services/connectors/wallet.connector';
+import './rewards.page.scss';
 
 interface Params {
     connectedWallet: WalletApi | undefined;
+    showModal: (text: string) => void;
 }
 
-function Rewards({ connectedWallet }: Params) {
-    const [modalVisible, setModalVisible] = useState(false);
+function Rewards({ connectedWallet, showModal }: Params) {
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
     const [hideSendAdaInfo, setHideSendAdaInfo] = useState(true);
     const [rewards, setRewards] = useState<GetRewards>();
     const [searchAddress, setSearchAddress] = useState<string>();
-    const [modalText, setModalText] = useState<string>('');
     const [loadingRewards, setLoadingRewards] = useState(false);
     const [checkedState, setCheckedState] = useState(new Array<boolean>());
     const [checkedCount, setCheckedCount] = useState(0);
@@ -29,6 +27,7 @@ function Rewards({ connectedWallet }: Params) {
     const [aproxReturn, setAproxReturn] = useState(0);
     const [paymentStatus] = useState(PaymentStatus.Awaiting);
     const [showTooltip, setShowTooltip] = useState(false);
+    const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
 
     const handleOnChange = (position: number) => {
         const updatedCheckedState = checkedState.map((item, index) =>
@@ -46,15 +45,21 @@ function Rewards({ connectedWallet }: Params) {
         if (searchAddress) {
             setLoadingRewards(true);
             // TODO: Catch errors and show message
-            const rewards = await getRewards(searchAddress);
+            try {
+                const rewards = await getRewards(searchAddress);
 
-            if (rewards && Object.keys(rewards.consolidated_promises).length) {
-                setRewards(rewards);
-                setLoadingRewards(false);
-            } else {
-                setModalText('No rewards found for the account');
-                setModalVisible(true);
-                setLoadingRewards(false);
+                if (rewards && Object.keys(rewards.consolidated_promises).length) {
+                    setRewards(rewards);
+                    setLoadingRewards(false);
+                } else {
+                    showModal('No rewards found for the account.');
+                    setLoadingRewards(false);
+                }
+            } catch (ex: any) {
+                if (ex?.response?.status === 404) {
+                    showModal('Account not found.');
+                    setLoadingRewards(false);
+                }
             }
         }
     }
@@ -79,7 +84,12 @@ function Rewards({ connectedWallet }: Params) {
     const sendADA = async () => {
         // TODO: Check that searched stake address === connected wallet stake address
         if (rewards) {
-            connectedWallet?.transferAda(rewards.vending_address, adaToSend.toString())
+            setSendAdaSpinner(true);
+            const txHash = await connectedWallet?.transferAda(rewards.vending_address, adaToSend.toString());
+            setSendAdaSpinner(false);
+            if (txHash) {
+                showModal(txHash);
+            }
         }
     }
 
@@ -166,12 +176,17 @@ function Rewards({ connectedWallet }: Params) {
 
     return (
         <div className='rewards'>
-            {<ModalComponent modalVisible={modalVisible} setModalVisible={setModalVisible} modalText={modalText} modalType={ModalTypes.info} />}
             <h1>Claim your rewards</h1>
 
             <div className={'content-reward check' + (hideCheck ? ' hidden' : '')}>
                 <p>Enter your wallet/stake address or $handle to view your rewards</p>
-                <input className='transparent-input' type="text" value={searchAddress} onInput={(e: KeyboardEvent<HTMLInputElement>) => setSearchAddress((e.target as HTMLInputElement).value)}></input>
+                <input
+                    className='transparent-input'
+                    type="text"
+                    value={searchAddress}
+                    onInput={(e: KeyboardEvent<HTMLInputElement>) => setSearchAddress((e.target as HTMLInputElement).value)}
+                    disabled={!hideStakingInfo}
+                ></input>
                 <div className='content-button'>
                     <button className='tosi-button' disabled={!hideStakingInfo} onClick={checkRewards}>Check my rewards</button>
                     <button className={'tosi-cancel-button' + (hideStakingInfo ? ' hidden' : '')} onClick={backRewards}>
@@ -242,9 +257,12 @@ function Rewards({ connectedWallet }: Params) {
                         </div>
                         <input className='transparent-input' type="text" disabled={true} value={rewards?.vending_address} />
                     </div>
-                    <img className='qr-address' alt='' src='https://www.business2community.com/wp-content/uploads/2012/04/Picture-21.png' />
+                    <img className='qr-address' alt='' src={'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + rewards?.vending_address} />
                     <div className='complete-info'>Complete the withdrawal process by sending <b>{formatTokens(adaToSend.toString(), 6, 1)} ADA</b> to the above address</div>
-                    <button className='tosi-button' onClick={sendADA}>Send ADA</button>
+                    <button className='tosi-button' onClick={sendADA}>
+                        Send ADA
+                        <HashLoader color='#73badd' loading={sendAdaSpinner} size={25} />
+                    </button>
                     <div className='complete-send-info'><small>Please only send {formatTokens(adaToSend.toString(), 6, 1)} ADA. Any other amount will be considered an error and refunded in aproximately 72 hours</small></div>
                 </div>
 

@@ -85,8 +85,8 @@ class WalletApi {
         if (!await this.isEnabled()) {
             try {
                 return await window.cardano[WalletKeys[walletKey]].enable();
-            } catch (error) {
-                throw error;
+            } catch (error: any) {
+                return (error.message || error.info) as string;
             }
         }
     }
@@ -244,9 +244,15 @@ class WalletApi {
                 txBuilder.build(),
                 this.serialLib.TransactionWitnessSet.new()
             );
-            const witness = await account.signTx(
-                Buffer.from(transaction.to_bytes(), "hex").toString("hex")
-            );
+
+            let witness;
+            try {
+                witness = await account.signTx(
+                    Buffer.from(transaction.to_bytes(), "hex").toString("hex")
+                );
+            } catch (error: any) {
+                return (error.message || error.info) as string;
+            }
 
             const signedTx = this.serialLib.Transaction.new(
                 txBody,
@@ -257,7 +263,10 @@ class WalletApi {
             const txHash = await account.submitTx(
                 Buffer.from(signedTx.to_bytes()).toString("hex")
             );
+
+            return txHash;
         }
+        return undefined;
     }
 
     async getUtxos(utxos: any[]) {

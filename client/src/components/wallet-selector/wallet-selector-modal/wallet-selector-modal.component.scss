@@ -1,72 +1,69 @@
-.modal {
-    .modal-content {
-        max-width: 450px;
+.wallet-modal {
+    .box {
+        display: flex;
+        flex-direction: column;
 
-        .box {
+        .wallet-modal-head {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
 
-            .wallet-modal-head {
-                display: flex;
-                align-items: center;
-                margin-bottom: 20px;
-    
-                .wallet-text-content { 
-                    flex: 1;
-                    font-size: 16px;
-                    color: var(--font-highlight);
-                }
-    
-                .wallet-modal-buttons {    
-                    .is-wallet-background {
-                        color: var(--font-highlight);
-                        background-color: var(--primary);
-                        border: 0;
-                    }
-                }
+            .wallet-text-content {
+                flex: 1;
+                font-size: 16px;
+                color: var(--font-highlight);
             }
 
-            .wallet-modal-body {
-                border: 1px solid var(--font-inactive-color);
-                border-radius: 8px;
-
-                .wallet-modal-body-row {
-                    display: flex;
-                    align-items: center;
-                    height: 50px;
-                    padding: 10px;
-                    cursor: pointer;
-                    border-radius: 7px;
-                    border-bottom: 1px solid var(--font-inactive-color);
+            .wallet-modal-buttons {
+                .is-wallet-background {
                     color: var(--font-highlight);
+                    background-color: var(--primary);
+                    border: 0;
+                }
+            }
+        }
 
-                    &:first-child {
-                        border-radius: 7px 7px 0px 0px;
-                    }
+        .wallet-modal-body {
+            border: 1px solid var(--font-inactive-color);
+            border-radius: 8px;
 
-                    &:last-child {
-                        border-bottom: 0;
-                        border-radius: 0px 0px 7px 7px;
-                    }
+            .wallet-modal-body-row {
+                display: flex;
+                align-items: center;
+                height: 50px;
+                padding: 10px;
+                cursor: pointer;
+                border-radius: 7px;
+                border-bottom: 1px solid var(--font-inactive-color);
+                color: var(--font-highlight);
 
-                    &:hover {
-                        background-color: var(--tooltip-background);
-                        color: var(--font-highlight);
-                    }
+                &:first-child {
+                    border-radius: 7px 7px 0px 0px;
+                }
 
-                    &.hidden {
-                        display: none;
-                    }
+                &:last-child {
+                    border-bottom: 0;
+                    border-radius: 0px 0px 7px 7px;
+                }
 
-                    p {
-                        padding-left: 10px;
-                        flex: 1;
-                    }
+                &:hover {
+                    background-color: var(--tooltip-background);
+                    color: var(--tooltip-font-color);
+                    font-weight: 600;
+                }
 
-                    img {
-                        width: 40px;
-                        height: 40px;
-                    }
+                &.hidden {
+                    display: none;
+                }
+
+                p {
+                    padding-left: 10px;
+                    flex: 1;
+                }
+
+                img {
+                    width: 40px;
+                    height: 40px;
                 }
             }
         }
