@@ -172,7 +172,7 @@ function Rewards({ connectedWallet, showModal }: Params) {
         }
 
         init();
-    }, [connectedWallet?.wallet?.api]);
+    }, [connectedWallet?.wallet?.api, connectedWallet]);
 
     return (
         <div className='rewards'>
