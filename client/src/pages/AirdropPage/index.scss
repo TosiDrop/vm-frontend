@@ -5,8 +5,6 @@
     flex: 1;
     padding-top: 20px;
     color: var(--font-highlight);
-    // width: 100%;
-    // max-width: 600px;
 
     & > * {
         margin-bottom: 20px;
@@ -56,17 +54,22 @@
         padding: 10px;
         background: var(--gradient-button);
         color: inherit;
-        flex: 1;
-        margin-left: 5px;
+        text-align: center;
     }
 
     &__button-airdrop {
         margin-left: 50%;
         transform: translateX(-50%);
+        font-family: inherit;
     }
 
     &__select {
         display: flex;
+        label {
+            flex: 1;
+            margin-left: 5px;
+            cursor: pointer;
+        }
     }
 
     &__detail-row {
@@ -76,9 +79,28 @@
     &__address-list {
         overflow: auto;
         height: 200px;
-        & > div {
-            border-bottom: 1px solid var(--font-highlight);
-            padding: 5px 0;
+    }
+
+    &__address-list-address {
+        border-bottom: 1px solid var(--font-highlight);
+        padding: 5px 0;
+    }
+
+    &__address-list-header {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        margin-bottom: 10px;
+
+        & > h1 {
+            margin-bottom: 0;
+        }
+
+        & > span {
+            margin-left: 10px;
+            font-style: italic;
+            font-size: 0.8rem;
+            opacity: 0.8;
         }
     }
 }

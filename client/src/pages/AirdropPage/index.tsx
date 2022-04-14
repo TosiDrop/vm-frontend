@@ -7,7 +7,7 @@ import "./index.scss";
 const CLASS = "airdrop-page";
 
 const Airdrop = () => {
-    const { addressList, setAddressList } = useAddressList();
+    const { addressList, setAddressList, shortenAddr } = useAddressList();
     const { fileRef, parseFile } = useFile({ setAddressList });
 
     return (
@@ -35,15 +35,23 @@ const Airdrop = () => {
                     onChange={() => parseFile()}
                     hidden
                 />
-                <label htmlFor="file-upload">Upload Addresses</label>
+                <label className={`${CLASS}__button`} htmlFor="file-upload">
+                    Upload Addresses
+                </label>
             </div>
             {addressList.length ? (
                 <div className={`${CLASS}__content ${CLASS}__address-list`}>
-                    <h1>Address List</h1>
-                    {addressList.map((addr: AirdropAddress) => {
+                    <div className={`${CLASS}__address-list-header`}>
+                        <h1>Address List</h1>
+                        <span>{addressList.length} address added</span>
+                    </div>
+                    {addressList.map((addr: AirdropAddress, i: number) => {
                         return (
-                            <div>
-                                {addr.address}: {addr.amount}
+                            <div
+                                key={i}
+                                className={`${CLASS}__address-list-address`}
+                            >
+                                {shortenAddr(addr.address)}: {addr.amount}
                             </div>
                         );
                     })}
