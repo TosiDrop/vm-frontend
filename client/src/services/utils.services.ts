@@ -37,3 +37,7 @@ export function copyContent(content_txt: string) {
     document.execCommand('copy');
     document.body.removeChild(selBox);
 }
+
+export function abbreviateAddress(address: string, start = 7, end = 4): string {
+    return address.substring(0, start) + '...' + address.substring(address.length - end)
+}

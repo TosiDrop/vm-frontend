@@ -38,6 +38,11 @@ html, body, #root, .body {
     font-weight: 600;
     font-size: 15px;
     cursor: pointer;
+
+    &:hover {
+        background: var(--gradient-button-hover-default);
+        background: var(--gradient-button-hover);
+    }
     
     &:disabled {
         background: var(--gradient-button-disabled) !important;

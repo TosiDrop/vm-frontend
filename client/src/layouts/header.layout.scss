@@ -39,6 +39,10 @@ $slide-bg: #030b13;
         }
     }
 
+    .header-wallet-selector {
+        margin-right: 10px;
+    }
+
     .last {
         text-align: end;
         display: flex;
@@ -49,6 +53,11 @@ $slide-bg: #030b13;
             color: var(--font-highlight);
             background-color: var(--primary);
             border: 0;
+
+            &:hover {
+                background: var(--primary-hover);
+                color: var(--font-highlight);
+            }
         }
     }
 }
@@ -71,6 +80,10 @@ $slide-bg: #030b13;
 
             .header-filler {
                 order: 2;
+            }
+
+            .header-wallet-selector {
+                display: none;
             }
     
             .logo-container {
