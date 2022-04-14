@@ -1,4 +1,4 @@
-import { faL, faLinkSlash } from '@fortawesome/free-solid-svg-icons';
+import { faLinkSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import WalletApi, { WalletKeys } from '../../services/connectors/wallet.connector';
@@ -37,7 +37,7 @@ function WalletSelectorComponent({ connectedWallet, connectWallet }: Params) {
         }
 
         init();
-    }, [connectedWallet?.wallet?.api]);
+    }, [connectedWallet?.wallet?.api, connectedWallet]);
 
     const Connected = () => (
         <div className="wallet-connected" onClick={() => toggleWalletMenuVisible()}>
