@@ -45,3 +45,8 @@ export interface Itn {
 export interface MyPoolIDS {
     [key: string]: string;
 }
+
+export interface AirdropAddress {
+    address: string;
+    amount: number;
+}
