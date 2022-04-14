@@ -1,11 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import "./type-buttons.component.scss";
 
-enum TypeButton {
-    claim = "claim",
-    airdrop = "airdrop",
-}
-
 function TypeButtonsComponent() {
     let location = useLocation().pathname;
     return (
