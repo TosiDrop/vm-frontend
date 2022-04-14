@@ -38,6 +38,8 @@ function WalletSelectorModalComponent({ modalVisible, setModalVisible, connected
                                             <img src={window.cardano[key].icon} alt='wallet'></img>
                                         </div>
                                     );
+                                } else {
+                                    return null;
                                 }
                             })
                         }
