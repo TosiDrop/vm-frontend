@@ -1,11 +1,14 @@
 import { Dropdown } from "react-bootstrap";
 import useAddressList from "./useAddressList";
+import useFile from "./useFile";
+import { AirdropAddress } from "src/entities/common.entities";
 import "./index.scss";
 
 const CLASS = "airdrop-page";
 
 const Airdrop = () => {
-    const { addressList } = useAddressList();
+    const { addressList, setAddressList } = useAddressList();
+    const { fileRef, parseFile } = useFile({ setAddressList });
 
     return (
         <div className={CLASS}>
@@ -24,18 +27,28 @@ const Airdrop = () => {
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
-                <button className={`${CLASS}__button`}>Add Addresses</button>
+                <input
+                    ref={fileRef}
+                    id="file-upload"
+                    type="file"
+                    accept=".csv"
+                    onChange={() => parseFile()}
+                    hidden
+                />
+                <label htmlFor="file-upload">Upload Addresses</label>
             </div>
-            <div className={`${CLASS}__content ${CLASS}__address-list`}>
-                <h1>Address List</h1>
-                {addressList.map((addr) => {
-                    return (
-                        <div>
-                            {addr.address}: {addr.amount}
-                        </div>
-                    );
-                })}
-            </div>
+            {addressList.length ? (
+                <div className={`${CLASS}__content ${CLASS}__address-list`}>
+                    <h1>Address List</h1>
+                    {addressList.map((addr: AirdropAddress) => {
+                        return (
+                            <div>
+                                {addr.address}: {addr.amount}
+                            </div>
+                        );
+                    })}
+                </div>
+            ) : null}
             <div className={`${CLASS}__content ${CLASS}__info`}>
                 <h1>Airdrop Breakdown</h1>
                 <div className={`${CLASS}__detail-row`}>Total token</div>
