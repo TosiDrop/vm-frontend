@@ -230,9 +230,7 @@ class WalletApi {
 
             // create TransactionUnspentOutputs for 'add_inputs_from' function
             const utxoOutputs = this.serialLib.TransactionUnspentOutputs.new();
-            utxosFromWalletConnector.map((currentUtxo) => {
-                utxoOutputs.add(currentUtxo);
-            });
+            utxosFromWalletConnector.map((currentUtxo) => utxoOutputs.add(currentUtxo));
 
             // inputs with coin selection
             // 0 for LargestFirst, 1 RandomImprove 2,3 Mutli asset
@@ -646,16 +644,6 @@ class WalletApi {
         }
     }
 
-}
-//////////////////////////////////////////////////
-//Auxiliary
-
-function HexToBuffer(string: WithImplicitCoercion<string> | { [Symbol.toPrimitive](hint: "string"): string; }) {
-    return Buffer.from(string, "hex")
-}
-
-function HexToAscii(string: string) {
-    return HexToBuffer(string).toString("ascii")
 }
 
 export default WalletApi;
