@@ -4,6 +4,7 @@ import Dashboard from '../pages/dashboard';
 import Rewards from '../pages/rewards.page';
 import RewardsHistory from '../pages/rewards-history';
 import Feedback from '../pages/feedback';
+import AirdropPage from '../pages/AirdropPage';
 import WalletApi from '../services/connectors/wallet.connector';
 
 interface Params {
@@ -17,6 +18,7 @@ function Page({ connectedWallet, showModal }: Params) {
         <Route path="/history" element={<RewardsHistory />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/feedback" element={<Feedback />} />
+        <Route path="/airdrop" element={<AirdropPage />} />
     </Routes>
 }
 
