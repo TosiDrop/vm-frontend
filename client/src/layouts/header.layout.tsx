@@ -3,7 +3,7 @@ import { faBars, faSun } from '@fortawesome/free-solid-svg-icons';
 import TypeButtonsComponent from '../components/type-buttons/type-buttons.component';
 import WalletSelectorComponent from '../components/wallet-selector/wallet-selector.component';
 import WalletApi, { WalletKeys } from '../services/connectors/wallet.connector';
-import logo from '../assets/logo.png';
+import logo from '../assets/aneta_tosi_logo.png';
 import './header.layout.scss';
 
 interface Params {
@@ -19,7 +19,7 @@ function Header({ toggleMenu, toggleTheme, connectWallet, connectedWallet }: Par
             <div className='logo-container'>
                 <img src={logo} className="logo" alt=''></img>
             </div>
-            <p className='title-text'>Tosidrop</p>
+            <p className='title-text'>TosiDrop</p>
             <div className='header-type-buttons'>
                 <TypeButtonsComponent />
             </div>

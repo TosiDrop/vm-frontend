@@ -1,32 +1,22 @@
-import { Dropdown } from "react-bootstrap";
-import useAddressList from "./useAddressList";
-import useFile from "./useFile";
+import useAddressList from "./hooks/useAddressList";
+import useFile from "./hooks/useFile";
 import { AirdropAddress } from "src/entities/common.entities";
 import "./index.scss";
+import useToken from "./hooks/useToken";
+import Select from "./components/Select";
 
 const CLASS = "airdrop-page";
 
 const Airdrop = () => {
     const { addressList, setAddressList, shortenAddr } = useAddressList();
     const { fileRef, parseFile } = useFile({ setAddressList });
+    const { tokens, selectedToken, setSelectedToken } = useToken();
 
     return (
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             <div className={`${CLASS}__content ${CLASS}__select`}>
-                <Dropdown className={`${CLASS}__dropdown`}>
-                    <Dropdown.Toggle>Select Token</Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                            Another action
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                            Something else
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                <Select></Select>
                 <input
                     ref={fileRef}
                     id="file-upload"
