@@ -1,9 +1,9 @@
-import { Dropdown } from "react-bootstrap";
 import useAddressList from "./hooks/useAddressList";
 import useFile from "./hooks/useFile";
 import { AirdropAddress } from "src/entities/common.entities";
 import "./index.scss";
 import useToken from "./hooks/useToken";
+import Select from "./components/Select";
 
 const CLASS = "airdrop-page";
 
@@ -16,14 +16,7 @@ const Airdrop = () => {
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             <div className={`${CLASS}__content ${CLASS}__select`}>
-                <Dropdown className={`${CLASS}__dropdown`}>
-                    {
-                        tokens.map(token => (
-                            <Dropdown.Item>{token.ticker}</Dropdown.Item>
-                        ))
-                    }
-                    <Dropdown.Toggle>Select Token</Dropdown.Toggle>
-                </Dropdown>
+                <Select></Select>
                 <input
                     ref={fileRef}
                     id="file-upload"
