@@ -15,6 +15,7 @@
   docker_container:
     name: vm-frontend
     env:
+      NODE_ENV: 'production'
       PORT: '{{ vm_frontend_port | string }}'
       REDIS_ENABLED: '{{ redis_enabled | string }}'
       REDIS_HOST: '172.17.0.1'
