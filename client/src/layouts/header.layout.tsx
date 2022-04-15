@@ -3,7 +3,7 @@ import { faBars, faSun } from '@fortawesome/free-solid-svg-icons';
 import TypeButtonsComponent from '../components/type-buttons/type-buttons.component';
 import WalletSelectorComponent from '../components/wallet-selector/wallet-selector.component';
 import WalletApi, { WalletKeys } from '../services/connectors/wallet.connector';
-import logo from '../assets/aneta_tosi_logo.png';
+import logo from '../assets/tosidrop_logo.png';
 import './header.layout.scss';
 
 interface Params {
