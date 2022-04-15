@@ -1,14 +1,28 @@
-import './type-buttons.component.scss';
+import { Link, useLocation } from "react-router-dom";
+import "./type-buttons.component.scss";
 
 function TypeButtonsComponent() {
-    return <div className='type-buttons'>
-        <div className="claim is-selected">
-            Claim
+    let location = useLocation().pathname;
+    return (
+        <div className="type-buttons">
+            <Link to="/">
+                <div
+                    className={`claim ${location === "/" ? "is-selected" : ""}`}
+                >
+                    Claim
+                </div>
+            </Link>
+            <Link to="/airdrop">
+                <div
+                    className={`airdrop ${
+                        location === "/airdrop" ? "is-selected" : ""
+                    }`}
+                >
+                    Airdrop
+                </div>
+            </Link>
         </div>
-        <div className="airdrop">
-            Airdrop
-        </div>
-    </div>
+    );
 }
 
 export default TypeButtonsComponent;
