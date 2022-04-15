@@ -30,6 +30,7 @@
         flex: 1;
         margin-right: 5px;
         .btn-primary {
+            font-family: inherit;
             font-size: 1rem;
             color: inherit;
             box-shadow: unset !important;
@@ -61,6 +62,9 @@
         margin-left: 50%;
         transform: translateX(-50%);
         font-family: inherit;
+        box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.13);
+        padding-left: 30px;
+        padding-right: 30px;
     }
 
     &__select {
