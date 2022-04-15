@@ -8,6 +8,7 @@ import { ExtendedMetadata, Metadata } from './client/src/entities/common.entitie
 import { formatTokens } from './client/src/services/utils.services'
 require('dotenv').config()
 
+const CARDANO_NETWORK = process.env.CARDANO_NETWORK || 'testnet';
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const PORT = process.env.PORT || 3000;
 const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
@@ -95,6 +96,12 @@ app.get("/healthz", async (req: any, res: any) => {
             status: "UP"
         })
     }
+});
+
+app.get("/network", (req: any, res: any) => {
+    res.status(200).json({
+        network: CARDANO_NETWORK
+    })
 });
 
 app.get("/sanitizeaddr", async (req: any, res: any) => {
