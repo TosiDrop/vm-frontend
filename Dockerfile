@@ -6,4 +6,4 @@ COPY . .
 
 RUN npm run build
 RUN npm run build-client
-CMD ["npm", "run", "start"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
