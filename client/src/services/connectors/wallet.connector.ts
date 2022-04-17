@@ -42,9 +42,7 @@ export interface CIP0030API {
     getRewardAddresses: () => Promise<Address[]>,
     getNetworkId: () => Promise<number>,
     experimental?: {
-        on: () => void,
-        off: () => void,
-        getCollateral: () => () => void,
+        [key: string]: any
     }
 }
 
@@ -58,7 +56,6 @@ export interface CIP0030Wallet {
     apiVersion: string;
     name: string;
     icon: string;
-    experimental: any;
     api: CIP0030API;
 }
 
@@ -595,6 +592,7 @@ class WalletApi {
     //     return txhash
     // }
 
+    // TODO: Change to koios
     async _getProtocolParameter(networkId: number) {
         let result = await this._blockfrostRequest({
             endpoint: `/epochs/latest/parameters`,

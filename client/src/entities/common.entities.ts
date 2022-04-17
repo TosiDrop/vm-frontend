@@ -1,5 +1,7 @@
 export enum PaymentStatus {
     Awaiting,
+    AwaitingConfirmations,
+    Sent,
     Completed
 }
 
@@ -64,4 +66,15 @@ export interface Token {
     policyId: string;
     nameHex: string;
     addressContainingToken: AdaAddress[];
+}
+
+export interface TokenTransactionHashRequest {
+    address: string;
+    afterBlock: number;
+    tokens: TokenTransactionHashRequestTokens[];
+}
+
+export interface TokenTransactionHashRequestTokens {
+    policyId: string;
+    quantity: string;
 }
