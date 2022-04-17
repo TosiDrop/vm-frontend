@@ -1,5 +1,7 @@
 export enum PaymentStatus {
     Awaiting,
+    AwaitingConfirmations,
+    Sent,
     Completed
 }
 
@@ -50,3 +52,32 @@ export interface AirdropAddress {
     address: string;
     amount: number;
 }
+<<<<<<< HEAD
+=======
+
+export interface AdaAddress {
+    address: string;
+    adaAmount?: number;
+}
+
+export interface Token {
+    name: string;
+    amount: number;
+    decimals: number;
+    ticker: string;
+    policyId: string;
+    nameHex: string;
+    addressContainingToken: AdaAddress[];
+}
+
+export interface TokenTransactionHashRequest {
+    address: string;
+    afterBlock: number;
+    tokens: TokenTransactionHashRequestTokens[];
+}
+
+export interface TokenTransactionHashRequestTokens {
+    policyId: string;
+    quantity: string;
+}
+>>>>>>> 37f1bc0 (checks entire cycle when using wallet)
