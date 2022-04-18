@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { connectWallet as connectWalletRedux } from "src/reducers/walletSlice";
-import ModalComponent, { ModalTypes } from "./components/modal/modal.component";
-import Header from "./layouts/header.layout";
-import Menu from "./layouts/menu.layout";
-import Page from "./layouts/page.layout";
+import ModalComponent, { ModalTypes } from './components/modal/modal.component';
+import Header from './layouts/header.layout';
+import Menu from './layouts/menu.layout';
+import Page from './layouts/page.layout';
 import WalletApi, {
     Cardano,
     CIP0030Wallet,
     WalletKeys,
 } from "./services/connectors/wallet.connector";
-import "./styles.scss";
+import './styles.scss';
 
 export const Themes = {
     light: "theme-light",
@@ -41,7 +41,7 @@ function App() {
         setModalVisible(true);
     };
 
-    const connectWallet = async (walletKey?: WalletKeys) => {
+    const connectWallet = useCallback(async (walletKey?: WalletKeys) => {
         if (walletKey) {
             if (connectedWallet) {
                 await connectedWallet.enable(walletKey).then(async (_api) => {
@@ -51,10 +51,9 @@ function App() {
                                 ...window.cardano[WalletKeys[walletKey]],
                                 api: _api,
                             };
-                            const walletApi = await getWalletApi(
-                                connectedWalletUpdate
-                            );
+                            const walletApi = await getWalletApi(connectedWalletUpdate);
                             dispatch(connectWalletRedux(walletApi));
+                            localStorage.setItem('wallet-provider', walletKey);
                             setConnectedWallet(walletApi);
                         } else {
                             showModal(_api);
@@ -69,7 +68,7 @@ function App() {
                 setConnectedWallet(walletApi);
             }
         }
-    };
+    }, [connectedWallet, dispatch]);
 
     const getWalletApi = async (
         walletApi?: CIP0030Wallet
@@ -84,14 +83,19 @@ function App() {
     };
 
     useEffect(() => {
-        async function init() {
-            const walletApi = await getWalletApi();
-            dispatch(connectWalletRedux(walletApi));
-            setConnectedWallet(walletApi);
+        async function init() {            
+            const walletKey = localStorage.getItem('wallet-provider');
+            if (!walletKey) {
+                const walletApi = await getWalletApi();
+                dispatch(connectWalletRedux(walletApi));
+                setConnectedWallet(walletApi);
+            } else {
+                connectWallet(walletKey as WalletKeys);
+            }
         }
 
         init();
-    }, [setConnectedWallet]);
+    }, [setConnectedWallet, connectWallet]);
 
     return (
         <div className={theme}>

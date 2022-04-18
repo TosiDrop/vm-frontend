@@ -10,6 +10,10 @@ export interface AccountInfo {
     treasury: string;
 }
 
+export interface AccountAddress {
+    address: string;
+}
+
 export interface AccountPoolInfo {
     delegated_pool: string
     reserves: string
@@ -82,4 +86,80 @@ export interface Relay {
     ipv4: string;
     ipv6: string;
     port: number;
+}
+
+export interface TransactionStatus {
+    tx_hash: string;
+    num_confirmations: number | null;
+}
+
+export interface AddressTransactions {
+    tx_hash: string;
+    block_height: number;
+    block_time: Date;
+}
+
+export interface TransactionInfo {
+    tx_hash: string;
+    block_hash: string;
+    block_height: number;
+    epoch: number;
+    epoch_slot: number;
+    absolute_slot: number;
+    tx_timestamp: Date;
+    tx_block_index: number;
+    tx_size: number;
+    total_output: string;
+    fee: string;
+    deposit: string;
+    invalid_before: null;
+    invalid_after: number;
+    collaterals: any[];
+    inputs: Put[];
+    outputs: Put[];
+    withdrawals: any[];
+    assets_minted: any[];
+    metadata: any[];
+    certificates: Certificate[];
+    native_scripts: any[];
+    plutus_contracts: any[];
+}
+
+export interface Certificate {
+    index: number;
+    type: string;
+    info: Info;
+}
+
+export interface Info {
+    stake_address: string;
+    pool_id_bech32: string;
+    pool_id_hex: string;
+}
+
+export interface Put {
+    payment_addr: PaymentAddr;
+    stake_addr: string;
+    tx_hash: string;
+    tx_index: number;
+    value: string;
+    asset_list: {
+        policy_id: string,
+        asset_name: string,
+        quantity: string
+    }[];
+}
+
+export interface PaymentAddr {
+    bech32: string;
+    cred: string;
+}
+
+export interface Tip {
+    hash: string;
+    epoch_no: number;
+    abs_slot: number;
+    epoch_slot: number;
+    block_no: number;
+    block_time: Date;
 }
