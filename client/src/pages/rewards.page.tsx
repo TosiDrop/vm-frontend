@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState, KeyboardEvent } from 'react';
 import { ClaimableToken, GetRewards } from '../entities/vm.entities';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { getBlock, getPaymentTransactionHash, getRewards, getTokenTransactionHash, getTransactionStatus } from '../services/http.services';
 import { copyContent, formatTokens, getNameFromHex, truncAmount } from '../services/utils.services';
 import { HashLoader, SyncLoader } from 'react-spinners';
@@ -13,6 +14,12 @@ import { copyContent, formatTokens, getNameFromHex, truncAmount } from '../servi
 import { HashLoader } from 'react-spinners';
 import { PaymentStatus, TokenTransactionHashRequest } from '../entities/common.entities';
 >>>>>>> b50756e (checks entire cycle when using wallet)
+=======
+import { getBlock, getPaymentTransactionHash, getRewards, getTokenTransactionHash, getTransactionStatus } from '../services/http.services';
+import { copyContent, formatTokens, getNameFromHex, truncAmount } from '../services/utils.services';
+import { HashLoader, SyncLoader } from 'react-spinners';
+import { PaymentStatus, PaymentTransactionHashRequest, TokenTransactionHashRequest } from '../entities/common.entities';
+>>>>>>> c55a5d1 (payment status finished)
 import WalletApi from '../services/connectors/wallet.connector';
 import QRCode from 'react-qr-code';
 import './rewards.page.scss';
@@ -37,15 +44,20 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
     const [adaToSend, setAdaToSend] = useState(0);
     const [aproxReturn, setAproxReturn] = useState(0);
 <<<<<<< HEAD
+<<<<<<< HEAD
     const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>();
 =======
     const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(PaymentStatus.Awaiting);
 >>>>>>> b50756e (checks entire cycle when using wallet)
+=======
+    const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>();
+>>>>>>> c55a5d1 (payment status finished)
     const [showTooltip, setShowTooltip] = useState(false);
     const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
     const [paymentTxAfterBlock, setPaymentTxAfterBlock] = useState<number>();
     const [tokenTxAfterBlock, setTokenTxAfterBlock] = useState<number>();
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     const checkInterval = 10000;
 =======
@@ -54,6 +66,13 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
     let checkTokenInterval: any;
     let checkTransactionInterval: any;
 >>>>>>> b50756e (checks entire cycle when using wallet)
+=======
+    let checkPaymentInterval: any;
+    let checkTokenInterval: any;
+    let checkPaymentTransactionInterval: any;
+    let checkTokenTransactionInterval: any;
+    const checkInterval = 10000;
+>>>>>>> c55a5d1 (payment status finished)
 
     const handleOnChange = (position: number) => {
         const updatedCheckedState = checkedState.map((item, index) =>
@@ -68,10 +87,14 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
     const checkRewards = async () => {
         if (searchAddress) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             setRewardsLoader(true);
 =======
             setLoadingRewards(true);
 >>>>>>> b50756e (checks entire cycle when using wallet)
+=======
+            setRewardsLoader(true);
+>>>>>>> c55a5d1 (payment status finished)
             try {
                 const rewards = await getRewards(searchAddress);
 
@@ -116,6 +139,7 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
             if (txHash) {
                 if (isTxHash(txHash)) {
 <<<<<<< HEAD
+<<<<<<< HEAD
                     showModal('https://testnet.cardanoscan.io/transaction/' + txHash);
                     setPaymentStatus(PaymentStatus.AwaitingConfirmations);
                     setPaymentTxAfterBlock(undefined);
@@ -128,6 +152,12 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
                     checkTransaction(txHash, true);
                     findTokenTxHash();
 >>>>>>> b50756e (checks entire cycle when using wallet)
+=======
+                    showModal('https://testnet.cardanoscan.io/transaction/' + txHash);
+                    setPaymentStatus(PaymentStatus.AwaitingConfirmations);
+                    setPaymentTxAfterBlock(undefined);
+                    checkPaymentTransaction(txHash);
+>>>>>>> c55a5d1 (payment status finished)
                 } else {
                     showModal(txHash);
                 }
@@ -137,7 +167,29 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+    const findPaymentTxHash = () => {
+        checkPaymentInterval = setInterval(async () => {
+            if (searchAddress) {
+                const request: PaymentTransactionHashRequest = {
+                    address: searchAddress,
+                    toAddress: rewards?.vending_address || '',
+                    afterBlock: paymentTxAfterBlock || 0,
+                    adaToSend
+                }
+                const response = await getPaymentTransactionHash(request);
+                if (response && response.txHash) {
+                    setPaymentStatus(PaymentStatus.AwaitingConfirmations);
+                    checkPaymentTransaction(response.txHash);
+                    clearInterval(checkPaymentInterval);
+                }
+            }
+        }, checkInterval);
+    }
+
+>>>>>>> c55a5d1 (payment status finished)
     const findTokenTxHash = () => {
         checkTokenInterval = setInterval(async () => {
             if (searchAddress) {
@@ -150,15 +202,15 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
                 const request: TokenTransactionHashRequest = {
                     address: searchAddress,
                     afterBlock: tokenTxAfterBlock || 0,
-                    tokens: tokens.map(token => ({policyId: token.assetId.split('.')[0], quantity: token.amount.toString()}))
+                    tokens: tokens.map(token => ({ policyId: token.assetId.split('.')[0], quantity: token.amount.toString() }))
                 }
                 const response = await getTokenTransactionHash(request);
                 if (response && response.txHash) {
-                    setPaymentStatus(PaymentStatus.Completed);
+                    checkTokenTransaction(response.txHash);
                     clearInterval(checkTokenInterval);
                 }
             }
-        }, 15000);
+        }, checkInterval);
     }
 
 >>>>>>> b50756e (checks entire cycle when using wallet)
@@ -233,6 +285,7 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
         }, 1000);
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     const checkPaymentTransaction = useCallback((txHash: string) => {
         const checkPaymentTransactionInterval = setInterval(async () => {
@@ -347,20 +400,63 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
 
     const checkTransaction = (txHash: string, isPayment: boolean) => {
         checkTransactionInterval = setInterval(async () => {
+=======
+    const checkPaymentTransaction = (txHash: string) => {
+        checkPaymentTransactionInterval = setInterval(async () => {
+>>>>>>> c55a5d1 (payment status finished)
             if (searchAddress) {
                 const transaction = await getTransactionStatus(txHash);
                 if (transaction && transaction.length && transaction[0].num_confirmations) {
-                    if (isPayment) {
-                        setPaymentStatus(PaymentStatus.Sent);
-                    } else {
-                        setPaymentStatus(PaymentStatus.Completed);
-                    }
-                    clearInterval(checkTransactionInterval);
+                    const blockNumber = await getBlock();
+                    setTokenTxAfterBlock(blockNumber.block_no);
+                    setPaymentStatus(PaymentStatus.Sent);
+                    clearInterval(checkPaymentTransactionInterval);
                 }
             }
-        }, 10000);
+        }, checkInterval);
     }
 >>>>>>> b50756e (checks entire cycle when using wallet)
+
+    const checkTokenTransaction = (txHash: string) => {
+        checkTokenTransactionInterval = setInterval(async () => {
+            if (searchAddress) {
+                const transaction = await getTransactionStatus(txHash);
+                if (transaction && transaction.length && transaction[0].num_confirmations) {
+                    setPaymentStatus(PaymentStatus.Completed);
+                    clearInterval(checkTokenTransactionInterval);
+                }
+            }
+        }, checkInterval);
+    }
+
+    useEffect(() => {
+        async function init() {
+            if (adaToSend !== 0) {
+                const blockNumber = await getBlock();
+                setPaymentTxAfterBlock(blockNumber.block_no);
+                setPaymentStatus(PaymentStatus.Awaiting);
+            }
+        }
+
+        init();
+    }, [adaToSend]);
+
+    useEffect(() => {
+        switch (paymentStatus) {
+            case PaymentStatus.Awaiting:
+                findPaymentTxHash();
+                break;
+            case PaymentStatus.AwaitingConfirmations:
+                setStatusLoader(true);
+                break;
+            case PaymentStatus.Sent:
+                findTokenTxHash();
+                break;
+            case PaymentStatus.Completed:
+                setStatusLoader(false);
+                break;
+        }
+    }, [paymentStatus]);
 
     useEffect(() => {
         if (rewards?.claimable_tokens.length) {
@@ -381,10 +477,14 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
                 setHideSendAdaInfo(true);
             } else {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 setPaymentStatus(undefined);
 =======
                 setPaymentStatus(PaymentStatus.Awaiting);
 >>>>>>> b50756e (checks entire cycle when using wallet)
+=======
+                setPaymentStatus(undefined);
+>>>>>>> c55a5d1 (payment status finished)
             }
         }
 
@@ -603,7 +703,7 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
                     <div className='content-button'>
                         <button className='tosi-button' disabled={!hideStakingInfo} onClick={checkRewards}>
                             Check my rewards
-                            <HashLoader color='#73badd' loading={loadingRewards} size={25} />
+                            <HashLoader color='#73badd' loading={rewardsLoader} size={25} />
                         </button>
                         <button className={'tosi-cancel-button' + (hideStakingInfo ? ' hidden' : '')} onClick={backRewards}>
                             <div className='tosi-cancel-icon'><FontAwesomeIcon icon={faXmark} /></div>
@@ -623,6 +723,7 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
                 <div className='status-step'>
                     <div className='content-reward claim-status-head'>
                         Claim status: <div className='payment-status'>{renderPaymentStatus()}</div>
+                        <SyncLoader color='#ffffff' loading={statusLoader} size={7} />
                     </div>
                     <div className='content-reward claim-status-body'>
                         <div className="icon-input">
