@@ -25,7 +25,7 @@ const useToken = ({ connectedWallet }: Props) => {
         //     getTokenArrayInWallet()
         // }
         (() => {
-            console.log(wallet);
+            
         })();
     }, []);
 

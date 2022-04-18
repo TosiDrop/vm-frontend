@@ -14,7 +14,6 @@ export const walletSlice = createSlice({
     initialState,
     reducers: {
         connectWallet: (state, action: PayloadAction<WalletApi>) => {
-            console.log(action.payload);
             state.connectedWallet = action.payload;
         },
     },
