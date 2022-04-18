@@ -2,6 +2,7 @@ import { Token, PolicyIDAndAssetNameToAmountMap, PolicyIDAndAssetNameToAdaAddres
 import { parseUtxo, convertBufferToHex } from './helper'
 import { useEffect, useState } from "react";
 import WalletApi from "src/services/connectors/wallet.connector";
+import { useSelector } from "react-redux";
 
 interface Props {
     connectedWallet: WalletApi | undefined;
@@ -11,10 +12,15 @@ const useToken = ({ connectedWallet }: Props) => {
     const [selectedToken, setSelectedToken] = useState("");
     const [tokens, setTokens] = useState<Token[]>([]);
 
+    const wallet = useSelector((state: any) => state.wallet)
+
     useEffect(() => {
         // if (connectedWallet) {
         //     getTokenArrayInWallet()
         // }
+        (() => {
+            console.log(wallet)
+        })()
     }, []);
 
     const getTokenArrayInWallet = async (API: any): Promise<void> => {
