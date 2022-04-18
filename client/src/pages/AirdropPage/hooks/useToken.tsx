@@ -3,6 +3,7 @@ import { parseUtxo, convertBufferToHex } from './helper'
 import { useEffect, useState } from "react";
 import WalletApi from "src/services/connectors/wallet.connector";
 import { useSelector } from "react-redux";
+import { RootState } from 'src/store'
 
 interface Props {
     connectedWallet: WalletApi | undefined;
@@ -11,8 +12,7 @@ interface Props {
 const useToken = ({ connectedWallet }: Props) => {
     const [selectedToken, setSelectedToken] = useState("");
     const [tokens, setTokens] = useState<Token[]>([]);
-
-    const wallet = useSelector((state: any) => state.wallet)
+    const wallet = useSelector((state: RootState) => state.wallet)
 
     useEffect(() => {
         // if (connectedWallet) {
