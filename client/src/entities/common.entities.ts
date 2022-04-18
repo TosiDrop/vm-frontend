@@ -52,6 +52,7 @@ export interface AirdropAddress {
     address: string;
     amount: number;
 }
+<<<<<<< HEAD
 
 export interface AdaAddress {
     address: string;
@@ -85,3 +86,5 @@ export interface PaymentTransactionHashRequest {
     afterBlock: number;
     adaToSend: number;
 }
+=======
+>>>>>>> master
