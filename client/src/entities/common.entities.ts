@@ -78,3 +78,10 @@ export interface TokenTransactionHashRequestTokens {
     policyId: string;
     quantity: string;
 }
+
+export interface PaymentTransactionHashRequest {
+    address: string;
+    toAddress: string;
+    afterBlock: number;
+    adaToSend: number;
+}

@@ -1,4 +1,4 @@
-import { TokenTransactionHashRequest } from "src/entities/common.entities";
+import { PaymentTransactionHashRequest, TokenTransactionHashRequest } from "src/entities/common.entities";
 import { TransactionStatus } from "src/entities/koios.entities";
 import { GetRewards } from "../entities/vm.entities";
 const axios = require('axios').default;
@@ -19,6 +19,14 @@ export async function getTransactionStatus(txHash: string): Promise<TransactionS
     return undefined;
 }
 
+export async function getPaymentTransactionHash(paymentTransactionHashRequest: PaymentTransactionHashRequest): Promise<{ txHash: string } | undefined> {
+    const response = await axios.post(`/getpaymenttransactionhash`, paymentTransactionHashRequest);
+    if (response && response.data) {
+        return response.data;
+    }
+    return undefined;
+}
+
 export async function getTokenTransactionHash(tokenTxHashRequest: TokenTransactionHashRequest): Promise<{ txHash: string } | undefined> {
     const response = await axios.post(`/gettokentransactionhash`, tokenTxHashRequest);
     if (response && response.data) {
@@ -27,10 +35,10 @@ export async function getTokenTransactionHash(tokenTxHashRequest: TokenTransacti
     return undefined;
 }
 
-export async function getBlock(): Promise<number> {
+export async function getBlock(): Promise<{ block_no: number }> {
     const response = await axios.get(`/getblock`);
     if (response && response.data) {
         return response.data;
     }
-    return 0;
+    return { block_no: 0 };
 }
