@@ -4,13 +4,18 @@ import { AirdropAddress } from "src/entities/common.entities";
 import "./index.scss";
 import useToken from "./hooks/useToken";
 import Select from "./components/Select";
+import WalletApi from 'src/services/connectors/wallet.connector';
 
 const CLASS = "airdrop-page";
 
-const Airdrop = () => {
+interface AirdropPageProps {
+    connectedWallet: WalletApi | undefined;
+}
+
+const AirdropPage = ({ connectedWallet }: AirdropPageProps) => {
     const { addressList, setAddressList, shortenAddr } = useAddressList();
     const { fileRef, parseFile } = useFile({ setAddressList });
-    const { tokens, selectedToken, setSelectedToken } = useToken();
+    const { tokens, selectedToken, setSelectedToken } = useToken({ connectedWallet });
 
     return (
         <div className={CLASS}>
@@ -60,4 +65,4 @@ const Airdrop = () => {
     );
 };
 
-export default Airdrop;
+export default AirdropPage;
