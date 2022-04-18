@@ -10,6 +10,10 @@ export interface AccountInfo {
     treasury: string;
 }
 
+export interface AccountAddress {
+    address: string;
+}
+
 export interface AccountPoolInfo {
     delegated_pool: string
     reserves: string

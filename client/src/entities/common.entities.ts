@@ -52,8 +52,6 @@ export interface AirdropAddress {
     address: string;
     amount: number;
 }
-<<<<<<< HEAD
-=======
 
 export interface AdaAddress {
     address: string;
@@ -80,4 +78,10 @@ export interface TokenTransactionHashRequestTokens {
     policyId: string;
     quantity: string;
 }
->>>>>>> 37f1bc0 (checks entire cycle when using wallet)
+
+export interface PaymentTransactionHashRequest {
+    address: string;
+    toAddress: string;
+    afterBlock: number;
+    adaToSend: number;
+}

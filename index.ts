@@ -2,9 +2,9 @@ import express from "express";
 import url from 'url';
 import axios from 'axios';
 import cors from 'cors';
-import { AccountInfo, AddressTransactions, PoolInfo, Tip, TransactionInfo, TransactionStatus } from './client/src/entities/koios.entities'
+import { AccountAddress, AccountInfo, AddressTransactions, PoolInfo, Tip, TransactionInfo, TransactionStatus } from './client/src/entities/koios.entities'
 import { ClaimableToken, GetRewards, GetTokens, SanitizeAddress } from './client/src/entities/vm.entities'
-import { ExtendedMetadata, Metadata, TokenTransactionHashRequest } from './client/src/entities/common.entities'
+import { ExtendedMetadata, Metadata, PaymentTransactionHashRequest, TokenTransactionHashRequest } from './client/src/entities/common.entities'
 import { formatTokens } from './client/src/services/utils.services'
 require('dotenv').config()
 
@@ -62,6 +62,10 @@ async function postFromKoios<T>(action: string, params?: any) {
 
 async function getAccountsInfo(stakeAddress: string) {
     return getFromKoios<AccountInfo[]>('account_info', `_address=${stakeAddress}`);
+}
+
+async function getAccountsAddresses(stakeAddress: string) {
+    return getFromKoios<AccountAddress[]>('account_addresses', `_address=${stakeAddress}`);
 }
 
 async function postPoolInfo(pools: string[]) {
@@ -171,8 +175,53 @@ app.get("/gettransactionstatus", async (req: any, res: any) => {
 });
 
 app.get("/getblock", async (req: any, res: any) => {
-    const getTipResponse = await getFromKoios<Tip>(`tip`);
-    res.send(getTipResponse.block_no);
+    const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+    res.send({ block_no: (getTipResponse && getTipResponse.length) ? getTipResponse[0].block_no : 0 });
+});
+
+app.post("/getpaymenttransactionhash", async (req: any, res: any) => {
+    const requestBody = req.body as PaymentTransactionHashRequest;
+    if (requestBody && requestBody.address && requestBody.address.length) {
+        const bodyStakingAddressResponse = await getFromVM<SanitizeAddress>(`sanitize_address&address=${requestBody.address}`);
+        if (bodyStakingAddressResponse && bodyStakingAddressResponse.staking_address) {
+            const accountAddresses = await getAccountsAddresses(bodyStakingAddressResponse.staking_address)
+            const getTokenTxHashResponse = await postFromKoios<AddressTransactions[]>(`address_txs`, {
+                _addresses: accountAddresses.map(accountAddress => accountAddress.address),
+                _after_block_height: requestBody.afterBlock || 0
+            });
+            if (getTokenTxHashResponse && getTokenTxHashResponse.length) {
+                const addressHashes = getTokenTxHashResponse.map(addressTx => addressTx.tx_hash);
+                const getTransactionsInfo = await postFromKoios<TransactionInfo[]>(`tx_info`, { _tx_hashes: addressHashes });
+                const fromStakingAddressResponse = await getFromVM<SanitizeAddress>(`sanitize_address&address=${requestBody.address}`);
+                const toStakingAddressResponse = await getFromVM<SanitizeAddress>(`sanitize_address&address=${requestBody.toAddress}`);
+                if (getTransactionsInfo && getTransactionsInfo.length) {
+                    const filteredTxs = getTransactionsInfo.filter(txInfo => {
+                        const inputCorrect = txInfo.inputs.some(input => {
+                            const stakingAddressCorrect = input.stake_addr === fromStakingAddressResponse.staking_address;
+                            return stakingAddressCorrect;
+                        });
+
+                        const outputCorrect = txInfo.outputs.some(output => {
+                            const stakingAddressCorrect = output.stake_addr === toStakingAddressResponse.staking_address;
+                            const amountCorrect = output.value === requestBody.adaToSend.toString();
+                            return amountCorrect && stakingAddressCorrect;
+                        });
+
+                        return inputCorrect && outputCorrect;
+                    });
+                    if (filteredTxs && filteredTxs.length) {
+                        res.send({ txHash: filteredTxs[0].tx_hash });
+                    } else {
+                        res.send({ txHash: undefined });
+                    }
+                }
+            } else {
+                res.send({ txHash: undefined });
+            }
+        }
+    } else {
+        res.send({ error: 'Address seems invalid' });
+    }
 });
 
 app.post("/gettokentransactionhash", async (req: any, res: any) => {
@@ -206,8 +255,9 @@ app.post("/gettokentransactionhash", async (req: any, res: any) => {
                     res.send({ txHash: undefined });
                 }
             }
+        } else {
+            res.send({ txHash: undefined });
         }
-        // res.send(getTokenTxHashResponse);
     } else {
         res.send({ error: 'Address seems invalid' });
     }

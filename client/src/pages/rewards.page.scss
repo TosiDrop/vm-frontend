@@ -144,9 +144,11 @@
             flex-direction: row;
             border-bottom: 1px solid var(--font-inactive-color);
             margin-bottom: 0px;
+            align-items: center;
 
             .payment-status {
                 margin-left: 30px;
+                margin-right: 10px;
                 color: var(--font-inactive-color);
                 font-family: $avenir-font-light;
 
