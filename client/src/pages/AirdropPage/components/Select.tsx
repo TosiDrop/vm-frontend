@@ -13,7 +13,7 @@ const Select = () => {
         setOpen(false);
         setSelected(v);
     };
-    
+
     return (
         <div className={`${CLASS}`}>
             <div

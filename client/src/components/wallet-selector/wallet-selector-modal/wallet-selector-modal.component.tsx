@@ -29,6 +29,7 @@ function WalletSelectorModalComponent({ modalVisible, setModalVisible, connected
                     </div>
                     <div className='wallet-modal-body'>
                         {
+                            window.cardano ? 
                             Object.keys(WalletKeys).map((key) => {
                                 if (window.cardano && window.cardano[key]) {
                                     const walletKey = key as WalletKeys;
@@ -41,7 +42,10 @@ function WalletSelectorModalComponent({ modalVisible, setModalVisible, connected
                                 } else {
                                     return null;
                                 }
-                            })
+                            }) : 
+                            <div className={'wallet-modal-body-row'} onClick={() => {}}>
+                                <p>No Wallet found :(</p>
+                            </div>
                         }
                     </div>
                 </div>
