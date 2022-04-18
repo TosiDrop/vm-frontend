@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { connectWallet as connectWalletRedux } from "src/reducers/walletSlice";
 import ModalComponent, { ModalTypes } from "./components/modal/modal.component";
@@ -41,7 +41,7 @@ function App() {
         setModalVisible(true);
     };
 
-    const connectWallet = async (walletKey?: WalletKeys) => {
+    const connectWallet = useCallback(async (walletKey?: WalletKeys) => {
         if (walletKey) {
             if (connectedWallet) {
                 await connectedWallet.enable(walletKey).then(async (_api) => {
@@ -70,7 +70,7 @@ function App() {
                 setConnectedWallet(walletApi);
             }
         }
-    };
+    }, [connectedWallet]);
 
     const getWalletApi = async (
         walletApi?: CIP0030Wallet
@@ -92,12 +92,12 @@ function App() {
                 dispatch(connectWalletRedux(walletApi));
                 setConnectedWallet(walletApi);
             } else {
-                connectWallet
+                connectWallet(walletKey as WalletKeys);
             }
         }
 
         init();
-    }, [setConnectedWallet]);
+    }, [setConnectedWallet, connectWallet]);
 
     return (
         <div className={theme}>
