@@ -55,8 +55,8 @@ function App() {
                                 connectedWalletUpdate
                             );
                             dispatch(connectWalletRedux(walletApi));
-                            localStorage.setItem('wallet-provider', walletKey);
                             setConnectedWallet(walletApi);
+                            localStorage.setItem('wallet-provider', walletKey);
                         } else {
                             showModal(_api);
                         }
@@ -65,9 +65,12 @@ function App() {
             }
         } else {
             if (connectedWallet) {
-                const walletApi = await getWalletApi();
-                dispatch(connectWalletRedux(walletApi));
-                setConnectedWallet(walletApi);
+                if (connectedWallet?.wallet?.api) {
+                    const walletApi = await getWalletApi();
+                    dispatch(connectWalletRedux(walletApi));
+                    setConnectedWallet(walletApi);
+                    localStorage.setItem('wallet-provider', '');
+                }
             }
         }
     }, [connectedWallet, dispatch]);
@@ -85,19 +88,19 @@ function App() {
     };
 
     useEffect(() => {
-        async function init() {            
-            const walletKey = localStorage.getItem('wallet-provider');
-            if (!walletKey) {
+        async function init() {
+            if (!connectedWallet) {
                 const walletApi = await getWalletApi();
                 dispatch(connectWalletRedux(walletApi));
                 setConnectedWallet(walletApi);
-            } else {
+            } else if (!connectedWallet.wallet) {
+                const walletKey = localStorage.getItem('wallet-provider');
                 connectWallet(walletKey as WalletKeys);
             }
         }
 
         init();
-    }, [setConnectedWallet, connectWallet]);
+    }, [setConnectedWallet, connectedWallet, dispatch]);
 
     return (
         <div className={theme}>
