@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ModalComponent, { ModalTypes } from './components/modal/modal.component';
 import Header from './layouts/header.layout';
 import Menu from './layouts/menu.layout';
@@ -31,7 +31,7 @@ function App() {
         setModalVisible(true);
     }
 
-    const connectWallet = async (walletKey?: WalletKeys) => {
+    const connectWallet = useCallback(async (walletKey?: WalletKeys) => {
         if (walletKey) {
             if (connectedWallet) {
                 await connectedWallet.enable(walletKey).then(async (_api) => {
@@ -55,7 +55,7 @@ function App() {
                 setConnectedWallet(await getWalletApi());
             }
         }
-    }
+    }, [connectedWallet]);
 
     const getWalletApi = async (walletApi?: CIP0030Wallet): Promise<WalletApi> => {
         const S = await Cardano();
@@ -73,12 +73,12 @@ function App() {
             if (!walletKey) {
                 setConnectedWallet(await getWalletApi());
             } else {
-                connectWallet
+                connectWallet(walletKey as WalletKeys);
             }
         }
 
         init();
-    }, [setConnectedWallet]);
+    }, [setConnectedWallet, connectWallet]);
 
     return (
         <div className={theme}>
