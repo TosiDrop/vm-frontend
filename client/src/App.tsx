@@ -65,8 +65,8 @@ function App() {
                             };
                             const walletApi = await getWalletApi(connectedWalletUpdate);
                             dispatch(connectWalletRedux(walletApi));
-                            localStorage.setItem('wallet-provider', walletKey);
                             setConnectedWallet(walletApi);
+                            localStorage.setItem('wallet-provider', walletKey);
                         } else {
                             showModal(_api);
                         }
@@ -74,12 +74,22 @@ function App() {
                 });
             }
         } else {
+<<<<<<< HEAD
             if (connectedWallet?.wallet?.api) {
                 const walletApi = await getWalletApi();
                 dispatch(connectWalletRedux(walletApi));
                 localStorage.setItem('wallet-provider', '');
                 setConnectedWallet(walletApi);
                 setWrongNetwork(false);
+=======
+            if (connectedWallet) {
+                if (connectedWallet?.wallet?.api) {
+                    const walletApi = await getWalletApi();
+                    dispatch(connectWalletRedux(walletApi));
+                    setConnectedWallet(walletApi);
+                    localStorage.setItem('wallet-provider', '');
+                }
+>>>>>>> dfbee69 (persistance added)
             }
         }
     }, [connectedWallet, dispatch, networkId]);
