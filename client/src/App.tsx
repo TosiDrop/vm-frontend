@@ -82,7 +82,11 @@ function App() {
                 setWrongNetwork(false);
             }
         }
+<<<<<<< HEAD
     }, [connectedWallet, dispatch, networkId]);
+=======
+    }, [connectedWallet, dispatch]);
+>>>>>>> c32845e (merge 2)
 
     const getWalletApi = async (
         walletApi?: CIP0030Wallet
