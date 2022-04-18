@@ -1,19 +1,24 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import WalletApi from "src/services/connectors/wallet.connector";
+
+interface WalletState {
+    connectedWallet: WalletApi | undefined;
+}
+
+const initialState: WalletState = {
+    connectedWallet: undefined,
+};
 
 export const walletSlice = createSlice({
     name: "wallet",
-    initialState: {
-        connectedWallet: "test",
-        API: "est",
-    },
+    initialState,
     reducers: {
-        connectWallet: (state) => {
-            state.connectedWallet = state.connectedWallet;
+        connectWallet: (state, action: PayloadAction<WalletApi>) => {
+            console.log(action.payload);
+            state.connectedWallet = action.payload;
         },
     },
 });
 
-// Action creators are generated for each case reducer function
 export const { connectWallet } = walletSlice.actions;
-
 export default walletSlice.reducer;

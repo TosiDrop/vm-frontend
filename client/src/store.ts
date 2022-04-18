@@ -5,6 +5,10 @@ const store = configureStore({
     reducer: {
         wallet: walletReducer,
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false,
+        }),
 });
 
 export default store;
