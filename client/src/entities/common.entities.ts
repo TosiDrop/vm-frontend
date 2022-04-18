@@ -84,13 +84,10 @@ export interface PaymentTransactionHashRequest {
     toAddress: string;
     afterBlock: number;
     adaToSend: number;
-<<<<<<< HEAD
 }
 
 export enum NetworkId {
     testnet,
     mainnet,
     undefined
-=======
->>>>>>> 9efd25a (payment status finished)
 }

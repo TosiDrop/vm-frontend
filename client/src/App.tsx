@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { connectWallet as connectWalletRedux } from "src/reducers/walletSlice";
 import ModalComponent, { ModalTypes } from './components/modal/modal.component';
@@ -63,9 +63,7 @@ function App() {
                                 ...window.cardano[WalletKeys[walletKey]],
                                 api: _api,
                             };
-                            const walletApi = await getWalletApi(
-                                connectedWalletUpdate
-                            );
+                            const walletApi = await getWalletApi(connectedWalletUpdate);
                             dispatch(connectWalletRedux(walletApi));
                             localStorage.setItem('wallet-provider', walletKey);
                             setConnectedWallet(walletApi);
