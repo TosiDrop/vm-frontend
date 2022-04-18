@@ -8,16 +8,10 @@ import WalletApi from "src/services/connectors/wallet.connector";
 
 const CLASS = "airdrop-page";
 
-interface AirdropPageProps {
-    connectedWallet: WalletApi | undefined;
-}
-
-const AirdropPage = ({ connectedWallet }: AirdropPageProps) => {
+const AirdropPage = () => {
     const { addressList, setAddressList, shortenAddr } = useAddressList();
     const { fileRef, parseFile } = useFile({ setAddressList });
-    const { tokens, selectedToken, setSelectedToken } = useToken({
-        connectedWallet,
-    });
+    const { tokens, selectedToken, setSelectedToken } = useToken();
 
     return (
         <div className={CLASS}>
