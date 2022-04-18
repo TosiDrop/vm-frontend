@@ -68,7 +68,7 @@ function App() {
                 setConnectedWallet(walletApi);
             }
         }
-    }, [connectedWallet]);
+    }, [connectedWallet, dispatch]);
 
     const getWalletApi = async (
         walletApi?: CIP0030Wallet
