@@ -9,6 +9,7 @@ import { PaymentStatus, PaymentTransactionHashRequest, TokenTransactionHashReque
 import WalletApi from '../services/connectors/wallet.connector';
 import QRCode from 'react-qr-code';
 import './rewards.page.scss';
+import { useCallback } from 'react';
 
 interface Params {
     connectedWallet: WalletApi | undefined;
@@ -33,10 +34,6 @@ function Rewards({ connectedWallet, showModal }: Params) {
     const [paymentTxAfterBlock, setPaymentTxAfterBlock] = useState<number>();
     const [tokenTxAfterBlock, setTokenTxAfterBlock] = useState<number>();
 
-    let checkPaymentInterval: any;
-    let checkTokenInterval: any;
-    let checkPaymentTransactionInterval: any;
-    let checkTokenTransactionInterval: any;
     const checkInterval = 10000;
 
     const handleOnChange = (position: number) => {
@@ -105,48 +102,6 @@ function Rewards({ connectedWallet, showModal }: Params) {
             }
             setSendAdaSpinner(false);
         }
-    }
-
-    const findPaymentTxHash = () => {
-        checkPaymentInterval = setInterval(async () => {
-            if (searchAddress) {
-                const request: PaymentTransactionHashRequest = {
-                    address: searchAddress,
-                    toAddress: rewards?.vending_address || '',
-                    afterBlock: paymentTxAfterBlock || 0,
-                    adaToSend
-                }
-                const response = await getPaymentTransactionHash(request);
-                if (response && response.txHash) {
-                    setPaymentStatus(PaymentStatus.AwaitingConfirmations);
-                    checkPaymentTransaction(response.txHash);
-                    clearInterval(checkPaymentInterval);
-                }
-            }
-        }, checkInterval);
-    }
-
-    const findTokenTxHash = () => {
-        checkTokenInterval = setInterval(async () => {
-            if (searchAddress) {
-                let tokens: ClaimableToken[] = [];
-                checkedState.forEach((check, i) => {
-                    if (check && rewards?.claimable_tokens[i]) {
-                        tokens.push(rewards.claimable_tokens[i]);
-                    }
-                });
-                const request: TokenTransactionHashRequest = {
-                    address: searchAddress,
-                    afterBlock: tokenTxAfterBlock || 0,
-                    tokens: tokens.map(token => ({ policyId: token.assetId.split('.')[0], quantity: token.amount.toString() }))
-                }
-                const response = await getTokenTransactionHash(request);
-                if (response && response.txHash) {
-                    checkTokenTransaction(response.txHash);
-                    clearInterval(checkTokenInterval);
-                }
-            }
-        }, checkInterval);
     }
 
     const isTxHash = (txHash: string) => {
@@ -220,31 +175,69 @@ function Rewards({ connectedWallet, showModal }: Params) {
         }, 1000);
     }
 
-    const checkPaymentTransaction = (txHash: string) => {
-        checkPaymentTransactionInterval = setInterval(async () => {
-            if (searchAddress) {
-                const transaction = await getTransactionStatus(txHash);
-                if (transaction && transaction.length && transaction[0].num_confirmations) {
-                    const blockNumber = await getBlock();
-                    setTokenTxAfterBlock(blockNumber.block_no);
-                    setPaymentStatus(PaymentStatus.Sent);
-                    clearInterval(checkPaymentTransactionInterval);
-                }
+    const checkPaymentTransaction = useCallback((txHash: string) => {
+        const checkPaymentTransactionInterval = setInterval(async () => {
+            const transaction = await getTransactionStatus(txHash);
+            if (transaction && transaction.length && transaction[0].num_confirmations) {
+                const blockNumber = await getBlock();
+                setTokenTxAfterBlock(blockNumber.block_no);
+                setPaymentStatus(PaymentStatus.Sent);
+                clearInterval(checkPaymentTransactionInterval);
             }
         }, checkInterval);
-    }
+    }, []);
 
-    const checkTokenTransaction = (txHash: string) => {
-        checkTokenTransactionInterval = setInterval(async () => {
+    const checkTokenTransaction = useCallback((txHash: string) => {
+        const checkTokenTransactionInterval = setInterval(async () => {
+            const transaction = await getTransactionStatus(txHash);
+            if (transaction && transaction.length && transaction[0].num_confirmations) {
+                setPaymentStatus(PaymentStatus.Completed);
+                clearInterval(checkTokenTransactionInterval);
+            }
+        }, checkInterval);
+    }, []);
+
+    const findPaymentTxHash = useCallback(() => {
+        const checkPaymentInterval = setInterval(async () => {
             if (searchAddress) {
-                const transaction = await getTransactionStatus(txHash);
-                if (transaction && transaction.length && transaction[0].num_confirmations) {
-                    setPaymentStatus(PaymentStatus.Completed);
-                    clearInterval(checkTokenTransactionInterval);
+                const request: PaymentTransactionHashRequest = {
+                    address: searchAddress,
+                    toAddress: rewards?.vending_address || '',
+                    afterBlock: paymentTxAfterBlock || 0,
+                    adaToSend
+                }
+                const response = await getPaymentTransactionHash(request);
+                if (response && response.txHash) {
+                    setPaymentStatus(PaymentStatus.AwaitingConfirmations);
+                    checkPaymentTransaction(response.txHash);
+                    clearInterval(checkPaymentInterval);
                 }
             }
         }, checkInterval);
-    }
+    }, [adaToSend, paymentTxAfterBlock, rewards?.vending_address, searchAddress, checkPaymentTransaction]);
+
+    const findTokenTxHash = useCallback(() => {
+        const checkTokenInterval = setInterval(async () => {
+            if (searchAddress) {
+                let tokens: ClaimableToken[] = [];
+                checkedState.forEach((check, i) => {
+                    if (check && rewards?.claimable_tokens[i]) {
+                        tokens.push(rewards.claimable_tokens[i]);
+                    }
+                });
+                const request: TokenTransactionHashRequest = {
+                    address: searchAddress,
+                    afterBlock: tokenTxAfterBlock || 0,
+                    tokens: tokens.map(token => ({ policyId: token.assetId.split('.')[0], quantity: token.amount.toString() }))
+                }
+                const response = await getTokenTransactionHash(request);
+                if (response && response.txHash) {
+                    checkTokenTransaction(response.txHash);
+                    clearInterval(checkTokenInterval);
+                }
+            }
+        }, checkInterval);
+    }, [checkedState, rewards?.claimable_tokens, searchAddress, tokenTxAfterBlock, checkTokenTransaction]);
 
     useEffect(() => {
         async function init() {
@@ -273,7 +266,7 @@ function Rewards({ connectedWallet, showModal }: Params) {
                 setStatusLoader(false);
                 break;
         }
-    }, [paymentStatus]);
+    }, [paymentStatus, findPaymentTxHash, findTokenTxHash]);
 
     useEffect(() => {
         if (rewards?.claimable_tokens.length) {
@@ -401,7 +394,7 @@ function Rewards({ connectedWallet, showModal }: Params) {
                     </div>
                     <div className='content-reward tx-details-body small-body'>
                         <div>Tx Fees</div>
-                        <div>~0.168053 ADA</div>
+                        <div>~0.168 ADA</div>
                     </div>
                     <div className='content-reward tx-details-body small-body-last'>
                         <div>Total transaction</div>

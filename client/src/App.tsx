@@ -55,6 +55,7 @@ function App() {
                                 connectedWalletUpdate
                             );
                             dispatch(connectWalletRedux(walletApi));
+                            localStorage.setItem('wallet-provider', walletKey);
                             setConnectedWallet(walletApi);
                         } else {
                             showModal(_api);
@@ -84,10 +85,15 @@ function App() {
     };
 
     useEffect(() => {
-        async function init() {
-            const walletApi = await getWalletApi();
-            dispatch(connectWalletRedux(walletApi));
-            setConnectedWallet(walletApi);
+        async function init() {            
+            const walletKey = localStorage.getItem('wallet-provider');
+            if (!walletKey) {
+                const walletApi = await getWalletApi();
+                dispatch(connectWalletRedux(walletApi));
+                setConnectedWallet(walletApi);
+            } else {
+                connectWallet
+            }
         }
 
         init();
