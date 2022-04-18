@@ -61,5 +61,3 @@ const Airdrop = () => {
 };
 
 export default Airdrop;
-
-// npx prettier --write ./client/src/pages/AirdropPage --tab-width 4
