@@ -31,7 +31,8 @@ else
 		KOIOS_URL=https://koios.rest/api/v0
 		VM_URL=https://vm.adaseal.eu
 	fi
-	echo "KOIOS_URL=${KOIOS_URL}" > ${__repo}/.env
+	echo "CARDANO_NETWORK=${CARDANO_NETWORK}" > ${__repo}/.env
+	echo "KOIOS_URL=${KOIOS_URL}" >> ${__repo}/.env
 	echo "VM_URL=${VM_URL}" >> ${__repo}/.env
 	echo "VM_API_TOKEN=${VM_API_TOKEN}" >> ${__repo}/.env
 	if test -n "${CLOUDFLARE_PSK}"; then

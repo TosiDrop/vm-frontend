@@ -1,41 +1,56 @@
-import { Dropdown } from "react-bootstrap";
-import useAddressList from "./useAddressList";
+import useAddressList from "./hooks/useAddressList";
+import useFile from "./hooks/useFile";
+import { AirdropAddress } from "src/entities/common.entities";
 import "./index.scss";
+import useToken from "./hooks/useToken";
+import Select from "./components/Select";
+import WalletApi from "src/services/connectors/wallet.connector";
 
 const CLASS = "airdrop-page";
 
-const Airdrop = () => {
-    const { addressList } = useAddressList();
+const AirdropPage = () => {
+    const { addressList, setAddressList, shortenAddr } = useAddressList();
+    const { fileRef, parseFile } = useFile({ setAddressList });
+    const { tokens, selectedToken, setSelectedToken } = useToken();
 
     return (
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             <div className={`${CLASS}__content ${CLASS}__select`}>
-                <Dropdown className={`${CLASS}__dropdown`}>
-                    <Dropdown.Toggle>Select Token</Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                            Another action
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                            Something else
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-                <button className={`${CLASS}__button`}>Add Addresses</button>
+                <Select
+                    tokens={tokens}
+                    setSelectedToken={setSelectedToken}
+                ></Select>
+                <input
+                    ref={fileRef}
+                    id="file-upload"
+                    type="file"
+                    accept=".csv"
+                    onChange={() => parseFile()}
+                    hidden
+                />
+                <label className={`${CLASS}__button`} htmlFor="file-upload">
+                    Upload Addresses
+                </label>
             </div>
-            <div className={`${CLASS}__content ${CLASS}__address-list`}>
-                <h1>Address List</h1>
-                {addressList.map((addr) => {
-                    return (
-                        <div>
-                            {addr.address}: {addr.amount}
-                        </div>
-                    );
-                })}
-            </div>
+            {addressList.length ? (
+                <div className={`${CLASS}__content ${CLASS}__address-list`}>
+                    <div className={`${CLASS}__address-list-header`}>
+                        <h1>Address List</h1>
+                        <span>{addressList.length} address added</span>
+                    </div>
+                    {addressList.map((addr: AirdropAddress, i: number) => {
+                        return (
+                            <div
+                                key={i}
+                                className={`${CLASS}__address-list-address`}
+                            >
+                                {shortenAddr(addr.address)}: {addr.amount}
+                            </div>
+                        );
+                    })}
+                </div>
+            ) : null}
             <div className={`${CLASS}__content ${CLASS}__info`}>
                 <h1>Airdrop Breakdown</h1>
                 <div className={`${CLASS}__detail-row`}>Total token</div>
@@ -49,6 +64,4 @@ const Airdrop = () => {
     );
 };
 
-export default Airdrop;
-
-// npx prettier --write ./client/src/pages/AirdropPage --tab-width 4
+export default AirdropPage;

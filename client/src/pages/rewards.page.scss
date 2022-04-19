@@ -36,9 +36,14 @@
                 display: flex;
 
                 .tosi-button {
+                    display: flex;
                     flex: 1;
-                    margin-top: 20px;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    min-width: 150px;
                     max-width: 350px;
+                    margin-top: 20px;
                 }
 
                 .tosi-cancel-button {
@@ -120,12 +125,12 @@
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                padding: 0px 10px;                    
+                padding: 0px 10px;
 
                 .down-arrow {
                     width: 16px;
                     height: 16px;
-                    margin-right: 10px;    
+                    margin-right: 10px;
                     -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 33 34' fill='currentColor' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M28.875 23.207V29.3945H4.125V23.207H0V29.3945C0 31.6633 1.85625 33.5195 4.125 33.5195H28.875C31.1437 33.5195 33 31.6633 33 29.3945V23.207H28.875ZM26.8125 14.957L23.9044 12.0489L18.5625 17.3702V0.519531H14.4375V17.3702L9.09562 12.0489L6.1875 14.957L16.5 25.2695L26.8125 14.957Z' fill='black'/%3E%3C/svg%3E%0A");
                     mask-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 33 34' fill='currentColor' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M28.875 23.207V29.3945H4.125V23.207H0V29.3945C0 31.6633 1.85625 33.5195 4.125 33.5195H28.875C31.1437 33.5195 33 31.6633 33 29.3945V23.207H28.875ZM26.8125 14.957L23.9044 12.0489L18.5625 17.3702V0.519531H14.4375V17.3702L9.09562 12.0489L6.1875 14.957L16.5 25.2695L26.8125 14.957Z' fill='black'/%3E%3C/svg%3E%0A");
                     background-color: var(--font-highlight);
@@ -139,11 +144,29 @@
             flex-direction: row;
             border-bottom: 1px solid var(--font-inactive-color);
             margin-bottom: 0px;
+            align-items: center;
 
             .payment-status {
                 margin-left: 30px;
+                margin-right: 10px;
                 color: var(--font-inactive-color);
                 font-family: $avenir-font-light;
+
+                .awaiting {
+                    color: var(--font-inactive-color);
+                }
+
+                .confirmations {
+                    color: orange;
+                }
+
+                .confirmed {
+                    color: greenyellow;
+                }
+
+                .completed {
+                    color: green;
+                }
             }
         }
 
@@ -308,10 +331,10 @@
 
             .selection {
                 label {
-                    font-size: 12px;  
+                    font-size: 12px;
                     display: flex;
                     align-items: center;
-                    color: var(--font-highlight);              
+                    color: var(--font-highlight);
                 }
 
                 input {

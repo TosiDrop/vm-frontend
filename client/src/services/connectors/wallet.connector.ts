@@ -1,6 +1,7 @@
 import Loader from "./loader";
 import { Buffer } from "buffer";
 import { Address } from "@emurgo/cardano-serialization-lib-asmjs";
+import { NetworkId } from "src/entities/common.entities";
 
 declare global {
     interface Window { cardano: CIP0030Wallets; }
@@ -42,9 +43,7 @@ export interface CIP0030API {
     getRewardAddresses: () => Promise<Address[]>,
     getNetworkId: () => Promise<number>,
     experimental?: {
-        on: () => void,
-        off: () => void,
-        getCollateral: () => () => void,
+        [key: string]: any
     }
 }
 
@@ -58,7 +57,6 @@ export interface CIP0030Wallet {
     apiVersion: string;
     name: string;
     icon: string;
-    experimental: any;
     api: CIP0030API;
 }
 
@@ -115,8 +113,7 @@ class WalletApi {
 
         let networkId = await this.wallet.api.getNetworkId()
         return {
-            id: networkId,
-            network: networkId === 1 ? 'mainnet' : 'testnet'
+            network: networkId as NetworkId
         }
     }
 
@@ -125,7 +122,7 @@ class WalletApi {
         if (!this.isEnabled() || !this.wallet) throw ERROR.NOT_CONNECTED;
 
         let networkId = await this.getNetworkId();
-        let protocolParameter = await this._getProtocolParameter(networkId.id)
+        let protocolParameter = await this._getProtocolParameter(networkId.network)
 
         // const valueCBOR = await this.wallet.api.getBalance()
         // const value = this.serialLib.Value.from_bytes(Buffer.from(valueCBOR, "hex"))
@@ -595,6 +592,7 @@ class WalletApi {
     //     return txhash
     // }
 
+    // TODO: Change to koios
     async _getProtocolParameter(networkId: number) {
         let result = await this._blockfrostRequest({
             endpoint: `/epochs/latest/parameters`,

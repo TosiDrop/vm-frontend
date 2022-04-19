@@ -1,15 +1,20 @@
 {
-    "name": "Tosidrop",
-    "short_name": "Tosidrop",
+    "name": "TosiDrop",
+    "short_name": "TosiDrop",
     "icons": [
         {
-            "src": "/android-chrome-192x192.png",
+            "src": "/tosidrop-logo-192x192.png",
             "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/tosidrop-logo-512x512.png",
+            "sizes": "512x512",
             "type": "image/png"
         }
     ],
-    "theme_color": "#0b3371",
-    "background_color": "#0b3371",
+    "theme_color": "#c7d5f4",
+    "background_color": "#c7d5f4",
     "start_url": "https://tosidrop.io",
     "display": "standalone"
 }

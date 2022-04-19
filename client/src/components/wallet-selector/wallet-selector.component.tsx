@@ -9,9 +9,10 @@ import './wallet-selector.component.scss';
 interface Params {
     connectedWallet: WalletApi | undefined;
     connectWallet: (walletKey?: WalletKeys) => void;
+    wrongNetwork: boolean | undefined;
 }
 
-function WalletSelectorComponent({ connectedWallet, connectWallet }: Params) {
+function WalletSelectorComponent({ connectedWallet, connectWallet, wrongNetwork }: Params) {
     const [modalVisible, setModalVisible] = useState(false);
     const [walletMenuVisible, setWalletMenuVisible] = useState(false);
     const [walletAddress, setWalletAddress] = useState('');
@@ -28,10 +29,15 @@ function WalletSelectorComponent({ connectedWallet, connectWallet }: Params) {
 
     useEffect(() => {
         async function init() {
-            if (connectedWallet?.wallet?.api) {
-                const addr = abbreviateAddress(await connectedWallet.getAddress())
-                setWalletAddress(addr);
-                setWalletIcon(connectedWallet.wallet.icon);
+            if (connectedWallet) {
+                if (connectedWallet.wallet?.api) {
+                    const addr = abbreviateAddress(await connectedWallet.getAddress());
+                    setWalletAddress(addr);
+                    setWalletIcon(connectedWallet.wallet.icon);
+                    setModalVisible(false);
+                }
+            } else {
+                setWalletAddress('');
                 setModalVisible(false);
             }
         }
@@ -52,11 +58,17 @@ function WalletSelectorComponent({ connectedWallet, connectWallet }: Params) {
         </div>
     )
 
+    const WrongNetwork = () => (
+        <div className={"wallet-wrong"} onClick={() => toggleWalletMenuVisible()}>
+            <p>WRONG NETWORK</p>
+        </div>
+    )
+
     return (
         <div className='wallet-selector-container'>
             <WalletSelectorModalComponent modalVisible={modalVisible} setModalVisible={setModalVisible} connectedWallet={connectedWallet} connectWallet={connectWallet} />
             <div className='wallet-selector'>
-                {connectedWallet?.wallet?.api ? <Connected /> : <NotConnected />}
+                {wrongNetwork ? <WrongNetwork /> : (connectedWallet?.wallet?.api ? <Connected /> : <NotConnected />)}
             </div>
             <div className={'wallet-menu' + (connectedWallet?.wallet?.api && walletMenuVisible ? '' : ' hidden')}>
                 <p onClick={disconnectWallet}><FontAwesomeIcon icon={faLinkSlash} />Disconnect</p>

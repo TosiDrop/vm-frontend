@@ -1,5 +1,7 @@
 export enum PaymentStatus {
     Awaiting,
+    AwaitingConfirmations,
+    Sent,
     Completed
 }
 
@@ -44,4 +46,48 @@ export interface Itn {
 
 export interface MyPoolIDS {
     [key: string]: string;
+}
+
+export interface AirdropAddress {
+    address: string;
+    amount: number;
+}
+
+export interface AdaAddress {
+    address: string;
+    adaAmount?: number;
+}
+
+export interface Token {
+    name: string;
+    amount: number;
+    decimals: number;
+    ticker: string;
+    policyId: string;
+    nameHex: string;
+    addressContainingToken: AdaAddress[];
+}
+
+export interface TokenTransactionHashRequest {
+    address: string;
+    afterBlock: number;
+    tokens: TokenTransactionHashRequestTokens[];
+}
+
+export interface TokenTransactionHashRequestTokens {
+    policyId: string;
+    quantity: string;
+}
+
+export interface PaymentTransactionHashRequest {
+    address: string;
+    toAddress: string;
+    afterBlock: number;
+    adaToSend: number;
+}
+
+export enum NetworkId {
+    testnet,
+    mainnet,
+    undefined
 }

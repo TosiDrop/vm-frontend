@@ -5,8 +5,6 @@
     flex: 1;
     padding-top: 20px;
     color: var(--font-highlight);
-    // width: 100%;
-    // max-width: 600px;
 
     & > * {
         margin-bottom: 20px;
@@ -26,29 +24,6 @@
         width: 100%;
     }
 
-    &__dropdown {
-        background: var(--gradient-button);
-        border-radius: 10px;
-        flex: 1;
-        margin-right: 5px;
-        .btn-primary {
-            font-size: 1rem;
-            color: inherit;
-            box-shadow: unset !important;
-            width: 100%;
-            text-align: center;
-            height: 100%;
-            border-radius: 10px;
-            background-color: unset !important;
-            border-color: unset !important;
-            border: none !important;
-        }
-        .dropdown-menu {
-            border-radius: 10px;
-            width: 100%;
-        }
-    }
-
     &__button {
         font-size: 1rem;
         border-radius: 10px;
@@ -56,17 +31,26 @@
         padding: 10px;
         background: var(--gradient-button);
         color: inherit;
-        flex: 1;
-        margin-left: 5px;
+        text-align: center;
     }
 
     &__button-airdrop {
         margin-left: 50%;
         transform: translateX(-50%);
+        font-family: inherit;
+        box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.13);
+        padding-left: 30px;
+        padding-right: 30px;
     }
 
     &__select {
         display: flex;
+
+        label {
+            flex: 1;
+            margin-left: 5px;
+            cursor: pointer;
+        }
     }
 
     &__detail-row {
@@ -76,9 +60,28 @@
     &__address-list {
         overflow: auto;
         height: 200px;
-        & > div {
-            border-bottom: 1px solid var(--font-highlight);
-            padding: 5px 0;
+    }
+
+    &__address-list-address {
+        border-bottom: 1px solid var(--font-highlight);
+        padding: 5px 0;
+    }
+
+    &__address-list-header {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        margin-bottom: 10px;
+
+        & > h1 {
+            margin-bottom: 0;
+        }
+
+        & > span {
+            margin-left: 10px;
+            font-style: italic;
+            font-size: 0.8rem;
+            opacity: 0.8;
         }
     }
 }

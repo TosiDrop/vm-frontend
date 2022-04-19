@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route } from "react-router-dom";
 import Dashboard from '../pages/dashboard';
 import Rewards from '../pages/rewards.page';
@@ -10,11 +9,12 @@ import WalletApi from '../services/connectors/wallet.connector';
 interface Params {
     connectedWallet: WalletApi | undefined;
     showModal: (text: string) => void;
+    wrongNetwork: boolean | undefined;
 }
 
-function Page({ connectedWallet, showModal }: Params) {
+function Page({ connectedWallet, showModal, wrongNetwork }: Params) {
     return <Routes>
-        <Route path="/" element={<Rewards connectedWallet={connectedWallet} showModal={showModal} />} />
+        <Route path="/" element={<Rewards connectedWallet={connectedWallet} showModal={showModal} wrongNetwork={wrongNetwork} />} />
         <Route path="/history" element={<RewardsHistory />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/feedback" element={<Feedback />} />
