@@ -14,9 +14,10 @@ import { useCallback } from 'react';
 interface Params {
     connectedWallet: WalletApi | undefined;
     showModal: (text: string) => void;
+    wrongNetwork: boolean | undefined;
 }
 
-function Rewards({ connectedWallet, showModal }: Params) {
+function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
     const [hideSendAdaInfo, setHideSendAdaInfo] = useState(true);
@@ -280,7 +281,7 @@ function Rewards({ connectedWallet, showModal }: Params) {
 
     useEffect(() => {
         async function init() {
-            if (connectedWallet?.wallet?.api) {
+            if (connectedWallet?.wallet?.api && !wrongNetwork) {
                 setSearchAddress(await connectedWallet.getAddress());
                 setHideCheck(false);
                 setHideStakingInfo(true);
@@ -291,7 +292,7 @@ function Rewards({ connectedWallet, showModal }: Params) {
         }
 
         init();
-    }, [connectedWallet?.wallet?.api, connectedWallet]);
+    }, [connectedWallet?.wallet?.api, connectedWallet, wrongNetwork]);
 
     function renderSendAdaButton() {
         if (connectedWallet?.wallet?.api) {
@@ -328,7 +329,7 @@ function Rewards({ connectedWallet, showModal }: Params) {
                         type="text"
                         value={searchAddress}
                         onInput={(e: KeyboardEvent<HTMLInputElement>) => setSearchAddress((e.target as HTMLInputElement).value)}
-                        disabled={!hideStakingInfo || typeof connectedWallet?.wallet?.api !== 'undefined'}
+                        disabled={!hideStakingInfo || (typeof connectedWallet?.wallet?.api !== 'undefined' && !wrongNetwork) }
                     ></input>
                     <div className='content-button'>
                         <button className='tosi-button' disabled={!hideStakingInfo} onClick={checkRewards}>

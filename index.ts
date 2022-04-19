@@ -104,7 +104,7 @@ app.get("/healthz", async (req: any, res: any) => {
 
 app.get("/network", (req: any, res: any) => {
     res.status(200).json({
-        network: CARDANO_NETWORK
+        network: CARDANO_NETWORK === 'testnet' ? 0 : 1
     })
 });
 
