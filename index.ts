@@ -8,7 +8,9 @@ import { ExtendedMetadata, Metadata, PaymentTransactionHashRequest, TokenTransac
 import { formatTokens } from './client/src/services/utils.services'
 require('dotenv').config()
 
+const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || false;
 const CARDANO_NETWORK = process.env.CARDANO_NETWORK || 'testnet';
+const CLAIM_ENABLED = process.env.CLAIM_ENABLED || true;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const PORT = process.env.PORT || 3000;
 const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
@@ -101,6 +103,14 @@ app.get("/healthz", async (req: any, res: any) => {
             status: "UP"
         })
     }
+});
+
+app.get("/features", (req: any, res: any) => {
+    res.status(200).json({
+        airdrop_enabled: AIRDROP_ENABLED,
+        claim_enabled: CLAIM_ENABLED,
+        network: CARDANO_NETWORK
+    })
 });
 
 app.get("/network", (req: any, res: any) => {
