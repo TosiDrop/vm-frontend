@@ -70,4 +70,19 @@
             color: var(--font-highlight);
         }
     }
+
+    .wallet-wrong {
+        padding: 0px 15px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+
+        p {
+            color: var(--font-warn);
+        }
+
+        &.hidden {
+            visibility: hidden;
+        }
+    }
 }

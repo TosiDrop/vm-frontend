@@ -1,4 +1,4 @@
-import { PaymentTransactionHashRequest, TokenTransactionHashRequest } from "src/entities/common.entities";
+import { NetworkId, PaymentTransactionHashRequest, TokenTransactionHashRequest } from "src/entities/common.entities";
 import { TransactionStatus } from "src/entities/koios.entities";
 import { GetRewards } from "../entities/vm.entities";
 const axios = require('axios').default;
@@ -41,4 +41,12 @@ export async function getBlock(): Promise<{ block_no: number }> {
         return response.data;
     }
     return { block_no: 0 };
+}
+
+export async function getNetworkId(): Promise<{ network: NetworkId }> {
+    const response = await axios.get(`/network`);
+    if (response && response.data) {
+        return response.data;
+    }
+    return { network: NetworkId.undefined };
 }

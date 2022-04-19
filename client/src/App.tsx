@@ -1,16 +1,18 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { connectWallet as connectWalletRedux } from "src/reducers/walletSlice";
-import ModalComponent, { ModalTypes } from "./components/modal/modal.component";
-import Header from "./layouts/header.layout";
-import Menu from "./layouts/menu.layout";
-import Page from "./layouts/page.layout";
+import ModalComponent, { ModalTypes } from './components/modal/modal.component';
+import { NetworkId } from './entities/common.entities';
+import Header from './layouts/header.layout';
+import Menu from './layouts/menu.layout';
+import Page from './layouts/page.layout';
 import WalletApi, {
     Cardano,
     CIP0030Wallet,
     WalletKeys,
 } from "./services/connectors/wallet.connector";
-import "./styles.scss";
+import { getNetworkId } from './services/http.services';
+import './styles.scss';
 
 export const Themes = {
     light: "theme-light",
@@ -25,6 +27,8 @@ function App() {
     const [connectedWallet, setConnectedWallet] = useState<WalletApi>();
     const [modalVisible, setModalVisible] = useState(false);
     const [modalText, setModalText] = useState<string>("");
+    const [networkId, setNetworkId] = useState<NetworkId>();
+    const [wrongNetwork, setWrongNetwork] = useState<boolean>();
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
@@ -45,10 +49,16 @@ function App() {
 
     const connectWallet = useCallback(async (walletKey?: WalletKeys) => {
         if (walletKey) {
-            if (connectedWallet) {
+            if (connectedWallet && typeof networkId !== 'undefined') {
                 await connectedWallet.enable(walletKey).then(async (_api) => {
                     if (_api) {
                         if (typeof _api !== "string") {
+                            const connectedWalletNetworkId = { network: await _api.getNetworkId() };
+                            if (connectedWalletNetworkId.network === networkId) {
+                                setWrongNetwork(false);
+                            } else {
+                                setWrongNetwork(true);
+                            }
                             const connectedWalletUpdate: CIP0030Wallet = {
                                 ...window.cardano[WalletKeys[walletKey]],
                                 api: _api,
@@ -66,13 +76,15 @@ function App() {
                 });
             }
         } else {
-            if (connectedWallet) {
+            if (connectedWallet?.wallet?.api) {
                 const walletApi = await getWalletApi();
                 dispatch(connectWalletRedux(walletApi));
+                localStorage.setItem('wallet-provider', '');
                 setConnectedWallet(walletApi);
+                setWrongNetwork(false);
             }
         }
-    }, [connectedWallet, dispatch]);
+    }, [connectedWallet, dispatch, networkId]);
 
     const getWalletApi = async (
         walletApi?: CIP0030Wallet
@@ -87,26 +99,32 @@ function App() {
     };
 
     useEffect(() => {
-        async function init() {            
-            const walletKey = localStorage.getItem('wallet-provider');
-            if (!walletKey) {
+        async function init() {
+            if (!connectedWallet) {
                 const walletApi = await getWalletApi();
                 dispatch(connectWalletRedux(walletApi));
                 setConnectedWallet(walletApi);
-            } else {
+            } else if (!connectedWallet.wallet) {
+                const walletKey = localStorage.getItem('wallet-provider');
                 connectWallet(walletKey as WalletKeys);
             }
         }
 
         init();
-    }, [setConnectedWallet, connectWallet]);
+    }, [connectWallet, dispatch, connectedWallet]);
 
     useEffect(() => {
+        const initNetworkId = async () => {
+            const networkIdResponse = await getNetworkId();
+            setNetworkId(networkIdResponse.network);
+        }
+
         const newTheme = localStorage.getItem('theme');
         if (newTheme) {
             setTheme(newTheme);
         }
-    });
+        initNetworkId();
+    }, []);
 
     return (
         <div className={theme}>
@@ -123,8 +141,9 @@ function App() {
                     connectWallet={connectWallet}
                     toggleMenu={toggleMenu}
                     toggleTheme={toggleTheme}
+                    wrongNetwork={wrongNetwork}
                 />
-                <Page connectedWallet={connectedWallet} showModal={showModal} />
+                <Page connectedWallet={connectedWallet} showModal={showModal} wrongNetwork={wrongNetwork} />
             </div>
         </div>
     );
