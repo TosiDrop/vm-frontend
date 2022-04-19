@@ -8,22 +8,19 @@ import WalletApi from "src/services/connectors/wallet.connector";
 
 const CLASS = "airdrop-page";
 
-interface AirdropPageProps {
-    connectedWallet: WalletApi | undefined;
-}
-
-const AirdropPage = ({ connectedWallet }: AirdropPageProps) => {
+const AirdropPage = () => {
     const { addressList, setAddressList, shortenAddr } = useAddressList();
     const { fileRef, parseFile } = useFile({ setAddressList });
-    const { tokens, selectedToken, setSelectedToken } = useToken({
-        connectedWallet,
-    });
+    const { tokens, selectedToken, setSelectedToken } = useToken();
 
     return (
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             <div className={`${CLASS}__content ${CLASS}__select`}>
-                <Select></Select>
+                <Select
+                    tokens={tokens}
+                    setSelectedToken={setSelectedToken}
+                ></Select>
                 <input
                     ref={fileRef}
                     id="file-upload"

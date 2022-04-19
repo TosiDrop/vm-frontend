@@ -18,7 +18,7 @@ function Page({ connectedWallet, showModal, wrongNetwork }: Params) {
         <Route path="/history" element={<RewardsHistory />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/feedback" element={<Feedback />} />
-        <Route path="/airdrop" element={<AirdropPage connectedWallet={connectedWallet} />} />
+        <Route path="/airdrop" element={<AirdropPage />} />
     </Routes>
 }
 

@@ -318,4 +318,3 @@ async function getRewards(stakeAddress: string) {
     }
     return getRewardsResponse;
 }
-

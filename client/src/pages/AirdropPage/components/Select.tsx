@@ -1,39 +1,64 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useComponentVisible from "src/hooks/useComponentVisible";
+import { Token } from "../utils";
 import "./index.scss";
-
-const options = ["hello", "world", "ada", "sundae"];
 
 const CLASS = "token-select";
 
-const Select = () => {
-    const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState("");
+interface Props {
+    tokens: any[];
+    setSelectedToken: Function;
+}
 
-    const selectOption = (v: string) => {
-        setOpen(false);
-        setSelected(v);
+const Select = ({ tokens, setSelectedToken }: Props) => {
+    const { visible, ref, setVisible } = useComponentVisible(false);
+    const [disabled, setDisabled] = useState<boolean>(true);
+    const [selected, setSelected] = useState<string>("");
+
+    tokens = [
+        {
+            ticker: "anetaBTC",
+        },
+    ];
+
+    const selectOption = (v: Token) => {
+        setVisible(false);
+        setSelected(v.ticker);
+        setSelectedToken(v);
     };
 
+    useEffect(() => {
+        if (tokens.length) {
+            setDisabled(false);
+            return;
+        }
+        setDisabled(true);
+    }, [tokens]);
+
     return (
-        <div className={`${CLASS}`}>
+        <div
+            ref={ref}
+            className={`${CLASS} ${disabled ? `${CLASS}__disabled` : ""}`}
+        >
             <div
                 className={`${CLASS}__select-btn`}
-                onClick={() => setOpen(!open)}
+                onClick={() => !disabled && setVisible(!visible)}
             >
-                {selected ? selected : "Select Token"}
+                {getBtnText(disabled, selected)}
             </div>
             <div
                 className={`${CLASS}__options ${
-                    open ? `${CLASS}__options-visible` : ""
+                    visible ? `${CLASS}__options-visible` : ""
                 }`}
             >
-                {options.map((o) => {
+                {tokens.map((token) => {
                     return (
                         <div
+                            key={token.ticker}
                             className={`${CLASS}__option`}
-                            onClick={() => selectOption(o)}
+                            onClick={() => selectOption(token)}
                         >
-                            {o}
+                            {token.ticker}
                         </div>
                     );
                 })}
@@ -43,3 +68,13 @@ const Select = () => {
 };
 
 export default Select;
+
+const getBtnText = (disabled: boolean, selected: string) => {
+    if (disabled) {
+        return "Connect wallet to select token";
+    }
+    if (selected) {
+        return selected;
+    }
+    return "Select Token";
+};

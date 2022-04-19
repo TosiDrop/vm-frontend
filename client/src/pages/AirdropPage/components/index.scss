@@ -6,6 +6,11 @@
     position: relative;
     cursor: pointer;
 
+    &__disabled {
+        filter: grayscale(0.8);
+        cursor: default;
+    }
+
     &__select-btn {
         display: flex;
         align-items: center;

@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import WalletApi from "src/services/connectors/wallet.connector";
+import WalletApi, {
+    CIP0030API,
+} from "src/services/connectors/wallet.connector";
 
 interface WalletState {
-    connectedWallet: WalletApi | undefined;
+    api: CIP0030API | undefined;
 }
 
 const initialState: WalletState = {
-    connectedWallet: undefined,
+    api: undefined,
 };
 
 export const walletSlice = createSlice({
@@ -14,7 +16,7 @@ export const walletSlice = createSlice({
     initialState,
     reducers: {
         connectWallet: (state, action: PayloadAction<WalletApi>) => {
-            state.connectedWallet = action.payload;
+            state.api = action.payload?.wallet?.api;
         },
     },
 });

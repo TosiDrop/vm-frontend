@@ -5,29 +5,25 @@ import {
     AdaAddress,
     TokenAddress,
 } from "../utils";
-import { parseUtxo, convertBufferToHex } from "./helper";
+import {
+    parseUtxo,
+    convertBufferToHex,
+    getAssetDetails,
+    getCompleteTokenArray,
+} from "./helper";
 import { useEffect, useState } from "react";
-import WalletApi from "src/services/connectors/wallet.connector";
 import { useSelector } from "react-redux";
 import { RootState } from "src/store";
+import { Buffer } from "buffer";
 
-interface Props {
-    connectedWallet: WalletApi | undefined;
-}
-
-const useToken = ({ connectedWallet }: Props) => {
-    const [selectedToken, setSelectedToken] = useState("");
+const useToken = () => {
+    const [selectedToken, setSelectedToken] = useState<Token | null>(null);
     const [tokens, setTokens] = useState<Token[]>([]);
-    const wallet = useSelector((state: RootState) => state.wallet);
+    const api = useSelector((state: RootState) => state.wallet.api);
 
     useEffect(() => {
-        // if (connectedWallet) {
-        //     getTokenArrayInWallet()
-        // }
-        (() => {
-            
-        })();
-    }, []);
+        if (api) getTokenArrayInWallet(api);
+    }, [api]);
 
     const getTokenArrayInWallet = async (API: any): Promise<void> => {
         try {
@@ -112,19 +108,16 @@ const useToken = ({ connectedWallet }: Props) => {
                 }
             }
 
-            console.log(assetAddresses);
-
-            //   const assetDetail = await getAssetDetails(assetAmount);
-            //   const tokenArray = getCompleteTokenArray(
-            //     assetAmount,
-            //     assetAddresses,
-            //     assetDetail
-            //   );
-            //   tokenArray.sort((a, b) => (a.name < b.name ? -1 : 1));
-            //   dispatch(setAddressContainingAda(addressContainingAda));
-            //   dispatch(setTokenArray(tokenArray));
+            const assetDetail = await getAssetDetails(assetAmount);
+            const tokenArray = getCompleteTokenArray(
+                assetAmount,
+                assetAddresses,
+                assetDetail
+            );
+            tokenArray.sort((a, b) => (a.name < b.name ? -1 : 1));
+            setTokens(tokenArray);
         } catch (err) {
-            //   setPopUpError("Something is wrong");
+            console.log("error", err);
         }
     };
 
