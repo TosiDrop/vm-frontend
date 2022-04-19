@@ -19,6 +19,7 @@ const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 
 const app = express();
 app.use(cors());
+app.use(express.static('client/build'));
 app.use(express.json());
 
 const server = app.listen(PORT, () => {
