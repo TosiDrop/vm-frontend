@@ -5,7 +5,12 @@ import {
     AdaAddress,
     TokenAddress,
 } from "../utils";
-import { parseUtxo, convertBufferToHex, getAssetDetails, getCompleteTokenArray } from "./helper";
+import {
+    parseUtxo,
+    convertBufferToHex,
+    getAssetDetails,
+    getCompleteTokenArray,
+} from "./helper";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "src/store";
@@ -17,7 +22,7 @@ const useToken = () => {
     const api = useSelector((state: RootState) => state.wallet.api);
 
     useEffect(() => {
-        if (api) getTokenArrayInWallet(api)
+        if (api) getTokenArrayInWallet(api);
     }, [api]);
 
     const getTokenArrayInWallet = async (API: any): Promise<void> => {
@@ -105,14 +110,14 @@ const useToken = () => {
 
             const assetDetail = await getAssetDetails(assetAmount);
             const tokenArray = getCompleteTokenArray(
-            assetAmount,
-            assetAddresses,
-            assetDetail
+                assetAmount,
+                assetAddresses,
+                assetDetail
             );
             tokenArray.sort((a, b) => (a.name < b.name ? -1 : 1));
-            setTokens(tokenArray)
+            setTokens(tokenArray);
         } catch (err) {
-            console.log('error', err)
+            console.log("error", err);
         }
     };
 

@@ -17,7 +17,10 @@ const AirdropPage = () => {
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             <div className={`${CLASS}__content ${CLASS}__select`}>
-                <Select tokens={tokens} setSelectedToken={setSelectedToken}></Select>
+                <Select
+                    tokens={tokens}
+                    setSelectedToken={setSelectedToken}
+                ></Select>
                 <input
                     ref={fileRef}
                     id="file-upload"

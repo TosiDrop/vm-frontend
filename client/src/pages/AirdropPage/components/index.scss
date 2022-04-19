@@ -7,7 +7,7 @@
     cursor: pointer;
 
     &__disabled {
-        filter: grayscale(.8);
+        filter: grayscale(0.8);
         cursor: default;
     }
 
