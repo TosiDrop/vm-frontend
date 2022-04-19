@@ -90,4 +90,8 @@ export enum NetworkId {
     testnet,
     mainnet,
     undefined
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5ac342c (wallet connected checks the correct network / several fixes regarding this)

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { NetworkId, PaymentTransactionHashRequest, TokenTransactionHashRequest } from "src/entities/common.entities";
-=======
-import { PaymentTransactionHashRequest, TokenTransactionHashRequest } from "src/entities/common.entities";
->>>>>>> 9efd25a (payment status finished)
 import { TransactionStatus } from "src/entities/koios.entities";
 import { GetRewards } from "../entities/vm.entities";
 const axios = require('axios').default;
