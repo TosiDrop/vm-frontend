@@ -7,13 +7,12 @@ import {
 } from "../utils";
 import { parseUtxo, convertBufferToHex, getAssetDetails, getCompleteTokenArray } from "./helper";
 import { useEffect, useState } from "react";
-import WalletApi from "src/services/connectors/wallet.connector";
 import { useSelector } from "react-redux";
 import { RootState } from "src/store";
 import { Buffer } from "buffer";
 
 const useToken = () => {
-    const [selectedToken, setSelectedToken] = useState("");
+    const [selectedToken, setSelectedToken] = useState<Token | null>(null);
     const [tokens, setTokens] = useState<Token[]>([]);
     const api = useSelector((state: RootState) => state.wallet.api);
 
@@ -104,19 +103,16 @@ const useToken = () => {
                 }
             }
 
-              const assetDetail = await getAssetDetails(assetAmount);
-              const tokenArray = getCompleteTokenArray(
-                assetAmount,
-                assetAddresses,
-                assetDetail
-              );
-              console.log(tokenArray)
-              tokenArray.sort((a, b) => (a.name < b.name ? -1 : 1));
-            //   dispatch(setAddressContainingAda(addressContainingAda));
-            //   dispatch(setTokenArray(tokenArray));
+            const assetDetail = await getAssetDetails(assetAmount);
+            const tokenArray = getCompleteTokenArray(
+            assetAmount,
+            assetAddresses,
+            assetDetail
+            );
+            tokenArray.sort((a, b) => (a.name < b.name ? -1 : 1));
+            setTokens(tokenArray)
         } catch (err) {
             console.log('error', err)
-            //   setPopUpError("Something is wrong");
         }
     };
 
