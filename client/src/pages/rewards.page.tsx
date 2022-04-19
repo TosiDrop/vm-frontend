@@ -295,7 +295,7 @@ function Rewards({ connectedWallet, showModal, wrongNetwork }: Params) {
     }, [connectedWallet?.wallet?.api, connectedWallet, wrongNetwork]);
 
     function renderSendAdaButton() {
-        if (connectedWallet?.wallet?.api) {
+        if (connectedWallet?.wallet?.api && !wrongNetwork) {
             return (
                 <button className='tosi-button' onClick={sendADA}>
                     Send ADA
