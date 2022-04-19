@@ -31,9 +31,11 @@ function App() {
     };
 
     const toggleTheme = () => {
-        setTheme((theme) =>
-            theme === Themes.dark ? Themes.light : Themes.dark
-        );
+        setTheme((theme) => {
+            const newTheme = theme === Themes.dark ? Themes.light : Themes.dark;
+            localStorage.setItem('theme', newTheme);
+            return newTheme;
+        });
     };
 
     const showModal = (text: string) => {
@@ -55,8 +57,8 @@ function App() {
                                 connectedWalletUpdate
                             );
                             dispatch(connectWalletRedux(walletApi));
-                            setConnectedWallet(walletApi);
                             localStorage.setItem('wallet-provider', walletKey);
+                            setConnectedWallet(walletApi);
                         } else {
                             showModal(_api);
                         }
@@ -65,12 +67,9 @@ function App() {
             }
         } else {
             if (connectedWallet) {
-                if (connectedWallet?.wallet?.api) {
-                    const walletApi = await getWalletApi();
-                    dispatch(connectWalletRedux(walletApi));
-                    setConnectedWallet(walletApi);
-                    localStorage.setItem('wallet-provider', '');
-                }
+                const walletApi = await getWalletApi();
+                dispatch(connectWalletRedux(walletApi));
+                setConnectedWallet(walletApi);
             }
         }
     }, [connectedWallet, dispatch]);
@@ -88,19 +87,26 @@ function App() {
     };
 
     useEffect(() => {
-        async function init() {
-            if (!connectedWallet) {
+        async function init() {            
+            const walletKey = localStorage.getItem('wallet-provider');
+            if (!walletKey) {
                 const walletApi = await getWalletApi();
                 dispatch(connectWalletRedux(walletApi));
                 setConnectedWallet(walletApi);
-            } else if (!connectedWallet.wallet) {
-                const walletKey = localStorage.getItem('wallet-provider');
+            } else {
                 connectWallet(walletKey as WalletKeys);
             }
         }
 
         init();
-    }, [setConnectedWallet, connectedWallet, dispatch]);
+    }, [setConnectedWallet, connectWallet]);
+
+    useEffect(() => {
+        const newTheme = localStorage.getItem('theme');
+        if (newTheme) {
+            setTheme(newTheme);
+        }
+    });
 
     return (
         <div className={theme}>
