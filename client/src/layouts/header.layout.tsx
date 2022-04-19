@@ -11,8 +11,9 @@ interface Params {
     toggleTheme: () => void;
     connectWallet: (walletKey?: WalletKeys) => void;
     connectedWallet: WalletApi | undefined;
+    wrongNetwork: boolean | undefined;
 }
-function Header({ toggleMenu, toggleTheme, connectWallet, connectedWallet }: Params) {
+function Header({ toggleMenu, toggleTheme, connectWallet, connectedWallet, wrongNetwork }: Params) {
 
     return <div className='header'>
         <div className='header-title'>
@@ -25,7 +26,7 @@ function Header({ toggleMenu, toggleTheme, connectWallet, connectedWallet }: Par
             </div>
             <div className='header-filler'></div>
             <div className='header-wallet-selector noselect'>
-                <WalletSelectorComponent connectedWallet={connectedWallet} connectWallet={connectWallet} />
+                <WalletSelectorComponent connectedWallet={connectedWallet} connectWallet={connectWallet} wrongNetwork={wrongNetwork} />
             </div>
             <div className='last'>
                 <button className="button light-button" onClick={toggleTheme}>

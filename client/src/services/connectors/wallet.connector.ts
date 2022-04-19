@@ -1,6 +1,7 @@
 import Loader from "./loader";
 import { Buffer } from "buffer";
 import { Address } from "@emurgo/cardano-serialization-lib-asmjs";
+import { NetworkId } from "src/entities/common.entities";
 
 declare global {
     interface Window { cardano: CIP0030Wallets; }
@@ -112,8 +113,7 @@ class WalletApi {
 
         let networkId = await this.wallet.api.getNetworkId()
         return {
-            id: networkId,
-            network: networkId === 1 ? 'mainnet' : 'testnet'
+            network: networkId as NetworkId
         }
     }
 
@@ -122,7 +122,7 @@ class WalletApi {
         if (!this.isEnabled() || !this.wallet) throw ERROR.NOT_CONNECTED;
 
         let networkId = await this.getNetworkId();
-        let protocolParameter = await this._getProtocolParameter(networkId.id)
+        let protocolParameter = await this._getProtocolParameter(networkId.network)
 
         // const valueCBOR = await this.wallet.api.getBalance()
         // const value = this.serialLib.Value.from_bytes(Buffer.from(valueCBOR, "hex"))

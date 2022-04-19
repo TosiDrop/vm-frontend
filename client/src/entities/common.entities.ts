@@ -85,3 +85,9 @@ export interface PaymentTransactionHashRequest {
     afterBlock: number;
     adaToSend: number;
 }
+
+export enum NetworkId {
+    testnet,
+    mainnet,
+    undefined
+}
