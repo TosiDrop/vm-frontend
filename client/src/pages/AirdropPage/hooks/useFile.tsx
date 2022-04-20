@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { AirdropAddress } from "src/entities/common.entities";
+import { csvToArray, splitAmountArray } from "../utils";
 
 const useFile = ({ setAddressList }: { setAddressList: Function }) => {
     const fileRef = useRef<any>(null);
@@ -27,25 +27,3 @@ const useFile = ({ setAddressList }: { setAddressList: Function }) => {
 };
 
 export default useFile;
-
-export const csvToArray = (csv: string): string[] => {
-    csv = csv.replaceAll("\r", ""); // for windows line ending
-    const parsedCsv = csv.split("\n");
-    if (parsedCsv[parsedCsv.length - 1] === "") parsedCsv.pop();
-    return parsedCsv;
-};
-
-export const splitAmountArray = (
-    addressAmountParsed: string[]
-): AirdropAddress[] => {
-    const res: AirdropAddress[] = [];
-    let temp: string[] = [];
-    for (let addressAmountInfo of addressAmountParsed) {
-        temp = addressAmountInfo.split(",");
-        res.push({
-            address: temp[0],
-            amount: Number(Number(temp[1])),
-        });
-    }
-    return res;
-};

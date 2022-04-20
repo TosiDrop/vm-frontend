@@ -1,16 +1,14 @@
 import useAddressList from "./hooks/useAddressList";
 import useFile from "./hooks/useFile";
-import { AirdropAddress } from "src/entities/common.entities";
+import { TokenAddress } from "./utils";
 import "./index.scss";
 import useToken from "./hooks/useToken";
 import Select from "./components/Select";
-import WalletApi from "src/services/connectors/wallet.connector";
-import { useState } from "react";
 
 const CLASS = "airdrop-page";
 
 const AirdropPage = () => {
-    const { addressList, setAddressList, shortenAddr } = useAddressList();
+    const { addressList, setAddressList, shortenAddress } = useAddressList();
     const { fileRef, parseFile } = useFile({ setAddressList });
     const { tokens, selectedToken, setSelectedToken, validated, exec } =
         useToken();
@@ -41,13 +39,14 @@ const AirdropPage = () => {
                         <h1>Address List</h1>
                         <span>{addressList.length} address added</span>
                     </div>
-                    {addressList.map((addr: AirdropAddress, i: number) => {
+                    {addressList.map((addr: TokenAddress, i: number) => {
                         return (
                             <div
                                 key={i}
                                 className={`${CLASS}__address-list-address`}
                             >
-                                {shortenAddr(addr.address)}: {addr.amount}
+                                {shortenAddress(addr.address)}:{" "}
+                                {addr.tokenAmount}
                             </div>
                         );
                     })}

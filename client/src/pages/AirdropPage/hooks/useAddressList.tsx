@@ -1,16 +1,12 @@
 import { useState } from "react";
-import { AirdropAddress } from "src/entities/common.entities";
+import { TokenAddress, shortenAddress } from "../utils";
 
 const useAddressList = () => {
-    const [addressList, setAddressList] = useState<AirdropAddress[]>([]);
-
-    const shortenAddr = (addr: string) => {
-        return `${addr.slice(0, 5)}...${addr.slice(addr.length - 10)}`;
-    };
+    const [addressList, setAddressList] = useState<TokenAddress[]>([]);
 
     return {
         addressList,
-        shortenAddr,
+        shortenAddress,
         setAddressList,
     };
 };
