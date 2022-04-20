@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import useComponentVisible from "src/hooks/useComponentVisible";
-import { Token } from "../utils";
+import { Token, getRealAmount } from "../utils";
 import "./index.scss";
 
 const CLASS = "token-select";
 
 interface Props {
-    tokens: any[];
+    tokens: Token[];
     setSelectedToken: Function;
 }
 
@@ -14,12 +14,6 @@ const Select = ({ tokens, setSelectedToken }: Props) => {
     const { visible, ref, setVisible } = useComponentVisible(false);
     const [disabled, setDisabled] = useState<boolean>(true);
     const [selected, setSelected] = useState<string>("");
-
-    tokens = [
-        {
-            ticker: "anetaBTC",
-        },
-    ];
 
     const selectOption = (v: Token) => {
         setVisible(false);
@@ -58,7 +52,10 @@ const Select = ({ tokens, setSelectedToken }: Props) => {
                             className={`${CLASS}__option`}
                             onClick={() => selectOption(token)}
                         >
-                            {token.ticker}
+                            <span>{token.ticker}</span>
+                            <span>
+                                {getRealAmount(token.amount, token.decimals)}
+                            </span>
                         </div>
                     );
                 })}

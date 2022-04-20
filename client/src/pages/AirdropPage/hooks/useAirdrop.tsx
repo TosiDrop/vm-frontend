@@ -1,12 +1,15 @@
-import { TokenAddress, Token, AdaAddress, AIRDROP_API_TX } from "../utils";
 import {
+    TokenAddress,
+    Token,
+    AdaAddress,
+    AIRDROP_API_TX,
     prepareBody,
     lovelaceToAda,
     transact,
     checkTxStatus,
     sleep,
     getAirdrop,
-} from "./helper";
+} from "../utils";
 import axios from "axios";
 
 const useAirdrop = () => {

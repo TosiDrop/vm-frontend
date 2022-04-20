@@ -5,13 +5,15 @@ import "./index.scss";
 import useToken from "./hooks/useToken";
 import Select from "./components/Select";
 import WalletApi from "src/services/connectors/wallet.connector";
+import { useState } from "react";
 
 const CLASS = "airdrop-page";
 
 const AirdropPage = () => {
     const { addressList, setAddressList, shortenAddr } = useAddressList();
     const { fileRef, parseFile } = useFile({ setAddressList });
-    const { tokens, selectedToken, setSelectedToken } = useToken();
+    const { tokens, selectedToken, setSelectedToken, validated, exec } =
+        useToken();
 
     return (
         <div className={CLASS}>
@@ -51,14 +53,21 @@ const AirdropPage = () => {
                     })}
                 </div>
             ) : null}
-            <div className={`${CLASS}__content ${CLASS}__info`}>
-                <h1>Airdrop Breakdown</h1>
-                <div className={`${CLASS}__detail-row`}>Total token</div>
-                <div className={`${CLASS}__detail-row`}>Total ADA to spend</div>
-                <div className={`${CLASS}__detail-row`}>Estimated fee</div>
-            </div>
-            <button className={`${CLASS}__button ${CLASS}__button-airdrop`}>
-                Send Airdrop
+            {validated ? (
+                <div className={`${CLASS}__content ${CLASS}__info`}>
+                    <h1>Airdrop Breakdown</h1>
+                    <div className={`${CLASS}__detail-row`}>Total token</div>
+                    <div className={`${CLASS}__detail-row`}>
+                        Total ADA to spend
+                    </div>
+                    <div className={`${CLASS}__detail-row`}>Estimated fee</div>
+                </div>
+            ) : null}
+            <button
+                className={`${CLASS}__button ${CLASS}__button-airdrop`}
+                onClick={() => exec()}
+            >
+                {validated ? "Send Airdrop" : "Validate Airdrop"}
             </button>
         </div>
     );
