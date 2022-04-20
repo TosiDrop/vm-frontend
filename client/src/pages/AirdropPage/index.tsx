@@ -3,6 +3,9 @@ import { TokenAddress, shortenAddress } from "./utils";
 import "./index.scss";
 import useToken from "./hooks/useToken";
 import Select from "./components/Select";
+import { useEffect, useLayoutEffect, useState } from "react";
+import axios from "axios";
+import ComingSoonPage from "../ComingSoonPage";
 
 const CLASS = "airdrop-page";
 
@@ -16,9 +19,17 @@ const AirdropPage = () => {
         addressList,
         setAddressList,
     } = useToken();
-    const { fileRef, parseFile } = useFile({ setAddressList });
 
-    return (
+    const { fileRef, parseFile } = useFile({ setAddressList });
+    const [enabled, setEnabled] = useState(false);
+
+    useLayoutEffect(() => {
+        axios.get("/features").then((res) => {
+            setEnabled(res.data.airdrop_enabled);
+        });
+    }, []);
+
+    return enabled ? (
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             <div className={`${CLASS}__content ${CLASS}__select`}>
@@ -74,6 +85,8 @@ const AirdropPage = () => {
                 {validated ? "Send Airdrop" : "Validate Airdrop"}
             </button>
         </div>
+    ) : (
+        <ComingSoonPage />
     );
 };
 

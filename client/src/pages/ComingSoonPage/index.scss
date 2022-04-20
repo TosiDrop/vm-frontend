@@ -1,0 +1,15 @@
+.comingsoon-page {
+    margin-right: 30px;
+    margin-bottom: 30px;
+    margin-left: 270px;
+    flex: 1;
+    padding-top: 20px;
+    color: var(--font-highlight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80%;
+    &__title {
+        font-size: 24px;
+    }
+}
