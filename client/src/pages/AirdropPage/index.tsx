@@ -1,6 +1,5 @@
-import useAddressList from "./hooks/useAddressList";
 import useFile from "./hooks/useFile";
-import { TokenAddress } from "./utils";
+import { TokenAddress, shortenAddress } from "./utils";
 import "./index.scss";
 import useToken from "./hooks/useToken";
 import Select from "./components/Select";
@@ -8,10 +7,16 @@ import Select from "./components/Select";
 const CLASS = "airdrop-page";
 
 const AirdropPage = () => {
-    const { addressList, setAddressList, shortenAddress } = useAddressList();
+    const {
+        tokens,
+        selectedToken,
+        setSelectedToken,
+        validated,
+        exec,
+        addressList,
+        setAddressList,
+    } = useToken();
     const { fileRef, parseFile } = useFile({ setAddressList });
-    const { tokens, selectedToken, setSelectedToken, validated, exec } =
-        useToken();
 
     return (
         <div className={CLASS}>

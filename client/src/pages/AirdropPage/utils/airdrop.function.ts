@@ -10,15 +10,14 @@ import {
     TransactionInfo,
     TokenAddress,
     convertBufferToHex,
-} from "../utils";
+    sleep,
+    lovelaceToAda,
+} from ".";
 import {
     Transaction,
     TransactionWitnessSet,
     TransactionUnspentOutput,
 } from "@emurgo/cardano-serialization-lib-asmjs";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "src/store";
 import axios from "axios";
 
 let Buffer = require("buffer").Buffer;
@@ -132,7 +131,9 @@ export const checkTxStatus = async (airdropHash: any) => {
     return false;
 };
 
-export const getTokenArrayInWallet = async (API: any): Promise<Token[]> => {
+export const getTokenArrayInWallet = async (
+    API: any
+): Promise<{ tokens: Token[]; adaAddresses: AdaAddress[] }> => {
     try {
         /**
          * Only fetch usable UTXOs
@@ -218,9 +219,12 @@ export const getTokenArrayInWallet = async (API: any): Promise<Token[]> => {
             assetDetail
         );
         tokenArray.sort((a, b) => (a.name < b.name ? -1 : 1));
-        return tokenArray;
+        return {
+            tokens: tokenArray,
+            adaAddresses: addressContainingAda,
+        };
     } catch (err) {
-        return [];
+        return { tokens: [], adaAddresses: [] };
     }
 };
 
@@ -301,4 +305,126 @@ export const getCompleteTokenArray = (
         });
     }
     return tokens;
+};
+
+export const validateAirdropRequest = async (
+    selectedToken: Token,
+    addressArray: TokenAddress[],
+    addressContainingAda: AdaAddress[]
+) => {
+    const requestBody = prepareBody(
+        selectedToken,
+        addressArray,
+        addressContainingAda
+    );
+
+    try {
+        const txData = await axios.post(
+            `${AIRDROP_API_TX}/api/v0/validate`,
+            requestBody
+        );
+        const adaToSpendForTxInAda = lovelaceToAda(
+            txData.data.spend_amounts.lovelace
+        );
+        const txFeeInAda = lovelaceToAda(txData.data.tx_fee);
+        let multiTx = false;
+        if (txData.data.transactions_count > 1) {
+            multiTx = true;
+        }
+
+        return {
+            valid: true,
+            detail: {
+                txFee: txFeeInAda,
+                adaToSpend: adaToSpendForTxInAda,
+                multiTx,
+            },
+        };
+    } catch (e: any) {
+        console.error(e);
+        return {
+            valid: false,
+        };
+    }
+};
+
+export const execAirdrop = async (
+    selectedToken: Token,
+    addressArray: TokenAddress[],
+    addressContainingAda: AdaAddress[]
+) => {
+    // setPopUpLoading(`Sending ${totalAmountToAirdrop} ${selectedToken.name}...`);
+
+    const requestBody = prepareBody(
+        selectedToken,
+        addressArray,
+        addressContainingAda
+    );
+
+    /**
+     * Submit first transaction after validation.
+     * first transaction is done to get the airdrop txs.
+     */
+    try {
+        const airdropTxData = await axios.post(
+            `${AIRDROP_API_TX}/api/v0/submit`,
+            requestBody
+        );
+        const cborHexInString = airdropTxData.data.cborHex;
+
+        /**
+         * the API uses the transaction id as a unique identifier.
+         * cardano serialization lib modifies it. We us the description
+         * field of the transaction json to pass along the original value.
+         */
+        const txId = airdropTxData.data.description;
+
+        /**
+         * functions to  erase witnesses, sign, and submit to api
+         */
+        const firstAirdropTx = await transact(
+            AIRDROP_API_TX,
+            cborHexInString,
+            txId
+        );
+
+        /**
+         * check if airdrop is single transaction.
+         * if single tx, then airdrop is done in 1 tx
+         */
+        // if (!multiTx) {
+        //   setPopUpSuccess(`Airdrop successful!`);
+        // } else {
+        //   /**
+        //    * else, do multiple signing for multiple airdrop txs
+        //    */
+        //   setPopUpLoading(`Negotiating UTXOs`);
+        //   await handleMultiTxAirdrop(firstAirdropTx.airdrop_hash);
+        // }
+    } catch (e: any) {}
+};
+
+export const handleMultiTxAirdrop = async (airdropHash: any) => {
+    // setPopUpLoading("Splitting your UTxOs...");
+    try {
+        let firstAirdropTxAdopted: boolean = false;
+        while (!firstAirdropTxAdopted) {
+            firstAirdropTxAdopted = await checkTxStatus(airdropHash);
+            await sleep(500);
+        }
+        const remainingAirdropTxs = await getAirdrop(airdropHash);
+        // setTxToSign(remainingAirdropTxs);
+        // setPopUpSuccess(
+        //   "Airdrop transactions are created! Please sign the transactions to execute the airdrop"
+        // );
+        // let cborHex, txId;
+        // for (let tx of remainingAirdropTxs) {
+        //   cborHex = tx.cborHex;
+        //   txId = tx.description;
+        //   const firstAirdropTx = await transact(api, cborHex, txId);
+        // }
+    } catch (e: any) {
+        console.error(e);
+        // setPopUpError("Something went wrong");
+    }
 };
