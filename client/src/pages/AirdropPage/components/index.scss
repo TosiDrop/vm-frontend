@@ -30,6 +30,7 @@
         border-radius: 10px;
         cursor: pointer;
         visibility: hidden;
+        z-index: 10;
     }
 
     &__options-visible {
@@ -39,6 +40,8 @@
     &__option {
         padding: 15px;
         border-bottom: 1px solid rgba(125, 125, 125, 0.2);
+        display: flex;
+        justify-content: space-between;
         &:last-child {
             border-bottom: none;
         }

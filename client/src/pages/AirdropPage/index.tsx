@@ -1,19 +1,35 @@
-import useAddressList from "./hooks/useAddressList";
 import useFile from "./hooks/useFile";
-import { AirdropAddress } from "src/entities/common.entities";
+import { TokenAddress, shortenAddress } from "./utils";
 import "./index.scss";
 import useToken from "./hooks/useToken";
 import Select from "./components/Select";
-import WalletApi from "src/services/connectors/wallet.connector";
+import { useEffect, useLayoutEffect, useState } from "react";
+import axios from "axios";
+import ComingSoonPage from "../ComingSoonPage";
 
 const CLASS = "airdrop-page";
 
 const AirdropPage = () => {
-    const { addressList, setAddressList, shortenAddr } = useAddressList();
-    const { fileRef, parseFile } = useFile({ setAddressList });
-    const { tokens, selectedToken, setSelectedToken } = useToken();
+    const {
+        tokens,
+        selectedToken,
+        setSelectedToken,
+        validated,
+        exec,
+        addressList,
+        setAddressList,
+    } = useToken();
 
-    return (
+    const { fileRef, parseFile } = useFile({ setAddressList });
+    const [enabled, setEnabled] = useState(false);
+
+    useLayoutEffect(() => {
+        axios.get("/features").then((res) => {
+            setEnabled(res.data.airdrop_enabled);
+        });
+    }, []);
+
+    return enabled ? (
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             <div className={`${CLASS}__content ${CLASS}__select`}>
@@ -39,28 +55,38 @@ const AirdropPage = () => {
                         <h1>Address List</h1>
                         <span>{addressList.length} address added</span>
                     </div>
-                    {addressList.map((addr: AirdropAddress, i: number) => {
+                    {addressList.map((addr: TokenAddress, i: number) => {
                         return (
                             <div
                                 key={i}
                                 className={`${CLASS}__address-list-address`}
                             >
-                                {shortenAddr(addr.address)}: {addr.amount}
+                                {shortenAddress(addr.address)}:{" "}
+                                {addr.tokenAmount}
                             </div>
                         );
                     })}
                 </div>
             ) : null}
-            <div className={`${CLASS}__content ${CLASS}__info`}>
-                <h1>Airdrop Breakdown</h1>
-                <div className={`${CLASS}__detail-row`}>Total token</div>
-                <div className={`${CLASS}__detail-row`}>Total ADA to spend</div>
-                <div className={`${CLASS}__detail-row`}>Estimated fee</div>
-            </div>
-            <button className={`${CLASS}__button ${CLASS}__button-airdrop`}>
-                Send Airdrop
+            {validated ? (
+                <div className={`${CLASS}__content ${CLASS}__info`}>
+                    <h1>Airdrop Breakdown</h1>
+                    <div className={`${CLASS}__detail-row`}>Total token</div>
+                    <div className={`${CLASS}__detail-row`}>
+                        Total ADA to spend
+                    </div>
+                    <div className={`${CLASS}__detail-row`}>Estimated fee</div>
+                </div>
+            ) : null}
+            <button
+                className={`${CLASS}__button ${CLASS}__button-airdrop`}
+                onClick={() => exec()}
+            >
+                {validated ? "Send Airdrop" : "Validate Airdrop"}
             </button>
         </div>
+    ) : (
+        <ComingSoonPage />
     );
 };
 
