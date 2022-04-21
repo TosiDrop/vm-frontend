@@ -66,14 +66,14 @@ export interface TransactionInfo {
 }
 
 export interface AirdropRequest {
-    valid: boolean,
-    detail?: AirdropDetail
+    valid: boolean;
+    detail?: AirdropDetail;
 }
 
 export interface AirdropDetail {
-    txFee: number,
-    adaToSpend: number,
-    multiTx: boolean,
+    txFee: number;
+    adaToSpend: number;
+    multiTx: boolean;
 }
 
 export enum PopUpType {

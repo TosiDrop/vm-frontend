@@ -19,7 +19,7 @@ const AirdropPage = () => {
         addressList,
         handleAddressList,
         airdropDetail,
-        totalToken
+        totalToken,
     } = useToken();
 
     const { fileRef, parseFile } = useFile({ handleAddressList });
@@ -73,11 +73,23 @@ const AirdropPage = () => {
             {validated ? (
                 <div className={`${CLASS}__content ${CLASS}__info`}>
                     <h1>Airdrop Breakdown</h1>
-                    <div className={`${CLASS}__detail-row`}>Total token: {totalToken} {selectedToken?.ticker}</div>
+                    <div className={`${CLASS}__detail-row`}>
+                        Total token: {totalToken} {selectedToken?.ticker}
+                    </div>
                     <div className={`${CLASS}__detail-row`}>
                         Total ADA to spend: {airdropDetail.adaToSpend} ADA
                     </div>
-                    <div className={`${CLASS}__detail-row`}>Estimated fee: {airdropDetail.txFee} ADA</div>
+                    <div className={`${CLASS}__detail-row`}>
+                        Estimated fee: {airdropDetail.txFee} ADA
+                    </div>
+                    {airdropDetail.multiTx ? (
+                        <div
+                            className={`${CLASS}__detail-row ${CLASS}__detail-row-warning`}
+                        >
+                            This airdrop will take multiple transactions. Please
+                            sign all the related transactions.
+                        </div>
+                    ) : null}
                 </div>
             ) : null}
             <button
