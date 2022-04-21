@@ -21,6 +21,7 @@ const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 
 const app = express();
 app.use(cors());
+// Serve our React app
 app.use(express.static('client/build'));
 app.use(express.json());
 
@@ -329,3 +330,8 @@ async function getRewards(stakeAddress: string) {
     }
     return getRewardsResponse;
 }
+
+// Fallback to React app
+app.get('*', (req, res) => {
+    res.sendFile('client/build/index.html', { root: __dirname });
+});
