@@ -4,6 +4,9 @@ import {
     Token,
     validateAirdropRequest,
     TokenAddress,
+    AirdropRequest,
+    AirdropDetail,
+    execAirdrop,
 } from "../utils";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -15,7 +18,20 @@ const useToken = () => {
     const [selectedToken, setSelectedToken] = useState<Token | null>(null);
     const [tokens, setTokens] = useState<Token[]>([]);
     const [validated, setValidated] = useState(false);
+    const [airdropDetail, setAirdropDetail] = useState<AirdropDetail>({
+        txFee: 0,
+        adaToSpend: 0,
+        multiTx: false,
+    });
+    const [totalToken, setTotalToken] = useState(0);
     const api = useSelector((state: RootState) => state.wallet.api);
+
+    const handleAddressList = (addressList: TokenAddress[]) => {
+        setAddressList(addressList);
+        let totalToken = 0;
+        addressList.forEach((a) => (totalToken += a.tokenAmount));
+        setTotalToken(totalToken);
+    };
 
     useEffect(() => {
         (async () => {
@@ -35,6 +51,8 @@ const useToken = () => {
              * if the transaction is validated,
              * execute airdrop
              */
+            if (!selectedToken || api == null) return;
+            await execAirdrop(api, selectedToken, addressList, addresses);
         } else {
             /**
              * if not yet validated,
@@ -42,7 +60,15 @@ const useToken = () => {
              */
             // do validation
             if (!selectedToken) return;
-            await validateAirdropRequest(selectedToken, addressList, addresses);
+            const airdropRequest: AirdropRequest = await validateAirdropRequest(
+                selectedToken,
+                addressList,
+                addresses
+            );
+            if (!airdropRequest.valid) return;
+            if (airdropRequest.detail == null) return;
+            setAirdropDetail(airdropRequest.detail);
+            setValidated(true);
         }
     };
 
@@ -53,7 +79,9 @@ const useToken = () => {
         validated,
         exec,
         addressList,
-        setAddressList,
+        handleAddressList,
+        airdropDetail,
+        totalToken,
     };
 };
 

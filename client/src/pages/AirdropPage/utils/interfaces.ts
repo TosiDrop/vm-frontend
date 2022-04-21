@@ -65,6 +65,17 @@ export interface TransactionInfo {
     cborHex: string;
 }
 
+export interface AirdropRequest {
+    valid: boolean;
+    detail?: AirdropDetail;
+}
+
+export interface AirdropDetail {
+    txFee: number;
+    adaToSpend: number;
+    multiTx: boolean;
+}
+
 export enum PopUpType {
     LOADING = "loading",
     SUCCESS = "success",

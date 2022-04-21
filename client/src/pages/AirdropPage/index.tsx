@@ -1,11 +1,11 @@
 import useFile from "./hooks/useFile";
 import { TokenAddress, shortenAddress } from "./utils";
-import "./index.scss";
 import useToken from "./hooks/useToken";
 import Select from "./components/Select";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import axios from "axios";
 import ComingSoonPage from "../ComingSoonPage";
+import "./index.scss";
 
 const CLASS = "airdrop-page";
 
@@ -17,10 +17,12 @@ const AirdropPage = () => {
         validated,
         exec,
         addressList,
-        setAddressList,
+        handleAddressList,
+        airdropDetail,
+        totalToken,
     } = useToken();
 
-    const { fileRef, parseFile } = useFile({ setAddressList });
+    const { fileRef, parseFile } = useFile({ handleAddressList });
     const [enabled, setEnabled] = useState(false);
 
     useLayoutEffect(() => {
@@ -71,11 +73,23 @@ const AirdropPage = () => {
             {validated ? (
                 <div className={`${CLASS}__content ${CLASS}__info`}>
                     <h1>Airdrop Breakdown</h1>
-                    <div className={`${CLASS}__detail-row`}>Total token</div>
                     <div className={`${CLASS}__detail-row`}>
-                        Total ADA to spend
+                        Total token: {totalToken} {selectedToken?.ticker}
                     </div>
-                    <div className={`${CLASS}__detail-row`}>Estimated fee</div>
+                    <div className={`${CLASS}__detail-row`}>
+                        Total ADA to spend: {airdropDetail.adaToSpend} ADA
+                    </div>
+                    <div className={`${CLASS}__detail-row`}>
+                        Estimated fee: {airdropDetail.txFee} ADA
+                    </div>
+                    {airdropDetail.multiTx ? (
+                        <div
+                            className={`${CLASS}__detail-row ${CLASS}__detail-row-warning`}
+                        >
+                            This airdrop will take multiple transactions. Please
+                            sign all the related transactions.
+                        </div>
+                    ) : null}
                 </div>
             ) : null}
             <button

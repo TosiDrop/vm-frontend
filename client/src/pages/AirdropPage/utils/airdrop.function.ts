@@ -19,6 +19,8 @@ import {
     TransactionUnspentOutput,
 } from "@emurgo/cardano-serialization-lib-asmjs";
 import axios from "axios";
+import { AirdropRequest } from "./interfaces";
+import { CIP0030API } from "src/services/connectors/wallet.connector";
 
 let Buffer = require("buffer").Buffer;
 
@@ -81,7 +83,7 @@ export const walletSign = async (
     const hexSigned = await Buffer.from(signedTx.to_bytes(), "utf8").toString(
         "hex"
     );
-    const txFormatted = `{ \n\t\"type\": \"Tx AlonzoEra\",\n\t\"description\": \"${txId}",\n\t\"cborHex\": \"${hexSigned}\"\n}`;
+    const txFormatted = `{ \n\t"type": "Tx AlonzoEra",\n\t"description": "${txId}",\n\t"cborHex": "${hexSigned}"\n}`;
     const txJson = JSON.parse(txFormatted);
     return txJson;
 };
@@ -127,7 +129,7 @@ export const checkTxStatus = async (airdropHash: any) => {
         `${AIRDROP_API_TX}/api/v0/airdrop_status/${airdropHash}`
     );
     const txStatus = response.data.transactions[0].transaction_status;
-    if (txStatus == "transaction adopted") return true;
+    if (txStatus === "transaction adopted") return true;
     return false;
 };
 
@@ -311,7 +313,7 @@ export const validateAirdropRequest = async (
     selectedToken: Token,
     addressArray: TokenAddress[],
     addressContainingAda: AdaAddress[]
-) => {
+): Promise<AirdropRequest> => {
     const requestBody = prepareBody(
         selectedToken,
         addressArray,
@@ -339,16 +341,16 @@ export const validateAirdropRequest = async (
                 adaToSpend: adaToSpendForTxInAda,
                 multiTx,
             },
-        };
+        } as AirdropRequest;
     } catch (e: any) {
-        console.error(e);
         return {
             valid: false,
-        };
+        } as AirdropRequest;
     }
 };
 
 export const execAirdrop = async (
+    api: CIP0030API,
     selectedToken: Token,
     addressArray: TokenAddress[],
     addressContainingAda: AdaAddress[]
@@ -382,11 +384,9 @@ export const execAirdrop = async (
         /**
          * functions to  erase witnesses, sign, and submit to api
          */
-        const firstAirdropTx = await transact(
-            AIRDROP_API_TX,
-            cborHexInString,
-            txId
-        );
+        const firstAirdropTx = await transact(api, cborHexInString, txId);
+
+        await checkTxStatus(firstAirdropTx.airdrop_hash);
 
         /**
          * check if airdrop is single transaction.
@@ -401,7 +401,9 @@ export const execAirdrop = async (
         //   setPopUpLoading(`Negotiating UTXOs`);
         //   await handleMultiTxAirdrop(firstAirdropTx.airdrop_hash);
         // }
-    } catch (e: any) {}
+    } catch (e: any) {
+        console.error(e);
+    }
 };
 
 export const handleMultiTxAirdrop = async (airdropHash: any) => {

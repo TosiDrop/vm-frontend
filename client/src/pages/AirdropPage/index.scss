@@ -58,6 +58,10 @@
         margin-bottom: 10px;
     }
 
+    &__detail-row-warning {
+        color: #ffcc00;
+    }
+
     &__address-list {
         overflow: auto;
         height: 200px;
@@ -66,6 +70,9 @@
     &__address-list-address {
         border-bottom: 1px solid var(--font-highlight);
         padding: 5px 0;
+        &:last-child {
+            border-bottom: none;
+        }
     }
 
     &__address-list-header {
@@ -84,5 +91,12 @@
             font-size: 0.8rem;
             opacity: 0.8;
         }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .airdrop-page {
+        margin-right: 0;
+        margin-left: 0;
     }
 }
