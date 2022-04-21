@@ -4,7 +4,8 @@ import {
     Token,
     validateAirdropRequest,
     TokenAddress,
-    AirdropRequest
+    AirdropRequest,
+    AirdropDetail
 } from "../utils";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -16,8 +17,16 @@ const useToken = () => {
     const [selectedToken, setSelectedToken] = useState<Token | null>(null);
     const [tokens, setTokens] = useState<Token[]>([]);
     const [validated, setValidated] = useState(false);
-    const [airdropDetail, setAirdropDetail] = useState({});
+    const [airdropDetail, setAirdropDetail] = useState<AirdropDetail>({ txFee: 0, adaToSpend: 0, multiTx: false });
+    const [totalToken, setTotalToken] = useState(0)
     const api = useSelector((state: RootState) => state.wallet.api);
+
+    const handleAddressList = (addressList: TokenAddress[]) => {
+        setAddressList(addressList)
+        let totalToken = 0
+        addressList.forEach(a => totalToken += a.tokenAmount)
+        setTotalToken(totalToken)
+    }
 
     useEffect(() => {
         (async () => {
@@ -33,6 +42,7 @@ const useToken = () => {
 
     const exec = async () => {
         if (validated) {
+            console.log('airdropping')
             /**
              * if the transaction is validated,
              * execute airdrop
@@ -46,7 +56,9 @@ const useToken = () => {
             if (!selectedToken) return;
             const airdropRequest: AirdropRequest = await validateAirdropRequest(selectedToken, addressList, addresses);
             if (!airdropRequest.valid) return
-            console.log(airdropRequest)
+            if (airdropRequest.detail == null) return
+            setAirdropDetail(airdropRequest.detail)
+            setValidated(true)
         }
     };
 
@@ -57,7 +69,9 @@ const useToken = () => {
         validated,
         exec,
         addressList,
-        setAddressList,
+        handleAddressList,
+        airdropDetail,
+        totalToken
     };
 };
 

@@ -17,10 +17,12 @@ const AirdropPage = () => {
         validated,
         exec,
         addressList,
-        setAddressList,
+        handleAddressList,
+        airdropDetail,
+        totalToken
     } = useToken();
 
-    const { fileRef, parseFile } = useFile({ setAddressList });
+    const { fileRef, parseFile } = useFile({ handleAddressList });
     const [enabled, setEnabled] = useState(false);
 
     useLayoutEffect(() => {
@@ -71,11 +73,11 @@ const AirdropPage = () => {
             {validated ? (
                 <div className={`${CLASS}__content ${CLASS}__info`}>
                     <h1>Airdrop Breakdown</h1>
-                    <div className={`${CLASS}__detail-row`}>Total token</div>
+                    <div className={`${CLASS}__detail-row`}>Total token: {totalToken} {selectedToken?.ticker}</div>
                     <div className={`${CLASS}__detail-row`}>
-                        Total ADA to spend
+                        Total ADA to spend: {airdropDetail.adaToSpend} ADA
                     </div>
-                    <div className={`${CLASS}__detail-row`}>Estimated fee</div>
+                    <div className={`${CLASS}__detail-row`}>Estimated fee: {airdropDetail.txFee} ADA</div>
                 </div>
             ) : null}
             <button

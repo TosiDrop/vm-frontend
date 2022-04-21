@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { csvToArray, splitAmountArray } from "../utils";
 
-const useFile = ({ setAddressList }: { setAddressList: Function }) => {
+const useFile = ({ handleAddressList }: { handleAddressList: Function }) => {
     const fileRef = useRef<any>(null);
 
     const parseFile = () => {
@@ -13,7 +13,7 @@ const useFile = ({ setAddressList }: { setAddressList: Function }) => {
                 const addressAmountParsed = csvToArray(reader.result as string);
                 const addressAmountArray =
                     splitAmountArray(addressAmountParsed);
-                setAddressList(addressAmountArray);
+                handleAddressList(addressAmountArray);
             };
         } catch (e) {
             // setPopUpError("File format is incorrect");
