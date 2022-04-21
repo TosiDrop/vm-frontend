@@ -66,6 +66,9 @@
     &__address-list-address {
         border-bottom: 1px solid var(--font-highlight);
         padding: 5px 0;
+        &:last-child {
+            border-bottom: none;
+        }
     }
 
     &__address-list-header {
