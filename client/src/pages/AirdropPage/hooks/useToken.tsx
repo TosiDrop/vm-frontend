@@ -4,6 +4,7 @@ import {
     Token,
     validateAirdropRequest,
     TokenAddress,
+    AirdropRequest
 } from "../utils";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -15,6 +16,7 @@ const useToken = () => {
     const [selectedToken, setSelectedToken] = useState<Token | null>(null);
     const [tokens, setTokens] = useState<Token[]>([]);
     const [validated, setValidated] = useState(false);
+    const [airdropDetail, setAirdropDetail] = useState({});
     const api = useSelector((state: RootState) => state.wallet.api);
 
     useEffect(() => {
@@ -42,7 +44,9 @@ const useToken = () => {
              */
             // do validation
             if (!selectedToken) return;
-            await validateAirdropRequest(selectedToken, addressList, addresses);
+            const airdropRequest: AirdropRequest = await validateAirdropRequest(selectedToken, addressList, addresses);
+            if (!airdropRequest.valid) return
+            console.log(airdropRequest)
         }
     };
 

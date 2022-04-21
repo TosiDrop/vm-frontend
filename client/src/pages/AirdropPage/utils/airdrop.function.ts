@@ -19,6 +19,7 @@ import {
     TransactionUnspentOutput,
 } from "@emurgo/cardano-serialization-lib-asmjs";
 import axios from "axios";
+import { AirdropRequest } from "./interfaces";
 
 let Buffer = require("buffer").Buffer;
 
@@ -311,7 +312,7 @@ export const validateAirdropRequest = async (
     selectedToken: Token,
     addressArray: TokenAddress[],
     addressContainingAda: AdaAddress[]
-) => {
+): Promise<AirdropRequest> => {
     const requestBody = prepareBody(
         selectedToken,
         addressArray,
@@ -339,12 +340,11 @@ export const validateAirdropRequest = async (
                 adaToSpend: adaToSpendForTxInAda,
                 multiTx,
             },
-        };
+        } as AirdropRequest;
     } catch (e: any) {
-        console.error(e);
         return {
             valid: false,
-        };
+        } as AirdropRequest;
     }
 };
 
