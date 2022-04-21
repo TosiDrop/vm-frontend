@@ -31,7 +31,7 @@ const AirdropPage = () => {
         });
     }, []);
 
-    return !enabled ? (
+    return enabled ? (
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             <div className={`${CLASS}__content ${CLASS}__select`}>
