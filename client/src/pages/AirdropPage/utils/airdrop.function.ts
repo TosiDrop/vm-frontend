@@ -81,7 +81,7 @@ export const walletSign = async (
     const hexSigned = await Buffer.from(signedTx.to_bytes(), "utf8").toString(
         "hex"
     );
-    const txFormatted = `{ \n\t\"type\": \"Tx AlonzoEra\",\n\t\"description\": \"${txId}",\n\t\"cborHex\": \"${hexSigned}\"\n}`;
+    const txFormatted = `{ \n\t"type": "Tx AlonzoEra",\n\t"description": "${txId}",\n\t"cborHex": "${hexSigned}"\n}`;
     const txJson = JSON.parse(txFormatted);
     return txJson;
 };
@@ -127,7 +127,7 @@ export const checkTxStatus = async (airdropHash: any) => {
         `${AIRDROP_API_TX}/api/v0/airdrop_status/${airdropHash}`
     );
     const txStatus = response.data.transactions[0].transaction_status;
-    if (txStatus == "transaction adopted") return true;
+    if (txStatus === "transaction adopted") return true;
     return false;
 };
 

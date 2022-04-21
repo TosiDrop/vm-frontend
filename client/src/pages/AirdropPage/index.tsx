@@ -1,11 +1,11 @@
 import useFile from "./hooks/useFile";
 import { TokenAddress, shortenAddress } from "./utils";
-import "./index.scss";
 import useToken from "./hooks/useToken";
 import Select from "./components/Select";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import axios from "axios";
 import ComingSoonPage from "../ComingSoonPage";
+import "./index.scss";
 
 const CLASS = "airdrop-page";
 
