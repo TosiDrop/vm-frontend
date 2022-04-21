@@ -6,6 +6,7 @@ import {
     TokenAddress,
     AirdropRequest,
     AirdropDetail,
+    execAirdrop,
 } from "../utils";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -46,11 +47,12 @@ const useToken = () => {
 
     const exec = async () => {
         if (validated) {
-            console.log("airdropping");
             /**
              * if the transaction is validated,
              * execute airdrop
              */
+            if (!selectedToken || api == null) return;
+            await execAirdrop(api, selectedToken, addressList, addresses);
         } else {
             /**
              * if not yet validated,

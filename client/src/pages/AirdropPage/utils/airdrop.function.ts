@@ -20,6 +20,7 @@ import {
 } from "@emurgo/cardano-serialization-lib-asmjs";
 import axios from "axios";
 import { AirdropRequest } from "./interfaces";
+import { CIP0030API } from "src/services/connectors/wallet.connector";
 
 let Buffer = require("buffer").Buffer;
 
@@ -349,6 +350,7 @@ export const validateAirdropRequest = async (
 };
 
 export const execAirdrop = async (
+    api: CIP0030API,
     selectedToken: Token,
     addressArray: TokenAddress[],
     addressContainingAda: AdaAddress[]
@@ -382,11 +384,9 @@ export const execAirdrop = async (
         /**
          * functions to  erase witnesses, sign, and submit to api
          */
-        const firstAirdropTx = await transact(
-            AIRDROP_API_TX,
-            cborHexInString,
-            txId
-        );
+        const firstAirdropTx = await transact(api, cborHexInString, txId);
+
+        await checkTxStatus(firstAirdropTx.airdrop_hash);
 
         /**
          * check if airdrop is single transaction.
@@ -401,7 +401,9 @@ export const execAirdrop = async (
         //   setPopUpLoading(`Negotiating UTXOs`);
         //   await handleMultiTxAirdrop(firstAirdropTx.airdrop_hash);
         // }
-    } catch (e: any) {}
+    } catch (e: any) {
+        console.error(e);
+    }
 };
 
 export const handleMultiTxAirdrop = async (airdropHash: any) => {
