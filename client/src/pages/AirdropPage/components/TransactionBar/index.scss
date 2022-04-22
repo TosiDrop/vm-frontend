@@ -1,0 +1,31 @@
+.transaction-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__spinner {
+        animation: spinner 1s infinite linear;
+        height: fit-content;
+        width: fit-content;
+    }
+
+    &__button {
+        font-size: 1rem;
+        border-radius: 10px;
+        border: none;
+        padding: 5px 10px;
+        background: var(--gradient-button);
+        color: inherit;
+        text-align: center;
+        cursor: pointer;
+    }
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+}

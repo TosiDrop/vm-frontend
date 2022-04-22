@@ -2,6 +2,7 @@ import useFile from "./hooks/useFile";
 import { TokenAddress, shortenAddress } from "./utils";
 import useToken from "./hooks/useToken";
 import Select from "./components/Select";
+import TransactionBar from "./components/TransactionBar";
 import { useLayoutEffect, useState } from "react";
 import axios from "axios";
 import ComingSoonPage from "../ComingSoonPage";
@@ -31,7 +32,7 @@ const AirdropPage = () => {
         });
     }, []);
 
-    return enabled ? (
+    return !enabled ? (
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             <div className={`${CLASS}__content ${CLASS}__select`}>
@@ -90,6 +91,12 @@ const AirdropPage = () => {
                             sign all the related transactions.
                         </div>
                     ) : null}
+                </div>
+            ) : null}
+            {true ? (
+                <div className={`${CLASS}__content ${CLASS}__info`}>
+                    <h1>Airdrop Transactions</h1>
+                    <TransactionBar></TransactionBar>
                 </div>
             ) : null}
             <button
