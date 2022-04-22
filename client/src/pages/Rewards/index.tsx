@@ -1,14 +1,14 @@
 import { faXmark, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState, KeyboardEvent } from 'react';
-import { ClaimableToken, GetRewards } from '../entities/vm.entities';
-import { getBlock, getPaymentTransactionHash, getRewards, getTokenTransactionHash, getTransactionStatus } from '../services/http.services';
-import { copyContent, formatTokens, getNameFromHex, truncAmount } from '../services/utils.services';
+import { ClaimableToken, GetRewards } from '../../entities/vm.entities';
+import { getBlock, getPaymentTransactionHash, getRewards, getTokenTransactionHash, getTransactionStatus } from '../../services/http.services';
+import { copyContent, formatTokens, getNameFromHex, truncAmount } from '../../services/utils.services';
 import { HashLoader, SyncLoader } from 'react-spinners';
-import { PaymentStatus, PaymentTransactionHashRequest, TokenTransactionHashRequest } from '../entities/common.entities';
-import WalletApi from '../services/connectors/wallet.connector';
+import { PaymentStatus, PaymentTransactionHashRequest, TokenTransactionHashRequest } from '../../entities/common.entities';
+import WalletApi from '../../services/connectors/wallet.connector';
 import QRCode from 'react-qr-code';
-import './rewards.page.scss';
+import './index.scss';
 import { useCallback } from 'react';
 
 interface Params {

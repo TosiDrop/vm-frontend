@@ -2,9 +2,10 @@ import useFile from "./hooks/useFile";
 import { TokenAddress, shortenAddress } from "./utils";
 import useToken from "./hooks/useToken";
 import Select from "./components/Select";
+import TransactionBar from "./components/TransactionBar";
 import { useLayoutEffect, useState } from "react";
 import axios from "axios";
-import ComingSoonPage from "../ComingSoonPage";
+import ComingSoon from "../ComingSoon";
 import "./index.scss";
 
 const CLASS = "airdrop-page";
@@ -92,6 +93,12 @@ const AirdropPage = () => {
                     ) : null}
                 </div>
             ) : null}
+            {true ? (
+                <div className={`${CLASS}__content ${CLASS}__info`}>
+                    <h1>Airdrop Transactions</h1>
+                    <TransactionBar></TransactionBar>
+                </div>
+            ) : null}
             <button
                 className={`${CLASS}__button ${CLASS}__button-airdrop`}
                 onClick={() => exec()}
@@ -100,7 +107,7 @@ const AirdropPage = () => {
             </button>
         </div>
     ) : (
-        <ComingSoonPage />
+        <ComingSoon />
     );
 };
 

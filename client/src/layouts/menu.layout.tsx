@@ -20,11 +20,11 @@ function Menu({ showMenu, setShowMenu }: Params) {
                     </div>
                     <ul className='menu-list'>
                         <li><Link to="/"><p className="icon"><FontAwesomeIcon icon={faWallet} /></p>Rewards</Link></li>
-                        <li><Link to="/history"><p className="icon"><FontAwesomeIcon icon={faClockRotateLeft} /></p>History</Link></li>
-                        <li><Link to="/dashboard"><p className="icon"><FontAwesomeIcon icon={faChartColumn} /></p>Dashboard</Link></li>
+                        {/* <li><Link to="/history"><p className="icon"><FontAwesomeIcon icon={faClockRotateLeft} /></p>History</Link></li> */}
+                        {/* <li><Link to="/dashboard"><p className="icon"><FontAwesomeIcon icon={faChartColumn} /></p>Dashboard</Link></li> */}
                         <hr />
                         <li><Link to="/feedback"><p className="icon"><FontAwesomeIcon icon={faMessage} /></p>Feedback</Link></li>
-                        <li><a target='_blank' rel="noreferrer" href="http://medium.com">
+                        <li><a target='_blank' rel="noreferrer" href="https://docs.tosidrop.io/">
                             <p className="icon"><FontAwesomeIcon icon={faBook} /></p>
                             Docs&nbsp;<FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                         </a></li>
@@ -32,10 +32,18 @@ function Menu({ showMenu, setShowMenu }: Params) {
                     <div className='menu-filler'>
                     </div>
                     <div className="social">
-                        <FontAwesomeIcon icon={faTwitter} />
-                        <FontAwesomeIcon icon={faDiscord} />
-                        <FontAwesomeIcon icon={faTelegram} />
-                        <FontAwesomeIcon icon={faGithub} />
+                        <a href='https://twitter.com/TosiDrop' target='_blank' rel="noreferrer">
+                            <FontAwesomeIcon icon={faTwitter} />
+                        </a>
+                        <a href='https://discord.gg/S85CKeyHTc' target='_blank' rel="noreferrer">
+                            <FontAwesomeIcon icon={faDiscord} />
+                        </a>
+                        <a href='http://t.me/anetabtc' target='_blank' rel="noreferrer">
+                            <FontAwesomeIcon icon={faTelegram} />
+                        </a>
+                        <a href='https://github.com/anetabtc' target='_blank' rel="noreferrer">
+                            <FontAwesomeIcon icon={faGithub} />
+                        </a>
                     </div>
                 </div>
             </div>
