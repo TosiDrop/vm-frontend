@@ -20,8 +20,8 @@ function Menu({ showMenu, setShowMenu }: Params) {
                     </div>
                     <ul className='menu-list'>
                         <li><Link to="/"><p className="icon"><FontAwesomeIcon icon={faWallet} /></p>Rewards</Link></li>
-                        <li><Link to="/history"><p className="icon"><FontAwesomeIcon icon={faClockRotateLeft} /></p>History</Link></li>
-                        <li><Link to="/dashboard"><p className="icon"><FontAwesomeIcon icon={faChartColumn} /></p>Dashboard</Link></li>
+                        {/* <li><Link to="/history"><p className="icon"><FontAwesomeIcon icon={faClockRotateLeft} /></p>History</Link></li> */}
+                        {/* <li><Link to="/dashboard"><p className="icon"><FontAwesomeIcon icon={faChartColumn} /></p>Dashboard</Link></li> */}
                         <hr />
                         <li><Link to="/feedback"><p className="icon"><FontAwesomeIcon icon={faMessage} /></p>Feedback</Link></li>
                         <li><a target='_blank' rel="noreferrer" href="http://medium.com">
