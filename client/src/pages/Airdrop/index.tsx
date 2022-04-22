@@ -5,7 +5,7 @@ import Select from "./components/Select";
 import TransactionBar from "./components/TransactionBar";
 import { useLayoutEffect, useState } from "react";
 import axios from "axios";
-import ComingSoonPage from "../ComingSoonPage";
+import ComingSoon from "../ComingSoon";
 import "./index.scss";
 
 const CLASS = "airdrop-page";
@@ -107,7 +107,7 @@ const AirdropPage = () => {
             </button>
         </div>
     ) : (
-        <ComingSoonPage />
+        <ComingSoon />
     );
 };
 
