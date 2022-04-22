@@ -1,5 +1,4 @@
-import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Spinner from "../Spinner";
 import "./index.scss";
 
 const CLASS = "transaction-bar";
@@ -16,9 +15,7 @@ const TransactionBar = () => {
             <button className={`${CLASS}__button ${CLASS}__button-airdrop`}>
                 Sign
             </button>
-            <div className={`${CLASS}__spinner`}>
-                <FontAwesomeIcon icon={faCircleNotch} />
-            </div>
+            <Spinner></Spinner>
         </div>
     );
 };

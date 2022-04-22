@@ -1,5 +1,7 @@
-import WalletApi, { WalletKeys } from '../../../services/connectors/wallet.connector';
-import './wallet-selector-modal.component.scss';
+import WalletApi, {
+    WalletKeys,
+} from "../../../services/connectors/wallet.connector";
+import "./wallet-selector-modal.component.scss";
 
 export interface ModalComponentProps {
     modalVisible: boolean;
@@ -8,50 +10,83 @@ export interface ModalComponentProps {
     connectWallet: (walletKey?: WalletKeys) => void;
 }
 
-function WalletSelectorModalComponent({ modalVisible, setModalVisible, connectedWallet, connectWallet }: ModalComponentProps) {
-
+function WalletSelectorModalComponent({
+    modalVisible,
+    setModalVisible,
+    connectedWallet,
+    connectWallet,
+}: ModalComponentProps) {
     const hideModal = () => {
         setModalVisible(false);
-    }
+    };
 
     return (
-        <div className={'wallet-modal modal' + (modalVisible ? ' is-active' : '')}>
+        <div
+            className={
+                "wallet-modal modal" + (modalVisible ? " is-active" : "")
+            }
+        >
             <div className="modal-background"></div>
             <div className="modal-content">
-                <div className='box'>
-                    <div className='wallet-modal-head'>
-                        <div className='wallet-text-content'>
+                <div className="box">
+                    <div className="wallet-modal-head">
+                        <div className="wallet-text-content">
                             Connect wallet
                         </div>
-                        <div className='wallet-modal-buttons'>
-                            <button className="button is-wallet-background is-small" onClick={hideModal}>X</button>
+                        <div className="wallet-modal-buttons">
+                            <button
+                                className="button is-wallet-background is-small"
+                                onClick={hideModal}
+                            >
+                                X
+                            </button>
                         </div>
                     </div>
-                    <div className='wallet-modal-body'>
-                        {
-                            window.cardano ? 
+                    <div className="wallet-modal-body">
+                        {window.cardano ? (
                             Object.keys(WalletKeys).map((key) => {
                                 if (window.cardano && window.cardano[key]) {
                                     const walletKey = key as WalletKeys;
                                     return (
-                                        <div className={'wallet-modal-body-row' + (window.cardano[key] ? '' : ' hidden')} onClick={() => connectWallet(walletKey)}>
-                                            <p>{key.charAt(0).toUpperCase() + key.slice(1)}</p>
-                                            <img src={window.cardano[key].icon} alt='wallet'></img>
+                                        <div
+                                            key={key}
+                                            className={
+                                                "wallet-modal-body-row" +
+                                                (window.cardano[key]
+                                                    ? ""
+                                                    : " hidden")
+                                            }
+                                            onClick={() =>
+                                                connectWallet(walletKey)
+                                            }
+                                        >
+                                            <p>
+                                                {key.charAt(0).toUpperCase() +
+                                                    key.slice(1)}
+                                            </p>
+                                            <img
+                                                src={window.cardano[key].icon}
+                                                alt="wallet"
+                                            ></img>
                                         </div>
                                     );
                                 } else {
                                     return null;
                                 }
-                            }) : 
-                            <div className={'wallet-modal-body-row'} onClick={() => {}}>
+                            })
+                        ) : (
+                            <div
+                                className={"wallet-modal-body-row"}
+                                onClick={() => {}}
+                            >
                                 <p>No Wallet found :(</p>
                             </div>
-                        }
+                        )}
                     </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default WalletSelectorModalComponent;

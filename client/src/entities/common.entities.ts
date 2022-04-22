@@ -71,3 +71,7 @@ export enum NetworkId {
     mainnet,
     undefined
 }
+
+export enum ModalTypes {
+    info,
+}

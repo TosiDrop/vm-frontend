@@ -9,8 +9,9 @@ import {
     execAirdrop,
 } from "../utils";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
+import { showModal } from "src/reducers/modalSlice";
 
 const useToken = () => {
     const [addressList, setAddressList] = useState<TokenAddress[]>([]);
@@ -24,7 +25,10 @@ const useToken = () => {
         multiTx: false,
     });
     const [totalToken, setTotalToken] = useState(0);
+    const [loading, setLoading] = useState(false);
+
     const api = useSelector((state: RootState) => state.wallet.api);
+    const dispatch = useDispatch();
 
     const handleAddressList = (addressList: TokenAddress[]) => {
         setAddressList(addressList);
@@ -52,7 +56,11 @@ const useToken = () => {
              * execute airdrop
              */
             if (!selectedToken || api == null) return;
+            setLoading(true);
             await execAirdrop(api, selectedToken, addressList, addresses);
+            dispatch(showModal('Airdrop successful!'));
+            setLoading(false);
+            
         } else {
             /**
              * if not yet validated,
@@ -60,6 +68,7 @@ const useToken = () => {
              */
             // do validation
             if (!selectedToken) return;
+            setLoading(true);
             const airdropRequest: AirdropRequest = await validateAirdropRequest(
                 selectedToken,
                 addressList,
@@ -69,6 +78,7 @@ const useToken = () => {
             if (airdropRequest.detail == null) return;
             setAirdropDetail(airdropRequest.detail);
             setValidated(true);
+            setLoading(false);
         }
     };
 
@@ -82,6 +92,7 @@ const useToken = () => {
         handleAddressList,
         airdropDetail,
         totalToken,
+        loading,
     };
 };
 
