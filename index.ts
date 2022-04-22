@@ -35,7 +35,7 @@ process.on('SIGTERM', () => {
 });
 
 async function getFromVM<T>(params: any) {
-    return (await axios.get<T>(`${VM_URL}/api.php?token=${VM_API_TOKEN}&action=${params}`)).data;
+    return (await axios.get<T>(`${VM_URL}/api.php?action=${params}`, { headers: { "X-API-Token": `${VM_API_TOKEN}` }})).data;
 }
 
 async function getExtendedMetadata(metadataUrl: string): Promise<ExtendedMetadata | undefined> {
