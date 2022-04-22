@@ -32,16 +32,16 @@ function Menu({ showMenu, setShowMenu }: Params) {
                     <div className='menu-filler'>
                     </div>
                     <div className="social">
-                        <a href='https://twitter.com/TosiDrop' target='_blank'>
+                        <a href='https://twitter.com/TosiDrop' target='_blank' rel="noreferrer">
                             <FontAwesomeIcon icon={faTwitter} />
                         </a>
-                        <a href='https://discord.gg/S85CKeyHTc' target='_blank'>
+                        <a href='https://discord.gg/S85CKeyHTc' target='_blank' rel="noreferrer">
                             <FontAwesomeIcon icon={faDiscord} />
                         </a>
-                        <a href='http://t.me/anetabtc' target='_blank'>
+                        <a href='http://t.me/anetabtc' target='_blank' rel="noreferrer">
                             <FontAwesomeIcon icon={faTelegram} />
                         </a>
-                        <a href='https://github.com/anetabtc' target='_blank'>
+                        <a href='https://github.com/anetabtc' target='_blank' rel="noreferrer">
                             <FontAwesomeIcon icon={faGithub} />
                         </a>
                     </div>
