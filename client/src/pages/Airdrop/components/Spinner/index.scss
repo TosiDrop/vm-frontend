@@ -1,0 +1,16 @@
+.spinner {
+    &__container {
+        animation: spinner 1s infinite linear;
+        height: fit-content;
+        width: fit-content;
+    }
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+}

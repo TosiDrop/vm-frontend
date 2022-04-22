@@ -32,6 +32,9 @@
         background: var(--gradient-button);
         color: inherit;
         text-align: center;
+        & > *:last-child {
+            margin-left: 10px;
+        }
     }
 
     &__button-airdrop {
@@ -42,6 +45,8 @@
         padding-left: 30px;
         padding-right: 30px;
         cursor: pointer;
+        display: flex;
+        align-items: center;
     }
 
     &__select {

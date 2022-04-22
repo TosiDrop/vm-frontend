@@ -7,6 +7,7 @@ import { useLayoutEffect, useState } from "react";
 import axios from "axios";
 import ComingSoon from "../ComingSoon";
 import "./index.scss";
+import Spinner from "./components/Spinner";
 
 const CLASS = "airdrop-page";
 
@@ -21,6 +22,7 @@ const AirdropPage = () => {
         handleAddressList,
         airdropDetail,
         totalToken,
+        loading,
     } = useToken();
 
     const { fileRef, parseFile } = useFile({ handleAddressList });
@@ -32,7 +34,23 @@ const AirdropPage = () => {
         });
     }, []);
 
-    return enabled ? (
+    const getBtnText = () => {
+        if (!validated) {
+            if (loading) {
+                return "Validating Airdrop";
+            } else {
+                return "Validate Airdrop";
+            }
+        } else {
+            if (loading) {
+                return "Sending Airdrop";
+            } else {
+                return "Send Airdrop";
+            }
+        }
+    };
+
+    return !enabled ? (
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             <div className={`${CLASS}__content ${CLASS}__select`}>
@@ -103,7 +121,8 @@ const AirdropPage = () => {
                 className={`${CLASS}__button ${CLASS}__button-airdrop`}
                 onClick={() => exec()}
             >
-                {validated ? "Send Airdrop" : "Validate Airdrop"}
+                {getBtnText()}
+                {loading ? <Spinner></Spinner> : null}
             </button>
         </div>
     ) : (
