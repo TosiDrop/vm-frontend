@@ -1,18 +1,19 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { connectWallet as connectWalletRedux } from "src/reducers/walletSlice";
-import ModalComponent, { ModalTypes } from './components/modal/modal.component';
-import { NetworkId } from './entities/common.entities';
-import Header from './layouts/header.layout';
-import Menu from './layouts/menu.layout';
-import Page from './layouts/page.layout';
+import ModalComponent from "./components/modal/modal.component";
+import { NetworkId } from "./entities/common.entities";
+import Header from "./layouts/header.layout";
+import Menu from "./layouts/menu.layout";
+import Page from "./layouts/page.layout";
+import { showModal } from "./reducers/modalSlice";
 import WalletApi, {
     Cardano,
     CIP0030Wallet,
     WalletKeys,
 } from "./services/connectors/wallet.connector";
-import { getNetworkId } from './services/http.services';
-import './styles.scss';
+import { getNetworkId } from "./services/http.services";
+import "./styles.scss";
 
 export const Themes = {
     light: "theme-light",
@@ -25,8 +26,6 @@ function App() {
     const [showMenu, setShowMenu] = useState(false);
     const [theme, setTheme] = useState(Themes.dark);
     const [connectedWallet, setConnectedWallet] = useState<WalletApi>();
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalText, setModalText] = useState<string>("");
     const [networkId, setNetworkId] = useState<NetworkId>();
     const [wrongNetwork, setWrongNetwork] = useState<boolean>();
 
@@ -37,52 +36,65 @@ function App() {
     const toggleTheme = () => {
         setTheme((theme) => {
             const newTheme = theme === Themes.dark ? Themes.light : Themes.dark;
-            localStorage.setItem('theme', newTheme);
+            localStorage.setItem("theme", newTheme);
             return newTheme;
         });
     };
 
-    const showModal = (text: string) => {
-        setModalText(text);
-        setModalVisible(true);
-    };
-
-    const connectWallet = useCallback(async (walletKey?: WalletKeys) => {
-        if (walletKey) {
-            if (connectedWallet && typeof networkId !== 'undefined') {
-                await connectedWallet.enable(walletKey).then(async (_api) => {
-                    if (_api) {
-                        if (typeof _api !== "string") {
-                            const connectedWalletNetworkId = { network: await _api.getNetworkId() };
-                            if (connectedWalletNetworkId.network === networkId) {
-                                setWrongNetwork(false);
-                            } else {
-                                setWrongNetwork(true);
+    const connectWallet = useCallback(
+        async (walletKey?: WalletKeys) => {
+            if (walletKey) {
+                if (connectedWallet && typeof networkId !== "undefined") {
+                    await connectedWallet
+                        .enable(walletKey)
+                        .then(async (_api) => {
+                            if (_api) {
+                                if (typeof _api !== "string") {
+                                    const connectedWalletNetworkId = {
+                                        network: await _api.getNetworkId(),
+                                    };
+                                    if (
+                                        connectedWalletNetworkId.network ===
+                                        networkId
+                                    ) {
+                                        setWrongNetwork(false);
+                                    } else {
+                                        setWrongNetwork(true);
+                                    }
+                                    const connectedWalletUpdate: CIP0030Wallet =
+                                        {
+                                            ...window.cardano[
+                                                WalletKeys[walletKey]
+                                            ],
+                                            api: _api,
+                                        };
+                                    const walletApi = await getWalletApi(
+                                        connectedWalletUpdate
+                                    );
+                                    dispatch(connectWalletRedux(walletApi));
+                                    localStorage.setItem(
+                                        "wallet-provider",
+                                        walletKey
+                                    );
+                                    setConnectedWallet(walletApi);
+                                } else {
+                                    dispatch(showModal(_api));
+                                }
                             }
-                            const connectedWalletUpdate: CIP0030Wallet = {
-                                ...window.cardano[WalletKeys[walletKey]],
-                                api: _api,
-                            };
-                            const walletApi = await getWalletApi(connectedWalletUpdate);
-                            dispatch(connectWalletRedux(walletApi));
-                            localStorage.setItem('wallet-provider', walletKey);
-                            setConnectedWallet(walletApi);
-                        } else {
-                            showModal(_api);
-                        }
-                    }
-                });
+                        });
+                }
+            } else {
+                if (connectedWallet?.wallet?.api) {
+                    const walletApi = await getWalletApi();
+                    dispatch(connectWalletRedux(walletApi));
+                    localStorage.setItem("wallet-provider", "");
+                    setConnectedWallet(walletApi);
+                    setWrongNetwork(false);
+                }
             }
-        } else {
-            if (connectedWallet?.wallet?.api) {
-                const walletApi = await getWalletApi();
-                dispatch(connectWalletRedux(walletApi));
-                localStorage.setItem('wallet-provider', '');
-                setConnectedWallet(walletApi);
-                setWrongNetwork(false);
-            }
-        }
-    }, [connectedWallet, dispatch, networkId]);
+        },
+        [connectedWallet, dispatch, networkId]
+    );
 
     const getWalletApi = async (
         walletApi?: CIP0030Wallet
@@ -103,7 +115,7 @@ function App() {
                 dispatch(connectWalletRedux(walletApi));
                 setConnectedWallet(walletApi);
             } else if (!connectedWallet.wallet) {
-                const walletKey = localStorage.getItem('wallet-provider');
+                const walletKey = localStorage.getItem("wallet-provider");
                 connectWallet(walletKey as WalletKeys);
             }
         }
@@ -115,9 +127,9 @@ function App() {
         const initNetworkId = async () => {
             const networkIdResponse = await getNetworkId();
             setNetworkId(networkIdResponse.network);
-        }
+        };
 
-        const newTheme = localStorage.getItem('theme');
+        const newTheme = localStorage.getItem("theme");
         if (newTheme) {
             setTheme(newTheme);
         }
@@ -126,12 +138,7 @@ function App() {
 
     return (
         <div className={theme}>
-            <ModalComponent
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
-                modalText={modalText}
-                modalType={ModalTypes.info}
-            />
+            <ModalComponent />
             <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
             <div className="body">
                 <Header
@@ -141,7 +148,10 @@ function App() {
                     toggleTheme={toggleTheme}
                     wrongNetwork={wrongNetwork}
                 />
-                <Page connectedWallet={connectedWallet} showModal={showModal} wrongNetwork={wrongNetwork} />
+                <Page
+                    connectedWallet={connectedWallet}
+                    wrongNetwork={wrongNetwork}
+                />
             </div>
         </div>
     );
