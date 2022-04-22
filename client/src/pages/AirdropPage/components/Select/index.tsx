@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useComponentVisible from "src/hooks/useComponentVisible";
-import { Token, getRealAmount } from "../utils";
+import { Token, getRealAmount } from "../../utils";
 import "./index.scss";
 
 const CLASS = "token-select";
