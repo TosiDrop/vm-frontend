@@ -29,9 +29,6 @@ function Menu({ showMenu, setShowMenu }: Params) {
             >
                 <div className="menu">
                     <div className="menu-content">
-                        <div className="menu-type-buttons">
-                            <TypeButtonsComponent />
-                        </div>
                         <ul className="menu-list">
                             <li>
                                 <Link to="/">

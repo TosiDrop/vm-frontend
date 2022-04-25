@@ -36,12 +36,12 @@ function Header({
                 </div>
                 <div className="last">
                     <button
-                        className="button light-button"
+                        className="light-button button"
                         onClick={toggleTheme}
                     >
                         <FontAwesomeIcon icon={faSun} />
                     </button>
-                    <button className="button menu-button" onClick={toggleMenu}>
+                    <button className="menu-button button" onClick={toggleMenu}>
                         <FontAwesomeIcon icon={faBars} />
                     </button>
                 </div>
