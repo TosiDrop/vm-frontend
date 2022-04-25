@@ -19,7 +19,7 @@ function Feedback() {
                     </div>
                 </a>
                 <a
-                    href="https://discord.gg/S85CKeyHTc"
+                    href="https://discord.gg/C32Mm3j4fG"
                     target="_blank"
                     rel="noreferrer"
                 >
@@ -28,7 +28,7 @@ function Feedback() {
                     </div>
                 </a>
                 <a
-                    href="http://t.me/anetabtc"
+                    href="https://t.me/+FdDUmLsW8jI0YmUx"
                     target="_blank"
                     rel="noreferrer"
                 >
