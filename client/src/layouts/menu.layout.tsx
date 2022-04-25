@@ -41,9 +41,9 @@ function Menu({ showMenu, setShowMenu }: Params) {
                         <a href='http://t.me/anetabtc' target='_blank' rel="noreferrer">
                             <FontAwesomeIcon icon={faTelegram} />
                         </a>
-                        <a href='https://github.com/anetabtc' target='_blank' rel="noreferrer">
+                        {/* <a href='https://github.com/anetabtc' target='_blank' rel="noreferrer">
                             <FontAwesomeIcon icon={faGithub} />
-                        </a>
+                        </a> */}
                     </div>
                 </div>
             </div>
