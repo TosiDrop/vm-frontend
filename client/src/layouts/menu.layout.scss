@@ -9,7 +9,7 @@ $fa-twitter: #55acee;
 
     .menu {
         display: flex;
-    
+
         .menu-content {
             padding-left: 8px;
             padding-right: 8px;
@@ -19,23 +19,23 @@ $fa-twitter: #55acee;
             background-color: var(--primary);
             min-width: 210px;
             flex: 5;
-            
+
             .menu-type-buttons {
                 display: none;
             }
-                
+
             hr {
                 border: 0;
                 border-top: 1px solid var(--font-inactive-color);
                 width: 88%;
                 position: relative;
-                left: 50%; 
+                left: 50%;
                 transform: translateX(-50%);
                 margin-top: 1px;
                 margin-bottom: 1px;
                 height: 1px;
             }
-    
+
             .menu-list li a {
                 color: var(--font-inactive-color);
                 border-radius: 10px;
@@ -45,9 +45,10 @@ $fa-twitter: #55acee;
                 display: flex;
                 align-items: center;
             }
-    
+
             .menu-list li {
-                a.selected, a:hover {
+                a.selected,
+                a:hover {
                     background-color: var(--hover-color);
                     color: var(--font-highlight);
                 }
@@ -56,22 +57,22 @@ $fa-twitter: #55acee;
             .menu-filler {
                 display: none;
             }
-    
+
             .social {
                 text-align: center;
                 * {
                     margin: 5px;
                     &.fa-twitter {
-                        color: #1C9DEB;
+                        color: #1c9deb;
                     }
-                    &.fa-discord { 
-                        color: #6F85D4; 
+                    &.fa-discord {
+                        color: #6f85d4;
                     }
-                    &.fa-telegram { 
-                        color: #2CA0DB; 
+                    &.fa-telegram {
+                        color: #2ca0db;
                     }
-                    &.fa-github { 
-                        color: var(--font-inactive-color); 
+                    &.fa-github {
+                        color: var(--font-inactive-color);
                     }
                 }
             }
@@ -105,7 +106,7 @@ $fa-twitter: #55acee;
                     display: flex;
                     justify-content: center;
                 }
-                
+
                 border-radius: 0;
                 display: flex;
                 flex-direction: column;
@@ -157,4 +158,3 @@ $fa-twitter: #55acee;
         }
     }
 }
-    
