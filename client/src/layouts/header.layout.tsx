@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faSun } from '@fortawesome/free-solid-svg-icons';
-import TypeButtonsComponent from '../components/type-buttons/type-buttons.component';
 import WalletSelectorComponent from '../components/wallet-selector/wallet-selector.component';
 import WalletApi, { WalletKeys } from '../services/connectors/wallet.connector';
 import logo from '../assets/tosidrop_logo.png';
@@ -21,9 +20,6 @@ function Header({ toggleMenu, toggleTheme, connectWallet, connectedWallet, wrong
                 <img src={logo} className="logo" alt=''></img>
             </div>
             <p className='title-text'>TosiDrop</p>
-            <div className='header-type-buttons'>
-                <TypeButtonsComponent />
-            </div>
             <div className='header-filler'></div>
             <div className='header-wallet-selector noselect'>
                 <WalletSelectorComponent connectedWallet={connectedWallet} connectWallet={connectWallet} wrongNetwork={wrongNetwork} />
