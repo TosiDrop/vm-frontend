@@ -61,6 +61,10 @@ $slide-bg: #030b13;
             }
         }
     }
+
+    .menu-button {
+        display: none;
+    }
 }
 
 @media screen and (max-width: 1024px) {
@@ -69,6 +73,7 @@ $slide-bg: #030b13;
 
         .header-title {
             min-width: inherit;
+            position: relative;
 
             .last {
                 order: 0;
@@ -89,16 +94,24 @@ $slide-bg: #030b13;
 
             .logo-container {
                 order: 3;
+                img {
+                    margin-right: 0;
+                }
             }
 
             .title-text {
-                order: 1;
-                padding-left: 20px;
+                position: absolute;
+                margin-left: 50%;
+                transform: translateX(-50%);
             }
 
             .header-type-buttons {
                 display: none;
             }
+        }
+        
+        .menu-button {
+            display: inline-block;
         }
     }
 }
