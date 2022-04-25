@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWallet, faClockRotateLeft, faChartColumn, faMessage, faBook, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { faWallet, faPaperPlane, faMessage, faBook, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faDiscord, faTelegram, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom';
 import TypeButtonsComponent from '../components/type-buttons/type-buttons.component';
@@ -19,7 +19,8 @@ function Menu({ showMenu, setShowMenu }: Params) {
                         <TypeButtonsComponent />
                     </div>
                     <ul className='menu-list'>
-                        <li><Link to="/"><p className="icon"><FontAwesomeIcon icon={faWallet} /></p>Rewards</Link></li>
+                        <li><Link to="/"><p className="icon"><FontAwesomeIcon icon={faWallet} /></p>Claim</Link></li>
+                        <li><Link to="/airdrop"><p className="icon"><FontAwesomeIcon icon={faPaperPlane} /></p>Airdrop</Link></li>
                         {/* <li><Link to="/history"><p className="icon"><FontAwesomeIcon icon={faClockRotateLeft} /></p>History</Link></li> */}
                         {/* <li><Link to="/dashboard"><p className="icon"><FontAwesomeIcon icon={faChartColumn} /></p>Dashboard</Link></li> */}
                         <hr />
