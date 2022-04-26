@@ -22,15 +22,15 @@ const Breakdown = ({
         <>
             <table className={`${CLASS}__table`}>
                 <tr>
-                    <td>Selected Token:</td>
+                    <td>Selected Token</td>
                     <td>{selectedToken?.ticker}</td>
                 </tr>
                 <tr>
-                    <td>Total Address:</td>
+                    <td>Total Address</td>
                     <td>{addressList.length}</td>
                 </tr>
                 <tr>
-                    <td>Total token:</td>
+                    <td>Total token</td>
                     <td>
                         {totalToken} {selectedToken?.ticker}
                     </td>
@@ -38,11 +38,11 @@ const Breakdown = ({
                 {validated ? (
                     <>
                         <tr>
-                            <td>Total ADA to spend:</td>
+                            <td>Total ADA to spend</td>
                             <td>{airdropDetail.adaToSpend} ADA</td>
                         </tr>
                         <tr>
-                            <td>Estimated fee:</td>
+                            <td>Estimated fee</td>
                             <td>{airdropDetail.txFee} ADA</td>
                         </tr>
                         <tr>
