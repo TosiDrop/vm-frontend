@@ -47,6 +47,13 @@
         cursor: pointer;
         display: flex;
         align-items: center;
+        transition: 0.2s;
+        &:hover {
+            transform: translateX(-50%) scale(1.01);
+        }
+        &:disabled {
+            filter: grayscale(0.8);
+        }
     }
 
     &__select {

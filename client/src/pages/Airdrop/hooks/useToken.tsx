@@ -58,9 +58,8 @@ const useToken = () => {
             if (!selectedToken || api == null) return;
             setLoading(true);
             await execAirdrop(api, selectedToken, addressList, addresses);
-            dispatch(showModal('Airdrop successful!'));
+            dispatch(showModal("Airdrop successful!"));
             setLoading(false);
-            
         } else {
             /**
              * if not yet validated,

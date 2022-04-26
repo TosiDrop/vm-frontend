@@ -1,0 +1,13 @@
+.breakdown {
+    &__warning {
+        margin-top: 10px;
+        color: #ffcc00;
+    }
+    &__table {
+        tr {
+            td {
+                padding-right: 20px;
+            }
+        }
+    }
+}
