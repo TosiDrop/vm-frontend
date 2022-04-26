@@ -17,21 +17,24 @@
     &__content {
         border-radius: 20px;
         background-color: var(--primary);
-        padding: 20px;
+        padding: 30px;
         box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.16);
         width: 100%;
-        max-width: 400px;
+        max-width: 500px;
     }
 
     a {
         text-decoration: none;
         color: inherit;
+        &:hover {
+            color: inherit;
+        }
     }
 
     &__content-btn {
         border-radius: 10px;
         background: var(--gradient-button);
-        padding: 10px;
+        padding: 20px;
         transition: 0.2s;
         margin-bottom: 15px;
         text-align: center;
