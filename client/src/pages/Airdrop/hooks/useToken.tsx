@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
 import { showModal } from "src/reducers/modalSlice";
+import { ModalTypes } from "src/entities/common.entities";
 
 const useToken = () => {
     const [addressList, setAddressList] = useState<TokenAddress[]>([]);
@@ -57,8 +58,22 @@ const useToken = () => {
              */
             if (!selectedToken || api == null) return;
             setLoading(true);
-            await execAirdrop(api, selectedToken, addressList, addresses);
-            dispatch(showModal("Airdrop successful!"));
+            try {
+                await execAirdrop(api, selectedToken, addressList, addresses);
+                dispatch(
+                    showModal({
+                        text: "Airdrop successful!",
+                        type: ModalTypes.success,
+                    })
+                );
+            } catch (e) {
+                dispatch(
+                    showModal({
+                        text: "Airdrop failed :(",
+                        type: ModalTypes.failure,
+                    })
+                );
+            }
             setLoading(false);
         } else {
             /**

@@ -1,19 +1,30 @@
 .modal {
+    &__icon {
+        svg {
+            font-size: 30px;
+            display: block;
+            margin: auto;
+            color: var(--font-highlight);
+        }
+    }
+
+    &__icon-failure {
+        svg {
+            color: #fb6b25;
+        }
+    }
+
+    &__icon-success {
+        svg {
+            color: #4ecc48;
+        }
+    }
+
     .modal-content {
         max-width: 450px;
 
         .box {
             background-color: var(--primary);
-
-            .modal-icon {
-
-                svg {
-                    font-size: 30px;
-                    display: block;
-                    margin: auto;
-                    color: var(--font-highlight);
-                }
-            }
 
             .text-content {
                 margin-top: 20px;

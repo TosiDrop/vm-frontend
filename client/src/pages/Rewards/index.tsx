@@ -17,6 +17,7 @@ import {
 } from "../../services/utils.services";
 import { HashLoader, SyncLoader } from "react-spinners";
 import {
+    ModalTypes,
     PaymentStatus,
     PaymentTransactionHashRequest,
     TokenTransactionHashRequest,
@@ -80,12 +81,22 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                     setRewards(rewards);
                     setRewardsLoader(false);
                 } else {
-                    dispatch(showModal("No rewards found for the account."));
+                    dispatch(
+                        showModal({
+                            text: "No rewards found for the account.",
+                            type: ModalTypes.info,
+                        })
+                    );
                     setRewardsLoader(false);
                 }
             } catch (ex: any) {
                 if (ex?.response?.status === 404) {
-                    dispatch(showModal("Account not found."));
+                    dispatch(
+                        showModal({
+                            text: "Account not found.",
+                            type: ModalTypes.info,
+                        })
+                    );
                     setRewardsLoader(false);
                 }
             }
@@ -120,16 +131,20 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
             if (txHash) {
                 if (isTxHash(txHash)) {
                     dispatch(
-                        showModal(
-                            "https://testnet.cardanoscan.io/transaction/" +
-                                txHash
-                        )
+                        showModal({
+                            text:
+                                "https://testnet.cardanoscan.io/transaction/" +
+                                txHash,
+                            type: ModalTypes.info,
+                        })
                     );
                     setPaymentStatus(PaymentStatus.AwaitingConfirmations);
                     setPaymentTxAfterBlock(undefined);
                     checkPaymentTransaction(txHash);
                 } else {
-                    dispatch(showModal(txHash));
+                    dispatch(
+                        showModal({ text: txHash, type: ModalTypes.info })
+                    );
                 }
             }
             setSendAdaSpinner(false);

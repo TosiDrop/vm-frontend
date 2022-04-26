@@ -74,4 +74,6 @@ export enum NetworkId {
 
 export enum ModalTypes {
     info,
+    failure,
+    success
 }

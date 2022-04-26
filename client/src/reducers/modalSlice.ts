@@ -4,22 +4,26 @@ import { ModalTypes } from "src/entities/common.entities";
 interface ModalState {
     text: string;
     show: boolean;
-    type: ModalTypes.info;
+    type: ModalTypes;
 }
 
 const initialState: ModalState = {
     text: "",
     show: false,
-    type: ModalTypes.info,
+    type: ModalTypes.failure,
 };
 
 export const modalSlice = createSlice({
     name: "modal",
     initialState,
     reducers: {
-        showModal: (state, action: PayloadAction<string>) => {
+        showModal: (
+            state,
+            action: PayloadAction<{ text: string; type: ModalTypes }>
+        ) => {
             state.show = true;
-            state.text = action.payload;
+            state.text = action.payload.text;
+            state.type = action.payload.type;
         },
         hideModal: (state) => {
             state.show = false;
