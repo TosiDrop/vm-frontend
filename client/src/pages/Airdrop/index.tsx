@@ -8,6 +8,7 @@ import axios from "axios";
 import ComingSoon from "../ComingSoon";
 import "./index.scss";
 import Spinner from "./components/Spinner";
+import Breakdown from "./components/Breakdown";
 
 const CLASS = "airdrop-page";
 
@@ -89,37 +90,26 @@ const AirdropPage = () => {
                     })}
                 </div>
             ) : null}
-            {validated ? (
-                <div className={`${CLASS}__content ${CLASS}__info`}>
-                    <h1>Airdrop Breakdown</h1>
-                    <div className={`${CLASS}__detail-row`}>
-                        Total token: {totalToken} {selectedToken?.ticker}
-                    </div>
-                    <div className={`${CLASS}__detail-row`}>
-                        Total ADA to spend: {airdropDetail.adaToSpend} ADA
-                    </div>
-                    <div className={`${CLASS}__detail-row`}>
-                        Estimated fee: {airdropDetail.txFee} ADA
-                    </div>
-                    {airdropDetail.multiTx ? (
-                        <div
-                            className={`${CLASS}__detail-row ${CLASS}__detail-row-warning`}
-                        >
-                            This airdrop will take multiple transactions. Please
-                            sign all the related transactions.
-                        </div>
-                    ) : null}
-                </div>
-            ) : null}
-            {true ? (
+            <div className={`${CLASS}__content ${CLASS}__info`}>
+                <h1>Airdrop Breakdown</h1>
+                <Breakdown
+                    selectedToken={selectedToken}
+                    addressList={addressList}
+                    totalToken={totalToken}
+                    validated={validated}
+                    airdropDetail={airdropDetail}
+                ></Breakdown>
+            </div>
+            {/* {true ? (
                 <div className={`${CLASS}__content ${CLASS}__info`}>
                     <h1>Airdrop Transactions</h1>
                     <TransactionBar></TransactionBar>
                 </div>
-            ) : null}
+            ) : null} */}
             <button
                 className={`${CLASS}__button ${CLASS}__button-airdrop`}
                 onClick={() => exec()}
+                disabled={!Boolean(addressList.length) || selectedToken == null}
             >
                 {getBtnText()}
                 {loading ? <Spinner></Spinner> : null}

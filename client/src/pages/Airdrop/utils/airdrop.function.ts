@@ -367,43 +367,39 @@ export const execAirdrop = async (
      * Submit first transaction after validation.
      * first transaction is done to get the airdrop txs.
      */
-    try {
-        const airdropTxData = await axios.post(
-            `${AIRDROP_API_TX}/api/v0/submit`,
-            requestBody
-        );
-        const cborHexInString = airdropTxData.data.cborHex;
+    const airdropTxData = await axios.post(
+        `${AIRDROP_API_TX}/api/v0/submit`,
+        requestBody
+    );
+    const cborHexInString = airdropTxData.data.cborHex;
 
-        /**
-         * the API uses the transaction id as a unique identifier.
-         * cardano serialization lib modifies it. We us the description
-         * field of the transaction json to pass along the original value.
-         */
-        const txId = airdropTxData.data.description;
+    /**
+     * the API uses the transaction id as a unique identifier.
+     * cardano serialization lib modifies it. We us the description
+     * field of the transaction json to pass along the original value.
+     */
+    const txId = airdropTxData.data.description;
 
-        /**
-         * functions to  erase witnesses, sign, and submit to api
-         */
-        const firstAirdropTx = await transact(api, cborHexInString, txId);
+    /**
+     * functions to  erase witnesses, sign, and submit to api
+     */
+    const firstAirdropTx = await transact(api, cborHexInString, txId);
 
-        await checkTxStatus(firstAirdropTx.airdrop_hash);
+    await checkTxStatus(firstAirdropTx.airdrop_hash);
 
-        /**
-         * check if airdrop is single transaction.
-         * if single tx, then airdrop is done in 1 tx
-         */
-        // if (!multiTx) {
-        //   setPopUpSuccess(`Airdrop successful!`);
-        // } else {
-        //   /**
-        //    * else, do multiple signing for multiple airdrop txs
-        //    */
-        //   setPopUpLoading(`Negotiating UTXOs`);
-        //   await handleMultiTxAirdrop(firstAirdropTx.airdrop_hash);
-        // }
-    } catch (e: any) {
-        console.error(e);
-    }
+    /**
+     * check if airdrop is single transaction.
+     * if single tx, then airdrop is done in 1 tx
+     */
+    // if (!multiTx) {
+    //   setPopUpSuccess(`Airdrop successful!`);
+    // } else {
+    //   /**
+    //    * else, do multiple signing for multiple airdrop txs
+    //    */
+    //   setPopUpLoading(`Negotiating UTXOs`);
+    //   await handleMultiTxAirdrop(firstAirdropTx.airdrop_hash);
+    // }
 };
 
 export const handleMultiTxAirdrop = async (airdropHash: any) => {

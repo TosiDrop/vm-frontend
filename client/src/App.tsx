@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { connectWallet as connectWalletRedux } from "src/reducers/walletSlice";
 import ModalComponent from "./components/modal/modal.component";
-import { NetworkId } from "./entities/common.entities";
+import { ModalTypes, NetworkId } from "./entities/common.entities";
 import Header from "./layouts/header.layout";
 import Menu from "./layouts/menu.layout";
 import Page from "./layouts/page.layout";
@@ -78,7 +78,7 @@ function App() {
                                     );
                                     setConnectedWallet(walletApi);
                                 } else {
-                                    dispatch(showModal(_api));
+                                    dispatch(showModal({ text: _api, type: ModalTypes.info }));
                                 }
                             }
                         });
