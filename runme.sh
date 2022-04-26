@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 
 __repo=$(cd $(dirname ${BASH_SOURCE[0]}); pwd -P)
-VM_BRANCH=${VM_BRANCH:-master}
-
-###
-# Check for updates
-cd ${__repo}
-git fetch origin && git merge --ff-only origin/${VM_BRANCH}
 
 ###
 # Check for .env
@@ -31,7 +25,8 @@ else
 		KOIOS_URL=https://koios.rest/api/v0
 		VM_URL=https://vm.adaseal.eu
 	fi
-	echo "CARDANO_NETWORK=${CARDANO_NETWORK}" > ${__repo}/.env
+	echo "VM_BRANCH=${VM_BRANCH}" > ${__repo}/.env
+	echo "CARDANO_NETWORK=${CARDANO_NETWORK}" >> ${__repo}/.env
 	echo "KOIOS_URL=${KOIOS_URL}" >> ${__repo}/.env
 	echo "VM_URL=${VM_URL}" >> ${__repo}/.env
 	echo "VM_API_TOKEN=${VM_API_TOKEN}" >> ${__repo}/.env
@@ -40,6 +35,13 @@ else
 	fi
 	. ${__repo}/.env # source our config
 fi
+
+VM_BRANCH=${VM_BRANCH:-master}
+
+###
+# Check for updates
+cd ${__repo}
+git fetch --tags origin && git merge --ff-only origin/${VM_BRANCH}
 
 # Install python3-virtualenv on debian-likes
 if [[ $(type -P dpkg) ]]; then
@@ -67,6 +69,7 @@ ansible-playbook ${__repo}/ansible/local.yml \
 	-e REPO=${__repo} \
 	-e DOCKER_USERS=${DOCKER_USERS:-ubuntu} \
 	-e MANAGE_DOCKER=${MANAGE_DOCKER:-true} \
+	-e vm_frontend_version=${VM_BRANCH} \
 	-e vm_frontend_port=${PORT:-3000} \
 	-e ansible_python_interpreter=${__repo}/.venv/bin/python3 \
 	--diff \
