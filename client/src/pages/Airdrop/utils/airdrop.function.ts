@@ -353,7 +353,8 @@ export const execAirdrop = async (
     api: CIP0030API,
     selectedToken: Token,
     addressArray: TokenAddress[],
-    addressContainingAda: AdaAddress[]
+    addressContainingAda: AdaAddress[],
+    multiTx: boolean
 ) => {
     // setPopUpLoading(`Sending ${totalAmountToAirdrop} ${selectedToken.name}...`);
 
@@ -384,45 +385,5 @@ export const execAirdrop = async (
      * functions to  erase witnesses, sign, and submit to api
      */
     const firstAirdropTx = await transact(api, cborHexInString, txId);
-
-    await checkTxStatus(firstAirdropTx.airdrop_hash);
-
-    /**
-     * check if airdrop is single transaction.
-     * if single tx, then airdrop is done in 1 tx
-     */
-    // if (!multiTx) {
-    //   setPopUpSuccess(`Airdrop successful!`);
-    // } else {
-    //   /**
-    //    * else, do multiple signing for multiple airdrop txs
-    //    */
-    //   setPopUpLoading(`Negotiating UTXOs`);
-    //   await handleMultiTxAirdrop(firstAirdropTx.airdrop_hash);
-    // }
-};
-
-export const handleMultiTxAirdrop = async (airdropHash: any) => {
-    // setPopUpLoading("Splitting your UTxOs...");
-    try {
-        let firstAirdropTxAdopted: boolean = false;
-        while (!firstAirdropTxAdopted) {
-            firstAirdropTxAdopted = await checkTxStatus(airdropHash);
-            await sleep(500);
-        }
-        const remainingAirdropTxs = await getAirdrop(airdropHash);
-        // setTxToSign(remainingAirdropTxs);
-        // setPopUpSuccess(
-        //   "Airdrop transactions are created! Please sign the transactions to execute the airdrop"
-        // );
-        // let cborHex, txId;
-        // for (let tx of remainingAirdropTxs) {
-        //   cborHex = tx.cborHex;
-        //   txId = tx.description;
-        //   const firstAirdropTx = await transact(api, cborHex, txId);
-        // }
-    } catch (e: any) {
-        console.error(e);
-        // setPopUpError("Something went wrong");
-    }
+    return firstAirdropTx.airdrop_hash;
 };

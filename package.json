@@ -18,12 +18,14 @@
     "clean-client": "cd client && npm run clean",
     "start": "node --inspect -r ts-node/register index.ts",
     "test": "exit 0",
-    "test-client": "cd client && npm run test"
+    "test-client": "cd client && npm run test",
+    "dev": "concurrently \"npm start\" \"cd client && npm start\""
   },
   "proxy": "http://localhost:3000",
   "keywords": [],
   "dependencies": {
     "axios": "^0.26.0",
+    "concurrently": "^7.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",

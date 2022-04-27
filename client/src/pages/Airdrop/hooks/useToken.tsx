@@ -7,6 +7,9 @@ import {
     AirdropRequest,
     AirdropDetail,
     execAirdrop,
+    checkTxStatus,
+    sleep,
+    getAirdrop,
 } from "../utils";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +30,7 @@ const useToken = () => {
     });
     const [totalToken, setTotalToken] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [multiTxTransactions, setMultiTxTransactions] = useState<any>([]);
 
     const api = useSelector((state: RootState) => state.wallet.api);
     const dispatch = useDispatch();
@@ -59,13 +63,52 @@ const useToken = () => {
             if (!selectedToken || api == null) return;
             setLoading(true);
             try {
-                await execAirdrop(api, selectedToken, addressList, addresses);
-                dispatch(
-                    showModal({
-                        text: "Airdrop successful!",
-                        type: ModalTypes.success,
-                    })
+                const airdropHash = await execAirdrop(
+                    api,
+                    selectedToken,
+                    addressList,
+                    addresses,
+                    airdropDetail.multiTx
                 );
+
+                let firstTxIsDone: boolean = false;
+                while (!firstTxIsDone) {
+                    firstTxIsDone = await checkTxStatus(airdropHash);
+                    await sleep(500);
+                }
+
+                /**
+                 * check if airdrop is single transaction.
+                 * if single tx, then airdrop is done in 1 tx
+                 */
+
+                if (airdropDetail.multiTx) {
+                    const airdropTransactionsToSign = await getAirdrop(
+                        airdropHash
+                    );
+                    /**
+                     * airdrop successful
+                     */
+                    dispatch(
+                        showModal({
+                            text: "Your token UTxO has been prepared for the airdrop! Please sign the transactions to airdrop",
+                            type: ModalTypes.success,
+                        })
+                    );
+                    setMultiTxTransactions(
+                        airdropTransactionsToSign.map((tx) => tx)
+                    );
+                } else {
+                    /**
+                     * airdrop successful
+                     */
+                    dispatch(
+                        showModal({
+                            text: "Airdrop successful!",
+                            type: ModalTypes.success,
+                        })
+                    );
+                }
             } catch (e) {
                 dispatch(
                     showModal({
@@ -88,11 +131,27 @@ const useToken = () => {
                 addressList,
                 addresses
             );
-            if (!airdropRequest.valid) return;
+
+            if (!airdropRequest.valid) {
+                dispatch(
+                    showModal({
+                        text: "Airdrop transactions cannot be validated",
+                        type: ModalTypes.failure,
+                    })
+                );
+                return;
+            }
             if (airdropRequest.detail == null) return;
+
             setAirdropDetail(airdropRequest.detail);
             setValidated(true);
             setLoading(false);
+            dispatch(
+                showModal({
+                    text: "Airdrop transactions has been validated! You can now send your airdrop",
+                    type: ModalTypes.success,
+                })
+            );
         }
     };
 
@@ -107,6 +166,7 @@ const useToken = () => {
         airdropDetail,
         totalToken,
         loading,
+        multiTxTransactions,
     };
 };
 

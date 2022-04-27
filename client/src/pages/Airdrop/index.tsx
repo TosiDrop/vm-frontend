@@ -24,6 +24,7 @@ const AirdropPage = () => {
         airdropDetail,
         totalToken,
         loading,
+        multiTxTransactions,
     } = useToken();
 
     const { fileRef, parseFile } = useFile({ handleAddressList });
@@ -100,12 +101,19 @@ const AirdropPage = () => {
                     airdropDetail={airdropDetail}
                 ></Breakdown>
             </div>
-            {/* {true ? (
+            {multiTxTransactions.length ? (
                 <div className={`${CLASS}__content ${CLASS}__info`}>
                     <h1>Airdrop Transactions</h1>
-                    <TransactionBar></TransactionBar>
+                    {multiTxTransactions.map((tx: any) => {
+                        return (
+                            <TransactionBar
+                                cborHex={tx.cborHex}
+                                description={tx.description}
+                            ></TransactionBar>
+                        );
+                    })}
                 </div>
-            ) : null} */}
+            ) : null}
             <button
                 className={`${CLASS}__button ${CLASS}__button-airdrop`}
                 onClick={() => exec()}
