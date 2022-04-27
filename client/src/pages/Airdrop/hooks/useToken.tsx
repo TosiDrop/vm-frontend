@@ -88,11 +88,27 @@ const useToken = () => {
                 addressList,
                 addresses
             );
-            if (!airdropRequest.valid) return;
+            
+            if (!airdropRequest.valid) {
+                dispatch(
+                    showModal({
+                        text: "Airdrop transactions cannot be validated",
+                        type: ModalTypes.failure,
+                    })
+                );
+                return
+            };
             if (airdropRequest.detail == null) return;
+
             setAirdropDetail(airdropRequest.detail);
             setValidated(true);
             setLoading(false);
+            dispatch(
+                showModal({
+                    text: "Airdrop transactions has been validated! You can now send your airdrop",
+                    type: ModalTypes.success,
+                })
+            );
         }
     };
 
