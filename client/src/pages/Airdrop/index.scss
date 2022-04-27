@@ -47,7 +47,7 @@
         cursor: pointer;
         display: flex;
         align-items: center;
-        transition: .2s;
+        transition: 0.2s;
         &:hover {
             transform: translateX(-50%) scale(1.01);
         }
