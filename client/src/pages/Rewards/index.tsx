@@ -41,7 +41,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
     const [hideSendAdaInfo, setHideSendAdaInfo] = useState(true);
     const [rewards, setRewards] = useState<GetRewards>();
-    const [searchAddress, setSearchAddress] = useState<string>();
+    const [searchAddress, setSearchAddress] = useState<string>("");
     const [rewardsLoader, setRewardsLoader] = useState(false);
     const [statusLoader, setStatusLoader] = useState(false);
     const [checkedState, setCheckedState] = useState(new Array<boolean>());
@@ -83,7 +83,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                 } else {
                     dispatch(
                         showModal({
-                            text: "No rewards found for the account.",
+                            text: "No rewards found for the account .",
                             type: ModalTypes.info,
                         })
                     );
