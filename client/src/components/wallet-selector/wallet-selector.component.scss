@@ -49,6 +49,16 @@
         height: 100%;
         align-items: center;
         position: relative;
+        color: var(--font-highlight);
+
+        .wallet-info {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            & > *:first-child {
+                margin-left: 10px;
+            }
+        }
 
         .wallet-icon {
             width: 20px;

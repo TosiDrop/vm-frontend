@@ -1,10 +1,13 @@
-import { faLinkSlash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
-import WalletApi, { WalletKeys } from '../../services/connectors/wallet.connector';
-import { abbreviateAddress } from '../../services/utils.services';
-import WalletSelectorModalComponent from './wallet-selector-modal/wallet-selector-modal.component';
-import './wallet-selector.component.scss';
+import { faLinkSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import Spinner from "src/pages/Airdrop/components/Spinner";
+import WalletApi, {
+    WalletKeys,
+} from "../../services/connectors/wallet.connector";
+import { abbreviateAddress } from "../../services/utils.services";
+import WalletSelectorModalComponent from "./wallet-selector-modal/wallet-selector-modal.component";
+import "./wallet-selector.component.scss";
 
 interface Params {
     connectedWallet: WalletApi | undefined;
@@ -12,32 +15,38 @@ interface Params {
     wrongNetwork: boolean | undefined;
 }
 
-function WalletSelectorComponent({ connectedWallet, connectWallet, wrongNetwork }: Params) {
+function WalletSelectorComponent({
+    connectedWallet,
+    connectWallet,
+    wrongNetwork,
+}: Params) {
     const [modalVisible, setModalVisible] = useState(false);
     const [walletMenuVisible, setWalletMenuVisible] = useState(false);
-    const [walletAddress, setWalletAddress] = useState('');
-    const [walletIcon, setWalletIcon] = useState('');
+    const [walletAddress, setWalletAddress] = useState("");
+    const [walletIcon, setWalletIcon] = useState("");
 
     const disconnectWallet = () => {
         setWalletMenuVisible(false);
         connectWallet();
-    }
+    };
 
     const toggleWalletMenuVisible = () => {
         setWalletMenuVisible(!walletMenuVisible);
-    }
+    };
 
     useEffect(() => {
         async function init() {
             if (connectedWallet) {
                 if (connectedWallet.wallet?.api) {
-                    const addr = abbreviateAddress(await connectedWallet.getAddress());
+                    const addr = abbreviateAddress(
+                        await connectedWallet.getAddress()
+                    );
                     setWalletAddress(addr);
                     setWalletIcon(connectedWallet.wallet.icon);
                     setModalVisible(false);
                 }
             } else {
-                setWalletAddress('');
+                setWalletAddress("");
                 setModalVisible(false);
             }
         }
@@ -45,36 +54,80 @@ function WalletSelectorComponent({ connectedWallet, connectWallet, wrongNetwork 
         init();
     }, [connectedWallet?.wallet?.api, connectedWallet]);
 
-    const Connected = () => (
-        <div className="wallet-connected" onClick={() => toggleWalletMenuVisible()}>
-            <img src={walletIcon} className='wallet-icon' alt='wallet icon'></img>
-            <p className='wallet-addr'>{walletAddress}</p>
-        </div>
-    )
+    const Connected = () => {
+        return (
+            <div
+                className="wallet-connected"
+                onClick={() => toggleWalletMenuVisible()}
+            >
+                {walletIcon ? (
+                    <>
+                        <img
+                            src={walletIcon}
+                            className="wallet-icon"
+                            alt="wallet icon"
+                        ></img>
+                        <p className="wallet-addr">{walletAddress}</p>
+                    </>
+                ) : (
+                    <div className="wallet-info">
+                        Connecting <Spinner></Spinner>
+                    </div>
+                )}
+            </div>
+        );
+    };
 
     const NotConnected = () => (
-        <div className="wallet-not-connected" onClick={() => setModalVisible(true)}>
+        <div
+            className="wallet-not-connected"
+            onClick={() => setModalVisible(true)}
+        >
             <p>Connect</p>
         </div>
-    )
+    );
 
     const WrongNetwork = () => (
-        <div className={"wallet-wrong"} onClick={() => toggleWalletMenuVisible()}>
+        <div
+            className={"wallet-wrong"}
+            onClick={() => toggleWalletMenuVisible()}
+        >
             <p>WRONG NETWORK</p>
         </div>
-    )
+    );
 
     return (
-        <div className='wallet-selector-container'>
-            <WalletSelectorModalComponent modalVisible={modalVisible} setModalVisible={setModalVisible} connectedWallet={connectedWallet} connectWallet={connectWallet} />
-            <div className='wallet-selector'>
-                {wrongNetwork ? <WrongNetwork /> : (connectedWallet?.wallet?.api ? <Connected /> : <NotConnected />)}
+        <div className="wallet-selector-container">
+            <WalletSelectorModalComponent
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                connectedWallet={connectedWallet}
+                connectWallet={connectWallet}
+            />
+            <div className="wallet-selector">
+                {wrongNetwork ? (
+                    <WrongNetwork />
+                ) : connectedWallet?.wallet?.api ? (
+                    <Connected />
+                ) : (
+                    <NotConnected />
+                )}
             </div>
-            <div className={'wallet-menu' + (connectedWallet?.wallet?.api && walletMenuVisible ? '' : ' hidden')}>
-                <p onClick={disconnectWallet}><FontAwesomeIcon icon={faLinkSlash} />Disconnect</p>
+            <div
+                className={
+                    "wallet-menu" +
+                    (connectedWallet?.wallet?.api && walletMenuVisible
+                        ? ""
+                        : " hidden")
+                }
+            >
+                <p onClick={disconnectWallet}>
+                    <FontAwesomeIcon icon={faLinkSlash} />
+                    Disconnect
+                </p>
             </div>
         </div>
-    )
+    );
 }
 
 export default WalletSelectorComponent;
