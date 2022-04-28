@@ -4,6 +4,8 @@ import { checkTxStatus, sleep, transact } from "../../utils";
 import Spinner from "../Spinner";
 import { RootState } from "src/store";
 import "./index.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const CLASS = "transaction-bar";
 
@@ -24,13 +26,19 @@ const TransactionBar = ({ cborHex, description }: Props) => {
     const api = useSelector((state: RootState) => state.wallet.api);
 
     const signTx = async () => {
-        const airdropHash = await transact(api, cborHex, description);
-        let txDone: boolean = false;
-        while (!txDone) {
-            txDone = await checkTxStatus(airdropHash);
-            await sleep(500);
+        try {
+            const airdropHash = (await transact(api, cborHex, description))
+                .airdrop_hash;
+            let txDone: boolean = false;
+            setStatus(TxStatus.loading);
+            while (!txDone) {
+                txDone = await checkTxStatus(airdropHash);
+                await sleep(500);
+            }
+            setStatus(TxStatus.success);
+        } catch (e) {
+            setStatus(TxStatus.fail);
         }
-        console.log(txDone);
     };
 
     const renderStatus = () => {
@@ -46,8 +54,9 @@ const TransactionBar = ({ cborHex, description }: Props) => {
                 );
             case TxStatus.loading:
                 return <Spinner></Spinner>;
-            case TxStatus.fail:
             case TxStatus.success:
+                return <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>;
+            case TxStatus.fail:
             default:
                 return null;
         }

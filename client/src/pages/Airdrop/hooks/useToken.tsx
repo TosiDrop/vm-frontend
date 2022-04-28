@@ -67,8 +67,7 @@ const useToken = () => {
                     api,
                     selectedToken,
                     addressList,
-                    addresses,
-                    airdropDetail.multiTx
+                    addresses
                 );
 
                 let firstTxIsDone: boolean = false;
@@ -135,12 +134,16 @@ const useToken = () => {
             if (!airdropRequest.valid) {
                 dispatch(
                     showModal({
-                        text: "Airdrop transactions cannot be validated",
+                        text: airdropRequest.errorMessage
+                            ? airdropRequest.errorMessage
+                            : "Something is wrong :(",
                         type: ModalTypes.failure,
                     })
                 );
+                setLoading(false);
                 return;
             }
+
             if (airdropRequest.detail == null) return;
 
             setAirdropDetail(airdropRequest.detail);
