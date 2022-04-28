@@ -83,7 +83,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                 } else {
                     dispatch(
                         showModal({
-                            text: "No rewards found for the account .",
+                            text: "No rewards found for the account, yet.",
                             type: ModalTypes.info,
                         })
                     );
