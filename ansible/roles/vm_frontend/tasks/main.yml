@@ -11,9 +11,14 @@
     state: started
   when: redis_enabled
 
-- name: Create VM frontend container
+- name: Disable old VM frontend container
   docker_container:
     name: vm-frontend
+    state: absent
+
+- name: Create VM frontend container
+  docker_container:
+    name: 'vm-frontend-{{ vm_frontend_port }}'
     env:
       NODE_ENV: 'production'
       PORT: '{{ vm_frontend_port | string }}'
