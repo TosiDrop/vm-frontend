@@ -21,6 +21,7 @@ import {
 import axios from "axios";
 import { AirdropRequest } from "./interfaces";
 import { CIP0030API } from "src/services/connectors/wallet.connector";
+import { ERROR } from "./constants";
 
 let Buffer = require("buffer").Buffer;
 
@@ -345,9 +346,19 @@ export const validateAirdropRequest = async (
     } catch (e: any) {
         return {
             valid: false,
+            errorMessage: getAirdropErrorMsg(e.response.data.CODE)
         } as AirdropRequest;
     }
 };
+
+const getAirdropErrorMsg = (code: string) => {
+    switch (code) {
+        case ERROR.NOT_ENOUGH_ADA:
+            return "You don't have enough ADA in your wallet to execute this airdrop. Please prepare at least 1.5 ADA times number of address (10 address => 15 ADA)."
+        default:
+            return "Something is wrong :("
+    }
+}
 
 export const execAirdrop = async (
     api: CIP0030API,

@@ -68,6 +68,7 @@ export interface TransactionInfo {
 export interface AirdropRequest {
     valid: boolean;
     detail?: AirdropDetail;
+    errorMessage?: string;
 }
 
 export interface AirdropDetail {
