@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { checkTxStatus, sleep, transact } from "../../utils";
+import { sleep, transact } from "../../utils";
+import { getTxStatus } from "src/services/airdrop.services";
 import Spinner from "../Spinner";
 import { RootState } from "src/store";
 import "./index.scss";
@@ -12,6 +13,7 @@ const CLASS = "transaction-bar";
 interface Props {
     cborHex: string;
     description: string;
+    i: number;
 }
 
 enum TxStatus {
@@ -21,18 +23,18 @@ enum TxStatus {
     toSign,
 }
 
-const TransactionBar = ({ cborHex, description }: Props) => {
+const TransactionBar = ({ cborHex, description, i }: Props) => {
     const [status, setStatus] = useState(TxStatus.toSign);
     const api = useSelector((state: RootState) => state.wallet.api);
 
     const signTx = async () => {
         try {
-            const airdropHash = (await transact(api, cborHex, description))
-                .airdrop_hash;
+            const airdropTx = await transact(api, cborHex, description);
+            const airdropHash = airdropTx.airdrop_hash;
             let txDone: boolean = false;
             setStatus(TxStatus.loading);
             while (!txDone) {
-                txDone = await checkTxStatus(airdropHash);
+                txDone = await getTxStatus(airdropHash);
                 await sleep(500);
             }
             setStatus(TxStatus.success);
@@ -64,7 +66,7 @@ const TransactionBar = ({ cborHex, description }: Props) => {
 
     return (
         <div className={`${CLASS}`}>
-            TX Info
+            Transaction {i + 1}
             {renderStatus()}
         </div>
     );

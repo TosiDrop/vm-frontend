@@ -10,7 +10,6 @@ import {
     TransactionInfo,
     TokenAddress,
     convertBufferToHex,
-    sleep,
     lovelaceToAda,
 } from ".";
 import {
@@ -18,25 +17,29 @@ import {
     TransactionWitnessSet,
     TransactionUnspentOutput,
 } from "@emurgo/cardano-serialization-lib-asmjs";
-import axios from "axios";
 import { AirdropRequest } from "./interfaces";
 import { CIP0030API } from "src/services/connectors/wallet.connector";
 import { ERROR } from "./constants";
+import {
+    getAirdropTxs,
+    submitTxRequest,
+    submitSignedTx,
+    getTokenDetails,
+    validateAirdrop,
+} from "src/services/airdrop.services";
 
 let Buffer = require("buffer").Buffer;
 
 export const transact = async (api: any, cborHex: string, txId: string) => {
     const clearedTx = await clearSignature(cborHex);
     const signedTx = await walletSign(api, clearedTx[0], clearedTx[1], txId);
-    const submittedTx = await submitTransaction(signedTx);
+    const submittedTx = await submitSignedTx(signedTx);
     return submittedTx;
 };
 
 // get the airdrop transactions
 export const getAirdrop = async (airdropHash: any) => {
-    const response = await axios.get(
-        `${AIRDROP_API_TX}/api/v0/get_transactions/${airdropHash}`
-    );
+    const response = await getAirdropTxs(airdropHash);
     const transactions = response.data;
     const transactionsToSign: TransactionInfo[] = [];
     const txHashMap: { [key: string]: boolean } = {};
@@ -49,19 +52,6 @@ export const getAirdrop = async (airdropHash: any) => {
         }
     }
     return transactionsToSign;
-};
-
-export const submitTransaction = async (txJson: any) => {
-    try {
-        const txSubmit = await axios.post(
-            `${AIRDROP_API_TX}/api/v0/submit_transaction`,
-            txJson
-        );
-        const submission = txSubmit.data;
-        return submission;
-    } catch (e) {
-        console.error(e);
-    }
 };
 
 //signing funcion and creating json object
@@ -123,15 +113,6 @@ export const prepareBody = (
         })),
     };
     return body;
-};
-
-export const checkTxStatus = async (airdropHash: any) => {
-    const response = await axios.get(
-        `${AIRDROP_API_TX}/api/v0/airdrop_status/${airdropHash}`
-    );
-    const txStatus = response.data.transactions[0].transaction_status;
-    if (txStatus === "transaction adopted") return true;
-    return false;
 };
 
 export const getTokenArrayInWallet = async (
@@ -268,8 +249,8 @@ export const getAssetDetails = async (
          * This means that the wallet has no asset other than ada
          */
         if (!tokens.length) return [];
-        const res = await axios.post(url, { tokens });
-        return res.data;
+        const tokenDetails = await getTokenDetails(tokens);
+        return tokenDetails;
     } catch (e: any) {
         switch (e.response.status) {
             case 406:
@@ -322,10 +303,7 @@ export const validateAirdropRequest = async (
     );
 
     try {
-        const txData = await axios.post(
-            `${AIRDROP_API_TX}/api/v0/validate`,
-            requestBody
-        );
+        const txData = await validateAirdrop(requestBody);
         const adaToSpendForTxInAda = lovelaceToAda(
             txData.data.spend_amounts.lovelace
         );
@@ -346,15 +324,18 @@ export const validateAirdropRequest = async (
     } catch (e: any) {
         return {
             valid: false,
-            errorMessage: getAirdropErrorMsg(e.response.data.CODE),
+            errorMessage: getAirdropErrorMsg(
+                e.response.data.CODE,
+                addressArray.length * 1.5
+            ),
         } as AirdropRequest;
     }
 };
 
-const getAirdropErrorMsg = (code: string) => {
+const getAirdropErrorMsg = (code: string, additionalInfo?: any) => {
     switch (code) {
         case ERROR.NOT_ENOUGH_ADA:
-            return "You don't have enough ADA in your wallet to execute this airdrop. Please prepare at least 1.5 ADA times number of address (10 address => 15 ADA).";
+            return `You don't have enough ADA in your wallet to execute this airdrop. Please prepare at least ${additionalInfo} ADA (1.5 ADA times the number of address) to execute the airdrop.`;
         default:
             return "Something is wrong :(";
     }
@@ -378,10 +359,7 @@ export const execAirdrop = async (
      * Submit first transaction after validation.
      * first transaction is done to get the airdrop txs.
      */
-    const airdropTxData = await axios.post(
-        `${AIRDROP_API_TX}/api/v0/submit`,
-        requestBody
-    );
+    const airdropTxData = await submitTxRequest(requestBody);
     const cborHexInString = airdropTxData.data.cborHex;
 
     /**

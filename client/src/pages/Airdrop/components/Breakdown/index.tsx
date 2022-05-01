@@ -58,7 +58,7 @@ const Breakdown = ({
                 <div className={`${CLASS}__warning`}>
                     IMPORTANT: This airdrop needs multiple transactions. The
                     first transaction will modify your UTxO for the airdrop.
-                    After splitting UTxO, please sign all the airdrop
+                    After the UTxO is modified, please sign all the airdrop
                     transactions.
                 </div>
             ) : null}

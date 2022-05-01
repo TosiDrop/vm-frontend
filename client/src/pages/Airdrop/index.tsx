@@ -52,7 +52,7 @@ const AirdropPage = () => {
         }
     };
 
-    return enabled ? (
+    return !enabled ? (
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             <div className={`${CLASS}__content ${CLASS}__select`}>
@@ -104,11 +104,12 @@ const AirdropPage = () => {
             {multiTxTransactions.length ? (
                 <div className={`${CLASS}__content ${CLASS}__info`}>
                     <h1>Airdrop Transactions</h1>
-                    {multiTxTransactions.map((tx: any) => {
+                    {multiTxTransactions.map((tx: any, i: number) => {
                         return (
                             <TransactionBar
                                 cborHex={tx.cborHex}
                                 description={tx.description}
+                                i={i}
                             ></TransactionBar>
                         );
                     })}
