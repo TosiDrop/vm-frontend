@@ -115,14 +115,18 @@ const AirdropPage = () => {
                     })}
                 </div>
             ) : null}
-            <button
-                className={`${CLASS}__button ${CLASS}__button-airdrop`}
-                onClick={() => exec()}
-                disabled={!Boolean(addressList.length) || selectedToken == null}
-            >
-                {getBtnText()}
-                {loading ? <Spinner></Spinner> : null}
-            </button>
+            {!multiTxTransactions.length ? (
+                <button
+                    className={`${CLASS}__button ${CLASS}__button-airdrop`}
+                    onClick={() => exec()}
+                    disabled={
+                        !Boolean(addressList.length) || selectedToken == null
+                    }
+                >
+                    {getBtnText()}
+                    {loading ? <Spinner></Spinner> : null}
+                </button>
+            ) : null}
         </div>
     ) : (
         <ComingSoon />
