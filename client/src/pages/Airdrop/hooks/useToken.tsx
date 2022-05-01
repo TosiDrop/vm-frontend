@@ -7,10 +7,10 @@ import {
     AirdropRequest,
     AirdropDetail,
     execAirdrop,
-    checkTxStatus,
     sleep,
     getAirdrop,
 } from "../utils";
+import { getTxStatus } from "src/services/airdrop.services";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
@@ -72,7 +72,7 @@ const useToken = () => {
 
                 let firstTxIsDone: boolean = false;
                 while (!firstTxIsDone) {
-                    firstTxIsDone = await checkTxStatus(airdropHash);
+                    firstTxIsDone = await getTxStatus(airdropHash);
                     await sleep(500);
                 }
 

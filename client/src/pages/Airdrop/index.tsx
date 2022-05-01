@@ -104,24 +104,29 @@ const AirdropPage = () => {
             {multiTxTransactions.length ? (
                 <div className={`${CLASS}__content ${CLASS}__info`}>
                     <h1>Airdrop Transactions</h1>
-                    {multiTxTransactions.map((tx: any) => {
+                    {multiTxTransactions.map((tx: any, i: number) => {
                         return (
                             <TransactionBar
                                 cborHex={tx.cborHex}
                                 description={tx.description}
+                                i={i}
                             ></TransactionBar>
                         );
                     })}
                 </div>
             ) : null}
-            <button
-                className={`${CLASS}__button ${CLASS}__button-airdrop`}
-                onClick={() => exec()}
-                disabled={!Boolean(addressList.length) || selectedToken == null}
-            >
-                {getBtnText()}
-                {loading ? <Spinner></Spinner> : null}
-            </button>
+            {!multiTxTransactions.length ? (
+                <button
+                    className={`${CLASS}__button ${CLASS}__button-airdrop`}
+                    onClick={() => exec()}
+                    disabled={
+                        !Boolean(addressList.length) || selectedToken == null
+                    }
+                >
+                    {getBtnText()}
+                    {loading ? <Spinner></Spinner> : null}
+                </button>
+            ) : null}
         </div>
     ) : (
         <ComingSoon />
