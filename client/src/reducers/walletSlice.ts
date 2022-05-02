@@ -5,10 +5,12 @@ import WalletApi, {
 
 interface WalletState {
     api: CIP0030API | undefined;
+    name: string;
 }
 
 const initialState: WalletState = {
     api: undefined,
+    name: '',
 };
 
 export const walletSlice = createSlice({
@@ -16,7 +18,10 @@ export const walletSlice = createSlice({
     initialState,
     reducers: {
         connectWallet: (state, action: PayloadAction<WalletApi>) => {
-            state.api = action.payload?.wallet?.api;
+            if (!action.payload) return;
+            if (!action.payload.wallet) return;
+            state.name = action.payload.wallet.name;
+            state.api = action.payload.wallet.api;
         },
     },
 });
