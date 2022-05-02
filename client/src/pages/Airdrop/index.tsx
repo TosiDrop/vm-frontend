@@ -122,6 +122,7 @@ const AirdropPage = () => {
                     {multiTxTransactions.map((tx: any, i: number) => {
                         return (
                             <TransactionBar
+                                key={tx.cborHex}
                                 cborHex={tx.cborHex}
                                 description={tx.description}
                                 i={i}
