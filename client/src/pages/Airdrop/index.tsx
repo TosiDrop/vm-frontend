@@ -9,6 +9,11 @@ import ComingSoon from "../ComingSoon";
 import "./index.scss";
 import Spinner from "./components/Spinner";
 import Breakdown from "./components/Breakdown";
+import { RootState } from "src/store";
+import { useSelector } from "react-redux";
+import { WalletKeys } from "src/services/connectors/wallet.connector";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWarning } from "@fortawesome/free-solid-svg-icons";
 
 const CLASS = "airdrop-page";
 
@@ -28,6 +33,7 @@ const AirdropPage = () => {
     } = useToken();
 
     const { fileRef, parseFile } = useFile({ handleAddressList });
+    const walletName = useSelector((state: RootState) => state.wallet.name);
     const [enabled, setEnabled] = useState(false);
 
     useLayoutEffect(() => {
@@ -55,6 +61,15 @@ const AirdropPage = () => {
     return enabled ? (
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
+            {walletName.toLowerCase() !== WalletKeys.nami.toLowerCase() ? (
+                <div className={`${CLASS}__content ${CLASS}__warning`}>
+                    <FontAwesomeIcon icon={faWarning} />
+                    <span>
+                        This feature is working properly ONLY for Nami wallet.
+                        The use of other wallets is not recommended.
+                    </span>
+                </div>
+            ) : null}
             <div className={`${CLASS}__content ${CLASS}__select`}>
                 <Select
                     tokens={tokens}

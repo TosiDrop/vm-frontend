@@ -24,6 +24,15 @@
         width: 100%;
     }
 
+    &__warning {
+        background: #ffcc00;
+        color: black;
+
+        & > span {
+            margin-left: 10px;
+        }
+    }
+
     &__button {
         font-size: 1rem;
         border-radius: 10px;
