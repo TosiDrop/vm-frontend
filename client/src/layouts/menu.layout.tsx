@@ -10,10 +10,8 @@ import {
     faTwitter,
     faDiscord,
     faTelegram,
-    faGithub,
 } from "@fortawesome/free-brands-svg-icons";
-import { Link } from "react-router-dom";
-import TypeButtonsComponent from "../components/type-buttons/type-buttons.component";
+import { Link, useLocation } from "react-router-dom";
 import "./menu.layout.scss";
 
 interface Params {
@@ -22,6 +20,18 @@ interface Params {
 }
 
 function Menu({ showMenu, setShowMenu }: Params) {
+    const location = useLocation().pathname;
+
+    const menuListItems = [
+        {
+            icon: faWallet,
+            text: "Claim",
+            tag: "Link",
+            selected: location === "/",
+        },
+        {},
+    ];
+
     return (
         <>
             <div
@@ -31,7 +41,14 @@ function Menu({ showMenu, setShowMenu }: Params) {
                     <div className="menu-content">
                         <ul className="menu-list">
                             <li>
-                                <Link to="/">
+                                <Link
+                                    to="/"
+                                    className={
+                                        location === "/"
+                                            ? "menu-list-selected"
+                                            : ""
+                                    }
+                                >
                                     <p className="icon">
                                         <FontAwesomeIcon icon={faWallet} />
                                     </p>
@@ -39,7 +56,14 @@ function Menu({ showMenu, setShowMenu }: Params) {
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/airdrop">
+                                <Link
+                                    to="/airdrop"
+                                    className={
+                                        location === "/airdrop"
+                                            ? "menu-list-selected"
+                                            : ""
+                                    }
+                                >
                                     <p className="icon">
                                         <FontAwesomeIcon icon={faPaperPlane} />
                                     </p>
@@ -48,9 +72,15 @@ function Menu({ showMenu, setShowMenu }: Params) {
                             </li>
                             {/* <li><Link to="/history"><p className="icon"><FontAwesomeIcon icon={faClockRotateLeft} /></p>History</Link></li> */}
                             {/* <li><Link to="/dashboard"><p className="icon"><FontAwesomeIcon icon={faChartColumn} /></p>Dashboard</Link></li> */}
-                            <hr />
                             <li>
-                                <Link to="/feedback">
+                                <Link
+                                    to="/feedback"
+                                    className={
+                                        location === "/feedback"
+                                            ? "menu-list-selected"
+                                            : ""
+                                    }
+                                >
                                     <p className="icon">
                                         <FontAwesomeIcon icon={faMessage} />
                                     </p>

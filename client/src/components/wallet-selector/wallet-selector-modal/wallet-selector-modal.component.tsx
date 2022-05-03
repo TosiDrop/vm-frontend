@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import WalletApi, {
     WalletKeys,
 } from "../../../services/connectors/wallet.connector";
@@ -38,7 +40,7 @@ function WalletSelectorModalComponent({
                                 className="button is-wallet-background is-small"
                                 onClick={hideModal}
                             >
-                                X
+                                <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
                             </button>
                         </div>
                     </div>

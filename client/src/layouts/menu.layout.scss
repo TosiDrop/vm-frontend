@@ -46,6 +46,10 @@ $fa-twitter: #55acee;
                 align-items: center;
             }
 
+            .menu-list li .menu-list-selected {
+                color: var(--font-highlight);
+            }
+
             .menu-list li {
                 a.selected,
                 a:hover {

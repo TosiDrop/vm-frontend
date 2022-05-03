@@ -37,6 +37,11 @@ export const splitAmountArray = (
     let temp: string[] = [];
     for (let addressAmountInfo of addressAmountParsed) {
         temp = addressAmountInfo.split(",");
+        let addr = temp[0];
+        let amount = Number(temp[1]);
+        if (typeof temp[0] !== "string" || isNaN(amount)) {
+            throw new Error("invalid csv");
+        }
         res.push({
             address: temp[0],
             tokenAmount: Number(Number(temp[1])),

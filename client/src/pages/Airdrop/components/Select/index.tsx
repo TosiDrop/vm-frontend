@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "src/store";
 import useComponentVisible from "src/hooks/useComponentVisible";
 import { Token, getRealAmount } from "../../utils";
 import "./index.scss";
+import Spinner from "../Spinner";
 
 const CLASS = "token-select";
 
@@ -14,11 +17,30 @@ const Select = ({ tokens, setSelectedToken }: Props) => {
     const { visible, ref, setVisible } = useComponentVisible(false);
     const [disabled, setDisabled] = useState<boolean>(true);
     const [selected, setSelected] = useState<string>("");
+    const api = useSelector((state: RootState) => state.wallet.api);
 
     const selectOption = (v: Token) => {
         setVisible(false);
         setSelected(v.ticker);
         setSelectedToken(v);
+    };
+
+    const getBtnText = () => {
+        console.log(api)
+        switch (true) {
+            case api == null:
+                return <>Connect wallet to select token</>;
+            case disabled:
+                return (
+                    <>
+                        Loading tokens<Spinner></Spinner>
+                    </>
+                );
+            case selected !== "":
+                return <>selected</>;
+            default:
+                return <>Select Token</>;
+        }
     };
 
     useEffect(() => {
@@ -38,7 +60,7 @@ const Select = ({ tokens, setSelectedToken }: Props) => {
                 className={`${CLASS}__select-btn`}
                 onClick={() => !disabled && setVisible(!visible)}
             >
-                {getBtnText(disabled, selected)}
+                {getBtnText()}
             </div>
             <div
                 className={`${CLASS}__options ${
@@ -65,13 +87,3 @@ const Select = ({ tokens, setSelectedToken }: Props) => {
 };
 
 export default Select;
-
-const getBtnText = (disabled: boolean, selected: string) => {
-    if (disabled) {
-        return "Connect wallet to select token";
-    }
-    if (selected) {
-        return selected;
-    }
-    return "Select Token";
-};
