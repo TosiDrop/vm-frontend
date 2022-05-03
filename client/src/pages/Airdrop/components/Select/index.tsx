@@ -26,7 +26,6 @@ const Select = ({ tokens, setSelectedToken }: Props) => {
     };
 
     const getBtnText = () => {
-        console.log(api)
         switch (true) {
             case api == null:
                 return <>Connect wallet to select token</>;
