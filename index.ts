@@ -8,7 +8,7 @@ import { ExtendedMetadata, Metadata, PaymentTransactionHashRequest, TokenTransac
 import { formatTokens } from './client/src/services/utils.services'
 require('dotenv').config()
 
-const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || false;
+const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
 const CARDANO_NETWORK = process.env.CARDANO_NETWORK || 'testnet';
 const CLAIM_ENABLED = process.env.CLAIM_ENABLED || true;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
