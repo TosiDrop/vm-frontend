@@ -6,7 +6,6 @@ import TransactionBar from "./components/TransactionBar";
 import { useLayoutEffect, useState } from "react";
 import axios from "axios";
 import ComingSoon from "../ComingSoon";
-import "./index.scss";
 import Spinner from "./components/Spinner";
 import Breakdown from "./components/Breakdown";
 import { RootState } from "src/store";
@@ -14,6 +13,7 @@ import { useSelector } from "react-redux";
 import { WalletKeys } from "src/services/connectors/wallet.connector";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
+import "./index.scss";
 
 const CLASS = "airdrop-page";
 

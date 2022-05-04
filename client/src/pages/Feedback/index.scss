@@ -9,6 +9,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    
     h1 {
         font-size: 24px;
         color: var(--font-highlight);
@@ -32,6 +33,7 @@
     }
 
     &__content-btn {
+        font-size: 1rem;
         border-radius: 10px;
         background: var(--gradient-button);
         padding: 20px;
