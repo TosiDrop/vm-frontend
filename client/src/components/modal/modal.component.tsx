@@ -33,7 +33,7 @@ function ModalComponent() {
             case ModalTypes.info:
             default:
                 return (
-                    <span className="modal__icon-">
+                    <span className="modal__icon">
                         <FontAwesomeIcon icon={faInfoCircle} />
                     </span>
                 );
