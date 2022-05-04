@@ -44,9 +44,12 @@ export async function getBlock(): Promise<{ block_no: number }> {
 }
 
 export async function getNetworkId(): Promise<{ network: NetworkId }> {
-    const response = await axios.get(`/network`);
+    const response = await axios.get(`/features`);
     if (response && response.data) {
-        return response.data;
+        if (response.data.network === 'testnet') {
+            return { network: NetworkId.testnet };
+        }
+        return { network: NetworkId.mainnet };
     }
     return { network: NetworkId.undefined };
 }

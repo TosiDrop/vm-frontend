@@ -114,12 +114,6 @@ app.get("/features", (req: any, res: any) => {
     })
 });
 
-app.get("/network", (req: any, res: any) => {
-    res.status(200).json({
-        network: CARDANO_NETWORK === 'testnet' ? 0 : 1
-    })
-});
-
 app.get("/sanitizeaddr", async (req: any, res: any) => {
     const queryObject = url.parse(req.url, true).query;
     if (queryObject.address) {
