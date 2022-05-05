@@ -17,7 +17,7 @@
     "clean": "rm -rf node_modules",
     "clean-client": "cd client && npm run clean",
     "start": "node --inspect -r ts-node/register index.ts",
-    "start-dev": "nodemon index.ts",
+    "start-dev": "nodemon --watch index.ts index.ts",
     "test": "exit 0",
     "test-client": "cd client && npm run test",
     "dev": "concurrently \"npm run start-dev\" \"cd client && npm start\""
