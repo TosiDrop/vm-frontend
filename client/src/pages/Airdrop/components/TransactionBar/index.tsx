@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { sleep, transact } from "../../utils";
 import { getTxStatus } from "src/services/airdrop.services";
-import Spinner from "../Spinner";
+import Spinner from "../../../../components/Spinner";
 import { RootState } from "src/store";
 import "./index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

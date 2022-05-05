@@ -1,7 +1,7 @@
 import { faLinkSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import Spinner from "src/pages/Airdrop/components/Spinner";
+import Spinner from "src/components/Spinner";
 import WalletApi, {
     WalletKeys,
 } from "../../services/connectors/wallet.connector";

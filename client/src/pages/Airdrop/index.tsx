@@ -6,7 +6,7 @@ import TransactionBar from "./components/TransactionBar";
 import { useLayoutEffect, useState } from "react";
 import axios from "axios";
 import ComingSoon from "../ComingSoon";
-import Spinner from "./components/Spinner";
+import Spinner from "../../components/Spinner";
 import Breakdown from "./components/Breakdown";
 import { RootState } from "src/store";
 import { useSelector } from "react-redux";
