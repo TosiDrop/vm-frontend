@@ -15,7 +15,6 @@ import {
     getNameFromHex,
     truncAmount,
 } from "../../services/utils.services";
-import { HashLoader, SyncLoader } from "react-spinners";
 import {
     ModalTypes,
     PaymentStatus,
@@ -29,6 +28,7 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { showModal } from "src/reducers/modalSlice";
 import { getStakeKey } from "./utils/common.function";
+import Spinner from "src/components/Spinner";
 
 let Buffer = require("buffer").Buffer;
 
@@ -56,8 +56,32 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
     const [paymentTxAfterBlock, setPaymentTxAfterBlock] = useState<number>();
     const [tokenTxAfterBlock, setTokenTxAfterBlock] = useState<number>();
+    const [allIsSelected, setAllIsSelected] = useState<boolean>(false);
 
     const checkInterval = 10000;
+
+    useEffect(() => {
+        setAllIsSelected(checkedState.every((i) => (i)))
+    }, [checkedState])
+
+    const selectAll = () => {
+        let updatedCheckedState;
+        if (allIsSelected) {
+            updatedCheckedState = checkedState.map(() =>
+                false
+            );
+        } else {
+            updatedCheckedState = checkedState.map(() =>
+                true
+            );
+        }
+
+        setCheckedState(updatedCheckedState);
+        const updatedCheckedCount = updatedCheckedState.filter(
+            (check) => check
+        ).length;
+        setCheckedCount(updatedCheckedCount);
+    }
 
     const handleOnChange = (position: number) => {
         const updatedCheckedState = checkedState.map((item, index) =>
@@ -145,9 +169,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                 if (isTxHash(txHash)) {
                     dispatch(
                         showModal({
-                            text:
-                                "https://testnet.cardanoscan.io/transaction/" +
-                                txHash,
+                            text: "Transaction ID: " + txHash,
                             type: ModalTypes.info,
                         })
                     );
@@ -225,21 +247,21 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const renderPaymentStatus = () => {
         switch (paymentStatus) {
             case PaymentStatus.Awaiting:
-                return <p className="awaiting">Awaiting payment</p>;
+                return <span className="awaiting">Awaiting payment</span>;
             case PaymentStatus.AwaitingConfirmations:
                 return (
-                    <p className="confirmations">
+                    <span className="confirmations">
                         Awaiting payment confirmations
-                    </p>
+                    </span>
                 );
             case PaymentStatus.Sent:
                 return (
-                    <p className="confirmed">
+                    <span className="confirmed">
                         Payment confirmed, sending tokens
-                    </p>
+                    </span>
                 );
             case PaymentStatus.Completed:
-                return <p className="completed">Withdraw completed</p>;
+                return <span className="completed">Withdraw completed</span>;
         }
     };
 
@@ -397,12 +419,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         if (connectedWallet?.wallet?.api && !wrongNetwork) {
             return (
                 <button className="tosi-button" onClick={sendADA}>
-                    Send ADA
-                    <HashLoader
-                        color="#73badd"
-                        loading={sendAdaSpinner}
-                        size={25}
-                    />
+                    Send ADA { sendAdaSpinner ? <Spinner></Spinner> : null }
                 </button>
             );
         } else {
@@ -453,11 +470,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                             onClick={checkRewards}
                         >
                             Check my rewards
-                            <HashLoader
-                                color="#73badd"
-                                loading={rewardsLoader}
-                                size={25}
-                            />
+                            { rewardsLoader ? <Spinner></Spinner> : null }
                         </button>
                         <button
                             className={
@@ -482,19 +495,36 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     function renderStatusStep() {
         if (!hideSendAdaInfo) {
             return (
-                <div className="status-step">
+                <>
+                <div className="claim-details">
                     <div className="content-reward claim-status-head">
-                        Claim status:{" "}
-                        <div className="payment-status">
+                        Claim status:
+                        <span className="payment-status">
                             {renderPaymentStatus()}
-                        </div>
-                        <SyncLoader
-                            color="#ffffff"
-                            loading={statusLoader}
-                            size={7}
-                        />
+                        </span>
                     </div>
                     <div className="content-reward claim-status-body">
+                        <div className="complete-info">
+                            Please complete the withdrawal process by sending{" "}
+                            <b>
+                                {formatTokens(adaToSend.toString(), 6, 1)} ADA
+                            </b>{" "}
+                            using one of the following options:
+                            <ul>
+                                <li>manual transfer to the address below,</li>
+                                <li>transfer by scanning the QR code, or</li>
+                                <li>
+                                    <b>Send ADA</b> button (if your wallet is
+                                    connected).
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="complete-info-warning">
+                            Please only send{" "}
+                            {formatTokens(adaToSend.toString(), 6, 1)} ADA. Any
+                            other amount will be considered an error and
+                            refunded in aproximately 72 hours
+                        </div>
                         <div className="icon-input">
                             <div
                                 className={
@@ -523,24 +553,10 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                             />
                         </div>
                         {renderQRCode()}
-                        <div className="complete-info">
-                            Complete the withdrawal process by sending{" "}
-                            <b>
-                                {formatTokens(adaToSend.toString(), 6, 1)} ADA
-                            </b>{" "}
-                            to the above address
-                        </div>
                         {renderSendAdaButton()}
-                        <div className="complete-send-info">
-                            <small>
-                                Please only send{" "}
-                                {formatTokens(adaToSend.toString(), 6, 1)} ADA.
-                                Any other amount will be considered an error and
-                                refunded in aproximately 72 hours
-                            </small>
-                        </div>
                     </div>
-
+                </div>
+                <div className="transaction-details">
                     <div className="content-reward tx-details-head">
                         <div>Transaction Details</div>
                         <div></div>
@@ -612,6 +628,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                         </div>
                     </div>
                 </div>
+                </>
             );
         } else {
             return null;
@@ -625,7 +642,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                     <div className={"content-reward staked"}>
                         {renderStakeInfo()}
                     </div>
-
                     <div className={"claim-list"}>
                         {rewards?.claimable_tokens?.map((token, index) => {
                             return (
@@ -667,14 +683,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                                                       )}
                                             </div>
                                         </div>
-                                        <button
-                                            className="tosi-button"
-                                            onClick={() => {
-                                                return claimRewards([token]);
-                                            }}
-                                        >
-                                            Claim token
-                                        </button>
                                     </div>
                                 </div>
                             );
@@ -685,6 +693,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                         <div className="text">
                             Selected {checkedCount} token
                         </div>
+                        <button className="tosi-button" onClick={selectAll}>{ allIsSelected ? 'Unselect All' : 'Select All'}</button>
                         <button
                             className="tosi-button"
                             disabled={checkedCount === 0}
@@ -704,7 +713,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     return (
         <div className="rewards">
             <h1>Claim your rewards</h1>
-
             {renderCheckRewardsStep()}
             {renderStakingInfoStep()}
             {renderStatusStep()}

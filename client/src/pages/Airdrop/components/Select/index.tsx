@@ -4,7 +4,7 @@ import { RootState } from "src/store";
 import useComponentVisible from "src/hooks/useComponentVisible";
 import { Token, getRealAmount } from "../../utils";
 import "./index.scss";
-import Spinner from "../Spinner";
+import Spinner from "../../../../components/Spinner";
 
 const CLASS = "token-select";
 

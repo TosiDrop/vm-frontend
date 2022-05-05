@@ -8,9 +8,17 @@
     padding-top: 20px;
     color: var(--font-highlight);
 
+    & > * {
+        margin-bottom: 20px;
+    }
+
     h1 {
         font-size: 24px;
         color: var(--font-highlight);
+    }
+
+    .tosi-button {
+        padding: 10px 30px;
     }
 
     .content-reward {
@@ -19,10 +27,8 @@
         background-color: var(--primary);
         display: flex;
         flex-direction: column;
-        margin-top: 10px;
 
         &.check {
-
             .transparent-input {
                 margin-top: 15px;
             }
@@ -126,7 +132,7 @@
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                padding: 0px 10px;
+                margin-left: 10px;
 
                 .down-arrow {
                     width: 16px;
@@ -148,10 +154,9 @@
             align-items: center;
 
             .payment-status {
-                margin-left: 30px;
-                margin-right: 10px;
                 color: var(--font-inactive-color);
                 font-family: $avenir-font-light;
+                margin-left: 10px;
 
                 .awaiting {
                     color: var(--font-inactive-color);
@@ -195,7 +200,7 @@
                     left: -30px;
                     visibility: visible;
                     opacity: 1;
-                    transition: all 1s cubic-bezier(0.335, 0.010, 0.030, 1.360);
+                    transition: all 1s cubic-bezier(0.335, 0.01, 0.03, 1.36);
 
                     &.hidden {
                         opacity: 0;
@@ -206,7 +211,6 @@
                 .icon {
                     height: 1.5rem;
                     width: 2.5rem;
-                    ;
                     position: absolute;
                     top: 3px;
                     cursor: pointer;
@@ -231,7 +235,18 @@
             }
 
             .complete-info {
-                font-family: $avenir-font-light;
+                width: 100%;
+                font-family: inherit;
+
+                li {
+                    list-style: circle;
+                    list-style-position: inside;
+                }
+            }
+
+            .complete-info-warning {
+                width: 100%;
+                color: var(--font-warn);
             }
 
             .tosi-button {
@@ -240,11 +255,6 @@
                 justify-content: center;
                 gap: 10px;
                 min-width: 150px;
-            }
-
-            .complete-send-info {
-                font-family: $avenir-font-light;
-                color: var(--font-warn);
             }
         }
 
@@ -313,14 +323,17 @@
         max-height: 1000px;
         display: flex;
         flex-direction: column;
+        
+        & > * {
+            margin-bottom: 20px;
+        }
     }
 
     .claim-list {
         display: flex;
         flex-direction: row;
-        gap: 10px;
+        gap: 20px;
         flex-wrap: wrap;
-        margin-top: 10px;
 
         .claim-item {
             padding: 14px 18px;

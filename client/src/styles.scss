@@ -37,6 +37,7 @@ html, body, #root, .body {
     color: var(--font-highlight);
     font-size: 15px;
     cursor: pointer;
+    font-family: inherit;
 
     &:hover {
         background: var(--gradient-button-hover-default);
