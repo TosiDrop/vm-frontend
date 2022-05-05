@@ -28,11 +28,7 @@ import "./index.scss";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { showModal } from "src/reducers/modalSlice";
-import {
-    Address,
-    BaseAddress,
-    RewardAddress,
-} from "@emurgo/cardano-serialization-lib-asmjs";
+import { getStakeKey } from "./utils/common.function";
 
 let Buffer = require("buffer").Buffer;
 
@@ -84,28 +80,8 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                  * we want the stake address
                  * if it is cardano address, get the staking address
                  */
-
-                let address = searchAddress;
-
-                if (searchAddress.includes("addr")) {
-                    const addressObject = Address.from_bech32(searchAddress);
-                    const stakeAddress =
-                        BaseAddress.from_address(addressObject);
-                    let rewardAddressBytes = new Uint8Array(29);
-                    rewardAddressBytes.set([0xe0], 0);
-
-                    if (stakeAddress == null) return;
-                    rewardAddressBytes.set(
-                        stakeAddress.stake_cred().to_bytes().slice(4, 32),
-                        1
-                    );
-                    let rewardAddress = RewardAddress.from_address(
-                        Address.from_bytes(rewardAddressBytes)
-                    );
-
-                    if (rewardAddress == null) return;
-                    address = rewardAddress?.to_address().to_bech32();
-                }
+                let address = getStakeKey(searchAddress);
+                if (address == null) throw new Error();
 
                 const rewards = await getRewards(address);
 
@@ -125,14 +101,16 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                     setRewardsLoader(false);
                 }
             } catch (ex: any) {
-                if (ex?.response?.status === 404) {
-                    dispatch(
-                        showModal({
-                            text: "Account not found.",
-                            type: ModalTypes.info,
-                        })
-                    );
-                    setRewardsLoader(false);
+                switch (true) {
+                    case ex?.response?.status === 404:
+                    default:
+                        dispatch(
+                            showModal({
+                                text: "Account not found.",
+                                type: ModalTypes.info,
+                            })
+                        );
+                        setRewardsLoader(false);
                 }
             }
         }
