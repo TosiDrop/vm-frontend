@@ -22,7 +22,6 @@
         margin-top: 10px;
 
         &.check {
-
             .transparent-input {
                 margin-top: 15px;
             }
@@ -148,10 +147,9 @@
             align-items: center;
 
             .payment-status {
-                margin-left: 30px;
-                margin-right: 10px;
                 color: var(--font-inactive-color);
                 font-family: $avenir-font-light;
+                margin-left: 10px;
 
                 .awaiting {
                     color: var(--font-inactive-color);
@@ -195,7 +193,7 @@
                     left: -30px;
                     visibility: visible;
                     opacity: 1;
-                    transition: all 1s cubic-bezier(0.335, 0.010, 0.030, 1.360);
+                    transition: all 1s cubic-bezier(0.335, 0.01, 0.03, 1.36);
 
                     &.hidden {
                         opacity: 0;
@@ -206,7 +204,6 @@
                 .icon {
                     height: 1.5rem;
                     width: 2.5rem;
-                    ;
                     position: absolute;
                     top: 3px;
                     cursor: pointer;
@@ -231,7 +228,18 @@
             }
 
             .complete-info {
-                font-family: $avenir-font-light;
+                width: 100%;
+                font-family: inherit;
+
+                li {
+                    list-style: circle;
+                    list-style-position: inside;
+                }
+            }
+
+            .complete-info-warning {
+                width: 100%;
+                color: var(--font-warn);
             }
 
             .tosi-button {
@@ -240,11 +248,6 @@
                 justify-content: center;
                 gap: 10px;
                 min-width: 150px;
-            }
-
-            .complete-send-info {
-                font-family: $avenir-font-light;
-                color: var(--font-warn);
             }
         }
 

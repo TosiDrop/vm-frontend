@@ -145,9 +145,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                 if (isTxHash(txHash)) {
                     dispatch(
                         showModal({
-                            text:
-                                "Transaction ID: " +
-                                txHash,
+                            text: "Transaction ID: " + txHash,
                             type: ModalTypes.info,
                         })
                     );
@@ -225,21 +223,21 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const renderPaymentStatus = () => {
         switch (paymentStatus) {
             case PaymentStatus.Awaiting:
-                return <p className="awaiting">Awaiting payment</p>;
+                return <span className="awaiting">Awaiting payment</span>;
             case PaymentStatus.AwaitingConfirmations:
                 return (
-                    <p className="confirmations">
+                    <span className="confirmations">
                         Awaiting payment confirmations
-                    </p>
+                    </span>
                 );
             case PaymentStatus.Sent:
                 return (
-                    <p className="confirmed">
+                    <span className="confirmed">
                         Payment confirmed, sending tokens
-                    </p>
+                    </span>
                 );
             case PaymentStatus.Completed:
-                return <p className="completed">Withdraw completed</p>;
+                return <span className="completed">Withdraw completed</span>;
         }
     };
 
@@ -484,17 +482,33 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
             return (
                 <div className="status-step">
                     <div className="content-reward claim-status-head">
-                        Claim status:{" "}
-                        <div className="payment-status">
+                        Claim status:
+                        <span className="payment-status">
                             {renderPaymentStatus()}
-                        </div>
-                        <SyncLoader
-                            color="#ffffff"
-                            loading={statusLoader}
-                            size={7}
-                        />
+                        </span>
                     </div>
                     <div className="content-reward claim-status-body">
+                        <div className="complete-info">
+                            Please complete the withdrawal process by sending{" "}
+                            <b>
+                                {formatTokens(adaToSend.toString(), 6, 1)} ADA
+                            </b>{" "}
+                            using one of the following options:
+                            <ul>
+                                <li>manual transfer to the address below,</li>
+                                <li>transfer by scanning the QR code, or</li>
+                                <li>
+                                    <b>Send ADA</b> button (if your wallet is
+                                    connected).
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="complete-info-warning">
+                            Please only send{" "}
+                            {formatTokens(adaToSend.toString(), 6, 1)} ADA. Any
+                            other amount will be considered an error and
+                            refunded in aproximately 72 hours
+                        </div>
                         <div className="icon-input">
                             <div
                                 className={
@@ -523,22 +537,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                             />
                         </div>
                         {renderQRCode()}
-                        <div className="complete-info">
-                            Complete the withdrawal process by sending{" "}
-                            <b>
-                                {formatTokens(adaToSend.toString(), 6, 1)} ADA
-                            </b>{" "}
-                            to the above address
-                        </div>
                         {renderSendAdaButton()}
-                        <div className="complete-send-info">
-                            <small>
-                                Please only send{" "}
-                                {formatTokens(adaToSend.toString(), 6, 1)} ADA.
-                                Any other amount will be considered an error and
-                                refunded in aproximately 72 hours
-                            </small>
-                        </div>
                     </div>
 
                     <div className="content-reward tx-details-head">
