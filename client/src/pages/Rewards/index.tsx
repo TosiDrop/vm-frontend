@@ -471,7 +471,8 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     function renderStatusStep() {
         if (!hideSendAdaInfo) {
             return (
-                <div className="status-step">
+                <>
+                <div className="claim-details">
                     <div className="content-reward claim-status-head">
                         Claim status:
                         <span className="payment-status">
@@ -530,7 +531,8 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                         {renderQRCode()}
                         {renderSendAdaButton()}
                     </div>
-
+                </div>
+                <div className="transaction-details">
                     <div className="content-reward tx-details-head">
                         <div>Transaction Details</div>
                         <div></div>
@@ -602,6 +604,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                         </div>
                     </div>
                 </div>
+                </>
             );
         } else {
             return null;
@@ -694,7 +697,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     return (
         <div className="rewards">
             <h1>Claim your rewards</h1>
-
             {renderCheckRewardsStep()}
             {renderStakingInfoStep()}
             {renderStatusStep()}

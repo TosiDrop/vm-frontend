@@ -8,6 +8,10 @@
     padding-top: 20px;
     color: var(--font-highlight);
 
+    & > * {
+        margin-bottom: 20px;
+    }
+
     h1 {
         font-size: 24px;
         color: var(--font-highlight);
@@ -368,6 +372,10 @@
                 margin-top: 10px;
             }
         }
+    }
+
+    .transaction-details {
+
     }
 }
 
