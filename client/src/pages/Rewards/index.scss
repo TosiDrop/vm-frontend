@@ -17,13 +17,16 @@
         color: var(--font-highlight);
     }
 
+    .tosi-button {
+        padding: 10px 30px;
+    }
+
     .content-reward {
         padding: 23px 30px;
         border-radius: 20px;
         background-color: var(--primary);
         display: flex;
         flex-direction: column;
-        margin-top: 10px;
 
         &.check {
             .transparent-input {
@@ -129,7 +132,7 @@
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                padding: 0px 10px;
+                margin-left: 10px;
 
                 .down-arrow {
                     width: 16px;
@@ -320,14 +323,17 @@
         max-height: 1000px;
         display: flex;
         flex-direction: column;
+        
+        & > * {
+            margin-bottom: 20px;
+        }
     }
 
     .claim-list {
         display: flex;
         flex-direction: row;
-        gap: 10px;
+        gap: 20px;
         flex-wrap: wrap;
-        margin-top: 10px;
 
         .claim-item {
             padding: 14px 18px;
@@ -372,10 +378,6 @@
                 margin-top: 10px;
             }
         }
-    }
-
-    .transaction-details {
-
     }
 }
 

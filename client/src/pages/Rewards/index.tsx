@@ -56,8 +56,32 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
     const [paymentTxAfterBlock, setPaymentTxAfterBlock] = useState<number>();
     const [tokenTxAfterBlock, setTokenTxAfterBlock] = useState<number>();
+    const [allIsSelected, setAllIsSelected] = useState<boolean>(false);
 
     const checkInterval = 10000;
+
+    useEffect(() => {
+        setAllIsSelected(checkedState.every((i) => (i)))
+    }, [checkedState])
+
+    const selectAll = () => {
+        let updatedCheckedState;
+        if (allIsSelected) {
+            updatedCheckedState = checkedState.map(() =>
+                false
+            );
+        } else {
+            updatedCheckedState = checkedState.map(() =>
+                true
+            );
+        }
+
+        setCheckedState(updatedCheckedState);
+        const updatedCheckedCount = updatedCheckedState.filter(
+            (check) => check
+        ).length;
+        setCheckedCount(updatedCheckedCount);
+    }
 
     const handleOnChange = (position: number) => {
         const updatedCheckedState = checkedState.map((item, index) =>
@@ -618,7 +642,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                     <div className={"content-reward staked"}>
                         {renderStakeInfo()}
                     </div>
-
                     <div className={"claim-list"}>
                         {rewards?.claimable_tokens?.map((token, index) => {
                             return (
@@ -660,14 +683,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                                                       )}
                                             </div>
                                         </div>
-                                        <button
-                                            className="tosi-button"
-                                            onClick={() => {
-                                                return claimRewards([token]);
-                                            }}
-                                        >
-                                            Claim token
-                                        </button>
                                     </div>
                                 </div>
                             );
@@ -678,6 +693,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                         <div className="text">
                             Selected {checkedCount} token
                         </div>
+                        <button className="tosi-button" onClick={selectAll}>{ allIsSelected ? 'Unselect All' : 'Select All'}</button>
                         <button
                             className="tosi-button"
                             disabled={checkedCount === 0}
