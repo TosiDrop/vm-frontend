@@ -146,7 +146,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                     dispatch(
                         showModal({
                             text:
-                                "https://testnet.cardanoscan.io/transaction/" +
+                                "Transaction ID: " +
                                 txHash,
                             type: ModalTypes.info,
                         })
