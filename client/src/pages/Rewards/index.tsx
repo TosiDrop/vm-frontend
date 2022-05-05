@@ -15,7 +15,6 @@ import {
     getNameFromHex,
     truncAmount,
 } from "../../services/utils.services";
-import { HashLoader, SyncLoader } from "react-spinners";
 import {
     ModalTypes,
     PaymentStatus,
@@ -29,6 +28,7 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { showModal } from "src/reducers/modalSlice";
 import { getStakeKey } from "./utils/common.function";
+import Spinner from "src/components/Spinner";
 
 let Buffer = require("buffer").Buffer;
 
@@ -395,12 +395,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         if (connectedWallet?.wallet?.api && !wrongNetwork) {
             return (
                 <button className="tosi-button" onClick={sendADA}>
-                    Send ADA
-                    <HashLoader
-                        color="#73badd"
-                        loading={sendAdaSpinner}
-                        size={25}
-                    />
+                    Send ADA { sendAdaSpinner ? <Spinner></Spinner> : null }
                 </button>
             );
         } else {
@@ -451,11 +446,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                             onClick={checkRewards}
                         >
                             Check my rewards
-                            <HashLoader
-                                color="#73badd"
-                                loading={rewardsLoader}
-                                size={25}
-                            />
+                            { rewardsLoader ? <Spinner></Spinner> : null }
                         </button>
                         <button
                             className={
