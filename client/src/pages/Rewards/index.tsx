@@ -651,7 +651,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                     </div>
                     <div className={"claim-list"}>
                         {rewards?.claimable_tokens?.map((token, index) => {
-                            console.log(token);
                             return (
                                 <ClaimableTokenBox
                                     key={index}
