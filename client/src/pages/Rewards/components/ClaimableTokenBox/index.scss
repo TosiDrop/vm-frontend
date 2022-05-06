@@ -1,0 +1,42 @@
+.claim-item {
+    padding: 14px 18px;
+    border-radius: 20px;
+    background-color: var(--primary);
+    display: flex;
+    flex-direction: column;
+    min-width: 250px;
+
+    .selection {
+        label {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            color: var(--font-highlight);
+        }
+
+        input {
+            margin-right: 10px;
+        }
+    }
+
+    .token-info {
+        margin-top: 20px;
+        text-align: center;
+        color: var(--font-highlight);
+
+        img {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            margin-top: 20px;
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .claim-item {
+        width: 100%;
+    }
+}

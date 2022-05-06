@@ -29,6 +29,7 @@ import { useDispatch } from "react-redux";
 import { showModal } from "src/reducers/modalSlice";
 import { getStakeKey } from "./utils/common.function";
 import Spinner from "src/components/Spinner";
+import ClaimableTokenBox from "./components/ClaimableTokenBox";
 
 let Buffer = require("buffer").Buffer;
 
@@ -61,19 +62,15 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const checkInterval = 10000;
 
     useEffect(() => {
-        setAllIsSelected(checkedState.every((i) => (i)))
-    }, [checkedState])
+        setAllIsSelected(checkedState.every((i) => i));
+    }, [checkedState]);
 
     const selectAll = () => {
         let updatedCheckedState;
         if (allIsSelected) {
-            updatedCheckedState = checkedState.map(() =>
-                false
-            );
+            updatedCheckedState = checkedState.map(() => false);
         } else {
-            updatedCheckedState = checkedState.map(() =>
-                true
-            );
+            updatedCheckedState = checkedState.map(() => true);
         }
 
         setCheckedState(updatedCheckedState);
@@ -81,7 +78,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
             (check) => check
         ).length;
         setCheckedCount(updatedCheckedCount);
-    }
+    };
 
     const handleOnChange = (position: number) => {
         const updatedCheckedState = checkedState.map((item, index) =>
@@ -419,7 +416,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         if (connectedWallet?.wallet?.api && !wrongNetwork) {
             return (
                 <button className="tosi-button" onClick={sendADA}>
-                    Send ADA { sendAdaSpinner ? <Spinner></Spinner> : null }
+                    Send ADA {sendAdaSpinner ? <Spinner></Spinner> : null}
                 </button>
             );
         } else {
@@ -470,7 +467,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                             onClick={checkRewards}
                         >
                             Check my rewards
-                            { rewardsLoader ? <Spinner></Spinner> : null }
+                            {rewardsLoader ? <Spinner></Spinner> : null}
                         </button>
                         <button
                             className={
@@ -496,138 +493,148 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         if (!hideSendAdaInfo) {
             return (
                 <>
-                <div className="claim-details">
-                    <div className="content-reward claim-status-head">
-                        Claim status:
-                        <span className="payment-status">
-                            {renderPaymentStatus()}
-                        </span>
+                    <div className="claim-details">
+                        <div className="content-reward claim-status-head">
+                            Claim status:
+                            <span className="payment-status">
+                                {renderPaymentStatus()}
+                            </span>
+                        </div>
+                        <div className="content-reward claim-status-body">
+                            <div className="complete-info">
+                                Please complete the withdrawal process by
+                                sending{" "}
+                                <b>
+                                    {formatTokens(adaToSend.toString(), 6, 1)}{" "}
+                                    ADA
+                                </b>{" "}
+                                using one of the following options:
+                                <ul>
+                                    <li>
+                                        manual transfer to the address below,
+                                    </li>
+                                    <li>
+                                        transfer by scanning the QR code, or
+                                    </li>
+                                    <li>
+                                        <b>Send ADA</b> button (if your wallet
+                                        is connected).
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="complete-info-warning">
+                                Please only send{" "}
+                                {formatTokens(adaToSend.toString(), 6, 1)} ADA.
+                                Any other amount will be considered an error and
+                                refunded in aproximately 72 hours
+                            </div>
+                            <div className="icon-input">
+                                <div
+                                    className={
+                                        "tooltip-icon" +
+                                        (showTooltip ? "" : " hidden")
+                                    }
+                                >
+                                    Address copied
+                                </div>
+                                <div
+                                    className="icon"
+                                    onClick={() => {
+                                        copyContent(
+                                            rewards
+                                                ? rewards.vending_address
+                                                : ""
+                                        );
+                                        triggerTooltip();
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faCopy} />
+                                </div>
+                                <input
+                                    className="transparent-input"
+                                    type="text"
+                                    disabled={true}
+                                    value={rewards?.vending_address}
+                                />
+                            </div>
+                            {renderQRCode()}
+                            {renderSendAdaButton()}
+                        </div>
                     </div>
-                    <div className="content-reward claim-status-body">
-                        <div className="complete-info">
-                            Please complete the withdrawal process by sending{" "}
-                            <b>
+                    <div className="transaction-details">
+                        <div className="content-reward tx-details-head">
+                            <div>Transaction Details</div>
+                            <div></div>
+                        </div>
+                        <div className="content-reward tx-details-body">
+                            <div>Selected {checkedCount} tokens</div>
+                            <div>
+                                {formatTokens(
+                                    (checkedCount * 300000).toString(),
+                                    6,
+                                    1
+                                )}{" "}
+                                ADA
+                            </div>
+                        </div>
+                        <div className="content-reward tx-details-body">
+                            <div>Withdraw Fees</div>
+                            <div>
+                                {formatTokens(rewards?.withdrawal_fee, 6, 1)}{" "}
+                                ADA
+                            </div>
+                        </div>
+                        <div className="content-reward tx-details-body">
+                            <div>Base Deposit</div>
+                            <div>
+                                {formatTokens(
+                                    (
+                                        (rewards?.min_balance || 0) + 300000
+                                    ).toString(),
+                                    6,
+                                    1
+                                )}{" "}
+                                ADA
+                            </div>
+                        </div>
+                        <div className="content-reward tx-details-body small-body">
+                            <div>You Send</div>
+                            <div>
                                 {formatTokens(adaToSend.toString(), 6, 1)} ADA
-                            </b>{" "}
-                            using one of the following options:
-                            <ul>
-                                <li>manual transfer to the address below,</li>
-                                <li>transfer by scanning the QR code, or</li>
-                                <li>
-                                    <b>Send ADA</b> button (if your wallet is
-                                    connected).
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="complete-info-warning">
-                            Please only send{" "}
-                            {formatTokens(adaToSend.toString(), 6, 1)} ADA. Any
-                            other amount will be considered an error and
-                            refunded in aproximately 72 hours
-                        </div>
-                        <div className="icon-input">
-                            <div
-                                className={
-                                    "tooltip-icon" +
-                                    (showTooltip ? "" : " hidden")
-                                }
-                            >
-                                Address copied
                             </div>
-                            <div
-                                className="icon"
-                                onClick={() => {
-                                    copyContent(
-                                        rewards ? rewards.vending_address : ""
-                                    );
-                                    triggerTooltip();
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faCopy} />
+                        </div>
+                        <div className="content-reward tx-details-body small-body">
+                            <div>Tx Fees</div>
+                            <div>~0.168 ADA</div>
+                        </div>
+                        <div className="content-reward tx-details-body small-body-last">
+                            <div>Total transaction</div>
+                            <div>
+                                ~
+                                {formatTokens(
+                                    (adaToSend + 168053).toString(),
+                                    6,
+                                    3
+                                )}{" "}
+                                ADA
                             </div>
-                            <input
-                                className="transparent-input"
-                                type="text"
-                                disabled={true}
-                                value={rewards?.vending_address}
-                            />
                         </div>
-                        {renderQRCode()}
-                        {renderSendAdaButton()}
-                    </div>
-                </div>
-                <div className="transaction-details">
-                    <div className="content-reward tx-details-head">
-                        <div>Transaction Details</div>
-                        <div></div>
-                    </div>
-                    <div className="content-reward tx-details-body">
-                        <div>Selected {checkedCount} tokens</div>
-                        <div>
-                            {formatTokens(
-                                (checkedCount * 300000).toString(),
-                                6,
-                                1
-                            )}{" "}
-                            ADA
+                        <div className="content-reward tx-details-body">
+                            <div>You'll get back (Aprox)</div>
+                            <div>
+                                ~{formatTokens(aproxReturn.toString(), 6, 3)}{" "}
+                                ADA
+                            </div>
+                        </div>
+                        <div className="content-reward tx-details-footer">
+                            <div className="deposit-info">
+                                You will pay a deposit, we will discount the
+                                withdraw fees and the tx fees (variable
+                                depending amount and size of tokens). Usually
+                                it'll cost no more than 0.5 ADA
+                            </div>
                         </div>
                     </div>
-                    <div className="content-reward tx-details-body">
-                        <div>Withdraw Fees</div>
-                        <div>
-                            {formatTokens(rewards?.withdrawal_fee, 6, 1)} ADA
-                        </div>
-                    </div>
-                    <div className="content-reward tx-details-body">
-                        <div>Base Deposit</div>
-                        <div>
-                            {formatTokens(
-                                (
-                                    (rewards?.min_balance || 0) + 300000
-                                ).toString(),
-                                6,
-                                1
-                            )}{" "}
-                            ADA
-                        </div>
-                    </div>
-                    <div className="content-reward tx-details-body small-body">
-                        <div>You Send</div>
-                        <div>
-                            {formatTokens(adaToSend.toString(), 6, 1)} ADA
-                        </div>
-                    </div>
-                    <div className="content-reward tx-details-body small-body">
-                        <div>Tx Fees</div>
-                        <div>~0.168 ADA</div>
-                    </div>
-                    <div className="content-reward tx-details-body small-body-last">
-                        <div>Total transaction</div>
-                        <div>
-                            ~
-                            {formatTokens(
-                                (adaToSend + 168053).toString(),
-                                6,
-                                3
-                            )}{" "}
-                            ADA
-                        </div>
-                    </div>
-                    <div className="content-reward tx-details-body">
-                        <div>You'll get back (Aprox)</div>
-                        <div>
-                            ~{formatTokens(aproxReturn.toString(), 6, 3)} ADA
-                        </div>
-                    </div>
-                    <div className="content-reward tx-details-footer">
-                        <div className="deposit-info">
-                            You will pay a deposit, we will discount the
-                            withdraw fees and the tx fees (variable depending
-                            amount and size of tokens). Usually it'll cost no
-                            more than 0.5 ADA
-                        </div>
-                    </div>
-                </div>
                 </>
             );
         } else {
@@ -645,46 +652,17 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                     <div className={"claim-list"}>
                         {rewards?.claimable_tokens?.map((token, index) => {
                             return (
-                                <div className="claim-item" key={index}>
-                                    <div className="selection">
-                                        <label className="noselect">
-                                            <input
-                                                type="checkbox"
-                                                id={`custom-checkbox-${index}`}
-                                                name={token.ticker}
-                                                value={token.ticker}
-                                                checked={checkedState[index]}
-                                                onChange={() =>
-                                                    handleOnChange(index)
-                                                }
-                                            />
-                                            {truncAmount(
-                                                token.amount,
-                                                token.decimals
-                                            )}{" "}
-                                            available
-                                        </label>
-                                    </div>
-                                    <div className="token-drop">
-                                        <div className="token-info">
-                                            <img alt="" src={token.logo}></img>
-                                            <div>
-                                                {token.assetId.split(".")
-                                                    .length > 1
-                                                    ? getNameFromHex(
-                                                          token.assetId.split(
-                                                              "."
-                                                          )[1]
-                                                      )
-                                                    : getNameFromHex(
-                                                          token.assetId.split(
-                                                              "."
-                                                          )[0]
-                                                      )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <ClaimableTokenBox
+                                    key={index}
+                                    index={index}
+                                    ticker={token.ticker}
+                                    checked={checkedState[index]}
+                                    handleOnChange={handleOnChange}
+                                    amount={token.amount}
+                                    decimals={token.decimals}
+                                    logo={token.logo}
+                                    assetId={token.assetId}
+                                />
                             );
                         })}
                     </div>
@@ -693,7 +671,9 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                         <div className="text">
                             Selected {checkedCount} token
                         </div>
-                        <button className="tosi-button" onClick={selectAll}>{ allIsSelected ? 'Unselect All' : 'Select All'}</button>
+                        <button className="tosi-button" onClick={selectAll}>
+                            {allIsSelected ? "Unselect All" : "Select All"}
+                        </button>
                         <button
                             className="tosi-button"
                             disabled={checkedCount === 0}
