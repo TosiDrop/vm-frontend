@@ -212,6 +212,27 @@ app.get("/getrewards", async (req: any, res: any) => {
     }
 });
 
+app.get("/getcustomrewards", async (req: any, res: any) => {
+    try {
+        const queryObject = url.parse(req.url, true).query;
+        const { staking_address, session_id, selected } = queryObject;
+
+        const stakingAddressResponse = await getFromVM<SanitizeAddress>(
+            `sanitize_address&address=${staking_address}`
+        );
+        if (!stakingAddressResponse) return res.sendStatus(404);
+        const sanitizedStakingAddress = stakingAddressResponse.staking_address;
+        if (!sanitizedStakingAddress) return res.sendStatus(404);
+
+        const submitCustomReward = await getFromVM(
+            `custom_request&staking_address=${sanitizedStakingAddress}&session_id=${"hsash"}&selected=${selected}`
+        );
+        return res.send(submitCustomReward);
+    } catch (e: any) {
+        return res.send({ error: "An error occurred." });
+    }
+});
+
 app.get("/gettransactionstatus", async (req: any, res: any) => {
     try {
         const queryObject = url.parse(req.url, true).query;
