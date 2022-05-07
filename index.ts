@@ -141,8 +141,8 @@ app.get("/healthz", async (req: any, res: any) => {
 
 app.get("/features", (req: any, res: any) => {
     res.status(200).json({
-        airdrop_enabled: AIRDROP_ENABLED,
-        claim_enabled: CLAIM_ENABLED,
+        airdrop_enabled: (typeof AIRDROP_ENABLED == "string")? JSON.parse(AIRDROP_ENABLED.toLowerCase()): AIRDROP_ENABLED,
+        claim_enabled: (typeof CLAIM_ENABLED == "string")? JSON.parse(CLAIM_ENABLED.toLowerCase()): CLAIM_ENABLED,
         network: CARDANO_NETWORK,
     });
 });
