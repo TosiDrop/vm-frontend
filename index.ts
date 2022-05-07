@@ -186,13 +186,13 @@ app.get("/getrewards", async (req: any, res: any) => {
          * try to get pool metadata
          * if fails, then leave without the metadata
          */
-        const logo = "";
+        let logo = "";
         try {
             const extendedMetadata = await getExtendedMetadata(
                 poolInfo.meta_url
             );
             if (!extendedMetadata) throw new Error();
-            const logo = extendedMetadata.info.url_png_icon_64x64;
+            logo = extendedMetadata.info.url_png_icon_64x64;
         } catch (e) {}
 
         getRewardsResponse = {
