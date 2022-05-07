@@ -177,37 +177,42 @@ app.get("/getrewards", async (req: any, res: any) => {
         let getRewardsResponse = await getRewards(stakeAddress);
         const accountsInfo = await getAccountsInfo(stakeAddress);
 
-        const accountInfo = accountsInfo[0];
-        const poolsInfo = await postPoolInfo([accountInfo.delegated_pool]);
-        if (!poolsInfo) throw new Error();
-        const poolInfo = poolsInfo[0];
-
         /**
          * try to get pool metadata
          * if fails, then leave without the metadata
          */
+        let poolInfoObj: any = null;
         let logo = "";
         try {
+            const accountInfo = accountsInfo[0];
+            const poolsInfo = await postPoolInfo([accountInfo.delegated_pool]);
+            if (!poolsInfo) throw new Error();
+            const poolInfo = poolsInfo[0];
             const extendedMetadata = await getExtendedMetadata(
                 poolInfo.meta_url
             );
             if (!extendedMetadata) throw new Error();
+            poolInfoObj = {
+                delegated_pool_name: poolInfo.meta_json.name,
+                delegated_pool_description: poolInfo.meta_json.description,
+                total_balance: formatTokens(accountInfo.total_balance, 6, 2),
+                delegated_pool_ticker: poolInfo.meta_json.ticker,
+            };
             logo = extendedMetadata.info.url_png_icon_64x64;
+            poolInfoObj = {
+                ...poolInfoObj,
+                delegated_pool_logo: logo,
+            };
         } catch (e) {}
 
         getRewardsResponse = {
             ...getRewardsResponse,
-            pool_info: {
-                delegated_pool_name: poolInfo.meta_json.name,
-                delegated_pool_description: poolInfo.meta_json.description,
-                total_balance: formatTokens(accountInfo.total_balance, 6, 2),
-                delegated_pool_logo: logo,
-                delegated_pool_ticker: poolInfo.meta_json.ticker,
-            },
+            pool_info: poolInfoObj,
         };
 
         return res.send(getRewardsResponse);
     } catch (error: any) {
+        console.log(error);
         return res.send({ error: "An error occurred." });
     }
 });
