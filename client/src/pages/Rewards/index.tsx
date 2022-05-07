@@ -4,6 +4,7 @@ import { useEffect, useState, KeyboardEvent } from "react";
 import { ClaimableToken, GetRewards } from "../../entities/vm.entities";
 import {
     getBlock,
+    getCustomRewards,
     getPaymentTransactionHash,
     getRewards,
     getTokenTransactionHash,
@@ -58,6 +59,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const [paymentTxAfterBlock, setPaymentTxAfterBlock] = useState<number>();
     const [tokenTxAfterBlock, setTokenTxAfterBlock] = useState<number>();
     const [allIsSelected, setAllIsSelected] = useState<boolean>(false);
+    const [stakeAddress, setStakeAddress] = useState<string>("");
 
     const checkInterval = 10000;
 
@@ -104,7 +106,10 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                 let address = getStakeKey(searchAddress);
                 if (address == null) throw new Error();
 
+                setStakeAddress(address);
                 const rewards = await getRewards(address);
+
+                console.log(rewards);
 
                 if (
                     rewards &&
@@ -138,16 +143,80 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     };
 
     const claimRewardsChecked = async () => {
-        if (checkedCount > 0) {
-            let tokens: ClaimableToken[] = [];
-            checkedState.forEach((check, i) => {
-                if (check && rewards?.claimable_tokens[i]) {
-                    tokens.push(rewards.claimable_tokens[i]);
+        if (checkedCount === 0) return;
+        if (rewards == null) return;
+
+        let rewardSetting: GetRewards = {
+            ...rewards,
+            pool_info: { ...rewards.pool_info },
+        };
+
+        if (!checkedState.every((rewardIsSelected) => rewardIsSelected)) {
+            /**
+             * get tx info for custom withdrawal
+             */
+            if (rewards == null) return;
+            const selectedTokenId = [];
+            const availableRewards = rewards.claimable_tokens;
+            for (let i = 0; i < checkedState.length; i++) {
+                if (checkedState[i]) {
+                    selectedTokenId.push(availableRewards[i].assetId);
                 }
-            });
-            claimRewards(tokens);
+            }
+            try {
+                const res = await getCustomRewards(
+                    stakeAddress,
+                    stakeAddress,
+                    selectedTokenId.join(",")
+                );
+                if (res == null) throw new Error();
+                rewardSetting.vending_address = res.withdrawal_address;
+                rewardSetting.min_balance = res.deposit;
+            } catch (e) {
+                dispatch(
+                    showModal({
+                        text: "Something went wrong. Please try again later.",
+                        type: ModalTypes.failure,
+                    })
+                );
+                return;
+            }
         }
+
+        setRewards(rewardSetting);
+
+        let tokens: ClaimableToken[] = [];
+        checkedState.forEach((check, i) => {
+            if (check && rewards?.claimable_tokens[i]) {
+                tokens.push(rewards.claimable_tokens[i]);
+            }
+        });
+
+        // setAproxReturn(updatedAproxReturn);
+        setAdaToSend(rewardSetting.min_balance);
+        setHideCheck(true);
+        setHideStakingInfo(true);
+        setHideSendAdaInfo(false);
     };
+
+    // const claimRewards = (tokens: ClaimableToken[]) => {
+    //     if (rewards) {
+    //         const tokenValue = 300000;
+    //         const updatedAdaToSend =
+    //             rewards.min_balance + tokenValue + tokens.length * tokenValue;
+    //         const falseArray = new Array(checkedState.length).fill(false);
+    //         const updatedAproxReturn =
+    //             updatedAdaToSend - 168000 - 200000 * tokens.length;
+    //         tokens.forEach((t: any, i) => (falseArray[i] = true));
+    //         setCheckedState(falseArray);
+    //         setCheckedCount(tokens.length);
+    //         setAdaToSend(updatedAdaToSend);
+    //         setAproxReturn(updatedAproxReturn);
+    //         setHideCheck(true);
+    //         setHideStakingInfo(true);
+    //         setHideSendAdaInfo(false);
+    //     }
+    // };
 
     const backRewards = async () => {
         setRewards(undefined);
@@ -185,25 +254,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
 
     const isTxHash = (txHash: string) => {
         return txHash.length === 64 && txHash.indexOf(" ") === -1;
-    };
-
-    const claimRewards = (tokens: ClaimableToken[]) => {
-        if (rewards) {
-            const tokenValue = 300000;
-            const updatedAdaToSend =
-                rewards.min_balance + tokenValue + tokens.length * tokenValue;
-            const falseArray = new Array(checkedState.length).fill(false);
-            const updatedAproxReturn =
-                updatedAdaToSend - 168000 - 200000 * tokens.length;
-            tokens.forEach((t: any, i) => (falseArray[i] = true));
-            setCheckedState(falseArray);
-            setCheckedCount(tokens.length);
-            setAdaToSend(updatedAdaToSend);
-            setAproxReturn(updatedAproxReturn);
-            setHideCheck(true);
-            setHideStakingInfo(true);
-            setHideSendAdaInfo(false);
-        }
     };
 
     const renderStakeInfo = () => {
