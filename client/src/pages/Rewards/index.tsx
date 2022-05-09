@@ -1,9 +1,14 @@
 import { faXmark, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, KeyboardEvent } from "react";
-import { ClaimableToken, GetRewards } from "../../entities/vm.entities";
+import {
+    ClaimableToken,
+    GetRewards,
+    GetCustomRewards,
+} from "../../entities/vm.entities";
 import {
     getBlock,
+    getCustomRewards,
     getPaymentTransactionHash,
     getRewards,
     getTokenTransactionHash,
@@ -30,6 +35,7 @@ import { showModal } from "src/reducers/modalSlice";
 import { getStakeKey } from "./utils/common.function";
 import Spinner from "src/components/Spinner";
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
+import TransactionDetail from "./components/TransactionDetail";
 
 let Buffer = require("buffer").Buffer;
 
@@ -50,7 +56,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const [statusLoader, setStatusLoader] = useState(false);
     const [checkedState, setCheckedState] = useState(new Array<boolean>());
     const [checkedCount, setCheckedCount] = useState(0);
-    const [adaToSend, setAdaToSend] = useState(0);
     const [aproxReturn, setAproxReturn] = useState(0);
     const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>();
     const [showTooltip, setShowTooltip] = useState(false);
@@ -58,6 +63,10 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const [paymentTxAfterBlock, setPaymentTxAfterBlock] = useState<number>();
     const [tokenTxAfterBlock, setTokenTxAfterBlock] = useState<number>();
     const [allIsSelected, setAllIsSelected] = useState<boolean>(false);
+    const [stakeAddress, setStakeAddress] = useState<string>("");
+    const [txDetail, setTxDetail] = useState<GetCustomRewards | null>(null);
+    const [claimMyRewardLoading, setClaimMyRewardLoading] =
+        useState<boolean>(false);
 
     const checkInterval = 10000;
 
@@ -104,6 +113,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                 let address = getStakeKey(searchAddress);
                 if (address == null) throw new Error();
 
+                setStakeAddress(address);
                 const rewards = await getRewards(address);
 
                 if (
@@ -138,14 +148,45 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     };
 
     const claimRewardsChecked = async () => {
-        if (checkedCount > 0) {
-            let tokens: ClaimableToken[] = [];
-            checkedState.forEach((check, i) => {
-                if (check && rewards?.claimable_tokens[i]) {
-                    tokens.push(rewards.claimable_tokens[i]);
-                }
-            });
-            claimRewards(tokens);
+        if (checkedCount === 0) return;
+        if (rewards == null) return;
+
+        /**
+         * get tx info for custom withdrawal
+         */
+        if (rewards == null) return;
+
+        setClaimMyRewardLoading(true);
+
+        const selectedTokenId = [];
+        const availableRewards = rewards.claimable_tokens;
+        for (let i = 0; i < checkedState.length; i++) {
+            if (checkedState[i]) {
+                selectedTokenId.push(availableRewards[i].assetId);
+            }
+        }
+        try {
+            const res = await getCustomRewards(
+                stakeAddress,
+                stakeAddress,
+                selectedTokenId.join(",")
+            );
+            if (res == null) throw new Error();
+
+            setTxDetail(res as GetCustomRewards);
+            setHideCheck(true);
+            setHideStakingInfo(true);
+            setHideSendAdaInfo(false);
+            setClaimMyRewardLoading(false);
+        } catch (e) {
+            dispatch(
+                showModal({
+                    text: "Something went wrong. Please try again later.",
+                    type: ModalTypes.failure,
+                })
+            );
+            setClaimMyRewardLoading(false);
+            return;
         }
     };
 
@@ -156,11 +197,11 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
 
     const sendADA = async () => {
         // TODO: Check that searched stake address === connected wallet stake address
-        if (rewards) {
+        if (rewards && txDetail) {
             setSendAdaSpinner(true);
             const txHash = await connectedWallet?.transferAda(
-                rewards.vending_address,
-                adaToSend.toString()
+                txDetail.withdrawal_address,
+                txDetail.deposit.toString()
             );
             if (txHash) {
                 if (isTxHash(txHash)) {
@@ -185,25 +226,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
 
     const isTxHash = (txHash: string) => {
         return txHash.length === 64 && txHash.indexOf(" ") === -1;
-    };
-
-    const claimRewards = (tokens: ClaimableToken[]) => {
-        if (rewards) {
-            const tokenValue = 300000;
-            const updatedAdaToSend =
-                rewards.min_balance + tokenValue + tokens.length * tokenValue;
-            const falseArray = new Array(checkedState.length).fill(false);
-            const updatedAproxReturn =
-                updatedAdaToSend - 168000 - 200000 * tokens.length;
-            tokens.forEach((t: any, i) => (falseArray[i] = true));
-            setCheckedState(falseArray);
-            setCheckedCount(tokens.length);
-            setAdaToSend(updatedAdaToSend);
-            setAproxReturn(updatedAproxReturn);
-            setHideCheck(true);
-            setHideStakingInfo(true);
-            setHideSendAdaInfo(false);
-        }
     };
 
     const renderStakeInfo = () => {
@@ -300,13 +322,14 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     }, []);
 
     const findPaymentTxHash = useCallback(() => {
+        if (txDetail == null) return;
         const checkPaymentInterval = setInterval(async () => {
             if (searchAddress) {
                 const request: PaymentTransactionHashRequest = {
                     address: searchAddress,
                     toAddress: rewards?.vending_address || "",
                     afterBlock: paymentTxAfterBlock || 0,
-                    adaToSend,
+                    adaToSend: txDetail?.deposit,
                 };
                 const response = await getPaymentTransactionHash(request);
                 if (response && response.txHash) {
@@ -317,7 +340,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
             }
         }, checkInterval);
     }, [
-        adaToSend,
+        txDetail,
         paymentTxAfterBlock,
         rewards?.vending_address,
         searchAddress,
@@ -356,17 +379,16 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         checkTokenTransaction,
     ]);
 
-    useEffect(() => {
-        async function init() {
-            if (adaToSend !== 0) {
-                const blockNumber = await getBlock();
-                setPaymentTxAfterBlock(blockNumber.block_no);
-                setPaymentStatus(PaymentStatus.Awaiting);
-            }
-        }
-
-        init();
-    }, [adaToSend]);
+    // useEffect(() => {
+    //     async function init() {
+    //         if (adaToSend !== 0) {
+    //             const blockNumber = await getBlock();
+    //             setPaymentTxAfterBlock(blockNumber.block_no);
+    //             setPaymentStatus(PaymentStatus.Awaiting);
+    //         }
+    //     }
+    //     init();
+    // }, [txDetail]);
 
     useEffect(() => {
         switch (paymentStatus) {
@@ -425,15 +447,12 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     }
 
     function renderQRCode() {
-        if (rewards?.vending_address) {
-            return (
-                <div className="qr-address">
-                    <QRCode value={rewards?.vending_address} size={180} />
-                </div>
-            );
-        } else {
-            return null;
-        }
+        if (txDetail == null) return null;
+        return (
+            <div className="qr-address">
+                <QRCode value={txDetail.withdrawal_address} size={180} />
+            </div>
+        );
     }
 
     function renderCheckRewardsStep() {
@@ -505,7 +524,11 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                                 Please complete the withdrawal process by
                                 sending{" "}
                                 <b>
-                                    {formatTokens(adaToSend.toString(), 6, 1)}{" "}
+                                    {formatTokens(
+                                        txDetail?.deposit.toString(),
+                                        6,
+                                        1
+                                    )}{" "}
                                     ADA
                                 </b>{" "}
                                 using one of the following options:
@@ -521,12 +544,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                                         is connected).
                                     </li>
                                 </ul>
-                            </div>
-                            <div className="complete-info-warning">
-                                Please only send{" "}
-                                {formatTokens(adaToSend.toString(), 6, 1)} ADA.
-                                Any other amount will be considered an error and
-                                refunded in aproximately 72 hours
+                                Please send ONLY from the wallet with the same stake key.
                             </div>
                             <div className="icon-input">
                                 <div
@@ -540,9 +558,10 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                                 <div
                                     className="icon"
                                     onClick={() => {
+                                        if (txDetail == null) return;
                                         copyContent(
                                             rewards
-                                                ? rewards.vending_address
+                                                ? txDetail.withdrawal_address
                                                 : ""
                                         );
                                         triggerTooltip();
@@ -561,80 +580,13 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                             {renderSendAdaButton()}
                         </div>
                     </div>
-                    <div className="transaction-details">
-                        <div className="content-reward tx-details-head">
-                            <div>Transaction Details</div>
-                            <div></div>
-                        </div>
-                        <div className="content-reward tx-details-body">
-                            <div>Selected {checkedCount} tokens</div>
-                            <div>
-                                {formatTokens(
-                                    (checkedCount * 300000).toString(),
-                                    6,
-                                    1
-                                )}{" "}
-                                ADA
-                            </div>
-                        </div>
-                        <div className="content-reward tx-details-body">
-                            <div>Withdraw Fees</div>
-                            <div>
-                                {formatTokens(rewards?.withdrawal_fee, 6, 1)}{" "}
-                                ADA
-                            </div>
-                        </div>
-                        <div className="content-reward tx-details-body">
-                            <div>Base Deposit</div>
-                            <div>
-                                {formatTokens(
-                                    (
-                                        (rewards?.min_balance || 0) + 300000
-                                    ).toString(),
-                                    6,
-                                    1
-                                )}{" "}
-                                ADA
-                            </div>
-                        </div>
-                        <div className="content-reward tx-details-body small-body">
-                            <div>You Send</div>
-                            <div>
-                                {formatTokens(adaToSend.toString(), 6, 1)} ADA
-                            </div>
-                        </div>
-                        <div className="content-reward tx-details-body small-body">
-                            <div>Tx Fees</div>
-                            <div>~0.168 ADA</div>
-                        </div>
-                        <div className="content-reward tx-details-body small-body-last">
-                            <div>Total transaction</div>
-                            <div>
-                                ~
-                                {formatTokens(
-                                    (adaToSend + 168053).toString(),
-                                    6,
-                                    3
-                                )}{" "}
-                                ADA
-                            </div>
-                        </div>
-                        <div className="content-reward tx-details-body">
-                            <div>You'll get back (Aprox)</div>
-                            <div>
-                                ~{formatTokens(aproxReturn.toString(), 6, 3)}{" "}
-                                ADA
-                            </div>
-                        </div>
-                        <div className="content-reward tx-details-footer">
-                            <div className="deposit-info">
-                                You will pay a deposit, we will discount the
-                                withdraw fees and the tx fees (variable
-                                depending amount and size of tokens). Usually
-                                it'll cost no more than 0.5 ADA
-                            </div>
-                        </div>
-                    </div>
+                    {txDetail ? (
+                        <TransactionDetail
+                            numberOfTokens={checkedCount}
+                            withdrawalFee={200000}
+                            deposit={txDetail.deposit}
+                        ></TransactionDetail>
+                    ) : null}
                 </>
             );
         } else {
@@ -679,8 +631,8 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                             disabled={checkedCount === 0}
                             onClick={claimRewardsChecked}
                         >
-                            <div className="down-arrow"></div>
                             Claim my rewards
+                            {claimMyRewardLoading ? <Spinner></Spinner> : null}
                         </button>
                     </div>
                 </div>

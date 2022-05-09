@@ -17,6 +17,11 @@ export interface GetRewards {
     };
 }
 
+export interface GetCustomRewards {
+    deposit: number;
+    withdrawal_address: string;
+}
+
 export interface SanitizeAddress {
     staking_address: string;
 }
