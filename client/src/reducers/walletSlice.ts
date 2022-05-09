@@ -1,3 +1,4 @@
+import { NetworkId } from "src/entities/common.entities";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import WalletApi, {
     CIP0030API,
@@ -6,11 +7,13 @@ import WalletApi, {
 interface WalletState {
     api: CIP0030API | undefined;
     name: string;
+    networkId: NetworkId | undefined
 }
 
 const initialState: WalletState = {
     api: undefined,
     name: '',
+    networkId: undefined
 };
 
 export const walletSlice = createSlice({
@@ -23,8 +26,11 @@ export const walletSlice = createSlice({
             state.name = action.payload.wallet.name;
             state.api = action.payload.wallet.api;
         },
+        setNetworkId: (state, action: PayloadAction<NetworkId>) => {
+            state.networkId = action.payload
+        }
     },
 });
 
-export const { connectWallet } = walletSlice.actions;
+export const { connectWallet, setNetworkId } = walletSlice.actions;
 export default walletSlice.reducer;
