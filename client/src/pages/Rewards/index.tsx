@@ -113,7 +113,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                  * we want the stake address
                  * if it is cardano address, get the staking address
                  */
-                let address = getStakeKey(searchAddress, networkId);
+                let address = await getStakeKey(searchAddress, networkId);
                 if (address == null) throw new Error();
 
                 setStakeAddress(address);
@@ -547,7 +547,8 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                                         is connected).
                                     </li>
                                 </ul>
-                                Please send ONLY from the wallet with the same stake key.
+                                Please send ONLY from the wallet with the same
+                                stake key.
                             </div>
                             <div className="icon-input">
                                 <div
