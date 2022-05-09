@@ -30,7 +30,8 @@ import WalletApi from "../../services/connectors/wallet.connector";
 import QRCode from "react-qr-code";
 import "./index.scss";
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "src/store";
 import { showModal } from "src/reducers/modalSlice";
 import { getStakeKey } from "./utils/common.function";
 import Spinner from "src/components/Spinner";
@@ -46,6 +47,8 @@ interface Params {
 
 function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const dispatch = useDispatch();
+
+    const networkId = useSelector((state: RootState) => state.wallet.networkId);
 
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
@@ -110,7 +113,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                  * we want the stake address
                  * if it is cardano address, get the staking address
                  */
-                let address = getStakeKey(searchAddress);
+                let address = await getStakeKey(searchAddress, networkId);
                 if (address == null) throw new Error();
 
                 setStakeAddress(address);
@@ -544,7 +547,8 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                                         is connected).
                                     </li>
                                 </ul>
-                                Please send ONLY from the wallet with the same stake key.
+                                Please send ONLY from the wallet with the same
+                                stake key.
                             </div>
                             <div className="icon-input">
                                 <div

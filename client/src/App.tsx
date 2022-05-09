@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { connectWallet as connectWalletRedux } from "src/reducers/walletSlice";
+import { connectWallet as connectWalletRedux, setNetworkId as setNetworkIdRedux } from "src/reducers/walletSlice";
 import ModalComponent from "./components/modal/modal.component";
 import { ModalTypes, NetworkId } from "./entities/common.entities";
 import Header from "./layouts/header.layout";
@@ -126,6 +126,7 @@ function App() {
     useEffect(() => {
         const initNetworkId = async () => {
             const networkIdResponse = await getNetworkId();
+            dispatch(setNetworkIdRedux(networkIdResponse.network))
             setNetworkId(networkIdResponse.network);
         };
 
