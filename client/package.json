@@ -1,7 +1,7 @@
 {
-  "name": "vm-frontend-client",
-  "version": "0.1.0",
-  "description": "Frontend React App Tosidrop",
+  "name": "tosidrop-client",
+  "version": "1.0.0",
+  "description": "TosiDrop Frontend React App",
   "engines": {
     "node": ">=16",
     "npm": ">=8"

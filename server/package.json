@@ -1,7 +1,7 @@
 {
-  "name": "tosidrop-fe",
+  "name": "tosidrop-server",
   "version": "1.0.0",
-  "description": "Tosidrop frontend: Express router + React client",
+  "description": "TosiDrop Express Router",
   "repository": {
     "type": "git",
     "url": "git://github.com/TosiDrop/vm-frontend.git"
@@ -13,13 +13,10 @@
   "main": "index.ts",
   "scripts": {
     "build": "npm install",
-    "build-client": "cd client && npm run build",
     "clean": "rm -rf node_modules",
-    "clean-client": "cd client && npm run clean",
     "start": "node --inspect -r ts-node/register index.ts",
     "start-dev": "nodemon --watch index.ts index.ts",
-    "test": "exit 0",
-    "test-client": "cd client && npm run test"
+    "test": "exit 0"
   },
   "proxy": "http://localhost:3000",
   "keywords": [],
