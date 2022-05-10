@@ -153,9 +153,9 @@ app.get("/sanitizeaddr", async (req: any, res: any) => {
         const stakingAddressResponse = await getFromVM<SanitizeAddress>(
             `sanitize_address&address=${queryObject.address}`
         );
-        res.send(stakingAddressResponse);
+        return res.send(stakingAddressResponse);
     } else {
-        res.send({ error: "Address seems invalid" });
+        return res.send({ error: "Address seems invalid" });
     }
 });
 
@@ -212,8 +212,7 @@ app.get("/getrewards", async (req: any, res: any) => {
 
         return res.send(getRewardsResponse);
     } catch (error: any) {
-        console.log(error);
-        return res.send({ error: "An error occurred." });
+        return res.status(500).send({ error: "An error occurred." });
     }
 });
 
@@ -225,11 +224,11 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
         if (!staking_address) return res.sendStatus(404);
 
         const submitCustomReward = await getFromVM(
-            `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`
+            `custom_request&staking_address=${staking_address}&session_id=${staking_address.slice(0, 40)}&selected=${selected}`
         );
         return res.send(submitCustomReward);
     } catch (e: any) {
-        return res.send({ error: "An error occurred." });
+        return res.status(500).send({ error: "An error occurred." });
     }
 });
 
@@ -245,7 +244,7 @@ app.get("/gettransactionstatus", async (req: any, res: any) => {
             res.send({ error: "Tx hash seems invalid" });
         }
     } catch (error: any) {
-        res.send({ error: "An error occurred." });
+        return res.status(500).send({ error: "An error occurred." });
     }
 });
 
@@ -259,7 +258,7 @@ app.get("/getblock", async (req: any, res: any) => {
                     : 0,
         });
     } catch (error: any) {
-        res.send({ error: "An error occurred." });
+        return res.status(500).send({ error: "An error occurred." });
     }
 });
 
@@ -344,7 +343,7 @@ app.post("/getpaymenttransactionhash", async (req: any, res: any) => {
             res.send({ error: "Address seems invalid" });
         }
     } catch (error: any) {
-        res.send({ error: "An error occurred." });
+        return res.status(500).send({ error: "An error occurred." });
     }
 });
 
@@ -406,7 +405,7 @@ app.post("/gettokentransactionhash", async (req: any, res: any) => {
             res.send({ error: "Address seems invalid" });
         }
     } catch (error: any) {
-        res.send({ error: "An error occurred." });
+        return res.status(500).send({ error: "An error occurred." });
     }
 });
 
