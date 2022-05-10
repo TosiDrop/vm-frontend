@@ -42,6 +42,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+/**
+ * Serve static files for our React app
+ */
+app.use(express.static("../client/build"));
+
 const server = app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
 });
