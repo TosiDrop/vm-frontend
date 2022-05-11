@@ -15,10 +15,6 @@ jobs:
       matrix:
         node-version: [16.x, 17.x]
         target: [client, server]
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ matrix.target }}
     steps:
       - uses: actions/checkout@v2
       - name: install node ${{ matrix.node-version }}
@@ -26,7 +22,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
+        working-directory: ${{ matrix.target }}
       - run: npm run build --if-present
         env:
           CI: false
+        working-directory: ${{ matrix.target }}
       - run: npm test
+        working-directory: ${{ matrix.target }}
