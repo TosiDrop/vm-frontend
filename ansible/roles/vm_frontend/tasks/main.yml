@@ -32,7 +32,7 @@
     restart_policy: unless-stopped
     state: started
     volumes:
-      - '{{ REPO }}/.env:/app/.env'
+      - '{{ REPO }}/.env:/app/server/.env'
     working_dir: /app
 
 - name: Cron job to run Ansible

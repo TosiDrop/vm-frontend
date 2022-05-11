@@ -10,20 +10,20 @@ import {
     Tip,
     TransactionInfo,
     TransactionStatus,
-} from "./client/src/entities/koios.entities";
+} from "../client/src/entities/koios.entities";
 import {
     ClaimableToken,
     GetRewards,
     GetTokens,
     SanitizeAddress,
-} from "./client/src/entities/vm.entities";
+} from "../client/src/entities/vm.entities";
 import {
     ExtendedMetadata,
     Metadata,
     PaymentTransactionHashRequest,
     TokenTransactionHashRequest,
-} from "./client/src/entities/common.entities";
-import { formatTokens } from "./client/src/services/utils.services";
+} from "../client/src/entities/common.entities";
+import { formatTokens } from "../client/src/services/utils.services";
 require("dotenv").config();
 
 const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
@@ -40,9 +40,12 @@ const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 
 const app = express();
 app.use(cors());
-// Serve our React app
-app.use(express.static("client/build"));
 app.use(express.json());
+
+/**
+ * Serve static files for our React app
+ */
+app.use(express.static("../client/build"));
 
 const server = app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
@@ -453,5 +456,5 @@ async function getRewards(stakeAddress: string) {
 
 // Fallback to React app
 app.get("*", (req, res) => {
-    res.sendFile("client/build/index.html", { root: __dirname });
+    res.sendFile("client/build/index.html", { root: '../' });
 });

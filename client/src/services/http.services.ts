@@ -1,7 +1,7 @@
 import { NetworkId, PaymentTransactionHashRequest, TokenTransactionHashRequest } from "src/entities/common.entities";
 import { TransactionStatus } from "src/entities/koios.entities";
 import { GetRewards, GetCustomRewards } from "../entities/vm.entities";
-const axios = require('axios').default;
+import axios from 'axios';
 
 export async function getRewards(address: string): Promise<GetRewards | undefined> {
     const response = await axios.get(`/getrewards?address=${address}`);
