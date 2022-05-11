@@ -6,20 +6,24 @@ import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TransactionDetail from "../TransactionDetail";
 import { copyContent, formatTokens } from "src/services/utils.services";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./index.scss";
 import { useDispatch } from "react-redux";
+import { getTxStatus } from "src/services/http.services";
+import { GetCustomRewards, GetRewards } from "src/entities/vm.entities";
+import WalletApi from "src/services/connectors/wallet.connector";
 
 const CLASS = "deposit-info";
 
 interface Params {
-    txDetail: any;
+    txDetail: GetCustomRewards | undefined;
     showTooltip: boolean;
-    rewards: any;
+    rewards: GetRewards | undefined;
     triggerTooltip: Function;
     checkedCount: number;
-    connectedWallet: any;
+    connectedWallet: WalletApi | undefined;
     wrongNetwork: boolean | undefined;
+    stakeAddress: string | undefined;
 }
 
 const DepositInfo = ({
@@ -30,9 +34,24 @@ const DepositInfo = ({
     checkedCount,
     connectedWallet,
     wrongNetwork,
+    stakeAddress
 }: Params) => {
     const dispatch = useDispatch();
     const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
+
+    useEffect(() => {
+      if (txDetail == null) return
+      if (stakeAddress == null) return
+
+      const checkTxStatus = setInterval(async () => {
+        const txStatus = await getTxStatus(txDetail.request_id, stakeAddress.slice(0, 40))
+        // console.log(txStatus)
+      }, 5000)
+
+      return () => {
+        clearInterval(checkTxStatus)
+      }
+    }, [txDetail])
 
     const renderQRCode = (txDetail: any) => {
         if (txDetail == null) return null;

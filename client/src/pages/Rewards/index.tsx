@@ -56,7 +56,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const [tokenTxAfterBlock, setTokenTxAfterBlock] = useState<number>();
     const [allIsSelected, setAllIsSelected] = useState<boolean>(false);
     const [stakeAddress, setStakeAddress] = useState<string>("");
-    const [txDetail, setTxDetail] = useState<GetCustomRewards | null>(null);
+    const [txDetail, setTxDetail] = useState<GetCustomRewards | undefined>();
     const [claimMyRewardLoading, setClaimMyRewardLoading] =
         useState<boolean>(false);
 
@@ -487,6 +487,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                     checkedCount={checkedCount}
                     connectedWallet={connectedWallet}
                     wrongNetwork={wrongNetwork}
+                    stakeAddress={stakeAddress}
                 ></DepositInfo>
             ) : null}
             {renderCheckRewardsStep()}
