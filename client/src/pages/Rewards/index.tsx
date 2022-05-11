@@ -196,7 +196,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         try {
             const res = await getCustomRewards(
                 stakeAddress,
-                stakeAddress,
+                stakeAddress.slice(0, 40),
                 selectedTokenId.join(",")
             );
             if (res == null) throw new Error();
