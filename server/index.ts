@@ -224,16 +224,32 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
         const queryObject = url.parse(req.url, true).query;
         const { staking_address, session_id, selected } = queryObject;
 
-        if (!staking_address) return res.sendStatus(404);
+        if (!staking_address) return res.sendStatus(400);
 
         const submitCustomReward = await getFromVM(
-            `custom_request&staking_address=${staking_address}&session_id=${staking_address.slice(0, 40)}&selected=${selected}`
+            `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`
         );
         return res.send(submitCustomReward);
     } catch (e: any) {
         return res.status(500).send({ error: "An error occurred." });
     }
 });
+
+app.get("/txstatus", async (req, res) => {
+    try {
+        const queryObject = url.parse(req.url, true).query;
+        const { request_id, session_id } = queryObject;
+
+        if (!request_id || !session_id) return res.sendStatus(400);
+
+        const txStatus = await getFromVM(
+            `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`
+        );
+        return res.send(txStatus);
+    } catch (e: any) {
+        return res.status(500).send({ error: "An error occurred." });
+    }
+})
 
 app.get("/gettransactionstatus", async (req: any, res: any) => {
     try {

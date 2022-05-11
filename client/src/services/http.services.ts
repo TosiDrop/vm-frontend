@@ -61,3 +61,8 @@ export async function getNetworkId(): Promise<{ network: NetworkId }> {
     }
     return { network: NetworkId.undefined };
 }
+
+export async function getTxStatus(request_id: string, session_id: string) {
+    const response = await axios.get(`/txstatus?request_id=${request_id}&session_id=${session_id}`);
+    return response.data
+}

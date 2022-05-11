@@ -1,4 +1,4 @@
-import { faXmark, faCopy } from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, KeyboardEvent } from "react";
 import {
@@ -15,19 +15,12 @@ import {
     getTransactionStatus,
 } from "../../services/http.services";
 import {
-    copyContent,
-    formatTokens,
-    getNameFromHex,
-    truncAmount,
-} from "../../services/utils.services";
-import {
     ModalTypes,
     PaymentStatus,
     PaymentTransactionHashRequest,
     TokenTransactionHashRequest,
 } from "../../entities/common.entities";
 import WalletApi from "../../services/connectors/wallet.connector";
-import QRCode from "react-qr-code";
 import "./index.scss";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,9 +29,7 @@ import { showModal } from "src/reducers/modalSlice";
 import { getStakeKey } from "./utils/common.function";
 import Spinner from "src/components/Spinner";
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
-import TransactionDetail from "./components/TransactionDetail";
-
-let Buffer = require("buffer").Buffer;
+import DepositInfo from "./components/DepositInfo";
 
 interface Params {
     connectedWallet: WalletApi | undefined;
@@ -59,24 +50,55 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const [statusLoader, setStatusLoader] = useState(false);
     const [checkedState, setCheckedState] = useState(new Array<boolean>());
     const [checkedCount, setCheckedCount] = useState(0);
-    const [aproxReturn, setAproxReturn] = useState(0);
     const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>();
     const [showTooltip, setShowTooltip] = useState(false);
-    const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
     const [paymentTxAfterBlock, setPaymentTxAfterBlock] = useState<number>();
     const [tokenTxAfterBlock, setTokenTxAfterBlock] = useState<number>();
     const [allIsSelected, setAllIsSelected] = useState<boolean>(false);
     const [stakeAddress, setStakeAddress] = useState<string>("");
-    const [txDetail, setTxDetail] = useState<GetCustomRewards | null>(null);
+    const [txDetail, setTxDetail] = useState<GetCustomRewards | undefined>();
     const [claimMyRewardLoading, setClaimMyRewardLoading] =
         useState<boolean>(false);
 
     const checkInterval = 10000;
 
+    /**
+     * check if every token is selected
+     */
     useEffect(() => {
         setAllIsSelected(checkedState.every((i) => i));
     }, [checkedState]);
 
+    useEffect(() => {
+        if (rewards?.claimable_tokens.length) {
+            setCheckedState(
+                new Array(rewards.claimable_tokens.length).fill(false)
+            );
+            setHideStakingInfo(false);
+        } else {
+            setCheckedState([]);
+            setHideStakingInfo(true);
+        }
+    }, [rewards?.claimable_tokens]);
+
+    useEffect(() => {
+        async function init() {
+            if (connectedWallet?.wallet?.api && !wrongNetwork) {
+                setSearchAddress(await connectedWallet.getAddress());
+                setHideCheck(false);
+                setHideStakingInfo(true);
+                setHideSendAdaInfo(true);
+            } else {
+                setPaymentStatus(undefined);
+            }
+        }
+
+        init();
+    }, [connectedWallet?.wallet?.api, connectedWallet, wrongNetwork]);
+
+    /**
+     * select/unselect all tokens
+     */
     const selectAll = () => {
         let updatedCheckedState;
         if (allIsSelected) {
@@ -92,7 +114,10 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         setCheckedCount(updatedCheckedCount);
     };
 
-    const handleOnChange = (position: number) => {
+    /**
+     * handle token select
+     */
+    const handleTokenSelect = (position: number) => {
         const updatedCheckedState = checkedState.map((item, index) =>
             index === position ? !item : item
         );
@@ -150,7 +175,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         }
     };
 
-    const claimRewardsChecked = async () => {
+    const claimMyRewards = async () => {
         if (checkedCount === 0) return;
         if (rewards == null) return;
 
@@ -171,7 +196,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         try {
             const res = await getCustomRewards(
                 stakeAddress,
-                stakeAddress,
+                stakeAddress.slice(0, 40),
                 selectedTokenId.join(",")
             );
             if (res == null) throw new Error();
@@ -193,42 +218,9 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         }
     };
 
-    const backRewards = async () => {
+    const cancelClaim = async () => {
         setRewards(undefined);
         setSearchAddress("");
-    };
-
-    const sendADA = async () => {
-        // TODO: Check that searched stake address === connected wallet stake address
-        if (rewards && txDetail) {
-            setSendAdaSpinner(true);
-            const txHash = await connectedWallet?.transferAda(
-                txDetail.withdrawal_address,
-                txDetail.deposit.toString()
-            );
-            if (txHash) {
-                if (isTxHash(txHash)) {
-                    dispatch(
-                        showModal({
-                            text: "Transaction ID: " + txHash,
-                            type: ModalTypes.info,
-                        })
-                    );
-                    setPaymentStatus(PaymentStatus.AwaitingConfirmations);
-                    setPaymentTxAfterBlock(undefined);
-                    checkPaymentTransaction(txHash);
-                } else {
-                    dispatch(
-                        showModal({ text: txHash, type: ModalTypes.info })
-                    );
-                }
-            }
-            setSendAdaSpinner(false);
-        }
-    };
-
-    const isTxHash = (txHash: string) => {
-        return txHash.length === 64 && txHash.indexOf(" ") === -1;
     };
 
     const renderStakeInfo = () => {
@@ -382,82 +374,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         checkTokenTransaction,
     ]);
 
-    // useEffect(() => {
-    //     async function init() {
-    //         if (adaToSend !== 0) {
-    //             const blockNumber = await getBlock();
-    //             setPaymentTxAfterBlock(blockNumber.block_no);
-    //             setPaymentStatus(PaymentStatus.Awaiting);
-    //         }
-    //     }
-    //     init();
-    // }, [txDetail]);
-
-    useEffect(() => {
-        switch (paymentStatus) {
-            case PaymentStatus.Awaiting:
-                findPaymentTxHash();
-                break;
-            case PaymentStatus.AwaitingConfirmations:
-                setStatusLoader(true);
-                break;
-            case PaymentStatus.Sent:
-                findTokenTxHash();
-                break;
-            case PaymentStatus.Completed:
-                setStatusLoader(false);
-                break;
-        }
-    }, [paymentStatus, findPaymentTxHash, findTokenTxHash]);
-
-    useEffect(() => {
-        if (rewards?.claimable_tokens.length) {
-            setCheckedState(
-                new Array(rewards.claimable_tokens.length).fill(false)
-            );
-            setHideStakingInfo(false);
-        } else {
-            setCheckedState([]);
-            setHideStakingInfo(true);
-        }
-    }, [rewards?.claimable_tokens]);
-
-    useEffect(() => {
-        async function init() {
-            if (connectedWallet?.wallet?.api && !wrongNetwork) {
-                setSearchAddress(await connectedWallet.getAddress());
-                setHideCheck(false);
-                setHideStakingInfo(true);
-                setHideSendAdaInfo(true);
-            } else {
-                setPaymentStatus(undefined);
-            }
-        }
-
-        init();
-    }, [connectedWallet?.wallet?.api, connectedWallet, wrongNetwork]);
-
-    function renderSendAdaButton() {
-        if (connectedWallet?.wallet?.api && !wrongNetwork) {
-            return (
-                <button className="tosi-button" onClick={sendADA}>
-                    Send ADA {sendAdaSpinner ? <Spinner></Spinner> : null}
-                </button>
-            );
-        } else {
-            return null;
-        }
-    }
-
-    function renderQRCode() {
-        if (txDetail == null) return null;
-        return (
-            <div className="qr-address">
-                <QRCode value={txDetail.withdrawal_address} size={180} />
-            </div>
-        );
-    }
-
     function renderCheckRewardsStep() {
         if (!hideCheck) {
             return (
@@ -496,7 +412,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                                 "tosi-cancel-button" +
                                 (hideStakingInfo ? " hidden" : "")
                             }
-                            onClick={backRewards}
+                            onClick={cancelClaim}
                         >
                             <div className="tosi-cancel-icon">
                                 <FontAwesomeIcon icon={faXmark} />
@@ -505,93 +421,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                         </button>
                     </div>
                 </div>
-            );
-        } else {
-            return null;
-        }
-    }
-
-    function renderStatusStep() {
-        if (!hideSendAdaInfo) {
-            return (
-                <>
-                    <div className="claim-details">
-                        <div className="content-reward claim-status-head">
-                            Claim status:
-                            <span className="payment-status">
-                                {renderPaymentStatus()}
-                            </span>
-                        </div>
-                        <div className="content-reward claim-status-body">
-                            <div className="complete-info">
-                                Please complete the withdrawal process by
-                                sending{" "}
-                                <b>
-                                    {formatTokens(
-                                        txDetail?.deposit.toString(),
-                                        6,
-                                        1
-                                    )}{" "}
-                                    ADA
-                                </b>{" "}
-                                using one of the following options:
-                                <ul>
-                                    <li>
-                                        manual transfer to the address below,
-                                    </li>
-                                    <li>
-                                        transfer by scanning the QR code, or
-                                    </li>
-                                    <li>
-                                        <b>Send ADA</b> button (if your wallet
-                                        is connected).
-                                    </li>
-                                </ul>
-                                Please send ONLY from the wallet with the same
-                                stake key.
-                            </div>
-                            <div className="icon-input">
-                                <div
-                                    className={
-                                        "tooltip-icon" +
-                                        (showTooltip ? "" : " hidden")
-                                    }
-                                >
-                                    Address copied
-                                </div>
-                                <div
-                                    className="icon"
-                                    onClick={() => {
-                                        if (txDetail == null) return;
-                                        copyContent(
-                                            rewards
-                                                ? txDetail.withdrawal_address
-                                                : ""
-                                        );
-                                        triggerTooltip();
-                                    }}
-                                >
-                                    <FontAwesomeIcon icon={faCopy} />
-                                </div>
-                                <input
-                                    className="transparent-input"
-                                    type="text"
-                                    disabled={true}
-                                    value={rewards?.vending_address}
-                                />
-                            </div>
-                            {renderQRCode()}
-                            {renderSendAdaButton()}
-                        </div>
-                    </div>
-                    {txDetail ? (
-                        <TransactionDetail
-                            numberOfTokens={checkedCount}
-                            withdrawalFee={200000}
-                            deposit={txDetail.deposit}
-                        ></TransactionDetail>
-                    ) : null}
-                </>
             );
         } else {
             return null;
@@ -613,7 +442,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                                     index={index}
                                     ticker={token.ticker}
                                     checked={checkedState[index]}
-                                    handleOnChange={handleOnChange}
+                                    handleOnChange={handleTokenSelect}
                                     amount={token.amount}
                                     decimals={token.decimals}
                                     logo={token.logo}
@@ -633,7 +462,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                         <button
                             className="tosi-button"
                             disabled={checkedCount === 0}
-                            onClick={claimRewardsChecked}
+                            onClick={claimMyRewards}
                         >
                             Claim my rewards
                             {claimMyRewardLoading ? <Spinner></Spinner> : null}
@@ -649,9 +478,20 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     return (
         <div className="rewards">
             <h1>Claim your rewards</h1>
+            {!hideSendAdaInfo ? (
+                <DepositInfo
+                    txDetail={txDetail}
+                    showTooltip={showTooltip}
+                    rewards={rewards}
+                    triggerTooltip={triggerTooltip}
+                    checkedCount={checkedCount}
+                    connectedWallet={connectedWallet}
+                    wrongNetwork={wrongNetwork}
+                    stakeAddress={stakeAddress}
+                ></DepositInfo>
+            ) : null}
             {renderCheckRewardsStep()}
             {renderStakingInfoStep()}
-            {renderStatusStep()}
         </div>
     );
 }
