@@ -254,7 +254,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                 </>
             );
         } else {
-            return <>Unregisted</>;
+            return <>Unregistered</>;
         }
     };
 
