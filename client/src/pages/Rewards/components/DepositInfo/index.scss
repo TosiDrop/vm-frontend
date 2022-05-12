@@ -84,6 +84,38 @@
             color: var(--font-inactive-color);
         }
     }
+
+    &__status {
+        width: fit-content;
+        display: flex;
+        flex-direction: row;
+        & > div {
+            margin-left: 5px;
+        }
+    }
+
+    &__status-processing {
+        color: #ffcc00;
+    }
+
+    &__status-success {
+        color: #00a308;
+    }
+
+    &__status-fail {
+        color: var(--font-warn);
+    }
+
+    &__warning {
+        background: #ffcc00;
+        color: black;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        & > span {
+            margin-left: 10px;
+        }
+    }
 }
 
 // &.claim-status-head {
