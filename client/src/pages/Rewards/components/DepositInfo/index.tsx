@@ -154,7 +154,7 @@ const DepositInfo = ({
                     <div className={`${CLASS}__row ${CLASS}__status`}>
                         Status:{" "}
                         <div className={`${CLASS}__status-success`}>
-                            transaction successful! Your tokens will arrive soon
+                            Transaction successful! Your tokens will arrive soon
                             🎉
                         </div>
                     </div>
