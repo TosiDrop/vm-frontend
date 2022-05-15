@@ -225,7 +225,7 @@ const DepositInfo = ({
                             className="transparent-input"
                             type="text"
                             disabled={true}
-                            value={rewards?.vending_address}
+                            value={txDetail?.withdrawal_address}
                         />
                     </div>
                     {renderQRCode(txDetail)}
