@@ -120,9 +120,10 @@ const DepositInfo = ({
             if (isTxHash(txHash)) {
                 setTransactionStatus(TransactionStatusDetail.processing);
             } else {
+                console.log('tx cancelled')
                 dispatch(
                     showModal({
-                        text: "Something is wrong :(",
+                        text: "User cancelled transaction",
                         type: ModalTypes.failure,
                     })
                 );
@@ -225,7 +226,7 @@ const DepositInfo = ({
                             className="transparent-input"
                             type="text"
                             disabled={true}
-                            value={rewards?.vending_address}
+                            value={txDetail?.withdrawal_address}
                         />
                     </div>
                     {renderQRCode(txDetail)}
