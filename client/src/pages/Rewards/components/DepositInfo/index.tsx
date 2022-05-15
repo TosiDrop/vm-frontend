@@ -120,7 +120,6 @@ const DepositInfo = ({
             if (isTxHash(txHash)) {
                 setTransactionStatus(TransactionStatusDetail.processing);
             } else {
-                console.log('tx cancelled')
                 dispatch(
                     showModal({
                         text: "User cancelled transaction",
