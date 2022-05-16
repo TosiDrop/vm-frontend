@@ -1,16 +1,21 @@
-import { ModalTypes } from "src/entities/common.entities";
+import { ModalTypes, NetworkId } from "src/entities/common.entities";
 import Spinner from "src/components/Spinner";
 import { showModal } from "src/reducers/modalSlice";
 import QRCode from "react-qr-code";
-import { faCopy, faWarning } from "@fortawesome/free-solid-svg-icons";
+import {
+    faCopy,
+    faWarning,
+    faArrowUpRightFromSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TransactionDetail from "../TransactionDetail";
 import { copyContent, formatTokens } from "src/services/utils.services";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getTxStatus } from "src/services/http.services";
 import { GetCustomRewards, GetRewards } from "src/entities/vm.entities";
 import WalletApi from "src/services/connectors/wallet.connector";
+import { RootState } from "src/store";
 import "./index.scss";
 
 const CLASS = "deposit-info";
@@ -48,10 +53,11 @@ const DepositInfo = ({
     stakeAddress,
 }: Params) => {
     const dispatch = useDispatch();
+    const networkId = useSelector((state: RootState) => state.wallet.networkId);
     const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
     const [transactionStatus, setTransactionStatus] =
         useState<TransactionStatusDetail>(TransactionStatusDetail.waiting);
-    const [showDepositDetail, setShowDepositDetail] = useState(true);
+    const [transactionId, setTransactionId] = useState<string>("");
 
     useEffect(() => {
         if (txDetail == null) return;
@@ -83,7 +89,7 @@ const DepositInfo = ({
         return () => {
             clearInterval(checkTxStatus);
         };
-    }, [txDetail]);
+    }, [txDetail, stakeAddress]);
 
     const renderQRCode = (txDetail: any) => {
         if (txDetail == null) return null;
@@ -119,6 +125,7 @@ const DepositInfo = ({
             if (!txHash) return;
             if (isTxHash(txHash)) {
                 setTransactionStatus(TransactionStatusDetail.processing);
+                setTransactionId(txHash);
             } else {
                 dispatch(
                     showModal({
@@ -131,31 +138,65 @@ const DepositInfo = ({
         }
     };
 
+    const renderTxId = () => {
+        let cardanoScanUrl = "";
+        switch (networkId) {
+            case NetworkId.mainnet:
+                cardanoScanUrl = "https://cardanoscan.io/transaction";
+                break;
+            case NetworkId.testnet:
+            default:
+                cardanoScanUrl = "https://testnet.cardanoscan.io/transaction";
+        }
+        return transactionId ? (
+            <div className={`${CLASS}__status-row`}>
+                Transaction ID:{" "}
+                <a
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ marginLeft: "5px" }}
+                    href={`${cardanoScanUrl}/${transactionId}`}
+                >
+                    {transactionId}{" "}
+                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                </a>
+            </div>
+        ) : null;
+    };
+
     const renderStatus = () => {
         switch (transactionStatus) {
             case TransactionStatusDetail.waiting:
                 return (
                     <div className={`${CLASS}__row ${CLASS}__status`}>
-                        Status: <div>waiting for deposit</div>
+                        <div className={`${CLASS}__status-row`}>
+                            <div>Status: </div>
+                            <div>waiting for deposit</div>
+                        </div>
                     </div>
                 );
             case TransactionStatusDetail.processing:
                 return (
                     <div className={`${CLASS}__row ${CLASS}__status`}>
-                        Status:{" "}
-                        <div className={`${CLASS}__status-processing`}>
-                            processing transaction
+                        {renderTxId()}
+                        <div className={`${CLASS}__status-row`}>
+                            <div>Status: </div>
+                            <div className={`${CLASS}__status-processing`}>
+                                processing transaction
+                            </div>
+                            <Spinner></Spinner>
                         </div>
-                        <Spinner></Spinner>
                     </div>
                 );
             case TransactionStatusDetail.success:
                 return (
                     <div className={`${CLASS}__row ${CLASS}__status`}>
-                        Status:{" "}
-                        <div className={`${CLASS}__status-success`}>
-                            Transaction successful! Your tokens will arrive soon
-                            🎉
+                        <div className={`${CLASS}__status-row`}>
+                            <div>Status: </div>
+                            <div className={`${CLASS}__status-success`}>
+                                Transaction successful! Your tokens will arrive
+                                soon 🎉
+                            </div>
                         </div>
                     </div>
                 );
@@ -163,9 +204,12 @@ const DepositInfo = ({
             default:
                 return (
                     <div className={`${CLASS}__row ${CLASS}__status`}>
-                        Status:{" "}
-                        <div className={`${CLASS}__status-fail`}>
-                            transaction fails, please try again
+                        {renderTxId()}
+                        <div className={`${CLASS}__status-row`}>
+                            <div>Status: </div>
+                            <div className={`${CLASS}__status-fail`}>
+                                transaction fails, please try again
+                            </div>
                         </div>
                     </div>
                 );
