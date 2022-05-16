@@ -78,7 +78,7 @@ const DepositInfo = ({
                         break;
                 }
             } catch (e) {}
-        }, 5000);
+        }, 30000);
 
         return () => {
             clearInterval(checkTxStatus);
