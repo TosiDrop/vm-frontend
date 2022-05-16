@@ -1,28 +1,11 @@
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, KeyboardEvent } from "react";
-import {
-    ClaimableToken,
-    GetRewards,
-    GetCustomRewards,
-} from "../../entities/vm.entities";
-import {
-    getBlock,
-    getCustomRewards,
-    getPaymentTransactionHash,
-    getRewards,
-    getTokenTransactionHash,
-    getTransactionStatus,
-} from "../../services/http.services";
-import {
-    ModalTypes,
-    PaymentStatus,
-    PaymentTransactionHashRequest,
-    TokenTransactionHashRequest,
-} from "../../entities/common.entities";
+import { GetRewards, GetCustomRewards } from "../../entities/vm.entities";
+import { getCustomRewards, getRewards } from "../../services/http.services";
+import { ModalTypes } from "../../entities/common.entities";
 import WalletApi from "../../services/connectors/wallet.connector";
 import "./index.scss";
-import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
 import { showModal } from "src/reducers/modalSlice";
@@ -38,29 +21,21 @@ interface Params {
 
 function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const dispatch = useDispatch();
-
     const networkId = useSelector((state: RootState) => state.wallet.networkId);
-
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
     const [hideSendAdaInfo, setHideSendAdaInfo] = useState(true);
     const [rewards, setRewards] = useState<GetRewards>();
     const [searchAddress, setSearchAddress] = useState<string>("");
     const [rewardsLoader, setRewardsLoader] = useState(false);
-    const [statusLoader, setStatusLoader] = useState(false);
     const [checkedState, setCheckedState] = useState(new Array<boolean>());
     const [checkedCount, setCheckedCount] = useState(0);
-    const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>();
     const [showTooltip, setShowTooltip] = useState(false);
-    const [paymentTxAfterBlock, setPaymentTxAfterBlock] = useState<number>();
-    const [tokenTxAfterBlock, setTokenTxAfterBlock] = useState<number>();
     const [allIsSelected, setAllIsSelected] = useState<boolean>(false);
     const [stakeAddress, setStakeAddress] = useState<string>("");
     const [txDetail, setTxDetail] = useState<GetCustomRewards | undefined>();
     const [claimMyRewardLoading, setClaimMyRewardLoading] =
         useState<boolean>(false);
-
-    const checkInterval = 10000;
 
     /**
      * check if every token is selected
@@ -88,8 +63,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                 setHideCheck(false);
                 setHideStakingInfo(true);
                 setHideSendAdaInfo(true);
-            } else {
-                setPaymentStatus(undefined);
             }
         }
 
@@ -258,121 +231,12 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         }
     };
 
-    const renderPaymentStatus = () => {
-        switch (paymentStatus) {
-            case PaymentStatus.Awaiting:
-                return <span className="awaiting">Awaiting payment</span>;
-            case PaymentStatus.AwaitingConfirmations:
-                return (
-                    <span className="confirmations">
-                        Awaiting payment confirmations
-                    </span>
-                );
-            case PaymentStatus.Sent:
-                return (
-                    <span className="confirmed">
-                        Payment confirmed, sending tokens
-                    </span>
-                );
-            case PaymentStatus.Completed:
-                return <span className="completed">Withdraw completed</span>;
-        }
-    };
-
     const triggerTooltip = () => {
         setShowTooltip(true);
         setTimeout(() => {
             setShowTooltip(false);
         }, 1000);
     };
-
-    const checkPaymentTransaction = useCallback((txHash: string) => {
-        const checkPaymentTransactionInterval = setInterval(async () => {
-            const transaction = await getTransactionStatus(txHash);
-            if (
-                transaction &&
-                transaction.length &&
-                transaction[0].num_confirmations
-            ) {
-                const blockNumber = await getBlock();
-                setTokenTxAfterBlock(blockNumber.block_no);
-                setPaymentStatus(PaymentStatus.Sent);
-                clearInterval(checkPaymentTransactionInterval);
-            }
-        }, checkInterval);
-    }, []);
-
-    const checkTokenTransaction = useCallback((txHash: string) => {
-        const checkTokenTransactionInterval = setInterval(async () => {
-            const transaction = await getTransactionStatus(txHash);
-            if (
-                transaction &&
-                transaction.length &&
-                transaction[0].num_confirmations
-            ) {
-                setPaymentStatus(PaymentStatus.Completed);
-                clearInterval(checkTokenTransactionInterval);
-            }
-        }, checkInterval);
-    }, []);
-
-    const findPaymentTxHash = useCallback(() => {
-        if (txDetail == null) return;
-        const checkPaymentInterval = setInterval(async () => {
-            if (searchAddress) {
-                const request: PaymentTransactionHashRequest = {
-                    address: searchAddress,
-                    toAddress: rewards?.vending_address || "",
-                    afterBlock: paymentTxAfterBlock || 0,
-                    adaToSend: txDetail?.deposit,
-                };
-                const response = await getPaymentTransactionHash(request);
-                if (response && response.txHash) {
-                    setPaymentStatus(PaymentStatus.AwaitingConfirmations);
-                    checkPaymentTransaction(response.txHash);
-                    clearInterval(checkPaymentInterval);
-                }
-            }
-        }, checkInterval);
-    }, [
-        txDetail,
-        paymentTxAfterBlock,
-        rewards?.vending_address,
-        searchAddress,
-        checkPaymentTransaction,
-    ]);
-
-    const findTokenTxHash = useCallback(() => {
-        const checkTokenInterval = setInterval(async () => {
-            if (searchAddress) {
-                let tokens: ClaimableToken[] = [];
-                checkedState.forEach((check, i) => {
-                    if (check && rewards?.claimable_tokens[i]) {
-                        tokens.push(rewards.claimable_tokens[i]);
-                    }
-                });
-                const request: TokenTransactionHashRequest = {
-                    address: searchAddress,
-                    afterBlock: tokenTxAfterBlock || 0,
-                    tokens: tokens.map((token) => ({
-                        policyId: token.assetId.split(".")[0],
-                        quantity: token.amount.toString(),
-                    })),
-                };
-                const response = await getTokenTransactionHash(request);
-                if (response && response.txHash) {
-                    checkTokenTransaction(response.txHash);
-                    clearInterval(checkTokenInterval);
-                }
-            }
-        }, checkInterval);
-    }, [
-        checkedState,
-        rewards?.claimable_tokens,
-        searchAddress,
-        tokenTxAfterBlock,
-        checkTokenTransaction,
-    ]);
 
     function renderCheckRewardsStep() {
         if (!hideCheck) {

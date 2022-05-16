@@ -88,10 +88,7 @@
     &__status {
         width: fit-content;
         display: flex;
-        flex-direction: row;
-        & > div {
-            margin-left: 5px;
-        }
+        flex-direction: column;
     }
 
     &__status-processing {
@@ -104,6 +101,25 @@
 
     &__status-fail {
         color: var(--font-warn);
+    }
+
+    &__status-row {
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: row;
+        &:last-child {
+            margin-bottom: 0;
+        }
+        & > div {
+            margin-left: 5px;
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+        a {
+            cursor: pointer;
+            transition: 0.1s;
+        }
     }
 
     &__warning {
