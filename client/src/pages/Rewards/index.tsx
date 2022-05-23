@@ -345,9 +345,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
             {!hideSendAdaInfo ? (
                 <DepositInfo
                     txDetail={txDetail}
-                    showTooltip={showTooltip}
-                    rewards={rewards}
-                    triggerTooltip={triggerTooltip}
                     checkedCount={checkedCount}
                     connectedWallet={connectedWallet}
                     wrongNetwork={wrongNetwork}

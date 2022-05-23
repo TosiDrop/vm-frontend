@@ -22,9 +22,6 @@ const CLASS = "deposit-info";
 
 interface Params {
     txDetail: GetCustomRewards | undefined;
-    showTooltip: boolean;
-    rewards: GetRewards | undefined;
-    triggerTooltip: Function;
     checkedCount: number;
     connectedWallet: WalletApi | undefined;
     wrongNetwork: boolean | undefined;
@@ -44,9 +41,6 @@ enum TransactionStatusDetail {
 
 const DepositInfo = ({
     txDetail,
-    showTooltip,
-    rewards,
-    triggerTooltip,
     checkedCount,
     connectedWallet,
     wrongNetwork,
@@ -58,6 +52,14 @@ const DepositInfo = ({
     const [transactionStatus, setTransactionStatus] =
         useState<TransactionStatusDetail>(TransactionStatusDetail.waiting);
     const [transactionId, setTransactionId] = useState<string>("");
+    const [showToolTip, setShowToolTip] = useState(false);
+
+    const triggerTooltip = () => {
+        setShowToolTip(true);
+        setTimeout(() => {
+            setShowToolTip(false);
+        }, 1000);
+    };
 
     useEffect(() => {
         if (txDetail == null) return;
@@ -116,7 +118,7 @@ const DepositInfo = ({
     };
 
     const sendADA = async () => {
-        if (rewards && txDetail) {
+        if (txDetail) {
             setSendAdaSpinner(true);
             const txHash = await connectedWallet?.transferAda(
                 txDetail.withdrawal_address,
@@ -248,7 +250,7 @@ const DepositInfo = ({
                     <div className={`${CLASS}__address ${CLASS}__row`}>
                         <div
                             className={
-                                "tooltip-icon" + (showTooltip ? "" : " hidden")
+                                "tooltip-icon" + (showToolTip ? "" : " hidden")
                             }
                         >
                             copied
@@ -258,7 +260,7 @@ const DepositInfo = ({
                             onClick={() => {
                                 if (txDetail == null) return;
                                 copyContent(
-                                    rewards ? txDetail.withdrawal_address : ""
+                                    txDetail ? txDetail.withdrawal_address : ""
                                 );
                                 triggerTooltip();
                             }}
