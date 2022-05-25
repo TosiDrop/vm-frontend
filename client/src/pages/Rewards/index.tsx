@@ -30,7 +30,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const [rewardsLoader, setRewardsLoader] = useState(false);
     const [checkedState, setCheckedState] = useState(new Array<boolean>());
     const [checkedCount, setCheckedCount] = useState(0);
-    const [showTooltip, setShowTooltip] = useState(false);
     const [allIsSelected, setAllIsSelected] = useState<boolean>(false);
     const [stakeAddress, setStakeAddress] = useState<string>("");
     const [txDetail, setTxDetail] = useState<GetCustomRewards | undefined>();
@@ -229,13 +228,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         } else {
             return <>Unregistered</>;
         }
-    };
-
-    const triggerTooltip = () => {
-        setShowTooltip(true);
-        setTimeout(() => {
-            setShowTooltip(false);
-        }, 1000);
     };
 
     function renderCheckRewardsStep() {
