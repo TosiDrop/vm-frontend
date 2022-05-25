@@ -1,5 +1,13 @@
 @import "../../variables.scss";
 
+.rewards-block {
+    padding: 20px;
+    border-radius: 20px;
+    background-color: var(--primary);
+    display: flex;
+    flex-direction: column;
+}
+
 .rewards {
     margin-right: 30px;
     margin-bottom: 30px;

@@ -21,19 +21,19 @@ interface Params {
 }
 
 enum QueryKey {
-    selectedTokens = 'selectedTokens',
-    stakeAddress = 'stakeAddress',
-    withdrawAddress = 'withdrawAddress',
-    requestId = 'requestId'
+    selectedTokens = "selectedTokens",
+    stakeAddress = "stakeAddress",
+    withdrawAddress = "withdrawAddress",
+    requestId = "requestId",
 }
 
 const DepositInfoPage = ({ wrongNetwork, connectedWallet }: Params) => {
-    const [searchParams] = useSearchParams()
-    const selectedTokens = searchParams.get(QueryKey.selectedTokens)
-    const stakeAddress = searchParams.get(QueryKey.stakeAddress)
-    const withdrawAddress = searchParams.get(QueryKey.withdrawAddress)
-    const requestId = searchParams.get(QueryKey.requestId)
-    
+    const [searchParams] = useSearchParams();
+    const selectedTokens = searchParams.get(QueryKey.selectedTokens);
+    const stakeAddress = searchParams.get(QueryKey.stakeAddress);
+    const withdrawAddress = searchParams.get(QueryKey.withdrawAddress);
+    const requestId = searchParams.get(QueryKey.requestId);
+
     const [txDetail, setTxDetail] = useState<GetCustomRewards>({
         deposit: 0,
         withdrawal_address: withdrawAddress ? withdrawAddress : "",
@@ -60,8 +60,10 @@ const DepositInfoPage = ({ wrongNetwork, connectedWallet }: Params) => {
         loadTxDetail();
     }, [requestId, stakeAddress, withdrawAddress]);
 
-    return loading ? null : (
-        (selectedTokens && stakeAddress && withdrawAddress && requestId) ? 
+    return loading ? null : selectedTokens &&
+      stakeAddress &&
+      withdrawAddress &&
+      requestId ? (
         <div className="rewards">
             <h1>Claim your rewards</h1>
             <DepositInfo
@@ -71,8 +73,8 @@ const DepositInfoPage = ({ wrongNetwork, connectedWallet }: Params) => {
                 wrongNetwork={wrongNetwork}
                 stakeAddress={stakeAddress}
             ></DepositInfo>
-        </div> : null
-    );
+        </div>
+    ) : null;
 };
 
 export default DepositInfoPage;

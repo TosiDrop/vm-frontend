@@ -3,20 +3,22 @@ import Spinner from "src/components/Spinner";
 import { showModal } from "src/reducers/modalSlice";
 import QRCode from "react-qr-code";
 import {
-    faCopy,
     faWarning,
     faArrowUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TransactionDetail from "../TransactionDetail";
-import { copyContent, formatTokens } from "src/services/utils.services";
+import { formatTokens } from "src/services/utils.services";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getTxStatus } from "src/services/http.services";
 import { GetCustomRewards } from "src/entities/vm.entities";
 import WalletApi from "src/services/connectors/wallet.connector";
 import { RootState } from "src/store";
+import SendAdaInfo from "../SendAdaInfo";
+import { isTxHash } from "src/pages/Rewards/utils/common.function";
 import "./index.scss";
+import TransactionStatus from "../TransactionStatus";
 
 const CLASS = "deposit-info";
 
@@ -28,7 +30,7 @@ interface Params {
     stakeAddress: string | undefined;
 }
 
-interface TransactionStatus {
+interface TransactionStatusInterface {
     status: number;
 }
 
@@ -46,20 +48,9 @@ const DepositInfo = ({
     wrongNetwork,
     stakeAddress,
 }: Params) => {
-    const dispatch = useDispatch();
-    const networkId = useSelector((state: RootState) => state.wallet.networkId);
-    const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
     const [transactionStatus, setTransactionStatus] =
         useState<TransactionStatusDetail>(TransactionStatusDetail.waiting);
     const [transactionId, setTransactionId] = useState<string>("");
-    const [showToolTip, setShowToolTip] = useState(false);
-
-    const triggerTooltip = () => {
-        setShowToolTip(true);
-        setTimeout(() => {
-            setShowToolTip(false);
-        }, 1000);
-    };
 
     useEffect(() => {
         if (txDetail == null) return;
@@ -67,7 +58,7 @@ const DepositInfo = ({
 
         const checkTxStatus = setInterval(async () => {
             try {
-                const txStatus: TransactionStatus = await getTxStatus(
+                const txStatus: TransactionStatusInterface = await getTxStatus(
                     txDetail.request_id,
                     stakeAddress.slice(0, 40)
                 );
@@ -93,140 +84,15 @@ const DepositInfo = ({
         };
     }, [txDetail, stakeAddress]);
 
-    const renderQRCode = (txDetail: any) => {
-        if (txDetail == null) return null;
-        return (
-            <div className={`${CLASS}__row ${CLASS}__qr`}>
-                <div className="qr-address">
-                    <QRCode value={txDetail.withdrawal_address} size={180} />
-                </div>
-            </div>
-        );
-    };
-    const renderSendAdaButton = () => {
-        if (connectedWallet?.wallet?.api && !wrongNetwork) {
-            return (
-                <div className={`${CLASS}__row ${CLASS}__send-ada-btn`}>
-                    <button className="tosi-button" onClick={sendADA}>
-                        Send ADA {sendAdaSpinner ? <Spinner></Spinner> : null}
-                    </button>
-                </div>
-            );
-        } else {
-            return null;
-        }
-    };
-
-    const sendADA = async () => {
-        if (txDetail) {
-            setSendAdaSpinner(true);
-            const txHash = await connectedWallet?.transferAda(
-                txDetail.withdrawal_address,
-                txDetail.deposit.toString()
-            );
-            if (!txHash) return;
-            if (isTxHash(txHash)) {
-                setTransactionStatus(TransactionStatusDetail.processing);
-                setTransactionId(txHash);
-            } else {
-                dispatch(
-                    showModal({
-                        text: "User cancelled transaction",
-                        type: ModalTypes.failure,
-                    })
-                );
-            }
-            setSendAdaSpinner(false);
-        }
-    };
-
-    const renderTxId = () => {
-        let cardanoScanUrl = "";
-        switch (networkId) {
-            case NetworkId.mainnet:
-                cardanoScanUrl = "https://cardanoscan.io/transaction";
-                break;
-            case NetworkId.testnet:
-            default:
-                cardanoScanUrl = "https://testnet.cardanoscan.io/transaction";
-        }
-        return transactionId ? (
-            <div className={`${CLASS}__status-row`}>
-                Transaction ID:{" "}
-                <a
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{ marginLeft: "5px" }}
-                    href={`${cardanoScanUrl}/${transactionId}`}
-                >
-                    {transactionId}{" "}
-                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-                </a>
-            </div>
-        ) : null;
-    };
-
-    const renderStatus = () => {
-        switch (transactionStatus) {
-            case TransactionStatusDetail.waiting:
-                return (
-                    <div className={`${CLASS}__row ${CLASS}__status`}>
-                        <div className={`${CLASS}__status-row`}>
-                            <div>Status: </div>
-                            <div>waiting for deposit</div>
-                        </div>
-                    </div>
-                );
-            case TransactionStatusDetail.processing:
-                return (
-                    <div className={`${CLASS}__row ${CLASS}__status`}>
-                        {renderTxId()}
-                        <div className={`${CLASS}__status-row`}>
-                            <div>Status: </div>
-                            <div className={`${CLASS}__status-processing`}>
-                                processing transaction
-                            </div>
-                            <Spinner></Spinner>
-                        </div>
-                    </div>
-                );
-            case TransactionStatusDetail.success:
-                return (
-                    <div className={`${CLASS}__row ${CLASS}__status`}>
-                        <div className={`${CLASS}__status-row`}>
-                            <div>Status: </div>
-                            <div className={`${CLASS}__status-success`}>
-                                Transaction successful! Your tokens will arrive
-                                soon 🎉
-                            </div>
-                        </div>
-                    </div>
-                );
-            case TransactionStatusDetail.failure:
-            default:
-                return (
-                    <div className={`${CLASS}__row ${CLASS}__status`}>
-                        {renderTxId()}
-                        <div className={`${CLASS}__status-row`}>
-                            <div>Status: </div>
-                            <div className={`${CLASS}__status-fail`}>
-                                transaction fails, please try again
-                            </div>
-                        </div>
-                    </div>
-                );
-        }
-    };
-
     return (
         <>
-            <div className={`${CLASS}__warning ${CLASS}`}>
+            <div className={`rewards-block ${CLASS}__warning ${CLASS}`}>
                 <FontAwesomeIcon icon={faWarning} />
                 <span>
                     Please send ONLY from the wallet with the same stake key
                 </span>
             </div>
-            <div className={`${CLASS}`}>
+            <div className={`rewards-block ${CLASS}`}>
                 <div className={`${CLASS}__info ${CLASS}__row`}>
                     Please complete the withdrawal process by sending{" "}
                     <b>
@@ -243,40 +109,18 @@ const DepositInfo = ({
                     </ul>
                 </div>
             </div>
-            <div className={`${CLASS}`}>{renderStatus()}</div>
+            <TransactionStatus
+                transactionId={transactionId}
+                transactionStatus={transactionStatus}
+            />
             {transactionStatus === TransactionStatusDetail.waiting ? (
-                <div className={`${CLASS}`}>
-                    <div className={`${CLASS}__row`}>Deposit Address</div>
-                    <div className={`${CLASS}__address ${CLASS}__row`}>
-                        <div
-                            className={
-                                "tooltip-icon" + (showToolTip ? "" : " hidden")
-                            }
-                        >
-                            copied
-                        </div>
-                        <div
-                            className="icon"
-                            onClick={() => {
-                                if (txDetail == null) return;
-                                copyContent(
-                                    txDetail ? txDetail.withdrawal_address : ""
-                                );
-                                triggerTooltip();
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faCopy} />
-                        </div>
-                        <input
-                            className="transparent-input"
-                            type="text"
-                            disabled={true}
-                            value={txDetail?.withdrawal_address}
-                        />
-                    </div>
-                    {renderQRCode(txDetail)}
-                    {renderSendAdaButton()}
-                </div>
+                <SendAdaInfo
+                    txDetail={txDetail}
+                    connectedWallet={connectedWallet}
+                    wrongNetwork={wrongNetwork}
+                    setTransactionId={setTransactionId}
+                    setTransactionStatus={setTransactionStatus}
+                />
             ) : null}
             {txDetail ? (
                 <TransactionDetail
@@ -290,7 +134,3 @@ const DepositInfo = ({
 };
 
 export default DepositInfo;
-
-const isTxHash = (txHash: string) => {
-    return txHash.length === 64 && txHash.indexOf(" ") === -1;
-};
