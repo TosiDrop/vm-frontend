@@ -1,9 +1,7 @@
 import { useParams } from "react-router-dom";
 import { getTxStatus } from "src/services/http.services";
 import WalletApi from "src/services/connectors/wallet.connector";
-import { RootState } from "src/store";
-import { GetRewards, GetCustomRewards } from "src/entities/vm.entities";
-import { getCustomRewards, getRewards } from "src/services/http.services";
+import { GetCustomRewards } from "src/entities/vm.entities";
 import { useEffect, useState } from "react";
 import DepositInfo from "../components/DepositInfo";
 import "./index.scss";
@@ -45,7 +43,7 @@ const DepositInfoPage = ({ wrongNetwork, connectedWallet }: Params) => {
             setLoading(false);
         };
         loadTxDetail();
-    }, []);
+    }, [requestId, stakeAddress, withdrawAddress]);
 
     return loading ? null : (
         <div className="rewards">

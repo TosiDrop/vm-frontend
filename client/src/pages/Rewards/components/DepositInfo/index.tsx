@@ -13,7 +13,7 @@ import { copyContent, formatTokens } from "src/services/utils.services";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getTxStatus } from "src/services/http.services";
-import { GetCustomRewards, GetRewards } from "src/entities/vm.entities";
+import { GetCustomRewards } from "src/entities/vm.entities";
 import WalletApi from "src/services/connectors/wallet.connector";
 import { RootState } from "src/store";
 import "./index.scss";
