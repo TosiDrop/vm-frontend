@@ -13,6 +13,7 @@ import { getStakeKey } from "./utils/common.function";
 import Spinner from "src/components/Spinner";
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
 import DepositInfo from "./components/DepositInfo";
+import { useNavigate } from "react-router-dom";
 
 interface Params {
     connectedWallet: WalletApi | undefined;
@@ -21,6 +22,7 @@ interface Params {
 
 function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const networkId = useSelector((state: RootState) => state.wallet.networkId);
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
@@ -173,11 +175,8 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
             );
             if (res == null) throw new Error();
 
-            setTxDetail(res as GetCustomRewards);
-            setHideCheck(true);
-            setHideStakingInfo(true);
-            setHideSendAdaInfo(false);
-            setClaimMyRewardLoading(false);
+            const depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${checkedCount}`
+            navigate(depositInfoUrl, { replace: true })
         } catch (e) {
             dispatch(
                 showModal({
@@ -334,15 +333,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     return (
         <div className="rewards">
             <h1>Claim your rewards</h1>
-            {!hideSendAdaInfo ? (
-                <DepositInfo
-                    txDetail={txDetail}
-                    checkedCount={checkedCount}
-                    connectedWallet={connectedWallet}
-                    wrongNetwork={wrongNetwork}
-                    stakeAddress={stakeAddress}
-                ></DepositInfo>
-            ) : null}
             {renderCheckRewardsStep()}
             {renderStakingInfoStep()}
         </div>
