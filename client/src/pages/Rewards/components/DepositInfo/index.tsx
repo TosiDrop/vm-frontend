@@ -117,7 +117,6 @@ const DepositInfo = ({
             {txDetail ? (
                 <TransactionDetail
                     numberOfTokens={checkedCount}
-                    withdrawalFee={200000}
                     deposit={txDetail.deposit}
                 ></TransactionDetail>
             ) : null}

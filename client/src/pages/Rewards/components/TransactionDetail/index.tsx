@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { getSettings } from "src/services/http.services";
 import { formatTokens } from "src/services/utils.services";
 import "./index.scss";
 
@@ -5,15 +7,33 @@ const CLASS = "transaction-detail";
 
 interface Props {
     numberOfTokens: number;
-    withdrawalFee: number;
     deposit: number;
 }
 
-const TransactionDetail = ({
-    numberOfTokens,
-    withdrawalFee,
-    deposit,
-}: Props) => {
+interface ISettings {
+    withdrawalFee: number;
+    serviceFee: number;
+    txFee: number;
+}
+
+const TransactionDetail = ({ numberOfTokens, deposit }: Props) => {
+    const [settings, setSettings] = useState<ISettings>({
+        withdrawalFee: 0,
+        serviceFee: 100000,
+        txFee: 170000,
+    });
+
+    useEffect(() => {
+        const getSettingsFromApi = async () => {
+            const settingsFromApi = await getSettings();
+            setSettings({
+                ...settings,
+                withdrawalFee: settingsFromApi.withdrawal_fee,
+            });
+        };
+        getSettingsFromApi();
+    }, []);
+
     return (
         <div className={`rewards-block ${CLASS}`}>
             <div className={`${CLASS}__title`}>Transaction Detail</div>
@@ -22,28 +42,28 @@ const TransactionDetail = ({
                 <div>Total tokens selected</div>
             </div>
             <div className={`${CLASS}__row`}>
-                <div>{formatTokens(withdrawalFee.toString(), 6, 1)} ADA</div>
+                <div>{lovelaceToAda(settings.withdrawalFee)} ADA</div>
                 <div>Withdrawal Fee</div>
             </div>
             <div className={`${CLASS}__row`}>
-                <div>0.17 ADA</div>
+                <div>{lovelaceToAda(settings.txFee)} ADA</div>
                 <div>Transaction Fee</div>
             </div>
             <div className={`${CLASS}__row`}>
-                <div>0.1 ADA</div>
+                <div>{lovelaceToAda(settings.serviceFee)} ADA</div>
                 <div>Service Fee</div>
             </div>
             <div className={`${CLASS}__row`}>
-                <div>{formatTokens(deposit.toString(), 6, 1)} ADA</div>
+                <div>{lovelaceToAda(deposit)} ADA</div>
                 <div>You Send</div>
             </div>
             <div className={`${CLASS}__row`}>
                 <div>
-                    ~
-                    {formatTokens(
-                        (deposit - 170000 - 100000 - withdrawalFee).toString(),
-                        6,
-                        1
+                    {lovelaceToAda(
+                        deposit -
+                            settings.withdrawalFee -
+                            settings.serviceFee -
+                            settings.txFee
                     )}{" "}
                     ADA
                 </div>
@@ -60,3 +80,7 @@ const TransactionDetail = ({
 };
 
 export default TransactionDetail;
+
+const lovelaceToAda = (lovelace: number) => {
+    return lovelace / Math.pow(10, 6);
+};
