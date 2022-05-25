@@ -25,7 +25,7 @@ function Page({ connectedWallet, wrongNetwork }: Params) {
                 }
             />
             <Route
-                path="/claim/:selectedTokens/:stakeAddress/:withdrawAddress/:requestId"
+                path="/claim"
                 element={
                     <DepositInfoPage
                         connectedWallet={connectedWallet}
