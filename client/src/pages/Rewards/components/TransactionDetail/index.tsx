@@ -15,7 +15,7 @@ const TransactionDetail = ({
     deposit,
 }: Props) => {
     return (
-        <div className={`${CLASS}`}>
+        <div className={`rewards-block ${CLASS}`}>
             <div className={`${CLASS}__title`}>Transaction Detail</div>
             <div className={`${CLASS}__row`}>
                 <div>{numberOfTokens} tokens</div>

@@ -1,24 +1,16 @@
-import { ModalTypes, NetworkId } from "src/entities/common.entities";
-import Spinner from "src/components/Spinner";
-import { showModal } from "src/reducers/modalSlice";
-import QRCode from "react-qr-code";
 import {
     faWarning,
-    faArrowUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TransactionDetail from "../TransactionDetail";
 import { formatTokens } from "src/services/utils.services";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { getTxStatus } from "src/services/http.services";
 import { GetCustomRewards } from "src/entities/vm.entities";
 import WalletApi from "src/services/connectors/wallet.connector";
-import { RootState } from "src/store";
 import SendAdaInfo from "../SendAdaInfo";
-import { isTxHash } from "src/pages/Rewards/utils/common.function";
-import "./index.scss";
 import TransactionStatus from "../TransactionStatus";
+import "./index.scss";
 
 const CLASS = "deposit-info";
 
