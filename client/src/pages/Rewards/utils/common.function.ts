@@ -89,3 +89,7 @@ const translateAdaHandle = async (handle: string, networkId: NetworkId) => {
     const address = data[0].payment_address;
     return address;
 };
+
+export const isTxHash = (txHash: string) => {
+    return txHash.length === 64 && txHash.indexOf(" ") === -1;
+};

@@ -1,5 +1,13 @@
 @import "../../variables.scss";
 
+.rewards-block {
+    padding: 20px;
+    border-radius: 20px;
+    background-color: var(--primary);
+    display: flex;
+    flex-direction: column;
+}
+
 .rewards {
     margin-right: 30px;
     margin-bottom: 30px;
@@ -88,6 +96,7 @@
 
         &.staked {
             flex-direction: row;
+            align-items: center;
 
             .pool-logo {
                 margin-right: 10px;
@@ -210,10 +219,6 @@
     .staking-info {
         display: flex;
         flex-direction: column;
-
-        & > * {
-            margin-bottom: 20px;
-        }
     }
 
     .claim-list {
@@ -222,6 +227,10 @@
         gap: 20px;
         flex-wrap: wrap;
     }
+}
+
+.staking-info__row {
+    margin-bottom: 20px;
 }
 
 .hidden {

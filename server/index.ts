@@ -116,6 +116,11 @@ async function getTokens() {
     return getFromVM<GetTokens>("get_tokens");
 }
 
+app.get("/getsettings", async (req, res) => {
+    const settings = await getFromVM("get_settings");
+    return res.status(200).send(settings);
+});
+
 app.get("/health", (req: any, res: any) => {
     res.status(200).json({
         status: "UP",
@@ -144,8 +149,14 @@ app.get("/healthz", async (req: any, res: any) => {
 
 app.get("/features", (req: any, res: any) => {
     res.status(200).json({
-        airdrop_enabled: (typeof AIRDROP_ENABLED == "string")? JSON.parse(AIRDROP_ENABLED.toLowerCase()): AIRDROP_ENABLED,
-        claim_enabled: (typeof CLAIM_ENABLED == "string")? JSON.parse(CLAIM_ENABLED.toLowerCase()): CLAIM_ENABLED,
+        airdrop_enabled:
+            typeof AIRDROP_ENABLED == "string"
+                ? JSON.parse(AIRDROP_ENABLED.toLowerCase())
+                : AIRDROP_ENABLED,
+        claim_enabled:
+            typeof CLAIM_ENABLED == "string"
+                ? JSON.parse(CLAIM_ENABLED.toLowerCase())
+                : CLAIM_ENABLED,
         network: CARDANO_NETWORK,
     });
 });
@@ -249,7 +260,7 @@ app.get("/txstatus", async (req, res) => {
     } catch (e: any) {
         return res.status(500).send({ error: "An error occurred." });
     }
-})
+});
 
 app.get("/gettransactionstatus", async (req: any, res: any) => {
     try {
@@ -472,5 +483,5 @@ async function getRewards(stakeAddress: string) {
 
 // Fallback to React app
 app.get("*", (req, res) => {
-    res.sendFile("client/build/index.html", { root: '../' });
+    res.sendFile("client/build/index.html", { root: "../" });
 });

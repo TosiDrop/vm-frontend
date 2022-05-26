@@ -21,6 +21,10 @@ html, body, #root, .body {
     padding: 0;
 }
 
+strong {
+    color: inherit;
+}
+
 .body {
     background: var(--body-background); 
     overflow-x: hidden;

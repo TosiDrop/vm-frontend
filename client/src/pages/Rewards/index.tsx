@@ -13,6 +13,7 @@ import { getStakeKey } from "./utils/common.function";
 import Spinner from "src/components/Spinner";
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
 import DepositInfo from "./components/DepositInfo";
+import { useNavigate } from "react-router-dom";
 
 interface Params {
     connectedWallet: WalletApi | undefined;
@@ -21,6 +22,7 @@ interface Params {
 
 function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const networkId = useSelector((state: RootState) => state.wallet.networkId);
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
@@ -30,7 +32,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const [rewardsLoader, setRewardsLoader] = useState(false);
     const [checkedState, setCheckedState] = useState(new Array<boolean>());
     const [checkedCount, setCheckedCount] = useState(0);
-    const [showTooltip, setShowTooltip] = useState(false);
     const [allIsSelected, setAllIsSelected] = useState<boolean>(false);
     const [stakeAddress, setStakeAddress] = useState<string>("");
     const [txDetail, setTxDetail] = useState<GetCustomRewards | undefined>();
@@ -174,11 +175,8 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
             );
             if (res == null) throw new Error();
 
-            setTxDetail(res as GetCustomRewards);
-            setHideCheck(true);
-            setHideStakingInfo(true);
-            setHideSendAdaInfo(false);
-            setClaimMyRewardLoading(false);
+            const depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${checkedCount}`;
+            navigate(depositInfoUrl, { replace: true });
         } catch (e) {
             dispatch(
                 showModal({
@@ -212,16 +210,16 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                     <div className="pool-info">
                         <div className="staking-info">
                             Currently staking&nbsp;
-                            <b>{rewards?.pool_info?.total_balance} ADA</b>
+                            <strong>{rewards?.pool_info?.total_balance} ADA</strong>
                             &nbsp;with&nbsp;
-                            <b className="no-break">
+                            <strong className="no-break">
                                 [{rewards?.pool_info?.delegated_pool_name}
                                 ]&nbsp;
                                 {rewards?.pool_info?.delegated_pool_description}
-                            </b>
-                            <b className="no-break-mobile">
+                            </strong>
+                            <strong className="no-break-mobile">
                                 [{rewards?.pool_info?.delegated_pool_name}]
-                            </b>
+                            </strong>
                         </div>
                     </div>
                 </>
@@ -229,13 +227,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         } else {
             return <>Unregistered</>;
         }
-    };
-
-    const triggerTooltip = () => {
-        setShowTooltip(true);
-        setTimeout(() => {
-            setShowTooltip(false);
-        }, 1000);
     };
 
     function renderCheckRewardsStep() {
@@ -295,10 +286,10 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         if (!hideStakingInfo) {
             return (
                 <div className="staking-info">
-                    <div className={"content-reward staked"}>
+                    <div className={"content-reward staked staking-info__row"}>
                         {renderStakeInfo()}
                     </div>
-                    <div className={"claim-list"}>
+                    <div className={"claim-list staking-info__row"}>
                         {rewards?.claimable_tokens?.map((token, index) => {
                             return (
                                 <ClaimableTokenBox
@@ -316,7 +307,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                         })}
                     </div>
 
-                    <div className={"content-reward claim"}>
+                    <div className={"content-reward claim staking-info__row"}>
                         <div className="text">
                             Selected {checkedCount} token
                         </div>
@@ -342,18 +333,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     return (
         <div className="rewards">
             <h1>Claim your rewards</h1>
-            {!hideSendAdaInfo ? (
-                <DepositInfo
-                    txDetail={txDetail}
-                    showTooltip={showTooltip}
-                    rewards={rewards}
-                    triggerTooltip={triggerTooltip}
-                    checkedCount={checkedCount}
-                    connectedWallet={connectedWallet}
-                    wrongNetwork={wrongNetwork}
-                    stakeAddress={stakeAddress}
-                ></DepositInfo>
-            ) : null}
             {renderCheckRewardsStep()}
             {renderStakingInfoStep()}
         </div>

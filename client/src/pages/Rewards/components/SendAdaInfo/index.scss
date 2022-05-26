@@ -1,0 +1,70 @@
+.send-ada-info {
+    &__row {
+        margin-bottom: 20px;
+        &:last-child {
+            margin-bottom: 0px;
+        }
+    }
+    &__qr,
+    &__send-ada-btn {
+        display: flex;
+        justify-content: center;
+    }
+
+    &__send-ada-btn {
+        .tosi-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 150px;
+        }
+    }
+
+    &__address {
+        position: relative;
+        border: 1px solid var(--font-inactive-color);
+        border-radius: 5px;
+        width: 100%;
+
+        .tooltip-icon {
+            position: absolute;
+            top: -35px;
+            height: 30px;
+            color: var(--font-highlight);
+            background-color: var(--tooltip-background);
+            padding: 5px;
+            font-size: 12px;
+            border-radius: 8px;
+            visibility: visible;
+            opacity: 1;
+            transition: all 1s cubic-bezier(0.335, 0.01, 0.03, 1.36);
+
+            &.hidden {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .icon {
+            height: 1.5rem;
+            width: 2.5rem;
+            position: absolute;
+            top: 3px;
+            cursor: pointer;
+
+            svg {
+                color: var(--font-inactive-color);
+            }
+        }
+
+        .transparent-input {
+            font-family: inherit;
+            border: 0;
+            padding-left: 2.5rem;
+            width: 100%;
+            cursor: text;
+            color: var(--font-inactive-color);
+        }
+    }
+}

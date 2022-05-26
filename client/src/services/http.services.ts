@@ -1,9 +1,15 @@
-import { NetworkId, PaymentTransactionHashRequest, TokenTransactionHashRequest } from "src/entities/common.entities";
+import {
+    NetworkId,
+    PaymentTransactionHashRequest,
+    TokenTransactionHashRequest,
+} from "src/entities/common.entities";
 import { TransactionStatus } from "src/entities/koios.entities";
 import { GetRewards, GetCustomRewards } from "../entities/vm.entities";
-import axios from 'axios';
+import axios from "axios";
 
-export async function getRewards(address: string): Promise<GetRewards | undefined> {
+export async function getRewards(
+    address: string
+): Promise<GetRewards | undefined> {
     const response = await axios.get(`/getrewards?address=${address}`);
     if (response && response.data) {
         return response.data;
@@ -11,15 +17,23 @@ export async function getRewards(address: string): Promise<GetRewards | undefine
     return undefined;
 }
 
-export async function getCustomRewards(staking_address: string, session_id: string, selected: string): Promise<GetCustomRewards | undefined> {
-    const response = await axios.get(`/getcustomrewards?staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`);
+export async function getCustomRewards(
+    staking_address: string,
+    session_id: string,
+    selected: string
+): Promise<GetCustomRewards | undefined> {
+    const response = await axios.get(
+        `/getcustomrewards?staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`
+    );
     if (response && response.data) {
         return response.data;
     }
     return undefined;
 }
 
-export async function getTransactionStatus(txHash: string): Promise<TransactionStatus[] | undefined> {
+export async function getTransactionStatus(
+    txHash: string
+): Promise<TransactionStatus[] | undefined> {
     const response = await axios.get(`/gettransactionstatus?txHash=${txHash}`);
     if (response && response.data) {
         return response.data;
@@ -27,16 +41,26 @@ export async function getTransactionStatus(txHash: string): Promise<TransactionS
     return undefined;
 }
 
-export async function getPaymentTransactionHash(paymentTransactionHashRequest: PaymentTransactionHashRequest): Promise<{ txHash: string } | undefined> {
-    const response = await axios.post(`/getpaymenttransactionhash`, paymentTransactionHashRequest);
+export async function getPaymentTransactionHash(
+    paymentTransactionHashRequest: PaymentTransactionHashRequest
+): Promise<{ txHash: string } | undefined> {
+    const response = await axios.post(
+        `/getpaymenttransactionhash`,
+        paymentTransactionHashRequest
+    );
     if (response && response.data) {
         return response.data;
     }
     return undefined;
 }
 
-export async function getTokenTransactionHash(tokenTxHashRequest: TokenTransactionHashRequest): Promise<{ txHash: string } | undefined> {
-    const response = await axios.post(`/gettokentransactionhash`, tokenTxHashRequest);
+export async function getTokenTransactionHash(
+    tokenTxHashRequest: TokenTransactionHashRequest
+): Promise<{ txHash: string } | undefined> {
+    const response = await axios.post(
+        `/gettokentransactionhash`,
+        tokenTxHashRequest
+    );
     if (response && response.data) {
         return response.data;
     }
@@ -54,7 +78,7 @@ export async function getBlock(): Promise<{ block_no: number }> {
 export async function getNetworkId(): Promise<{ network: NetworkId }> {
     const response = await axios.get(`/features`);
     if (response && response.data) {
-        if (response.data.network === 'testnet') {
+        if (response.data.network === "testnet") {
             return { network: NetworkId.testnet };
         }
         return { network: NetworkId.mainnet };
@@ -63,6 +87,13 @@ export async function getNetworkId(): Promise<{ network: NetworkId }> {
 }
 
 export async function getTxStatus(request_id: string, session_id: string) {
-    const response = await axios.get(`/txstatus?request_id=${request_id}&session_id=${session_id}`);
-    return response.data
+    const response = await axios.get(
+        `/txstatus?request_id=${request_id}&session_id=${session_id}`
+    );
+    return response.data;
+}
+
+export async function getSettings() {
+    const response = await axios.get(`/getsettings`);
+    return response.data;
 }
