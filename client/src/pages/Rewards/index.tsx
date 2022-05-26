@@ -1,19 +1,18 @@
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, KeyboardEvent } from "react";
-import { GetRewards, GetCustomRewards } from "../../entities/vm.entities";
+import { GetRewards } from "../../entities/vm.entities";
 import { getCustomRewards, getRewards } from "../../services/http.services";
 import { ModalTypes } from "../../entities/common.entities";
 import WalletApi from "../../services/connectors/wallet.connector";
-import "./index.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
 import { showModal } from "src/reducers/modalSlice";
 import { getStakeKey } from "./utils/common.function";
 import Spinner from "src/components/Spinner";
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
-import DepositInfo from "./components/DepositInfo";
 import { useNavigate } from "react-router-dom";
+import "./index.scss";
 
 interface Params {
     connectedWallet: WalletApi | undefined;
@@ -26,7 +25,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const networkId = useSelector((state: RootState) => state.wallet.networkId);
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
-    const [hideSendAdaInfo, setHideSendAdaInfo] = useState(true);
     const [rewards, setRewards] = useState<GetRewards>();
     const [searchAddress, setSearchAddress] = useState<string>("");
     const [rewardsLoader, setRewardsLoader] = useState(false);
@@ -34,7 +32,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
     const [checkedCount, setCheckedCount] = useState(0);
     const [allIsSelected, setAllIsSelected] = useState<boolean>(false);
     const [stakeAddress, setStakeAddress] = useState<string>("");
-    const [txDetail, setTxDetail] = useState<GetCustomRewards | undefined>();
     const [claimMyRewardLoading, setClaimMyRewardLoading] =
         useState<boolean>(false);
 
@@ -63,7 +60,6 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                 setSearchAddress(await connectedWallet.getAddress());
                 setHideCheck(false);
                 setHideStakingInfo(true);
-                setHideSendAdaInfo(true);
             }
         }
 

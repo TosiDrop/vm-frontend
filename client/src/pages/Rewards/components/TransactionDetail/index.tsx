@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getSettings } from "src/services/http.services";
-import { formatTokens } from "src/services/utils.services";
 import "./index.scss";
 
 const CLASS = "transaction-detail";
@@ -32,7 +31,7 @@ const TransactionDetail = ({ numberOfTokens, deposit }: Props) => {
             });
         };
         getSettingsFromApi();
-    }, []);
+    }, [settings]);
 
     return (
         <div className={`rewards-block ${CLASS}`}>

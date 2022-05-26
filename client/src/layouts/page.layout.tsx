@@ -6,7 +6,6 @@ import Feedback from "../pages/Feedback";
 import Airdrop from "../pages/Airdrop";
 import WalletApi from "../services/connectors/wallet.connector";
 import DepositInfoPage from "src/pages/Rewards/DepositInfoPage";
-import Loading from "src/pages/Loading";
 import "./page.layout.scss";
 
 interface Params {
