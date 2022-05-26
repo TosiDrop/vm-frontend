@@ -96,6 +96,7 @@
 
         &.staked {
             flex-direction: row;
+            align-items: center;
 
             .pool-logo {
                 margin-right: 10px;
@@ -218,10 +219,6 @@
     .staking-info {
         display: flex;
         flex-direction: column;
-
-        & > * {
-            margin-bottom: 20px;
-        }
     }
 
     .claim-list {
@@ -230,6 +227,10 @@
         gap: 20px;
         flex-wrap: wrap;
     }
+}
+
+.staking-info__row {
+    margin-bottom: 20px;
 }
 
 .hidden {

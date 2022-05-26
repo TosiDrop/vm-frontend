@@ -210,16 +210,16 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                     <div className="pool-info">
                         <div className="staking-info">
                             Currently staking&nbsp;
-                            <b>{rewards?.pool_info?.total_balance} ADA</b>
+                            <strong>{rewards?.pool_info?.total_balance} ADA</strong>
                             &nbsp;with&nbsp;
-                            <b className="no-break">
+                            <strong className="no-break">
                                 [{rewards?.pool_info?.delegated_pool_name}
                                 ]&nbsp;
                                 {rewards?.pool_info?.delegated_pool_description}
-                            </b>
-                            <b className="no-break-mobile">
+                            </strong>
+                            <strong className="no-break-mobile">
                                 [{rewards?.pool_info?.delegated_pool_name}]
-                            </b>
+                            </strong>
                         </div>
                     </div>
                 </>
@@ -286,10 +286,10 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         if (!hideStakingInfo) {
             return (
                 <div className="staking-info">
-                    <div className={"content-reward staked"}>
+                    <div className={"content-reward staked staking-info__row"}>
                         {renderStakeInfo()}
                     </div>
-                    <div className={"claim-list"}>
+                    <div className={"claim-list staking-info__row"}>
                         {rewards?.claimable_tokens?.map((token, index) => {
                             return (
                                 <ClaimableTokenBox
@@ -307,7 +307,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                         })}
                     </div>
 
-                    <div className={"content-reward claim"}>
+                    <div className={"content-reward claim staking-info__row"}>
                         <div className="text">
                             Selected {checkedCount} token
                         </div>
