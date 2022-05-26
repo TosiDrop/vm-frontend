@@ -15,10 +15,6 @@ enum TransactionStatusDetail {
     success = 3,
 }
 
-interface TransactionStatusInterface {
-    status: number;
-}
-
 interface Params {
     transactionStatus: TransactionStatusDetail;
     transactionId: string;

@@ -22,16 +22,6 @@ interface Params {
 function Menu({ showMenu, setShowMenu }: Params) {
     const location = useLocation().pathname;
 
-    const menuListItems = [
-        {
-            icon: faWallet,
-            text: "Claim",
-            tag: "Link",
-            selected: location === "/",
-        },
-        {},
-    ];
-
     return (
         <>
             <div
