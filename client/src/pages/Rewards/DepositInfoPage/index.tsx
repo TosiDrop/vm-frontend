@@ -8,6 +8,7 @@ import WalletApi from "src/services/connectors/wallet.connector";
 import { GetCustomRewards } from "src/entities/vm.entities";
 import { useEffect, useState } from "react";
 import DepositInfo from "../components/DepositInfo";
+import Loading from "src/pages/Loading";
 import "../index.scss";
 
 interface TransactionStatus {
@@ -60,10 +61,9 @@ const DepositInfoPage = ({ wrongNetwork, connectedWallet }: Params) => {
         loadTxDetail();
     }, [requestId, stakeAddress, withdrawAddress]);
 
-    return loading ? null : selectedTokens &&
-      stakeAddress &&
-      withdrawAddress &&
-      requestId ? (
+    return loading ? (
+        <Loading />
+    ) : selectedTokens && stakeAddress && withdrawAddress && requestId ? (
         <div className="rewards">
             <h1>Claim your rewards</h1>
             <DepositInfo

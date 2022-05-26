@@ -175,8 +175,8 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
             );
             if (res == null) throw new Error();
 
-            const depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${checkedCount}`
-            navigate(depositInfoUrl, { replace: true })
+            const depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${checkedCount}`;
+            navigate(depositInfoUrl, { replace: true });
         } catch (e) {
             dispatch(
                 showModal({

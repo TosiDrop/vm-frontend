@@ -3,10 +3,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-top: 200px;
     &__logo {
         width: 75px;
         animation: spin-logo infinite 1s ease-in-out;
+        margin-top: 200px;
         margin-bottom: 20px;
     }
 }

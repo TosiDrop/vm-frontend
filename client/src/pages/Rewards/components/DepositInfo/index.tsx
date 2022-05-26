@@ -1,6 +1,4 @@
-import {
-    faWarning,
-} from "@fortawesome/free-solid-svg-icons";
+import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TransactionDetail from "../TransactionDetail";
 import { formatTokens } from "src/services/utils.services";
