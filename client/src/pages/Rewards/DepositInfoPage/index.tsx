@@ -8,7 +8,7 @@ import WalletApi from "src/services/connectors/wallet.connector";
 import { GetCustomRewards } from "src/entities/vm.entities";
 import { useEffect, useState } from "react";
 import DepositInfo from "../components/DepositInfo";
-import "./index.scss";
+import "../index.scss";
 
 interface TransactionStatus {
     expected_deposit: number;
