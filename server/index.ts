@@ -6,6 +6,7 @@ import {
     AccountAddress,
     AccountInfo,
     AddressTransactions,
+    EpochParams,
     PoolInfo,
     Tip,
     TransactionInfo,
@@ -105,6 +106,13 @@ async function getAccountsAddresses(stakeAddress: string) {
     return getFromKoios<AccountAddress[]>(
         "account_addresses",
         `_address=${stakeAddress}`
+    );
+}
+
+async function getEpochParams(epochNo: number) {
+    return getFromKoios<EpochParams>(
+	"epoch_params",
+	`_epoch_no=${epochNo}`
     );
 }
 
@@ -287,6 +295,20 @@ app.get("/getblock", async (req: any, res: any) => {
                     ? getTipResponse[0].block_no
                     : 0,
         });
+    } catch (error: any) {
+        return res.status(500).send({ error: "An error occurred." });
+    }
+});
+
+app.get("/getepochparams", async (req: any, res: any) => {
+    try {
+        const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+        const getEpochParamsResponse = await getEpochParams(
+            getTipResponse && getTipResponse.length
+	        ? getTipResponse[0].epoch_no
+		: 0
+	);
+	res.send(getEpochParamsResponse);
     } catch (error: any) {
         return res.status(500).send({ error: "An error occurred." });
     }
