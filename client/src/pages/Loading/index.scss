@@ -1,0 +1,21 @@
+.loading-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 200px;
+    &__logo {
+        width: 75px;
+        animation: spin-logo infinite 1s ease-in-out;
+        margin-bottom: 20px;
+    }
+}
+
+@keyframes spin-logo {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
