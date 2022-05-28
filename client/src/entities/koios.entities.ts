@@ -47,6 +47,41 @@ export interface EpochInfo {
     active_stake: string;
 }
 
+export interface EpochParams {
+    epoch_no: number;
+    min_fee_a: number;
+    min_fee_b: number;
+    max_block_size: number;
+    max_tx_size: number;
+    max_bh_size: number;
+    key_deposit: number;
+    pool_deposit: number;
+    max_epoch: number;
+    optimal_pool_count: number;
+    influence: number;
+    monetary_expand_rate: number;
+    treasury_growth_rate: number;
+    decentralisation: number;
+    entropy: string | null;
+    protocol_major: number;
+    protocol_minor: number;
+    min_utxo_value: number;
+    min_pool_cost: number;
+    nonce: string;
+    block_hash: string;
+    cost_models: string;
+    price_mem: number;
+    price_step: number;
+    max_tx_ex_mem: number;
+    max_tx_ex_steps: number;
+    max_block_ex_mem: number;
+    max_block_ex_steps: number;
+    max_val_size: number;
+    collateral_percent: number;
+    max_collateral_inputs: number;
+    coins_per_utxo_word: number;
+}
+
 export interface PoolInfo {
     pool_id_bech32: string;
     pool_id_hex: string;

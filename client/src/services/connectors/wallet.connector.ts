@@ -179,7 +179,8 @@ class WalletApi {
     async transferAda(paymentAddress: string, adaAmount: string) {
         if (!this.wallet) return;
 
-        const protocolParameters = await this._getProtocolParameter(1);
+        let networkId = await this.getNetworkId();
+        const protocolParameters = await this._getProtocolParameter(networkId.network);
         const changeAddress = await (this.wallet?.api.getChangeAddress() as Promise<string>);
         // Cast according to wallet
         if (changeAddress) {
