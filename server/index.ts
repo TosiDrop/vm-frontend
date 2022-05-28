@@ -296,6 +296,20 @@ app.get("/gettransactionstatus", async (req: any, res: any) => {
     }
 });
 
+app.get("/getabsslot", async (req: any, res: any) => {
+    try {
+        const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+        res.send({
+            abs_slot:
+                getTipResponse && getTipResponse.length
+                    ? getTipResponse[0].abs_slot
+                    : 0,
+        });
+    } catch (error: any) {
+        return res.status(500).send({ error: "An error occurred." });
+    }
+});
+
 app.get("/getblock", async (req: any, res: any) => {
     try {
         const getTipResponse = await getFromKoios<Tip[]>(`tip`);
@@ -305,6 +319,15 @@ app.get("/getblock", async (req: any, res: any) => {
                     ? getTipResponse[0].block_no
                     : 0,
         });
+    } catch (error: any) {
+        return res.status(500).send({ error: "An error occurred." });
+    }
+});
+
+app.get("/gettip", async (req: any, res: any) => {
+    try {
+        const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+        res.send(getTipResponse[0]);
     } catch (error: any) {
         return res.status(500).send({ error: "An error occurred." });
     }
