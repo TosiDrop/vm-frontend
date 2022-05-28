@@ -3,7 +3,7 @@ import {
     PaymentTransactionHashRequest,
     TokenTransactionHashRequest,
 } from "src/entities/common.entities";
-import { TransactionStatus } from "src/entities/koios.entities";
+import { EpochParams, TransactionStatus } from "src/entities/koios.entities";
 import { GetRewards, GetCustomRewards } from "../entities/vm.entities";
 import axios from "axios";
 
@@ -73,6 +73,11 @@ export async function getBlock(): Promise<{ block_no: number }> {
         return response.data;
     }
     return { block_no: 0 };
+}
+
+export async function getEpochParams(): Promise<EpochParams[]> {
+    const response = await axios.get(`/getepochparams`);
+    return response.data;
 }
 
 export async function getNetworkId(): Promise<{ network: NetworkId }> {
