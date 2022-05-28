@@ -14,6 +14,7 @@ import {
 } from "../client/src/entities/koios.entities";
 import {
     ClaimableToken,
+    GetPools,
     GetRewards,
     GetTokens,
     SanitizeAddress,
@@ -120,9 +121,18 @@ async function postPoolInfo(pools: string[]) {
     return postFromKoios<PoolInfo[]>("pool_info", { _pool_bech32_ids: pools });
 }
 
+async function getPools() {
+    return getFromVM<GetPools>("get_pools");
+}
+
 async function getTokens() {
     return getFromVM<GetTokens>("get_tokens");
 }
+
+app.get("/getpools", async (req, res) => {
+    const pools = await getPools();
+    return res.status(200).send(pools);
+});
 
 app.get("/getsettings", async (req, res) => {
     const settings = await getFromVM("get_settings");

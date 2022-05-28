@@ -53,3 +53,20 @@ export interface TokenInfo {
     visible: string,
     info: string
 }
+
+export interface GetPools {
+    [key: string]: PoolInfo;
+}
+
+export interface PoolInfo {
+    id: string,
+    ticker: string,
+    name: string,
+    enabled: string,
+    logo: string,
+    last_delegator_refresh: string,
+    loading_addr: string,
+    description: string,
+    visible: string,
+    delegator_count: string
+}
