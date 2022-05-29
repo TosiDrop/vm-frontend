@@ -17,12 +17,13 @@ export async function Cardano() {
 };
 
 export enum WalletKeys {
-    nami = 'nami',
+    anetawallet = 'anetawallet',
     eternl = 'eternl',
     flint = 'flint',
-    // typhon = 'typhon',
+    nami = 'nami',
     gerowallet = 'gerowallet',
-    anetawallet = 'anetawallet'
+    // typhon = 'typhon',
+    yoroi = 'yoroi'
 }
 
 const ERROR = {
