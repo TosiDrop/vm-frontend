@@ -12,7 +12,7 @@ import WalletApi, {
     CIP0030Wallet,
     WalletKeys,
 } from "./services/connectors/wallet.connector";
-import { getNetworkId } from "./services/http.services";
+import { getNetworkId } from "./services/claim.services";
 import "./styles.scss";
 
 export const Themes = {
@@ -135,7 +135,7 @@ function App() {
             setTheme(newTheme);
         }
         initNetworkId();
-    }, []);
+    }, [dispatch]);
 
     return (
         <div className={theme}>

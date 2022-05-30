@@ -77,7 +77,7 @@ export async function getBlock(): Promise<{ block_no: number }> {
 
 export async function getEpochParams(): Promise<EpochParams[]> {
     const response = await axios.get(`/getepochparams`);
-    return response.data;
+    return response.data[0];
 }
 
 export async function getNetworkId(): Promise<{ network: NetworkId }> {

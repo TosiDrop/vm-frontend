@@ -2,7 +2,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, KeyboardEvent } from "react";
 import { GetRewards } from "../../entities/vm.entities";
-import { getCustomRewards, getRewards } from "../../services/http.services";
+import { getCustomRewards, getRewards } from "../../services/claim.services";
 import { ModalTypes } from "../../entities/common.entities";
 import WalletApi from "../../services/connectors/wallet.connector";
 import { useDispatch, useSelector } from "react-redux";
