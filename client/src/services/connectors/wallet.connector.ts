@@ -20,7 +20,7 @@ export enum WalletKeys {
     nami = 'nami',
     eternl = 'eternl',
     flint = 'flint',
-    typhon = 'typhoncip30',
+    typhoncip30 = 'typhoncip30',
     gerowallet = 'gerowallet',
     anetawallet = 'anetawallet'
 }
