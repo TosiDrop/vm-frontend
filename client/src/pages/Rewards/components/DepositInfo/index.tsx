@@ -2,12 +2,11 @@ import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TransactionDetail from "../TransactionDetail";
 import { formatTokens } from "src/services/utils.services";
-import { useEffect, useState } from "react";
-import { getTxStatus } from "src/services/claim.services";
 import { GetCustomRewards } from "src/entities/vm.entities";
 import WalletApi from "src/services/connectors/wallet.connector";
 import SendAdaInfo from "../SendAdaInfo";
 import TransactionStatus from "../TransactionStatus";
+import { TransactionStatusDetail } from "../../DepositInfoPage";
 import "./index.scss";
 
 const CLASS = "deposit-info";
@@ -17,18 +16,10 @@ interface Params {
     checkedCount: number;
     connectedWallet: WalletApi | undefined;
     wrongNetwork: boolean | undefined;
-    stakeAddress: string | undefined;
-}
-
-interface TransactionStatusInterface {
-    status: number;
-}
-
-enum TransactionStatusDetail {
-    waiting = 0,
-    processing = 1,
-    failure = 2,
-    success = 3,
+    transactionId: string;
+    transactionStatus: TransactionStatusDetail;
+    setTransactionId: Function;
+    setTransactionStatus: Function;
 }
 
 const DepositInfo = ({
@@ -36,44 +27,11 @@ const DepositInfo = ({
     checkedCount,
     connectedWallet,
     wrongNetwork,
-    stakeAddress,
+    transactionId,
+    transactionStatus,
+    setTransactionId,
+    setTransactionStatus,
 }: Params) => {
-    const [transactionStatus, setTransactionStatus] =
-        useState<TransactionStatusDetail>(TransactionStatusDetail.waiting);
-    const [transactionId, setTransactionId] = useState<string>("");
-
-    useEffect(() => {
-        if (txDetail == null) return;
-        if (stakeAddress == null) return;
-
-        const checkTxStatus = setInterval(async () => {
-            try {
-                const txStatus: TransactionStatusInterface = await getTxStatus(
-                    txDetail.request_id,
-                    stakeAddress.slice(0, 40)
-                );
-                const status = txStatus.status;
-                switch (status) {
-                    case TransactionStatusDetail.failure:
-                    case TransactionStatusDetail.success:
-                        setTransactionStatus(txStatus.status);
-                        clearInterval(checkTxStatus);
-                        break;
-                    case TransactionStatusDetail.processing:
-                        setTransactionStatus(txStatus.status);
-                        break;
-                    case TransactionStatusDetail.waiting:
-                    default:
-                        break;
-                }
-            } catch (e) {}
-        }, 30000);
-
-        return () => {
-            clearInterval(checkTxStatus);
-        };
-    }, [txDetail, stakeAddress]);
-
     return (
         <>
             <div className={`rewards-block ${CLASS}__warning ${CLASS}`}>

@@ -14,6 +14,7 @@ import "../index.scss";
 interface TransactionStatus {
     expected_deposit: number;
     deposit: number;
+    status: number;
 }
 
 interface Params {
@@ -26,6 +27,13 @@ enum QueryKey {
     stakeAddress = "stakeAddress",
     withdrawAddress = "withdrawAddress",
     requestId = "requestId",
+}
+
+export enum TransactionStatusDetail {
+    waiting = 0,
+    processing = 1,
+    failure = 2,
+    success = 3,
 }
 
 const DepositInfoPage = ({ wrongNetwork, connectedWallet }: Params) => {
@@ -42,23 +50,64 @@ const DepositInfoPage = ({ wrongNetwork, connectedWallet }: Params) => {
     });
     const checkedCount = selectedTokens ? Number(selectedTokens) : 0;
     const [loading, setLoading] = useState(true);
+    const [transactionStatus, setTransactionStatus] =
+        useState<TransactionStatusDetail>(TransactionStatusDetail.waiting);
+    const [transactionId, setTransactionId] = useState<string>("");
 
     useEffect(() => {
         const loadTxDetail = async () => {
+            /**
+             * check if all info is there
+             */
             if (!requestId || !stakeAddress || !withdrawAddress) return;
+
+            /**
+             * get the tx status
+             */
             const txStatus: TransactionStatus = await getTxStatus(
                 requestId,
                 stakeAddress.slice(0, 40)
             );
 
+            /**
+             * set result to state
+             */
             setTxDetail({
                 deposit: txStatus.expected_deposit,
                 withdrawal_address: withdrawAddress,
                 request_id: requestId,
             });
+
+            const status = txStatus.status;
+            switch (status) {
+                case TransactionStatusDetail.failure:
+                case TransactionStatusDetail.success:
+                    setTransactionStatus(status);
+                    clearInterval(checkTxStatusInterval);
+                    break;
+                case TransactionStatusDetail.processing:
+                    setTransactionStatus(status);
+                    break;
+                case TransactionStatusDetail.waiting:
+                default:
+                    break;
+            }
+
+            /**
+             * if status is retrieved, stop loading
+             */
             setLoading(false);
         };
+
+        /**
+         * load status every 10s
+         */
         loadTxDetail();
+        const checkTxStatusInterval = setInterval(loadTxDetail, 10000);
+
+        return () => {
+            clearInterval(checkTxStatusInterval);
+        };
     }, [requestId, stakeAddress, withdrawAddress]);
 
     return loading ? (
@@ -71,7 +120,10 @@ const DepositInfoPage = ({ wrongNetwork, connectedWallet }: Params) => {
                 checkedCount={checkedCount}
                 connectedWallet={connectedWallet}
                 wrongNetwork={wrongNetwork}
-                stakeAddress={stakeAddress}
+                transactionId={transactionId}
+                transactionStatus={transactionStatus}
+                setTransactionId={setTransactionId}
+                setTransactionStatus={setTransactionStatus}
             ></DepositInfo>
         </div>
     ) : null;
