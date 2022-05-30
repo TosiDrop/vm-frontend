@@ -135,7 +135,7 @@ function App() {
             setTheme(newTheme);
         }
         initNetworkId();
-    }, []);
+    }, [dispatch]);
 
     return (
         <div className={theme}>
