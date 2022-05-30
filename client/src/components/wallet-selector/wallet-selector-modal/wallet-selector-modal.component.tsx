@@ -63,8 +63,7 @@ function WalletSelectorModalComponent({
                                             }
                                         >
                                             <p>
-                                                {key.charAt(0).toUpperCase() +
-                                                    key.slice(1)}
+                                                {window.cardano[key].name}
                                             </p>
                                             <img
                                                 src={window.cardano[key].icon}
