@@ -182,7 +182,7 @@ class WalletApi {
         const protocolParameters = await this._getProtocolParameter(
             networkId.network
         );
-        
+
         const changeAddress =
             await (this.wallet?.api.getChangeAddress() as Promise<string>);
         // Cast according to wallet
@@ -199,8 +199,7 @@ class WalletApi {
                 this.serialLib.TransactionBuilderConfigBuilder.new()
                     .coins_per_utxo_word(
                         this.serialLib.BigNum.from_str(
-                            String(
-                            protocolParameters.coinsPerUtxoWord)
+                            String(protocolParameters.coinsPerUtxoWord)
                         )
                     )
                     .fee_algo(
@@ -227,7 +226,6 @@ class WalletApi {
                     .max_value_size(protocolParameters.maxValSize)
                     .prefer_pure_change(true)
                     .build();
-            
 
             // builder
             const txBuilder = this.serialLib.TransactionBuilder.new(txConfig);
@@ -365,7 +363,7 @@ class WalletApi {
     }
 
     async _getProtocolParameter(networkId: number) {
-        let epochParams: any = await getEpochParams()
+        let epochParams: any = await getEpochParams();
 
         return {
             linearFee: {
@@ -383,9 +381,7 @@ class WalletApi {
         };
     }
 
-    async _koiosRequest() {
-
-    }
+    async _koiosRequest() {}
 
     async _blockfrostRequest({
         body,
@@ -403,7 +399,7 @@ class WalletApi {
             return await (
                 await fetch(`${networkEndpoint}${endpoint}`, {
                     headers: {
-                        project_id: 'testnetJ8MGT6Xbuvlv9ZTwEJsEecKvvQlqtHZz',
+                        project_id: "testnetJ8MGT6Xbuvlv9ZTwEJsEecKvvQlqtHZz",
                         ...headers,
                     },
                     method: method,
