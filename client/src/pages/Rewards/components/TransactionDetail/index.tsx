@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getSettings } from "src/services/http.services";
+import { getSettings } from "src/services/claim.services";
 import "./index.scss";
 
 const CLASS = "transaction-detail";
