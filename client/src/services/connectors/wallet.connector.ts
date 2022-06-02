@@ -66,16 +66,13 @@ export interface CIP0030Wallet {
 class WalletApi {
     wallet: CIP0030Wallet | undefined;
     serialLib: any;
-    apiKey: string;
 
     constructor(
         serilizationLib: any,
-        walletApi: CIP0030Wallet | undefined,
-        _apiKey: string
+        walletApi: CIP0030Wallet | undefined
     ) {
         this.wallet = walletApi;
         this.serialLib = serilizationLib;
-        this.apiKey = _apiKey;
     }
 
     async disconnectWallet() {
@@ -382,35 +379,5 @@ class WalletApi {
     }
 
     async _koiosRequest() {}
-
-    async _blockfrostRequest({
-        body,
-        endpoint = "",
-        networkId = 0,
-        headers = {},
-        method = "GET",
-    }: any) {
-        let networkEndpoint =
-            networkId === 0
-                ? "https://cardano-testnet.blockfrost.io/api/v0"
-                : "https://cardano-mainnet.blockfrost.io/api/v0";
-
-        try {
-            return await (
-                await fetch(`${networkEndpoint}${endpoint}`, {
-                    headers: {
-                        project_id: "testnetJ8MGT6Xbuvlv9ZTwEJsEecKvvQlqtHZz",
-                        ...headers,
-                    },
-                    method: method,
-                    body,
-                })
-            ).json();
-        } catch (error) {
-            console.log(error);
-            return null;
-        }
-    }
-}
 
 export default WalletApi;

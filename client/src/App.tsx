@@ -102,8 +102,7 @@ function App() {
         const S = await Cardano();
         const api = new WalletApi(
             S,
-            walletApi,
-            "mainnetRhGqfpK8V1F0qIri9ElcQxBg2cFplyme"
+            walletApi
         );
         return api;
     };
