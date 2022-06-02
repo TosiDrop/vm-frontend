@@ -100,7 +100,7 @@ const DepositInfoPage = ({ wrongNetwork, connectedWallet }: Params) => {
         };
 
         /**
-         * load status every 10s
+         * load status every 30s
          */
         loadTxDetail();
         const checkTxStatusInterval = setInterval(loadTxDetail, 30000);
