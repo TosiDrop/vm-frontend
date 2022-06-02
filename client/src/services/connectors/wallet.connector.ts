@@ -379,5 +379,6 @@ class WalletApi {
     }
 
     async _koiosRequest() {}
+}
 
 export default WalletApi;
