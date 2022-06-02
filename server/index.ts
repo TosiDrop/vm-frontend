@@ -181,7 +181,7 @@ app.get("/features", (req: any, res: any) => {
  */
 app.get("/sanitizeaddr", async (req: any, res: any) => {
   const queryObject = url.parse(req.url, true).query;
-  const address = queryObject.address as string;
+  let address = queryObject.address as string;
   let stakingAddressResponse, translatedAddress;
 
   if (!address) return res.send({ error: "Address seems invalid" });
@@ -189,15 +189,6 @@ app.get("/sanitizeaddr", async (req: any, res: any) => {
   const prefix = address.slice(0, 5);
 
   switch (true) {
-    /**
-     * if standard address, use VMSEAL API
-     */
-    case prefix === "addr_":
-    case prefix === "addr1":
-      stakingAddressResponse = await getFromVM<SanitizeAddress>(
-        `sanitize_address&address=${address}`
-      );
-      return res.send(stakingAddressResponse);
     /**
      * if ADA Handle, use ADA HANDLE API
      */
@@ -208,30 +199,32 @@ app.get("/sanitizeaddr", async (req: any, res: any) => {
         CARDANO_NETWORK,
         VM_KOIOS_URL
       );
-      return res.send({ staking_address: translatedAddress });
+      address = translatedAddress;
+      break;
+    /**
+     * if standard address, use VMSEAL API
+     */
+    case prefix === "addr_":
+    case prefix === "addr1":
+      break;
     /**
      * check if not receive address
      */
     default:
       return res.send({ error: "Address seems invalid" });
   }
+  stakingAddressResponse = await getFromVM<SanitizeAddress>(
+    `sanitize_address&address=${address}`
+  );
+  return res.send(stakingAddressResponse);
 });
 
 app.get("/getrewards", async (req: any, res: any) => {
   try {
     const queryObject = url.parse(req.url, true).query;
-    const address = queryObject.address;
+    const stakeAddress = queryObject.address as string;
+    if (!stakeAddress) throw new Error();
 
-    if (!queryObject.address) throw new Error();
-
-    const stakingAddressResponse = await getFromVM<SanitizeAddress>(
-      `sanitize_address&address=${address}`
-    );
-
-    if (!stakingAddressResponse) return res.sendStatus(404);
-    if (!stakingAddressResponse.staking_address) return res.sendStatus(404);
-
-    const stakeAddress = stakingAddressResponse.staking_address;
     let getRewardsResponse = await getRewards(stakeAddress);
     const accountsInfo = await getAccountsInfo(stakeAddress);
 
@@ -369,142 +362,6 @@ app.get("/getepochparams", async (req: any, res: any) => {
   }
 });
 
-app.post("/getpaymenttransactionhash", async (req: any, res: any) => {
-  try {
-    const requestBody = req.body as PaymentTransactionHashRequest;
-    if (requestBody && requestBody.address && requestBody.address.length) {
-      const bodyStakingAddressResponse = await getFromVM<SanitizeAddress>(
-        `sanitize_address&address=${requestBody.address}`
-      );
-      if (
-        bodyStakingAddressResponse &&
-        bodyStakingAddressResponse.staking_address
-      ) {
-        const accountAddresses = await getAccountsAddresses(
-          bodyStakingAddressResponse.staking_address
-        );
-        const getTokenTxHashResponse = await postFromKoios<
-          AddressTransactions[]
-        >(`address_txs`, {
-          _addresses: accountAddresses.map(
-            (accountAddress) => accountAddress.address
-          ),
-          _after_block_height: requestBody.afterBlock || 0,
-        });
-        if (getTokenTxHashResponse && getTokenTxHashResponse.length) {
-          const addressHashes = getTokenTxHashResponse.map(
-            (addressTx) => addressTx.tx_hash
-          );
-          const getTransactionsInfo = await postFromKoios<TransactionInfo[]>(
-            `tx_info`,
-            { _tx_hashes: addressHashes }
-          );
-          const fromStakingAddressResponse = await getFromVM<SanitizeAddress>(
-            `sanitize_address&address=${requestBody.address}`
-          );
-          const toStakingAddressResponse = await getFromVM<SanitizeAddress>(
-            `sanitize_address&address=${requestBody.toAddress}`
-          );
-          if (getTransactionsInfo && getTransactionsInfo.length) {
-            const filteredTxs = getTransactionsInfo.filter((txInfo) => {
-              const inputCorrect = txInfo.inputs.some((input) => {
-                const stakingAddressCorrect =
-                  input.stake_addr ===
-                  fromStakingAddressResponse.staking_address;
-                return stakingAddressCorrect;
-              });
-
-              const outputCorrect = txInfo.outputs.some((output) => {
-                const stakingAddressCorrect =
-                  output.stake_addr ===
-                  toStakingAddressResponse.staking_address;
-                const amountCorrect =
-                  output.value === requestBody.adaToSend.toString();
-                return amountCorrect && stakingAddressCorrect;
-              });
-
-              return inputCorrect && outputCorrect;
-            });
-            if (filteredTxs && filteredTxs.length) {
-              res.send({ txHash: filteredTxs[0].tx_hash });
-            } else {
-              res.send({ txHash: undefined });
-            }
-          }
-        } else {
-          res.send({ txHash: undefined });
-        }
-      }
-    } else {
-      res.send({ error: "Address seems invalid" });
-    }
-  } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
-  }
-});
-
-app.post("/gettokentransactionhash", async (req: any, res: any) => {
-  try {
-    const requestBody = req.body as TokenTransactionHashRequest;
-    if (requestBody && requestBody.address) {
-      const getTokenTxHashResponse = await postFromKoios<AddressTransactions[]>(
-        `address_txs`,
-        {
-          _addresses: [requestBody.address],
-          _after_block_height: requestBody.afterBlock || 0,
-        }
-      );
-      if (getTokenTxHashResponse && getTokenTxHashResponse.length) {
-        const addressHashes = getTokenTxHashResponse.map(
-          (addressTx) => addressTx.tx_hash
-        );
-        const getTransactionsInfo = await postFromKoios<TransactionInfo[]>(
-          `tx_info`,
-          { _tx_hashes: addressHashes }
-        );
-        const stakingAddressResponse = await getFromVM<SanitizeAddress>(
-          `sanitize_address&address=${requestBody.address}`
-        );
-        if (getTransactionsInfo && getTransactionsInfo.length) {
-          const filteredTxs = getTransactionsInfo.filter((txInfo) => {
-            return txInfo.outputs.some((output) => {
-              const stakingAddressCorrect =
-                output.stake_addr === stakingAddressResponse.staking_address;
-              let hasTokensCorrect: any[] = [];
-              output.asset_list.forEach((asset) => {
-                const token = requestBody.tokens.find(
-                  (token) =>
-                    token.policyId === asset.policy_id &&
-                    token.quantity === asset.quantity
-                );
-                if (token) {
-                  hasTokensCorrect.push(token);
-                }
-              });
-              return (
-                hasTokensCorrect.length &&
-                hasTokensCorrect.length === output.asset_list.length &&
-                stakingAddressCorrect
-              );
-            });
-          });
-          if (filteredTxs && filteredTxs.length) {
-            res.send({ txHash: filteredTxs[0].tx_hash });
-          } else {
-            res.send({ txHash: undefined });
-          }
-        }
-      } else {
-        res.send({ txHash: undefined });
-      }
-    } else {
-      res.send({ error: "Address seems invalid" });
-    }
-  } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
-  }
-});
-
 async function getRewards(stakeAddress: string) {
   const getRewardsResponse = await getFromVM<GetRewards>(
     `get_rewards&staking_address=${stakeAddress}`
@@ -547,3 +404,146 @@ async function getRewards(stakeAddress: string) {
 app.get("*", (req, res) => {
   res.sendFile("client/build/index.html", { root: "../" });
 });
+
+/**
+ * unused routes
+ */
+
+/*
+ app.post("/getpaymenttransactionhash", async (req: any, res: any) => {
+    try {
+      const requestBody = req.body as PaymentTransactionHashRequest;
+      if (requestBody && requestBody.address && requestBody.address.length) {
+        const bodyStakingAddressResponse = await getFromVM<SanitizeAddress>(
+          `sanitize_address&address=${requestBody.address}`
+        );
+        if (
+          bodyStakingAddressResponse &&
+          bodyStakingAddressResponse.staking_address
+        ) {
+          const accountAddresses = await getAccountsAddresses(
+            bodyStakingAddressResponse.staking_address
+          );
+          const getTokenTxHashResponse = await postFromKoios<
+            AddressTransactions[]
+          >(`address_txs`, {
+            _addresses: accountAddresses.map(
+              (accountAddress) => accountAddress.address
+            ),
+            _after_block_height: requestBody.afterBlock || 0,
+          });
+          if (getTokenTxHashResponse && getTokenTxHashResponse.length) {
+            const addressHashes = getTokenTxHashResponse.map(
+              (addressTx) => addressTx.tx_hash
+            );
+            const getTransactionsInfo = await postFromKoios<TransactionInfo[]>(
+              `tx_info`,
+              { _tx_hashes: addressHashes }
+            );
+            const fromStakingAddressResponse = await getFromVM<SanitizeAddress>(
+              `sanitize_address&address=${requestBody.address}`
+            );
+            const toStakingAddressResponse = await getFromVM<SanitizeAddress>(
+              `sanitize_address&address=${requestBody.toAddress}`
+            );
+            if (getTransactionsInfo && getTransactionsInfo.length) {
+              const filteredTxs = getTransactionsInfo.filter((txInfo) => {
+                const inputCorrect = txInfo.inputs.some((input) => {
+                  const stakingAddressCorrect =
+                    input.stake_addr ===
+                    fromStakingAddressResponse.staking_address;
+                  return stakingAddressCorrect;
+                });
+  
+                const outputCorrect = txInfo.outputs.some((output) => {
+                  const stakingAddressCorrect =
+                    output.stake_addr ===
+                    toStakingAddressResponse.staking_address;
+                  const amountCorrect =
+                    output.value === requestBody.adaToSend.toString();
+                  return amountCorrect && stakingAddressCorrect;
+                });
+  
+                return inputCorrect && outputCorrect;
+              });
+              if (filteredTxs && filteredTxs.length) {
+                res.send({ txHash: filteredTxs[0].tx_hash });
+              } else {
+                res.send({ txHash: undefined });
+              }
+            }
+          } else {
+            res.send({ txHash: undefined });
+          }
+        }
+      } else {
+        res.send({ error: "Address seems invalid" });
+      }
+    } catch (error: any) {
+      return res.status(500).send({ error: "An error occurred." });
+    }
+  });
+
+app.post("/gettokentransactionhash", async (req: any, res: any) => {
+    try {
+      const requestBody = req.body as TokenTransactionHashRequest;
+      if (requestBody && requestBody.address) {
+        const getTokenTxHashResponse = await postFromKoios<AddressTransactions[]>(
+          `address_txs`,
+          {
+            _addresses: [requestBody.address],
+            _after_block_height: requestBody.afterBlock || 0,
+          }
+        );
+        if (getTokenTxHashResponse && getTokenTxHashResponse.length) {
+          const addressHashes = getTokenTxHashResponse.map(
+            (addressTx) => addressTx.tx_hash
+          );
+          const getTransactionsInfo = await postFromKoios<TransactionInfo[]>(
+            `tx_info`,
+            { _tx_hashes: addressHashes }
+          );
+          const stakingAddressResponse = await getFromVM<SanitizeAddress>(
+            `sanitize_address&address=${requestBody.address}`
+          );
+          if (getTransactionsInfo && getTransactionsInfo.length) {
+            const filteredTxs = getTransactionsInfo.filter((txInfo) => {
+              return txInfo.outputs.some((output) => {
+                const stakingAddressCorrect =
+                  output.stake_addr === stakingAddressResponse.staking_address;
+                let hasTokensCorrect: any[] = [];
+                output.asset_list.forEach((asset) => {
+                  const token = requestBody.tokens.find(
+                    (token) =>
+                      token.policyId === asset.policy_id &&
+                      token.quantity === asset.quantity
+                  );
+                  if (token) {
+                    hasTokensCorrect.push(token);
+                  }
+                });
+                return (
+                  hasTokensCorrect.length &&
+                  hasTokensCorrect.length === output.asset_list.length &&
+                  stakingAddressCorrect
+                );
+              });
+            });
+            if (filteredTxs && filteredTxs.length) {
+              res.send({ txHash: filteredTxs[0].tx_hash });
+            } else {
+              res.send({ txHash: undefined });
+            }
+          }
+        } else {
+          res.send({ txHash: undefined });
+        }
+      } else {
+        res.send({ error: "Address seems invalid" });
+      }
+    } catch (error: any) {
+      return res.status(500).send({ error: "An error occurred." });
+    }
+  });
+
+*/

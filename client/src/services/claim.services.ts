@@ -41,32 +41,6 @@ export async function getTransactionStatus(
     return undefined;
 }
 
-export async function getPaymentTransactionHash(
-    paymentTransactionHashRequest: PaymentTransactionHashRequest
-): Promise<{ txHash: string } | undefined> {
-    const response = await axios.post(
-        `/getpaymenttransactionhash`,
-        paymentTransactionHashRequest
-    );
-    if (response && response.data) {
-        return response.data;
-    }
-    return undefined;
-}
-
-export async function getTokenTransactionHash(
-    tokenTxHashRequest: TokenTransactionHashRequest
-): Promise<{ txHash: string } | undefined> {
-    const response = await axios.post(
-        `/gettokentransactionhash`,
-        tokenTxHashRequest
-    );
-    if (response && response.data) {
-        return response.data;
-    }
-    return undefined;
-}
-
 export async function getBlock(): Promise<{ block_no: number }> {
     const response = await axios.get(`/getblock`);
     if (response && response.data) {
