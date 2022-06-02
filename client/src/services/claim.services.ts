@@ -1,7 +1,5 @@
 import {
     NetworkId,
-    PaymentTransactionHashRequest,
-    TokenTransactionHashRequest,
 } from "src/entities/common.entities";
 import { EpochParams, TransactionStatus } from "src/entities/koios.entities";
 import { GetRewards, GetCustomRewards } from "../entities/vm.entities";
@@ -41,32 +39,6 @@ export async function getTransactionStatus(
     return undefined;
 }
 
-export async function getPaymentTransactionHash(
-    paymentTransactionHashRequest: PaymentTransactionHashRequest
-): Promise<{ txHash: string } | undefined> {
-    const response = await axios.post(
-        `/getpaymenttransactionhash`,
-        paymentTransactionHashRequest
-    );
-    if (response && response.data) {
-        return response.data;
-    }
-    return undefined;
-}
-
-export async function getTokenTransactionHash(
-    tokenTxHashRequest: TokenTransactionHashRequest
-): Promise<{ txHash: string } | undefined> {
-    const response = await axios.post(
-        `/gettokentransactionhash`,
-        tokenTxHashRequest
-    );
-    if (response && response.data) {
-        return response.data;
-    }
-    return undefined;
-}
-
 export async function getBlock(): Promise<{ block_no: number }> {
     const response = await axios.get(`/getblock`);
     if (response && response.data) {
@@ -100,5 +72,10 @@ export async function getTxStatus(request_id: string, session_id: string) {
 
 export async function getSettings() {
     const response = await axios.get(`/getsettings`);
+    return response.data;
+}
+
+export async function getStakeKey(addr: string) {
+    const response = await axios.get(`/sanitizeaddr?address=${addr}`);
     return response.data;
 }
