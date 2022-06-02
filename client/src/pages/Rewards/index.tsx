@@ -2,13 +2,12 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, KeyboardEvent } from "react";
 import { GetRewards } from "../../entities/vm.entities";
-import { getCustomRewards, getRewards } from "../../services/claim.services";
+import { getCustomRewards, getRewards, getStakeKey } from "../../services/claim.services";
 import { ModalTypes } from "../../entities/common.entities";
 import WalletApi from "../../services/connectors/wallet.connector";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
 import { showModal } from "src/reducers/modalSlice";
-import { getStakeKey } from "./utils/common.function";
 import Spinner from "src/components/Spinner";
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
 import { useNavigate } from "react-router-dom";
@@ -108,8 +107,9 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                  * we want the stake address
                  * if it is cardano address, get the staking address
                  */
-                let address = await getStakeKey(searchAddress, networkId);
-                if (address == null) throw new Error();
+                let address = await getStakeKey(searchAddress);
+
+                address = address.staking_address
 
                 setStakeAddress(address);
                 const rewards = await getRewards(address);

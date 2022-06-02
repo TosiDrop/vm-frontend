@@ -102,3 +102,8 @@ export async function getSettings() {
     const response = await axios.get(`/getsettings`);
     return response.data;
 }
+
+export async function getStakeKey(addr: string) {
+    const response = await axios.get(`/sanitizeaddr?address=${addr}`);
+    return response.data;
+}
