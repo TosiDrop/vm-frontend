@@ -1,7 +1,5 @@
 import {
     NetworkId,
-    PaymentTransactionHashRequest,
-    TokenTransactionHashRequest,
 } from "src/entities/common.entities";
 import { EpochParams, TransactionStatus } from "src/entities/koios.entities";
 import { GetRewards, GetCustomRewards } from "../entities/vm.entities";

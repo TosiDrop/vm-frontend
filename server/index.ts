@@ -5,11 +5,9 @@ import cors from "cors";
 import {
   AccountAddress,
   AccountInfo,
-  AddressTransactions,
   EpochParams,
   PoolInfo,
   Tip,
-  TransactionInfo,
   TransactionStatus,
 } from "../client/src/entities/koios.entities";
 import {
@@ -22,8 +20,6 @@ import {
 import {
   ExtendedMetadata,
   Metadata,
-  PaymentTransactionHashRequest,
-  TokenTransactionHashRequest,
 } from "../client/src/entities/common.entities";
 import { formatTokens } from "../client/src/services/utils.services";
 import { ICardanoNetwork, translateAdaHandle } from "./utils";
