@@ -3,6 +3,11 @@ import url from "url";
 import axios from "axios";
 import cors from "cors";
 import {
+  Address,
+  BaseAddress,
+  RewardAddress,
+} from "@emurgo/cardano-serialization-lib-nodejs";
+import {
   AccountAddress,
   AccountInfo,
   EpochParams,
@@ -22,11 +27,11 @@ import {
   Metadata,
 } from "../client/src/entities/common.entities";
 import { formatTokens } from "../client/src/services/utils.services";
-import { ICardanoNetwork, translateAdaHandle } from "./utils";
+import { CardanoNetwork, translateAdaHandle } from "./utils";
 require("dotenv").config();
 
 const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
-const CARDANO_NETWORK = process.env.CARDANO_NETWORK || ICardanoNetwork.testnet;
+const CARDANO_NETWORK = process.env.CARDANO_NETWORK || CardanoNetwork.testnet;
 const CLAIM_ENABLED = process.env.CLAIM_ENABLED || true;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const PORT = process.env.PORT || 3000;
@@ -171,25 +176,22 @@ app.get("/features", (req: any, res: any) => {
   });
 });
 
-/**
- * get staking address of the user's address
- * support ADA Handle
- */
-app.get("/sanitizeaddr", async (req: any, res: any) => {
+app.get("/getstakekey", async (req: any, res: any) => {
   const queryObject = url.parse(req.url, true).query;
   let address = queryObject.address as string;
-  let stakingAddressResponse, translatedAddress;
+  let translatedAddress;
 
   if (!address) return res.send({ error: "Address seems invalid" });
+  if (!VM_KOIOS_URL) return res.send({ error: "KOIOS URL is not defined" });
 
   const prefix = address.slice(0, 5);
 
   switch (true) {
     /**
-     * if ADA Handle, use ADA HANDLE API
+     * for ADA Handle, translate the handle
+     * to a functional address
      */
     case prefix[0] === "$":
-      if (!VM_KOIOS_URL) return res.send({ error: "something is wrong" });
       translatedAddress = await translateAdaHandle(
         address,
         CARDANO_NETWORK,
@@ -197,22 +199,41 @@ app.get("/sanitizeaddr", async (req: any, res: any) => {
       );
       address = translatedAddress;
       break;
-    /**
-     * if standard address, use VMSEAL API
-     */
     case prefix === "addr_":
-    case prefix === "addr1":
+      if (CARDANO_NETWORK === CardanoNetwork.mainnet)
+        return res.send({ error: "Inserted address is for testnet" });
       break;
-    /**
-     * check if not receive address
-     */
+    case prefix === "addr1":
+      if (CARDANO_NETWORK === CardanoNetwork.testnet)
+        return res.send({ error: "Inserted address is for mainnet" });
+      break;
     default:
       return res.send({ error: "Address seems invalid" });
   }
-  stakingAddressResponse = await getFromVM<SanitizeAddress>(
-    `sanitize_address&address=${address}`
+
+  let rewardAddressBytes = new Uint8Array(29);
+  switch (CARDANO_NETWORK) {
+    case CardanoNetwork.mainnet:
+      rewardAddressBytes.set([0xe1], 0);
+      break;
+    case CardanoNetwork.testnet:
+    default:
+      rewardAddressBytes.set([0xe0], 0);
+      break;
+  }
+
+  const addressObject = Address.from_bech32(address);
+  const baseAddress = BaseAddress.from_address(addressObject);
+  if (baseAddress == null) return null;
+  rewardAddressBytes.set(baseAddress.stake_cred().to_bytes().slice(4, 32), 1);
+
+  let rewardAddress = RewardAddress.from_address(
+    Address.from_bytes(rewardAddressBytes)
   );
-  return res.send(stakingAddressResponse);
+
+  if (rewardAddress == null) return null;
+
+  return res.send({ staking_address: rewardAddress.to_address().to_bech32() });
 });
 
 app.get("/getrewards", async (req: any, res: any) => {
