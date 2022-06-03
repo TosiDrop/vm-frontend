@@ -76,6 +76,6 @@ export async function getSettings() {
 }
 
 export async function getStakeKey(addr: string) {
-    const response = await axios.get(`/sanitizeaddr?address=${addr}`);
+    const response = await axios.get(`/getstakekey?address=${addr}`);
     return response.data;
 }
