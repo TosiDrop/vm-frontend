@@ -1,4 +1,4 @@
-export enum ICardanoNetwork {
+export enum CardanoNetwork {
   mainnet = "mainnet",
   testnet = "testnet",
 }

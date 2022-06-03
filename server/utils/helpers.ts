@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ICardanoNetwork } from ".";
+import { CardanoNetwork } from ".";
 
 let Buffer = require("buffer").Buffer;
 
@@ -11,11 +11,11 @@ export const translateAdaHandle = async (
   let urlPrefix, policyId;
 
   switch (network) {
-    case ICardanoNetwork.mainnet:
+    case CardanoNetwork.mainnet:
       urlPrefix = "api";
       policyId = "f0ff48bbb7bbe9d59a40f1ce90e9e9d0ff5002ec48f232b49ca0fb9a";
       break;
-    case ICardanoNetwork.testnet:
+    case CardanoNetwork.testnet:
     default:
       urlPrefix = "testnet";
       policyId = "8d18d786e92776c824607fd8e193ec535c79dc61ea2405ddf3b09fe3";
