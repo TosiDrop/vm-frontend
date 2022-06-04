@@ -177,67 +177,71 @@ app.get("/features", (req: any, res: any) => {
 });
 
 app.get("/getstakekey", async (req: any, res: any) => {
-  const queryObject = url.parse(req.url, true).query;
-  let address = queryObject.address as string;
-  let translatedAddress;
+  try {
+    const queryObject = url.parse(req.url, true).query;
+    let address = queryObject.address as string;
+    let translatedAddress;
 
-  if (!address) return res.send({ error: "Input missing or invalid address" });
-  if (!VM_KOIOS_URL) return res.send({ error: "KOIOS URL is not defined" });
+    if (!address) return res.send({ error: "Address seems invalid" });
+    if (!VM_KOIOS_URL) return res.send({ error: "KOIOS URL is not defined" });
 
-  const prefix = address.slice(0, 5);
+    const prefix = address.slice(0, 5);
 
-  switch (true) {
-    /**
-     * for ADA Handle, translate the handle
-     * to a functional address
-     */
-    case prefix[0] === "$":
-      translatedAddress = await translateAdaHandle(
-        address,
-        CARDANO_NETWORK,
-        VM_KOIOS_URL
-      );
-      address = translatedAddress;
-      break;
-    case prefix === "addr_":
-      if (CARDANO_NETWORK === CardanoNetwork.mainnet)
-        return res.send({ error: "Inserted address is for testnet" });
-      break;
-    case prefix === "addr1":
-      if (CARDANO_NETWORK === CardanoNetwork.testnet)
-        return res.send({ error: "Inserted address is for mainnet" });
-      break;
-    case prefix === "stake":
-      // We were given a stake address, pass it through
-      return res.send({ staking_address: address });
-      break;
-    default:
-      return res.send({ error: "Address seems invalid" });
+    switch (true) {
+      /**
+       * for ADA Handle, translate the handle
+       * to a functional address
+       */
+      case prefix[0] === "$":
+        translatedAddress = await translateAdaHandle(
+          address,
+          CARDANO_NETWORK,
+          VM_KOIOS_URL
+        );
+        address = translatedAddress;
+        break;
+      case prefix === "addr_":
+        if (CARDANO_NETWORK === CardanoNetwork.mainnet)
+          return res.send({ error: "Inserted address is for testnet" });
+        break;
+      case prefix === "addr1":
+        if (CARDANO_NETWORK === CardanoNetwork.testnet)
+          return res.send({ error: "Inserted address is for mainnet" });
+        break;
+      case prefix === "stake":
+        // We were given a stake address, pass it through
+        return res.send({ staking_address: address });
+        break;
+      default:
+        return res.send({ error: "Address seems invalid" });
+    }
+
+    let rewardAddressBytes = new Uint8Array(29);
+    switch (CARDANO_NETWORK) {
+      case CardanoNetwork.mainnet:
+        rewardAddressBytes.set([0xe1], 0);
+        break;
+      case CardanoNetwork.testnet:
+      default:
+        rewardAddressBytes.set([0xe0], 0);
+        break;
+    }
+
+    const addressObject = Address.from_bech32(address);
+    const baseAddress = BaseAddress.from_address(addressObject);
+    if (baseAddress == null) return null;
+    rewardAddressBytes.set(baseAddress.stake_cred().to_bytes().slice(4, 32), 1);
+
+    let rewardAddress = RewardAddress.from_address(
+      Address.from_bytes(rewardAddressBytes)
+    );
+
+    if (rewardAddress == null) return null;
+
+    return res.send({ staking_address: rewardAddress.to_address().to_bech32() });
+  } catch (error: any) {
+    return res.status(500).send({ error: "An error occurred." });
   }
-
-  let rewardAddressBytes = new Uint8Array(29);
-  switch (CARDANO_NETWORK) {
-    case CardanoNetwork.mainnet:
-      rewardAddressBytes.set([0xe1], 0);
-      break;
-    case CardanoNetwork.testnet:
-    default:
-      rewardAddressBytes.set([0xe0], 0);
-      break;
-  }
-
-  const addressObject = Address.from_bech32(address);
-  const baseAddress = BaseAddress.from_address(addressObject);
-  if (baseAddress == null) return null;
-  rewardAddressBytes.set(baseAddress.stake_cred().to_bytes().slice(4, 32), 1);
-
-  let rewardAddress = RewardAddress.from_address(
-    Address.from_bytes(rewardAddressBytes)
-  );
-
-  if (rewardAddress == null) return null;
-
-  return res.send({ staking_address: rewardAddress.to_address().to_bech32() });
 });
 
 app.get("/getrewards", async (req: any, res: any) => {
