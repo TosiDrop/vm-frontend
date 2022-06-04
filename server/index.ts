@@ -181,7 +181,7 @@ app.get("/getstakekey", async (req: any, res: any) => {
   let address = queryObject.address as string;
   let translatedAddress;
 
-  if (!address) return res.send({ error: "Address seems invalid" });
+  if (!address) return res.send({ error: "Input missing or invalid address" });
   if (!VM_KOIOS_URL) return res.send({ error: "KOIOS URL is not defined" });
 
   const prefix = address.slice(0, 5);
@@ -206,6 +206,10 @@ app.get("/getstakekey", async (req: any, res: any) => {
     case prefix === "addr1":
       if (CARDANO_NETWORK === CardanoNetwork.testnet)
         return res.send({ error: "Inserted address is for mainnet" });
+      break;
+    case prefix === "stake":
+      // We were given a stake address, pass it through
+      return res.send({ staking_address: address });
       break;
     default:
       return res.send({ error: "Address seems invalid" });
