@@ -4,23 +4,20 @@ import Rewards from "../pages/Rewards";
 import RewardsHistory from "../pages/RewardsHistory";
 import Feedback from "../pages/Feedback";
 import Airdrop from "../pages/Airdrop";
-import WalletApi from "../services/connectors/wallet.connector";
 import DepositInfoPage from "src/pages/Rewards/DepositInfoPage";
 import "./page.layout.scss";
 
 interface Params {
-    connectedWallet: WalletApi | undefined;
     wrongNetwork: boolean | undefined;
 }
 
-function Page({ connectedWallet, wrongNetwork }: Params) {
+function Page({ wrongNetwork }: Params) {
     return (
         <Routes>
             <Route
                 path="/"
                 element={
                     <Rewards
-                        connectedWallet={connectedWallet}
                         wrongNetwork={wrongNetwork}
                     />
                 }
@@ -29,7 +26,6 @@ function Page({ connectedWallet, wrongNetwork }: Params) {
                 path="/claim"
                 element={
                     <DepositInfoPage
-                        connectedWallet={connectedWallet}
                         wrongNetwork={wrongNetwork}
                     />
                 }

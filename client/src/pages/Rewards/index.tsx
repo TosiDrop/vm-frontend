@@ -4,7 +4,6 @@ import { useEffect, useState, KeyboardEvent } from "react";
 import { GetRewards } from "../../entities/vm.entities";
 import { getCustomRewards, getRewards, getStakeKey } from "../../services/claim.services";
 import { ModalTypes } from "../../entities/common.entities";
-import WalletApi from "../../services/connectors/wallet.connector";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
 import { showModal } from "src/reducers/modalSlice";
@@ -14,14 +13,13 @@ import { useNavigate } from "react-router-dom";
 import "./index.scss";
 
 interface Params {
-    connectedWallet: WalletApi | undefined;
     wrongNetwork: boolean | undefined;
 }
 
-function Rewards({ connectedWallet, wrongNetwork }: Params) {
+function Rewards({ wrongNetwork }: Params) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const networkId = useSelector((state: RootState) => state.wallet.networkId);
+    const connectedWallet = useSelector((state: RootState) => state.wallet.walletApi);
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
     const [rewards, setRewards] = useState<GetRewards>();

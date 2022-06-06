@@ -148,7 +148,6 @@ function App() {
                     wrongNetwork={wrongNetwork}
                 />
                 <Page
-                    connectedWallet={connectedWallet}
                     wrongNetwork={wrongNetwork}
                 />
             </div>

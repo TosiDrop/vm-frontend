@@ -4,11 +4,12 @@
 
 import { useSearchParams } from "react-router-dom";
 import { getTxStatus } from "src/services/claim.services";
-import WalletApi from "src/services/connectors/wallet.connector";
 import { GetCustomRewards } from "src/entities/vm.entities";
 import { useEffect, useState } from "react";
 import DepositInfo from "../components/DepositInfo";
 import Loading from "src/pages/Loading";
+import { useSelector } from "react-redux";
+import { RootState } from "src/store";
 import "../index.scss";
 
 interface TransactionStatus {
@@ -19,7 +20,6 @@ interface TransactionStatus {
 
 interface Params {
     wrongNetwork: boolean | undefined;
-    connectedWallet: WalletApi | undefined;
 }
 
 enum QueryKey {
@@ -36,7 +36,8 @@ export enum TransactionStatusDetail {
     success = 3,
 }
 
-const DepositInfoPage = ({ wrongNetwork, connectedWallet }: Params) => {
+const DepositInfoPage = ({ wrongNetwork }: Params) => {
+    const connectedWallet = useSelector((state: RootState) => state.wallet.walletApi);
     const [searchParams] = useSearchParams();
     const selectedTokens = searchParams.get(QueryKey.selectedTokens);
     const stakeAddress = searchParams.get(QueryKey.stakeAddress);
