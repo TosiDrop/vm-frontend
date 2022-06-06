@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { connectWallet as connectWalletRedux, setNetworkId as setNetworkIdRedux } from "src/reducers/walletSlice";
 import ModalComponent from "./components/modal/modal.component";
 import { ModalTypes, NetworkId } from "./entities/common.entities";
@@ -7,6 +7,7 @@ import Header from "./layouts/header.layout";
 import Menu from "./layouts/menu.layout";
 import Page from "./layouts/page.layout";
 import { showModal } from "./reducers/modalSlice";
+import { RootState } from "src/store";
 import WalletApi, {
     Cardano,
     CIP0030Wallet,
@@ -23,9 +24,10 @@ export const Themes = {
 function App() {
     const dispatch = useDispatch();
 
+    const connectedWallet = useSelector((state: RootState) => state.wallet.walletApi);
+
     const [showMenu, setShowMenu] = useState(false);
     const [theme, setTheme] = useState(Themes.dark);
-    const [connectedWallet, setConnectedWallet] = useState<WalletApi>();
     const [networkId, setNetworkId] = useState<NetworkId>();
     const [wrongNetwork, setWrongNetwork] = useState<boolean>();
 
@@ -76,7 +78,6 @@ function App() {
                                         "wallet-provider",
                                         walletKey
                                     );
-                                    setConnectedWallet(walletApi);
                                 } else {
                                     dispatch(showModal({ text: _api, type: ModalTypes.info }));
                                 }
@@ -88,7 +89,6 @@ function App() {
                     const walletApi = await getWalletApi();
                     dispatch(connectWalletRedux(walletApi));
                     localStorage.setItem("wallet-provider", "");
-                    setConnectedWallet(walletApi);
                     setWrongNetwork(false);
                 }
             }
@@ -112,7 +112,6 @@ function App() {
             if (!connectedWallet) {
                 const walletApi = await getWalletApi();
                 dispatch(connectWalletRedux(walletApi));
-                setConnectedWallet(walletApi);
             } else if (!connectedWallet.wallet) {
                 const walletKey = localStorage.getItem("wallet-provider");
                 connectWallet(walletKey as WalletKeys);
