@@ -1,12 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { connectWallet as connectWalletRedux, setNetworkId as setNetworkIdRedux } from "src/reducers/walletSlice";
+import { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    connectWallet as connectWalletRedux,
+    setIsWrongNetwork,
+    setNetworkId,
+} from "src/reducers/walletSlice";
 import ModalComponent from "./components/modal/modal.component";
-import { ModalTypes, NetworkId } from "./entities/common.entities";
+import { ModalTypes } from "./entities/common.entities";
 import Header from "./layouts/header.layout";
 import Menu from "./layouts/menu.layout";
 import Page from "./layouts/page.layout";
 import { showModal } from "./reducers/modalSlice";
+import { RootState } from "src/store";
 import WalletApi, {
     Cardano,
     CIP0030Wallet,
@@ -15,31 +20,14 @@ import WalletApi, {
 import { getNetworkId } from "./services/claim.services";
 import "./styles.scss";
 
-export const Themes = {
-    light: "theme-light",
-    dark: "theme-dark",
-};
-
 function App() {
     const dispatch = useDispatch();
 
-    const [showMenu, setShowMenu] = useState(false);
-    const [theme, setTheme] = useState(Themes.dark);
-    const [connectedWallet, setConnectedWallet] = useState<WalletApi>();
-    const [networkId, setNetworkId] = useState<NetworkId>();
-    const [wrongNetwork, setWrongNetwork] = useState<boolean>();
-
-    const toggleMenu = () => {
-        setShowMenu(!showMenu);
-    };
-
-    const toggleTheme = () => {
-        setTheme((theme) => {
-            const newTheme = theme === Themes.dark ? Themes.light : Themes.dark;
-            localStorage.setItem("theme", newTheme);
-            return newTheme;
-        });
-    };
+    const connectedWallet = useSelector(
+        (state: RootState) => state.wallet.walletApi
+    );
+    const networkId = useSelector((state: RootState) => state.wallet.networkId);
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     const connectWallet = useCallback(
         async (walletKey?: WalletKeys) => {
@@ -57,9 +45,9 @@ function App() {
                                         connectedWalletNetworkId.network ===
                                         networkId
                                     ) {
-                                        setWrongNetwork(false);
+                                        dispatch(setIsWrongNetwork(false));
                                     } else {
-                                        setWrongNetwork(true);
+                                        dispatch(setIsWrongNetwork(true));
                                     }
                                     const connectedWalletUpdate: CIP0030Wallet =
                                         {
@@ -76,9 +64,13 @@ function App() {
                                         "wallet-provider",
                                         walletKey
                                     );
-                                    setConnectedWallet(walletApi);
                                 } else {
-                                    dispatch(showModal({ text: _api, type: ModalTypes.info }));
+                                    dispatch(
+                                        showModal({
+                                            text: _api,
+                                            type: ModalTypes.info,
+                                        })
+                                    );
                                 }
                             }
                         });
@@ -87,9 +79,8 @@ function App() {
                 if (connectedWallet?.wallet?.api) {
                     const walletApi = await getWalletApi();
                     dispatch(connectWalletRedux(walletApi));
+                    dispatch(setIsWrongNetwork(false));
                     localStorage.setItem("wallet-provider", "");
-                    setConnectedWallet(walletApi);
-                    setWrongNetwork(false);
                 }
             }
         },
@@ -100,58 +91,46 @@ function App() {
         walletApi?: CIP0030Wallet
     ): Promise<WalletApi> => {
         const S = await Cardano();
-        const api = new WalletApi(
-            S,
-            walletApi
-        );
+        const api = new WalletApi(S, walletApi);
         return api;
     };
 
+    /**
+     * handles wallet
+     */
     useEffect(() => {
-        async function init() {
+        const initWallet = async () => {
             if (!connectedWallet) {
                 const walletApi = await getWalletApi();
                 dispatch(connectWalletRedux(walletApi));
-                setConnectedWallet(walletApi);
             } else if (!connectedWallet.wallet) {
                 const walletKey = localStorage.getItem("wallet-provider");
                 connectWallet(walletKey as WalletKeys);
             }
-        }
+        };
 
-        init();
+        initWallet();
     }, [connectWallet, dispatch, connectedWallet]);
 
+    /**
+     * handles network id
+     */
     useEffect(() => {
         const initNetworkId = async () => {
             const networkIdResponse = await getNetworkId();
-            dispatch(setNetworkIdRedux(networkIdResponse.network))
-            setNetworkId(networkIdResponse.network);
+            dispatch(setNetworkId(networkIdResponse.network));
         };
 
-        const newTheme = localStorage.getItem("theme");
-        if (newTheme) {
-            setTheme(newTheme);
-        }
         initNetworkId();
     }, [dispatch]);
 
     return (
         <div className={theme}>
             <ModalComponent />
-            <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
+            <Menu />
             <div className="body">
-                <Header
-                    connectedWallet={connectedWallet}
-                    connectWallet={connectWallet}
-                    toggleMenu={toggleMenu}
-                    toggleTheme={toggleTheme}
-                    wrongNetwork={wrongNetwork}
-                />
-                <Page
-                    connectedWallet={connectedWallet}
-                    wrongNetwork={wrongNetwork}
-                />
+                <Header connectWallet={connectWallet} />
+                <Page />
             </div>
         </div>
     );

@@ -1,24 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSun } from "@fortawesome/free-solid-svg-icons";
 import WalletSelectorComponent from "../components/wallet-selector/wallet-selector.component";
-import WalletApi, { WalletKeys } from "../services/connectors/wallet.connector";
+import { WalletKeys } from "../services/connectors/wallet.connector";
 import logo from "../assets/tosidrop_logo.png";
+import { useDispatch } from "react-redux";
+import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
 import "./header.layout.scss";
 
 interface Params {
-    toggleMenu: () => void;
-    toggleTheme: () => void;
     connectWallet: (walletKey?: WalletKeys) => void;
-    connectedWallet: WalletApi | undefined;
-    wrongNetwork: boolean | undefined;
 }
-function Header({
-    toggleMenu,
-    toggleTheme,
-    connectWallet,
-    connectedWallet,
-    wrongNetwork,
-}: Params) {
+function Header({ connectWallet }: Params) {
+    const dispatch = useDispatch();
     return (
         <div className="header">
             <div className="header-title">
@@ -28,20 +21,19 @@ function Header({
                 <p className="title-text">TosiDrop</p>
                 <div className="header-filler"></div>
                 <div className="header-wallet-selector noselect">
-                    <WalletSelectorComponent
-                        connectedWallet={connectedWallet}
-                        connectWallet={connectWallet}
-                        wrongNetwork={wrongNetwork}
-                    />
+                    <WalletSelectorComponent connectWallet={connectWallet} />
                 </div>
                 <div className="last">
                     <button
                         className="light-button button"
-                        onClick={toggleTheme}
+                        onClick={() => dispatch(toggleTheme())}
                     >
                         <FontAwesomeIcon icon={faSun} />
                     </button>
-                    <button className="menu-button button" onClick={toggleMenu}>
+                    <button
+                        className="menu-button button"
+                        onClick={() => dispatch(toggleMenu())}
+                    >
                         <FontAwesomeIcon icon={faBars} />
                     </button>
                 </div>

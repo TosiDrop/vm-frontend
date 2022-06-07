@@ -2,21 +2,19 @@ import { ModalTypes } from "src/entities/common.entities";
 import { showModal } from "src/reducers/modalSlice";
 import { useState } from "react";
 import { copyContent } from "src/services/utils.services";
-import WalletApi from "src/services/connectors/wallet.connector";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import QRCode from "react-qr-code";
 import Spinner from "src/components/Spinner";
 import { isTxHash } from "src/pages/Rewards/utils/common.function";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "src/store";
 import "./index.scss";
 
 const CLASS = "send-ada-info";
 
 interface Params {
     txDetail: any;
-    connectedWallet: WalletApi | undefined;
-    wrongNetwork: boolean | undefined;
     setTransactionId: Function;
     setTransactionStatus: Function;
 }
@@ -30,12 +28,16 @@ enum TransactionStatusDetail {
 
 const SendAdaInfo = ({
     txDetail,
-    connectedWallet,
-    wrongNetwork,
     setTransactionId,
     setTransactionStatus,
 }: Params) => {
     const dispatch = useDispatch();
+    const connectedWallet = useSelector(
+        (state: RootState) => state.wallet.walletApi
+    );
+    const isWrongNetwork = useSelector(
+        (state: RootState) => state.wallet.isWrongNetwork
+    );
     const [showToolTip, setShowToolTip] = useState(false);
     const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
 
@@ -64,7 +66,7 @@ const SendAdaInfo = ({
      * render button to send ada
      */
     const renderSendAdaButton = () => {
-        if (connectedWallet?.wallet?.api && !wrongNetwork) {
+        if (connectedWallet?.wallet?.api && !isWrongNetwork) {
             return (
                 <div className={`${CLASS}__row ${CLASS}__send-ada-btn`}>
                     <button className="tosi-button" onClick={sendADA}>

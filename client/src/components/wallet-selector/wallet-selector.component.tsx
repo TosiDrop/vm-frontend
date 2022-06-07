@@ -1,25 +1,26 @@
 import { faLinkSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Spinner from "src/components/Spinner";
-import WalletApi, {
-    WalletKeys,
-} from "../../services/connectors/wallet.connector";
+import { RootState } from "src/store";
+import { WalletKeys } from "../../services/connectors/wallet.connector";
 import { abbreviateAddress } from "../../services/utils.services";
 import WalletSelectorModalComponent from "./wallet-selector-modal/wallet-selector-modal.component";
 import "./wallet-selector.component.scss";
 
 interface Params {
-    connectedWallet: WalletApi | undefined;
     connectWallet: (walletKey?: WalletKeys) => void;
-    wrongNetwork: boolean | undefined;
 }
 
-function WalletSelectorComponent({
-    connectedWallet,
-    connectWallet,
-    wrongNetwork,
-}: Params) {
+function WalletSelectorComponent({ connectWallet }: Params) {
+    const connectedWallet = useSelector(
+        (state: RootState) => state.wallet.walletApi
+    );
+    const isWrongNetwork = useSelector(
+        (state: RootState) => state.wallet.isWrongNetwork
+    );
+
     const [modalVisible, setModalVisible] = useState(false);
     const [walletMenuVisible, setWalletMenuVisible] = useState(false);
     const [walletAddress, setWalletAddress] = useState("");
@@ -101,11 +102,10 @@ function WalletSelectorComponent({
             <WalletSelectorModalComponent
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
-                connectedWallet={connectedWallet}
                 connectWallet={connectWallet}
             />
             <div className="wallet-selector">
-                {wrongNetwork ? (
+                {isWrongNetwork ? (
                     <WrongNetwork />
                 ) : connectedWallet?.wallet?.api ? (
                     <Connected />

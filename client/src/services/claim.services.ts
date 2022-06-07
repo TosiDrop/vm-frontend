@@ -1,6 +1,4 @@
-import {
-    NetworkId,
-} from "src/entities/common.entities";
+import { NetworkId } from "src/entities/common.entities";
 import { EpochParams, TransactionStatus } from "src/entities/koios.entities";
 import { GetRewards, GetCustomRewards } from "../entities/vm.entities";
 import axios from "axios";
@@ -76,8 +74,8 @@ export async function getSettings() {
 }
 
 export async function getStakeKey(addr: string) {
-    if (addr.slice(0, 5) == "stake") {
-        return {staking_address: addr};
+    if (addr.slice(0, 5) === "stake") {
+        return { staking_address: addr };
     }
     const response = await axios.get(`/getstakekey?address=${addr}`);
     return response.data;

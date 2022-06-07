@@ -2,9 +2,12 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, KeyboardEvent } from "react";
 import { GetRewards } from "../../entities/vm.entities";
-import { getCustomRewards, getRewards, getStakeKey } from "../../services/claim.services";
+import {
+    getCustomRewards,
+    getRewards,
+    getStakeKey,
+} from "../../services/claim.services";
 import { ModalTypes } from "../../entities/common.entities";
-import WalletApi from "../../services/connectors/wallet.connector";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
 import { showModal } from "src/reducers/modalSlice";
@@ -13,15 +16,16 @@ import ClaimableTokenBox from "./components/ClaimableTokenBox";
 import { useNavigate } from "react-router-dom";
 import "./index.scss";
 
-interface Params {
-    connectedWallet: WalletApi | undefined;
-    wrongNetwork: boolean | undefined;
-}
-
-function Rewards({ connectedWallet, wrongNetwork }: Params) {
+function Rewards() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const networkId = useSelector((state: RootState) => state.wallet.networkId);
+    const connectedWallet = useSelector(
+        (state: RootState) => state.wallet.walletApi
+    );
+
+    const isWrongNetwork = useSelector(
+        (state: RootState) => state.wallet.isWrongNetwork
+    );
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
     const [rewards, setRewards] = useState<GetRewards>();
@@ -55,7 +59,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
 
     useEffect(() => {
         async function init() {
-            if (connectedWallet?.wallet?.api && !wrongNetwork) {
+            if (connectedWallet?.wallet?.api && !isWrongNetwork) {
                 setSearchAddress(await connectedWallet.getAddress());
                 setHideCheck(false);
                 setHideStakingInfo(true);
@@ -63,7 +67,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
         }
 
         init();
-    }, [connectedWallet?.wallet?.api, connectedWallet, wrongNetwork]);
+    }, [connectedWallet?.wallet?.api, connectedWallet, isWrongNetwork]);
 
     /**
      * select/unselect all tokens
@@ -109,7 +113,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                  */
                 let address = await getStakeKey(searchAddress);
 
-                address = address.staking_address
+                address = address.staking_address;
 
                 setStakeAddress(address);
                 const rewards = await getRewards(address);
@@ -206,7 +210,9 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                     <div className="pool-info">
                         <div className="staking-info">
                             Currently staking&nbsp;
-                            <strong>{rewards?.pool_info?.total_balance} ADA</strong>
+                            <strong>
+                                {rewards?.pool_info?.total_balance} ADA
+                            </strong>
                             &nbsp;with&nbsp;
                             <strong className="no-break">
                                 [{rewards?.pool_info?.delegated_pool_name}
@@ -246,7 +252,7 @@ function Rewards({ connectedWallet, wrongNetwork }: Params) {
                             !hideStakingInfo ||
                             (typeof connectedWallet?.wallet?.api !==
                                 "undefined" &&
-                                !wrongNetwork)
+                                !isWrongNetwork)
                         }
                     ></input>
                     <div className="content-button">

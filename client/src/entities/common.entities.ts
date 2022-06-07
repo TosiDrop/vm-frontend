@@ -2,7 +2,7 @@ export enum PaymentStatus {
     Awaiting,
     AwaitingConfirmations,
     Sent,
-    Completed
+    Completed,
 }
 
 export interface ExtendedMetadata {
@@ -69,11 +69,16 @@ export interface PaymentTransactionHashRequest {
 export enum NetworkId {
     testnet,
     mainnet,
-    undefined
+    undefined,
 }
 
 export enum ModalTypes {
     info,
     failure,
-    success
+    success,
+}
+
+export enum Themes {
+    light = "theme-light",
+    dark = "theme-dark",
 }
