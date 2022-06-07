@@ -77,3 +77,8 @@ export enum ModalTypes {
     failure,
     success,
 }
+
+export enum Themes {
+    light = "theme-light",
+    dark = "theme-dark",
+}

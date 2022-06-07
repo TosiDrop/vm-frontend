@@ -6,7 +6,7 @@ import {
     setNetworkId,
 } from "src/reducers/walletSlice";
 import ModalComponent from "./components/modal/modal.component";
-import { ModalTypes, NetworkId } from "./entities/common.entities";
+import { ModalTypes } from "./entities/common.entities";
 import Header from "./layouts/header.layout";
 import Menu from "./layouts/menu.layout";
 import Page from "./layouts/page.layout";
@@ -20,33 +20,19 @@ import WalletApi, {
 import { getNetworkId } from "./services/claim.services";
 import "./styles.scss";
 
-export const Themes = {
-    light: "theme-light",
-    dark: "theme-dark",
-};
-
 function App() {
     const dispatch = useDispatch();
 
     const connectedWallet = useSelector(
         (state: RootState) => state.wallet.walletApi
     );
-
     const networkId = useSelector((state: RootState) => state.wallet.networkId);
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     const [showMenu, setShowMenu] = useState(false);
-    const [theme, setTheme] = useState(Themes.dark);
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
-    };
-
-    const toggleTheme = () => {
-        setTheme((theme) => {
-            const newTheme = theme === Themes.dark ? Themes.light : Themes.dark;
-            localStorage.setItem("theme", newTheme);
-            return newTheme;
-        });
     };
 
     const connectWallet = useCallback(
@@ -115,8 +101,11 @@ function App() {
         return api;
     };
 
+    /**
+     * handles wallet
+     */
     useEffect(() => {
-        async function init() {
+        const initWallet = async () => {
             if (!connectedWallet) {
                 const walletApi = await getWalletApi();
                 dispatch(connectWalletRedux(walletApi));
@@ -124,21 +113,20 @@ function App() {
                 const walletKey = localStorage.getItem("wallet-provider");
                 connectWallet(walletKey as WalletKeys);
             }
-        }
+        };
 
-        init();
+        initWallet();
     }, [connectWallet, dispatch, connectedWallet]);
 
+    /**
+     * handles network id
+     */
     useEffect(() => {
         const initNetworkId = async () => {
             const networkIdResponse = await getNetworkId();
             dispatch(setNetworkId(networkIdResponse.network));
         };
 
-        const newTheme = localStorage.getItem("theme");
-        if (newTheme) {
-            setTheme(newTheme);
-        }
         initNetworkId();
     }, [dispatch]);
 
@@ -147,11 +135,7 @@ function App() {
             <ModalComponent />
             <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
             <div className="body">
-                <Header
-                    connectWallet={connectWallet}
-                    toggleMenu={toggleMenu}
-                    toggleTheme={toggleTheme}
-                />
+                <Header connectWallet={connectWallet} toggleMenu={toggleMenu} />
                 <Page />
             </div>
         </div>

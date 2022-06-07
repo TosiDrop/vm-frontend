@@ -17,7 +17,7 @@ const initialState: WalletState = {
     api: undefined,
     name: "",
     networkId: undefined,
-    isWrongNetwork: true,
+    isWrongNetwork: false,
 };
 
 export const walletSlice = createSlice({

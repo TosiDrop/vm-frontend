@@ -4,13 +4,15 @@ import WalletSelectorComponent from "../components/wallet-selector/wallet-select
 import { WalletKeys } from "../services/connectors/wallet.connector";
 import logo from "../assets/tosidrop_logo.png";
 import "./header.layout.scss";
+import { useDispatch } from "react-redux";
+import { toggleTheme } from "src/reducers/globalSlice";
 
 interface Params {
     toggleMenu: () => void;
-    toggleTheme: () => void;
     connectWallet: (walletKey?: WalletKeys) => void;
 }
-function Header({ toggleMenu, toggleTheme, connectWallet }: Params) {
+function Header({ toggleMenu, connectWallet }: Params) {
+    const dispatch = useDispatch();
     return (
         <div className="header">
             <div className="header-title">
@@ -25,7 +27,7 @@ function Header({ toggleMenu, toggleTheme, connectWallet }: Params) {
                 <div className="last">
                     <button
                         className="light-button button"
-                        onClick={toggleTheme}
+                        onClick={() => dispatch(toggleTheme())}
                     >
                         <FontAwesomeIcon icon={faSun} />
                     </button>
