@@ -34,7 +34,8 @@ function Menu({ showMenu, setShowMenu }: Params) {
                                 <Link
                                     to="/"
                                     className={
-                                        location === "/" || location === "/claim/"
+                                        location === "/" ||
+                                        location === "/claim/"
                                             ? "menu-list-selected"
                                             : ""
                                     }

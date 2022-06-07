@@ -28,14 +28,13 @@
             background: var(--gradient-button);
             color: var(--font-highlight);
         }
-        
+
         &:not(.is-selected):hover {
             background: var(--primary-hover);
             color: var(--font-highlight);
         }
     }
 }
-
 
 @media screen and (max-width: 1024px) {
     .type-buttons {

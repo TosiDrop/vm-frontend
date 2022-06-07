@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TransactionDetail from "../TransactionDetail";
 import { formatTokens } from "src/services/utils.services";
 import { GetCustomRewards } from "src/entities/vm.entities";
-import WalletApi from "src/services/connectors/wallet.connector";
 import SendAdaInfo from "../SendAdaInfo";
 import TransactionStatus from "../TransactionStatus";
 import { TransactionStatusDetail } from "../../DepositInfoPage";
@@ -14,7 +13,6 @@ const CLASS = "deposit-info";
 interface Params {
     txDetail: GetCustomRewards | undefined;
     checkedCount: number;
-    connectedWallet: WalletApi | undefined;
     wrongNetwork: boolean | undefined;
     transactionId: string;
     transactionStatus: TransactionStatusDetail;
@@ -25,7 +23,6 @@ interface Params {
 const DepositInfo = ({
     txDetail,
     checkedCount,
-    connectedWallet,
     wrongNetwork,
     transactionId,
     transactionStatus,
@@ -64,7 +61,6 @@ const DepositInfo = ({
             {transactionStatus === TransactionStatusDetail.waiting ? (
                 <SendAdaInfo
                     txDetail={txDetail}
-                    connectedWallet={connectedWallet}
                     wrongNetwork={wrongNetwork}
                     setTransactionId={setTransactionId}
                     setTransactionStatus={setTransactionStatus}

@@ -32,11 +32,11 @@ export interface Assets {
 }
 
 export interface ClaimableToken {
-    assetId: string,
-    ticker: string,
-    logo: string,
-    decimals: number,
-    amount: number
+    assetId: string;
+    ticker: string;
+    logo: string;
+    decimals: number;
+    amount: number;
 }
 
 export interface GetTokens {
@@ -44,14 +44,14 @@ export interface GetTokens {
 }
 
 export interface TokenInfo {
-    id: string,
-    enabled: string,
-    name: string,
-    ticker: string,
-    logo: string,
-    decimals: number,
-    visible: string,
-    info: string
+    id: string;
+    enabled: string;
+    name: string;
+    ticker: string;
+    logo: string;
+    decimals: number;
+    visible: string;
+    info: string;
 }
 
 export interface GetPools {
@@ -59,14 +59,14 @@ export interface GetPools {
 }
 
 export interface PoolInfo {
-    id: string,
-    ticker: string,
-    name: string,
-    enabled: string,
-    logo: string,
-    last_delegator_refresh: string,
-    loading_addr: string,
-    description: string,
-    visible: string,
-    delegator_count: string
+    id: string;
+    ticker: string;
+    name: string;
+    enabled: string;
+    logo: string;
+    last_delegator_refresh: string;
+    loading_addr: string;
+    description: string;
+    visible: string;
+    delegator_count: string;
 }

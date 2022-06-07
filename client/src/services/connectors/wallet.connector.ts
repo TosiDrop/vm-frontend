@@ -67,10 +67,7 @@ class WalletApi {
     wallet: CIP0030Wallet | undefined;
     serialLib: any;
 
-    constructor(
-        serilizationLib: any,
-        walletApi: CIP0030Wallet | undefined
-    ) {
+    constructor(serilizationLib: any, walletApi: CIP0030Wallet | undefined) {
         this.wallet = walletApi;
         this.serialLib = serilizationLib;
     }

@@ -14,21 +14,10 @@ interface Params {
 function Page({ wrongNetwork }: Params) {
     return (
         <Routes>
-            <Route
-                path="/"
-                element={
-                    <Rewards
-                        wrongNetwork={wrongNetwork}
-                    />
-                }
-            />
+            <Route path="/" element={<Rewards wrongNetwork={wrongNetwork} />} />
             <Route
                 path="/claim"
-                element={
-                    <DepositInfoPage
-                        wrongNetwork={wrongNetwork}
-                    />
-                }
+                element={<DepositInfoPage wrongNetwork={wrongNetwork} />}
             />
             <Route path="/history" element={<RewardsHistory />} />
             <Route path="/dashboard" element={<Dashboard />} />

@@ -8,8 +8,6 @@ import { GetCustomRewards } from "src/entities/vm.entities";
 import { useEffect, useState } from "react";
 import DepositInfo from "../components/DepositInfo";
 import Loading from "src/pages/Loading";
-import { useSelector } from "react-redux";
-import { RootState } from "src/store";
 import "../index.scss";
 
 interface TransactionStatus {
@@ -37,7 +35,6 @@ export enum TransactionStatusDetail {
 }
 
 const DepositInfoPage = ({ wrongNetwork }: Params) => {
-    const connectedWallet = useSelector((state: RootState) => state.wallet.walletApi);
     const [searchParams] = useSearchParams();
     const selectedTokens = searchParams.get(QueryKey.selectedTokens);
     const stakeAddress = searchParams.get(QueryKey.stakeAddress);
@@ -119,7 +116,6 @@ const DepositInfoPage = ({ wrongNetwork }: Params) => {
             <DepositInfo
                 txDetail={txDetail}
                 checkedCount={checkedCount}
-                connectedWallet={connectedWallet}
                 wrongNetwork={wrongNetwork}
                 transactionId={transactionId}
                 transactionStatus={transactionStatus}

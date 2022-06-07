@@ -15,15 +15,15 @@ export interface AccountAddress {
 }
 
 export interface AccountPoolInfo {
-    delegated_pool: string
-    reserves: string
-    rewards: string
-    rewards_available: string
-    status: string
-    total_balance: string
-    treasury: string
-    utxo: string
-    withdrawals: string
+    delegated_pool: string;
+    reserves: string;
+    rewards: string;
+    rewards_available: string;
+    status: string;
+    total_balance: string;
+    treasury: string;
+    utxo: string;
+    withdrawals: string;
 }
 
 export interface AccountRewards {
@@ -179,9 +179,9 @@ export interface Put {
     tx_index: number;
     value: string;
     asset_list: {
-        policy_id: string,
-        asset_name: string,
-        quantity: string
+        policy_id: string;
+        asset_name: string;
+        quantity: string;
     }[];
 }
 

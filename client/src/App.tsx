@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { connectWallet as connectWalletRedux, setNetworkId as setNetworkIdRedux } from "src/reducers/walletSlice";
+import {
+    connectWallet as connectWalletRedux,
+    setNetworkId as setNetworkIdRedux,
+} from "src/reducers/walletSlice";
 import ModalComponent from "./components/modal/modal.component";
 import { ModalTypes, NetworkId } from "./entities/common.entities";
 import Header from "./layouts/header.layout";
@@ -24,7 +27,9 @@ export const Themes = {
 function App() {
     const dispatch = useDispatch();
 
-    const connectedWallet = useSelector((state: RootState) => state.wallet.walletApi);
+    const connectedWallet = useSelector(
+        (state: RootState) => state.wallet.walletApi
+    );
 
     const [showMenu, setShowMenu] = useState(false);
     const [theme, setTheme] = useState(Themes.dark);
@@ -79,7 +84,12 @@ function App() {
                                         walletKey
                                     );
                                 } else {
-                                    dispatch(showModal({ text: _api, type: ModalTypes.info }));
+                                    dispatch(
+                                        showModal({
+                                            text: _api,
+                                            type: ModalTypes.info,
+                                        })
+                                    );
                                 }
                             }
                         });
@@ -100,10 +110,7 @@ function App() {
         walletApi?: CIP0030Wallet
     ): Promise<WalletApi> => {
         const S = await Cardano();
-        const api = new WalletApi(
-            S,
-            walletApi
-        );
+        const api = new WalletApi(S, walletApi);
         return api;
     };
 
@@ -124,7 +131,7 @@ function App() {
     useEffect(() => {
         const initNetworkId = async () => {
             const networkIdResponse = await getNetworkId();
-            dispatch(setNetworkIdRedux(networkIdResponse.network))
+            dispatch(setNetworkIdRedux(networkIdResponse.network));
             setNetworkId(networkIdResponse.network);
         };
 
@@ -141,15 +148,12 @@ function App() {
             <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
             <div className="body">
                 <Header
-                    connectedWallet={connectedWallet}
                     connectWallet={connectWallet}
                     toggleMenu={toggleMenu}
                     toggleTheme={toggleTheme}
                     wrongNetwork={wrongNetwork}
                 />
-                <Page
-                    wrongNetwork={wrongNetwork}
-                />
+                <Page wrongNetwork={wrongNetwork} />
             </div>
         </div>
     );

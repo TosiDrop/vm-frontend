@@ -1,21 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import WalletApi, {
-    WalletKeys,
-} from "../../../services/connectors/wallet.connector";
+import { WalletKeys } from "../../../services/connectors/wallet.connector";
 import "./wallet-selector-modal.component.scss";
 
 export interface ModalComponentProps {
     modalVisible: boolean;
     setModalVisible: any;
-    connectedWallet: WalletApi | undefined;
     connectWallet: (walletKey?: WalletKeys) => void;
 }
 
 function WalletSelectorModalComponent({
     modalVisible,
     setModalVisible,
-    connectedWallet,
     connectWallet,
 }: ModalComponentProps) {
     const hideModal = () => {
@@ -40,7 +36,9 @@ function WalletSelectorModalComponent({
                                 className="button is-wallet-background is-small"
                                 onClick={hideModal}
                             >
-                                <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
+                                <FontAwesomeIcon
+                                    icon={faXmark}
+                                ></FontAwesomeIcon>
                             </button>
                         </div>
                     </div>
@@ -63,8 +61,12 @@ function WalletSelectorModalComponent({
                                             }
                                         >
                                             <p>
-                                                {window.cardano[key].name.charAt(0).toUpperCase() +
-                                                    window.cardano[key].name.slice(1)}
+                                                {window.cardano[key].name
+                                                    .charAt(0)
+                                                    .toUpperCase() +
+                                                    window.cardano[
+                                                        key
+                                                    ].name.slice(1)}
                                             </p>
                                             <img
                                                 src={window.cardano[key].icon}

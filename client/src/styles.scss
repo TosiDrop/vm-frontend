@@ -14,7 +14,10 @@
     margin: 0px;
 }
 
-html, body, #root, .body {
+html,
+body,
+#root,
+.body {
     width: 100vw;
     height: 100vh;
     margin: 0;
@@ -26,7 +29,7 @@ strong {
 }
 
 .body {
-    background: var(--body-background); 
+    background: var(--body-background);
     overflow-x: hidden;
     padding: 20px;
 }
@@ -47,7 +50,7 @@ strong {
         background: var(--gradient-button-hover-default);
         background: var(--gradient-button-hover);
     }
-    
+
     &:disabled {
         background: var(--gradient-button-disabled) !important;
         cursor: initial;
@@ -64,10 +67,10 @@ strong {
     color: var(--font-highlight);
     font-size: 15px;
     cursor: pointer;
-    -moz-transition: all .8s linear;
-    -o-transition: all .8s linear;
-    -webkit-transition: all .8s linear;
-    transition: all .8s linear;
+    -moz-transition: all 0.8s linear;
+    -o-transition: all 0.8s linear;
+    -webkit-transition: all 0.8s linear;
+    transition: all 0.8s linear;
 }
 
 .transparent-input {
@@ -81,10 +84,10 @@ strong {
 
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
-      -webkit-user-select: none; /* Safari */
-       -khtml-user-select: none; /* Konqueror HTML */
-         -moz-user-select: none; /* Old versions of Firefox */
-          -ms-user-select: none; /* Internet Explorer/Edge */
-              user-select: none; /* Non-prefixed version, currently
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
 }

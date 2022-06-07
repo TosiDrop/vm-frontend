@@ -2,7 +2,11 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, KeyboardEvent } from "react";
 import { GetRewards } from "../../entities/vm.entities";
-import { getCustomRewards, getRewards, getStakeKey } from "../../services/claim.services";
+import {
+    getCustomRewards,
+    getRewards,
+    getStakeKey,
+} from "../../services/claim.services";
 import { ModalTypes } from "../../entities/common.entities";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
@@ -19,7 +23,9 @@ interface Params {
 function Rewards({ wrongNetwork }: Params) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const connectedWallet = useSelector((state: RootState) => state.wallet.walletApi);
+    const connectedWallet = useSelector(
+        (state: RootState) => state.wallet.walletApi
+    );
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
     const [rewards, setRewards] = useState<GetRewards>();
@@ -107,7 +113,7 @@ function Rewards({ wrongNetwork }: Params) {
                  */
                 let address = await getStakeKey(searchAddress);
 
-                address = address.staking_address
+                address = address.staking_address;
 
                 setStakeAddress(address);
                 const rewards = await getRewards(address);
@@ -204,7 +210,9 @@ function Rewards({ wrongNetwork }: Params) {
                     <div className="pool-info">
                         <div className="staking-info">
                             Currently staking&nbsp;
-                            <strong>{rewards?.pool_info?.total_balance} ADA</strong>
+                            <strong>
+                                {rewards?.pool_info?.total_balance} ADA
+                            </strong>
                             &nbsp;with&nbsp;
                             <strong className="no-break">
                                 [{rewards?.pool_info?.delegated_pool_name}
