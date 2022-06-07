@@ -13,7 +13,6 @@ const CLASS = "deposit-info";
 interface Params {
     txDetail: GetCustomRewards | undefined;
     checkedCount: number;
-    wrongNetwork: boolean | undefined;
     transactionId: string;
     transactionStatus: TransactionStatusDetail;
     setTransactionId: Function;
@@ -23,7 +22,6 @@ interface Params {
 const DepositInfo = ({
     txDetail,
     checkedCount,
-    wrongNetwork,
     transactionId,
     transactionStatus,
     setTransactionId,
@@ -61,7 +59,6 @@ const DepositInfo = ({
             {transactionStatus === TransactionStatusDetail.waiting ? (
                 <SendAdaInfo
                     txDetail={txDetail}
-                    wrongNetwork={wrongNetwork}
                     setTransactionId={setTransactionId}
                     setTransactionStatus={setTransactionStatus}
                 />

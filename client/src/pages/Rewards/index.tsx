@@ -16,15 +16,15 @@ import ClaimableTokenBox from "./components/ClaimableTokenBox";
 import { useNavigate } from "react-router-dom";
 import "./index.scss";
 
-interface Params {
-    wrongNetwork: boolean | undefined;
-}
-
-function Rewards({ wrongNetwork }: Params) {
+function Rewards() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const connectedWallet = useSelector(
         (state: RootState) => state.wallet.walletApi
+    );
+
+    const isWrongNetwork = useSelector(
+        (state: RootState) => state.wallet.isWrongNetwork
     );
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
@@ -59,7 +59,7 @@ function Rewards({ wrongNetwork }: Params) {
 
     useEffect(() => {
         async function init() {
-            if (connectedWallet?.wallet?.api && !wrongNetwork) {
+            if (connectedWallet?.wallet?.api && !isWrongNetwork) {
                 setSearchAddress(await connectedWallet.getAddress());
                 setHideCheck(false);
                 setHideStakingInfo(true);
@@ -67,7 +67,7 @@ function Rewards({ wrongNetwork }: Params) {
         }
 
         init();
-    }, [connectedWallet?.wallet?.api, connectedWallet, wrongNetwork]);
+    }, [connectedWallet?.wallet?.api, connectedWallet, isWrongNetwork]);
 
     /**
      * select/unselect all tokens
@@ -252,7 +252,7 @@ function Rewards({ wrongNetwork }: Params) {
                             !hideStakingInfo ||
                             (typeof connectedWallet?.wallet?.api !==
                                 "undefined" &&
-                                !wrongNetwork)
+                                !isWrongNetwork)
                         }
                     ></input>
                     <div className="content-button">

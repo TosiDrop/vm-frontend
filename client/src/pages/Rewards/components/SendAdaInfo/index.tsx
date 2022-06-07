@@ -15,7 +15,6 @@ const CLASS = "send-ada-info";
 
 interface Params {
     txDetail: any;
-    wrongNetwork: boolean | undefined;
     setTransactionId: Function;
     setTransactionStatus: Function;
 }
@@ -29,13 +28,15 @@ enum TransactionStatusDetail {
 
 const SendAdaInfo = ({
     txDetail,
-    wrongNetwork,
     setTransactionId,
     setTransactionStatus,
 }: Params) => {
     const dispatch = useDispatch();
     const connectedWallet = useSelector(
         (state: RootState) => state.wallet.walletApi
+    );
+    const isWrongNetwork = useSelector(
+        (state: RootState) => state.wallet.isWrongNetwork
     );
     const [showToolTip, setShowToolTip] = useState(false);
     const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
@@ -65,7 +66,7 @@ const SendAdaInfo = ({
      * render button to send ada
      */
     const renderSendAdaButton = () => {
-        if (connectedWallet?.wallet?.api && !wrongNetwork) {
+        if (connectedWallet?.wallet?.api && !isWrongNetwork) {
             return (
                 <div className={`${CLASS}__row ${CLASS}__send-ada-btn`}>
                     <button className="tosi-button" onClick={sendADA}>

@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     connectWallet as connectWalletRedux,
-    setNetworkId as setNetworkIdRedux,
+    setIsWrongNetwork,
+    setNetworkId,
 } from "src/reducers/walletSlice";
 import ModalComponent from "./components/modal/modal.component";
 import { ModalTypes, NetworkId } from "./entities/common.entities";
@@ -31,10 +32,10 @@ function App() {
         (state: RootState) => state.wallet.walletApi
     );
 
+    const networkId = useSelector((state: RootState) => state.wallet.networkId);
+
     const [showMenu, setShowMenu] = useState(false);
     const [theme, setTheme] = useState(Themes.dark);
-    const [networkId, setNetworkId] = useState<NetworkId>();
-    const [wrongNetwork, setWrongNetwork] = useState<boolean>();
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
@@ -64,9 +65,9 @@ function App() {
                                         connectedWalletNetworkId.network ===
                                         networkId
                                     ) {
-                                        setWrongNetwork(false);
+                                        dispatch(setIsWrongNetwork(false));
                                     } else {
-                                        setWrongNetwork(true);
+                                        dispatch(setIsWrongNetwork(true));
                                     }
                                     const connectedWalletUpdate: CIP0030Wallet =
                                         {
@@ -98,8 +99,8 @@ function App() {
                 if (connectedWallet?.wallet?.api) {
                     const walletApi = await getWalletApi();
                     dispatch(connectWalletRedux(walletApi));
+                    dispatch(setIsWrongNetwork(false));
                     localStorage.setItem("wallet-provider", "");
-                    setWrongNetwork(false);
                 }
             }
         },
@@ -131,8 +132,7 @@ function App() {
     useEffect(() => {
         const initNetworkId = async () => {
             const networkIdResponse = await getNetworkId();
-            dispatch(setNetworkIdRedux(networkIdResponse.network));
-            setNetworkId(networkIdResponse.network);
+            dispatch(setNetworkId(networkIdResponse.network));
         };
 
         const newTheme = localStorage.getItem("theme");
@@ -151,9 +151,8 @@ function App() {
                     connectWallet={connectWallet}
                     toggleMenu={toggleMenu}
                     toggleTheme={toggleTheme}
-                    wrongNetwork={wrongNetwork}
                 />
-                <Page wrongNetwork={wrongNetwork} />
+                <Page />
             </div>
         </div>
     );

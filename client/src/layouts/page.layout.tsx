@@ -7,18 +7,11 @@ import Airdrop from "../pages/Airdrop";
 import DepositInfoPage from "src/pages/Rewards/DepositInfoPage";
 import "./page.layout.scss";
 
-interface Params {
-    wrongNetwork: boolean | undefined;
-}
-
-function Page({ wrongNetwork }: Params) {
+function Page() {
     return (
         <Routes>
-            <Route path="/" element={<Rewards wrongNetwork={wrongNetwork} />} />
-            <Route
-                path="/claim"
-                element={<DepositInfoPage wrongNetwork={wrongNetwork} />}
-            />
+            <Route path="/" element={<Rewards />} />
+            <Route path="/claim" element={<DepositInfoPage />} />
             <Route path="/history" element={<RewardsHistory />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/feedback" element={<Feedback />} />

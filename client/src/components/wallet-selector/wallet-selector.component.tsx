@@ -11,12 +11,14 @@ import "./wallet-selector.component.scss";
 
 interface Params {
     connectWallet: (walletKey?: WalletKeys) => void;
-    wrongNetwork: boolean | undefined;
 }
 
-function WalletSelectorComponent({ connectWallet, wrongNetwork }: Params) {
+function WalletSelectorComponent({ connectWallet }: Params) {
     const connectedWallet = useSelector(
         (state: RootState) => state.wallet.walletApi
+    );
+    const isWrongNetwork = useSelector(
+        (state: RootState) => state.wallet.isWrongNetwork
     );
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -103,7 +105,7 @@ function WalletSelectorComponent({ connectWallet, wrongNetwork }: Params) {
                 connectWallet={connectWallet}
             />
             <div className="wallet-selector">
-                {wrongNetwork ? (
+                {isWrongNetwork ? (
                     <WrongNetwork />
                 ) : connectedWallet?.wallet?.api ? (
                     <Connected />

@@ -9,6 +9,7 @@ interface WalletState {
     api: CIP0030API | undefined;
     name: string;
     networkId: NetworkId | undefined;
+    isWrongNetwork: boolean;
 }
 
 const initialState: WalletState = {
@@ -16,6 +17,7 @@ const initialState: WalletState = {
     api: undefined,
     name: "",
     networkId: undefined,
+    isWrongNetwork: true,
 };
 
 export const walletSlice = createSlice({
@@ -32,8 +34,12 @@ export const walletSlice = createSlice({
         setNetworkId: (state, action: PayloadAction<NetworkId>) => {
             state.networkId = action.payload;
         },
+        setIsWrongNetwork: (state, action: PayloadAction<boolean>) => {
+            state.isWrongNetwork = action.payload;
+        },
     },
 });
 
-export const { connectWallet, setNetworkId } = walletSlice.actions;
+export const { connectWallet, setNetworkId, setIsWrongNetwork } =
+    walletSlice.actions;
 export default walletSlice.reducer;

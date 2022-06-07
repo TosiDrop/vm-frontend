@@ -16,10 +16,6 @@ interface TransactionStatus {
     status: number;
 }
 
-interface Params {
-    wrongNetwork: boolean | undefined;
-}
-
 enum QueryKey {
     selectedTokens = "selectedTokens",
     stakeAddress = "stakeAddress",
@@ -34,7 +30,7 @@ export enum TransactionStatusDetail {
     success = 3,
 }
 
-const DepositInfoPage = ({ wrongNetwork }: Params) => {
+const DepositInfoPage = () => {
     const [searchParams] = useSearchParams();
     const selectedTokens = searchParams.get(QueryKey.selectedTokens);
     const stakeAddress = searchParams.get(QueryKey.stakeAddress);
@@ -116,7 +112,6 @@ const DepositInfoPage = ({ wrongNetwork }: Params) => {
             <DepositInfo
                 txDetail={txDetail}
                 checkedCount={checkedCount}
-                wrongNetwork={wrongNetwork}
                 transactionId={transactionId}
                 transactionStatus={transactionStatus}
                 setTransactionId={setTransactionId}

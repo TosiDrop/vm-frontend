@@ -9,14 +9,8 @@ interface Params {
     toggleMenu: () => void;
     toggleTheme: () => void;
     connectWallet: (walletKey?: WalletKeys) => void;
-    wrongNetwork: boolean | undefined;
 }
-function Header({
-    toggleMenu,
-    toggleTheme,
-    connectWallet,
-    wrongNetwork,
-}: Params) {
+function Header({ toggleMenu, toggleTheme, connectWallet }: Params) {
     return (
         <div className="header">
             <div className="header-title">
@@ -26,10 +20,7 @@ function Header({
                 <p className="title-text">TosiDrop</p>
                 <div className="header-filler"></div>
                 <div className="header-wallet-selector noselect">
-                    <WalletSelectorComponent
-                        connectWallet={connectWallet}
-                        wrongNetwork={wrongNetwork}
-                    />
+                    <WalletSelectorComponent connectWallet={connectWallet} />
                 </div>
                 <div className="last">
                     <button
