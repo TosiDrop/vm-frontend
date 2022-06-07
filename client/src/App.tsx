@@ -29,12 +29,6 @@ function App() {
     const networkId = useSelector((state: RootState) => state.wallet.networkId);
     const theme = useSelector((state: RootState) => state.global.theme);
 
-    const [showMenu, setShowMenu] = useState(false);
-
-    const toggleMenu = () => {
-        setShowMenu(!showMenu);
-    };
-
     const connectWallet = useCallback(
         async (walletKey?: WalletKeys) => {
             if (walletKey) {
@@ -133,9 +127,9 @@ function App() {
     return (
         <div className={theme}>
             <ModalComponent />
-            <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
+            <Menu />
             <div className="body">
-                <Header connectWallet={connectWallet} toggleMenu={toggleMenu} />
+                <Header connectWallet={connectWallet} />
                 <Page />
             </div>
         </div>

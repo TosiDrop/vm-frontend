@@ -3,12 +3,14 @@ import { Themes } from "src/entities/common.entities";
 
 interface ModalState {
     theme: Themes;
+    showMenu: boolean;
 }
 
 const initialState: ModalState = {
     theme: localStorage.getItem("theme")
         ? (localStorage.getItem("theme") as Themes)
         : Themes.dark,
+    showMenu: false,
 };
 
 export const globalSlice = createSlice({
@@ -25,8 +27,15 @@ export const globalSlice = createSlice({
             state.theme = action.payload;
             localStorage.setItem("theme", action.payload);
         },
+        toggleMenu: (state) => {
+            state.showMenu = !state.showMenu;
+        },
+        setShowMenu: (state, action: PayloadAction<boolean>) => {
+            state.showMenu = action.payload;
+        },
     },
 });
 
-export const { toggleTheme, setTheme } = globalSlice.actions;
+export const { toggleTheme, setTheme, toggleMenu, setShowMenu } =
+    globalSlice.actions;
 export default globalSlice.reducer;

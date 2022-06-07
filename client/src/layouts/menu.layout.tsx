@@ -12,15 +12,15 @@ import {
     faTelegram,
 } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
+import { RootState } from "src/store";
 import "./menu.layout.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { setShowMenu } from "src/reducers/globalSlice";
 
-interface Params {
-    showMenu: boolean;
-    setShowMenu: (showMenu: boolean) => void;
-}
-
-function Menu({ showMenu, setShowMenu }: Params) {
+function Menu() {
     const location = useLocation().pathname;
+    const dispatch = useDispatch();
+    const showMenu = useSelector((state: RootState) => state.global.showMenu);
 
     return (
         <>
@@ -126,7 +126,7 @@ function Menu({ showMenu, setShowMenu }: Params) {
             </div>
             <div
                 className={"gray-layer" + (!showMenu ? " layer-hidden" : "")}
-                onClick={() => setShowMenu(false)}
+                onClick={() => dispatch(setShowMenu(false))}
             ></div>
         </>
     );

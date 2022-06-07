@@ -3,15 +3,14 @@ import { faBars, faSun } from "@fortawesome/free-solid-svg-icons";
 import WalletSelectorComponent from "../components/wallet-selector/wallet-selector.component";
 import { WalletKeys } from "../services/connectors/wallet.connector";
 import logo from "../assets/tosidrop_logo.png";
-import "./header.layout.scss";
 import { useDispatch } from "react-redux";
-import { toggleTheme } from "src/reducers/globalSlice";
+import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
+import "./header.layout.scss";
 
 interface Params {
-    toggleMenu: () => void;
     connectWallet: (walletKey?: WalletKeys) => void;
 }
-function Header({ toggleMenu, connectWallet }: Params) {
+function Header({ connectWallet }: Params) {
     const dispatch = useDispatch();
     return (
         <div className="header">
@@ -31,7 +30,10 @@ function Header({ toggleMenu, connectWallet }: Params) {
                     >
                         <FontAwesomeIcon icon={faSun} />
                     </button>
-                    <button className="menu-button button" onClick={toggleMenu}>
+                    <button
+                        className="menu-button button"
+                        onClick={() => dispatch(toggleMenu())}
+                    >
                         <FontAwesomeIcon icon={faBars} />
                     </button>
                 </div>
