@@ -1,6 +1,8 @@
 FROM node:16 AS base
 
 FROM base AS builder
+WORKDIR /code
+COPY .npmrc .
 WORKDIR /code/client
 COPY client .
 RUN npm run build
