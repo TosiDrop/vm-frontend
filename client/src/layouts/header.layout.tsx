@@ -1,17 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSun } from "@fortawesome/free-solid-svg-icons";
 import WalletSelectorComponent from "../components/wallet-selector/wallet-selector.component";
-import { WalletKeys } from "../services/connectors/wallet.connector";
 import logo from "../assets/tosidrop_logo.png";
 import { useDispatch } from "react-redux";
 import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
+import useWallet from "src/hooks/useWallet";
 import "./header.layout.scss";
 
-interface Params {
-    connectWallet: (walletKey?: WalletKeys) => void;
-}
-function Header({ connectWallet }: Params) {
+function Header() {
     const dispatch = useDispatch();
+    const { connectWallet } = useWallet();
+
     return (
         <div className="header">
             <div className="header-title">
