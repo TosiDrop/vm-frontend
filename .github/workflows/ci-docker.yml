@@ -34,4 +34,6 @@ jobs:
           push: false
           tags: tosidrop:latest
       - name: run
-        run: docker run --read-only tosidrop:latest
+        run: docker run --detach --read-only -p3000:3000 tosidrop:latest
+      - name: ping health check
+        run: sleep 5; curl -v http://localhost:3000/health
