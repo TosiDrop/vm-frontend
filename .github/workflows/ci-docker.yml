@@ -29,6 +29,6 @@ jobs:
         with:
           context: .
           push: false
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          tags: tosidrop:latest
       - name: run
-        run: docker run --read-only ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        run: docker run --read-only tosidrop:latest
