@@ -3,7 +3,7 @@ import { TokenAddress, shortenAddress } from "./utils";
 import useToken from "./hooks/useToken";
 import Select from "./components/Select";
 import TransactionBar from "./components/TransactionBar";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import ComingSoon from "../ComingSoon";
 import Spinner from "../../components/Spinner";
@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { WalletKeys } from "src/services/connectors/wallet.connector";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
+import Loading from "../Loading";
 import "./index.scss";
 
 const CLASS = "airdrop-page";
@@ -35,30 +36,32 @@ const AirdropPage = () => {
     const { fileRef, parseFile } = useFile({ handleAddressList });
     const walletName = useSelector((state: RootState) => state.wallet.name);
     const [enabled, setEnabled] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         axios.get("/features").then((res) => {
             setEnabled(res.data.airdrop_enabled);
+            setInitialLoading(false);
         });
     }, []);
 
     const getBtnText = () => {
-        if (!validated) {
-            if (loading) {
-                return "Validating Airdrop";
-            } else {
-                return "Validate Airdrop";
-            }
-        } else {
-            if (loading) {
+        switch (true) {
+            case validated && loading:
                 return "Sending Airdrop";
-            } else {
+            case validated && !loading:
                 return "Send Airdrop";
-            }
+            case !validated && loading:
+                return "Validating Airdrop";
+            case !validated && !loading:
+            default:
+                return "Validate Airdrop";
         }
     };
 
-    return enabled ? (
+    return initialLoading ? (
+        <Loading></Loading>
+    ) : enabled ? (
         <div className={CLASS}>
             <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
             {walletName.toLowerCase() !== WalletKeys.nami.toLowerCase() ? (
