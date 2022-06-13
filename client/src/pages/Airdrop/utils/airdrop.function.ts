@@ -336,6 +336,8 @@ const getAirdropErrorMsg = (code: string, additionalInfo?: any) => {
     switch (code) {
         case ERROR.NOT_ENOUGH_ADA:
             return `You don't have enough ADA in your wallet to execute this airdrop. Please prepare at least ${additionalInfo} ADA (1.5 ADA times the number of address) to execute the airdrop.`;
+        case ERROR.NOT_ENOUGH_TOKENS:
+            return `You don't have enough token in your wallet to execute this airdrop. Please prepare the correct total amount of token.`;
         default:
             return "Something is wrong :(";
     }
