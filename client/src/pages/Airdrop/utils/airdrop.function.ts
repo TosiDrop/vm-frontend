@@ -322,6 +322,10 @@ export const validateAirdropRequest = async (
             },
         } as AirdropRequest;
     } catch (e: any) {
+        /**
+         * temporary debug
+         */
+        console.log(e);
         return {
             valid: false,
             errorMessage: getAirdropErrorMsg(

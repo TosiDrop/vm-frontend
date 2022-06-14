@@ -109,6 +109,10 @@ const useToken = () => {
                     );
                 }
             } catch (e) {
+                /**
+                 * temporary debug
+                 */
+                console.log(e);
                 dispatch(
                     showModal({
                         text: "Airdrop failed :(",
