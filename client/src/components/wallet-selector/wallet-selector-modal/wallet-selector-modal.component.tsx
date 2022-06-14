@@ -6,12 +6,14 @@ import "./wallet-selector-modal.component.scss";
 export interface ModalComponentProps {
     modalVisible: boolean;
     setModalVisible: any;
+    visibilityRef: any;
     connectWallet: (walletKey?: WalletKeys) => void;
 }
 
 function WalletSelectorModalComponent({
     modalVisible,
     setModalVisible,
+    visibilityRef,
     connectWallet,
 }: ModalComponentProps) {
     const hideModal = () => {
@@ -26,7 +28,7 @@ function WalletSelectorModalComponent({
         >
             <div className="modal-background"></div>
             <div className="modal-content">
-                <div className="box">
+                <div className="box" ref={visibilityRef}>
                     <div className="wallet-modal-head">
                         <div className="wallet-text-content">
                             Connect wallet

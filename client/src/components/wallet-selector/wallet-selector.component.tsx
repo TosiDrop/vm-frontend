@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Spinner from "src/components/Spinner";
+import useComponentVisible from "src/hooks/useComponentVisible";
 import { RootState } from "src/store";
 import { WalletKeys } from "../../services/connectors/wallet.connector";
 import { abbreviateAddress } from "../../services/utils.services";
@@ -24,18 +25,18 @@ function WalletSelectorComponent({ connectWallet }: Params) {
         (state: RootState) => state.wallet.networkId
     );
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [walletMenuVisible, setWalletMenuVisible] = useState(false);
+    const modalMenu = useComponentVisible(false);
+    const walletMenu = useComponentVisible(false);
     const [walletAddress, setWalletAddress] = useState("");
     const [walletIcon, setWalletIcon] = useState("");
 
     const disconnectWallet = () => {
-        setWalletMenuVisible(false);
+        walletMenu.setVisible(false);
         connectWallet();
     };
 
     const toggleWalletMenuVisible = () => {
-        setWalletMenuVisible(!walletMenuVisible);
+        walletMenu.setVisible(!walletMenu.visible);
     };
 
     useEffect(() => {
@@ -47,11 +48,11 @@ function WalletSelectorComponent({ connectWallet }: Params) {
                     );
                     setWalletAddress(addr);
                     setWalletIcon(connectedWallet.wallet.icon);
-                    setModalVisible(false);
+                    modalMenu.setVisible(false);
                 }
             } else {
                 setWalletAddress("");
-                setModalVisible(false);
+                modalMenu.setVisible(false);
             }
         }
 
@@ -85,7 +86,7 @@ function WalletSelectorComponent({ connectWallet }: Params) {
     const NotConnected = () => (
         <div
             className="wallet-not-connected"
-            onClick={() => setModalVisible(true)}
+            onClick={() => modalMenu.setVisible(true)}
         >
             <p>Connect</p>
         </div>
@@ -103,8 +104,9 @@ function WalletSelectorComponent({ connectWallet }: Params) {
     return (
         <div className="wallet-selector-container">
             <WalletSelectorModalComponent
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
+                visibilityRef={modalMenu.ref}
+                modalVisible={modalMenu.visible}
+                setModalVisible={modalMenu.setVisible}
                 connectWallet={connectWallet}
             />
             <div className="wallet-selector">
@@ -117,9 +119,10 @@ function WalletSelectorComponent({ connectWallet }: Params) {
                 )}
             </div>
             <div
+                ref={walletMenu.ref}
                 className={
                     "wallet-menu" +
-                    (connectedWallet?.wallet?.api && walletMenuVisible
+                    (connectedWallet?.wallet?.api && walletMenu.visible
                         ? ""
                         : " hidden")
                 }
