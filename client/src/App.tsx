@@ -4,7 +4,7 @@ import {
     connectWallet as connectWalletRedux,
     setNetworkId,
 } from "src/reducers/walletSlice";
-import ModalComponent from "./components/modal/modal.component";
+import Modal from "src/components/Modal";
 import Header from "./layouts/header.layout";
 import Menu from "./layouts/menu.layout";
 import Page from "./layouts/page.layout";
@@ -50,7 +50,7 @@ function App() {
 
     return (
         <div className={theme}>
-            <ModalComponent />
+            <Modal />
             <Menu />
             <div className="body">
                 <Header />

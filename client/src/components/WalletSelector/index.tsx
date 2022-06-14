@@ -7,23 +7,21 @@ import useComponentVisible from "src/hooks/useComponentVisible";
 import { RootState } from "src/store";
 import { WalletKeys } from "../../services/connectors/wallet.connector";
 import { abbreviateAddress } from "../../services/utils.services";
-import WalletSelectorModalComponent from "./wallet-selector-modal/wallet-selector-modal.component";
-import "./wallet-selector.component.scss";
+import WalletSelectorModal from "./WalletSelectorModal";
+import "./index.scss";
 
-interface Params {
+interface Props {
     connectWallet: (walletKey?: WalletKeys) => void;
 }
 
-function WalletSelectorComponent({ connectWallet }: Params) {
+function WalletSelector({ connectWallet }: Props) {
     const connectedWallet = useSelector(
         (state: RootState) => state.wallet.walletApi
     );
     const isWrongNetwork = useSelector(
         (state: RootState) => state.wallet.isWrongNetwork
     );
-    const networkId = useSelector(
-        (state: RootState) => state.wallet.networkId
-    );
+    const networkId = useSelector((state: RootState) => state.wallet.networkId);
 
     const modalMenu = useComponentVisible(false);
     const walletMenu = useComponentVisible(false);
@@ -72,7 +70,10 @@ function WalletSelectorComponent({ connectWallet }: Params) {
                             className="wallet-icon"
                             alt="wallet icon"
                         ></img>
-                        <p className="wallet-addr">{networkId === 0 ? "(testnet) " : ""}{walletAddress}</p>
+                        <p className="wallet-addr">
+                            {networkId === 0 ? "(testnet) " : ""}
+                            {walletAddress}
+                        </p>
                     </>
                 ) : (
                     <div className="wallet-info">
@@ -103,7 +104,7 @@ function WalletSelectorComponent({ connectWallet }: Params) {
 
     return (
         <div className="wallet-selector-container">
-            <WalletSelectorModalComponent
+            <WalletSelectorModal
                 visibilityRef={modalMenu.ref}
                 modalVisible={modalMenu.visible}
                 setModalVisible={modalMenu.setVisible}
@@ -136,4 +137,4 @@ function WalletSelectorComponent({ connectWallet }: Params) {
     );
 }
 
-export default WalletSelectorComponent;
+export default WalletSelector;

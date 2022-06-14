@@ -1,21 +1,21 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { WalletKeys } from "../../../services/connectors/wallet.connector";
-import "./wallet-selector-modal.component.scss";
+import "./index.scss";
 
-export interface ModalComponentProps {
+export interface Props {
     modalVisible: boolean;
     setModalVisible: any;
     visibilityRef: any;
     connectWallet: (walletKey?: WalletKeys) => void;
 }
 
-function WalletSelectorModalComponent({
+function WalletSelectorModal({
     modalVisible,
     setModalVisible,
     visibilityRef,
     connectWallet,
-}: ModalComponentProps) {
+}: Props) {
     const hideModal = () => {
         setModalVisible(false);
     };
@@ -95,4 +95,4 @@ function WalletSelectorModalComponent({
     );
 }
 
-export default WalletSelectorModalComponent;
+export default WalletSelectorModal;
