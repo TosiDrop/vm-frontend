@@ -36,6 +36,7 @@
                 border-radius: 7px;
                 border-bottom: 1px solid var(--font-inactive-color);
                 color: var(--font-highlight);
+                transition: 0.25s;
 
                 &:first-child {
                     border-radius: 7px 7px 0px 0px;
@@ -49,7 +50,6 @@
                 &:hover {
                     background-color: var(--tooltip-background);
                     color: var(--tooltip-font-color);
-                    font-weight: 600;
                 }
 
                 &.hidden {
@@ -62,8 +62,7 @@
                 }
 
                 img {
-                    width: 40px;
-                    height: 40px;
+                    height: 100%;
                 }
             }
         }

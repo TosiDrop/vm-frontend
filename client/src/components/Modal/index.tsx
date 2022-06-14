@@ -8,9 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { hideModal } from "src/reducers/modalSlice";
 import { RootState } from "src/store";
 import { ModalTypes } from "src/entities/common.entities";
-import "./modal.component.scss";
+import "./index.scss";
 
-function ModalComponent() {
+function Modal() {
     const dispatch = useDispatch();
     const modalVisible = useSelector((state: RootState) => state.modal.show);
     const modalText = useSelector((state: RootState) => state.modal.text);
@@ -63,4 +63,4 @@ function ModalComponent() {
     );
 }
 
-export default ModalComponent;
+export default Modal;
