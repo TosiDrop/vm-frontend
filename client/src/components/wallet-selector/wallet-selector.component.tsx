@@ -20,6 +20,9 @@ function WalletSelectorComponent({ connectWallet }: Params) {
     const isWrongNetwork = useSelector(
         (state: RootState) => state.wallet.isWrongNetwork
     );
+    const networkId = useSelector(
+        (state: RootState) => state.wallet.networkId
+    );
 
     const [modalVisible, setModalVisible] = useState(false);
     const [walletMenuVisible, setWalletMenuVisible] = useState(false);
@@ -68,7 +71,7 @@ function WalletSelectorComponent({ connectWallet }: Params) {
                             className="wallet-icon"
                             alt="wallet icon"
                         ></img>
-                        <p className="wallet-addr">{walletAddress}</p>
+                        <p className="wallet-addr">{networkId === 0 ? "(testnet) " : ""}{walletAddress}</p>
                     </>
                 ) : (
                     <div className="wallet-info">
