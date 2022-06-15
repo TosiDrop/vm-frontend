@@ -1,50 +1,50 @@
 .blockchain-selector {
-  padding: 0px 15px;
-  border-radius: 4px;
-  height: 100%;
-  margin-right: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-
-  & > img {
-    margin-right: 10px;
-  }
-
-  img {
-    height: 20px;
-  }
-
-  &__select {
-    position: absolute;
-    top: calc(100% + 10px);
-    width: 100%;
-    &.visible {
-      visibility: visible;
-    }
-    &.hidden {
-      visibility: hidden;
-    }
-  }
-
-  &__option {
-    padding: 0 15px;
-    background: var(--primary);
-    height: 40px;
-    width: 100%;
+    padding: 0px 15px;
     border-radius: 4px;
+    height: 100%;
+    margin-right: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+    cursor: pointer;
+    position: relative;
+
+    & > img {
+        margin-right: 10px;
+    }
+
+    img {
+        height: 20px;
+    }
+
+    &__select {
+        position: absolute;
+        top: calc(100% + 10px);
+        width: 100%;
+        &.visible {
+            visibility: visible;
+        }
+        &.hidden {
+            visibility: hidden;
+        }
+    }
+
+    &__option {
+        padding: 0 15px;
+        background: var(--primary);
+        height: 40px;
+        width: 100%;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .cardano {
-  background: var(--cardano-bg);
+    background: var(--cardano-bg);
 }
 
 .ergo {
-  background: var(--ergo-bg);
+    background: var(--ergo-bg);
 }
