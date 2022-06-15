@@ -120,7 +120,10 @@ function Rewards() {
 
                 if (
                     rewards &&
-                    Object.keys(rewards.consolidated_promises).length
+                    (
+                        Object.keys(rewards.consolidated_promises).length ||
+                        Object.keys(rewards.consolidated_rewards).length
+                    )
                 ) {
                     setRewards(rewards);
                     setRewardsLoader(false);
