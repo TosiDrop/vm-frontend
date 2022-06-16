@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Themes } from "src/entities/common.entities";
+import { Themes, Blockchain } from "src/entities/common.entities";
 
 interface ModalState {
     theme: Themes;
     showMenu: boolean;
+    blockchain: Blockchain;
 }
 
 const initialState: ModalState = {
@@ -11,6 +12,7 @@ const initialState: ModalState = {
         ? (localStorage.getItem("theme") as Themes)
         : Themes.dark,
     showMenu: false,
+    blockchain: Blockchain.cardano,
 };
 
 export const globalSlice = createSlice({
@@ -33,9 +35,12 @@ export const globalSlice = createSlice({
         setShowMenu: (state, action: PayloadAction<boolean>) => {
             state.showMenu = action.payload;
         },
+        setBlockchain: (state, action: PayloadAction<Blockchain>) => {
+            state.blockchain = action.payload;
+        },
     },
 });
 
-export const { toggleTheme, setTheme, toggleMenu, setShowMenu } =
+export const { toggleTheme, setTheme, toggleMenu, setShowMenu, setBlockchain } =
     globalSlice.actions;
 export default globalSlice.reducer;

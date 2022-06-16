@@ -82,3 +82,8 @@ export enum Themes {
     light = "theme-light",
     dark = "theme-dark",
 }
+
+export enum Blockchain {
+    cardano = "cardano",
+    ergo = "ergo",
+}

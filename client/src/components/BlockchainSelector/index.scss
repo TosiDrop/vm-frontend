@@ -20,7 +20,8 @@
     &__select {
         position: absolute;
         top: calc(100% + 10px);
-        width: 100%;
+        right: 0;
+        width: 150px;
         &.visible {
             visibility: visible;
         }

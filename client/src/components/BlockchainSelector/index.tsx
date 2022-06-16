@@ -1,5 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import { Blockchain } from "src/entities/common.entities";
+import { RootState } from "src/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setBlockchain } from "src/reducers/globalSlice";
 import CardanoLogo from "src/assets/cardano-logo.png";
 import ErgoLogo from "src/assets/ergo-logo.png";
 import useComponentVisible from "src/hooks/useComponentVisible";
@@ -9,34 +13,76 @@ const CLASS = "blockchain-selector";
 
 const BlockchainSelector = () => {
     const { ref, visible, setVisible } = useComponentVisible(false);
+    const dispatch = useDispatch(); 
 
-    const handleClick = () => {
-        setVisible(!visible);
+    const blockchain = useSelector(
+        (state: RootState) => state.global.blockchain
+    );
+
+    const CurrentBlockchain = () => {
+        switch (blockchain) {
+            case Blockchain.ergo:
+                return (
+                    <>
+                        <img src={ErgoLogo} alt="ergo logo"></img>
+                        <FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>
+                    </>
+                );
+            case Blockchain.cardano:
+            default:
+                return (
+                    <>
+                        <img src={CardanoLogo} alt="cardano logo"></img>
+                        <FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>
+                    </>
+                );
+        }
     };
 
-    const switchBlockchain = (blockchain: string) => {};
+    const BlockchainSwitch = () => {
+        switch (blockchain) {
+            case Blockchain.ergo:
+                return (
+                    <div
+                        className={`${CLASS}__select ${
+                            visible ? "visible" : "hidden"
+                        }`}
+                    >
+                        <div
+                            className={`${CLASS}__option cardano`}
+                            onClick={() => dispatch(setBlockchain(Blockchain.cardano))}
+                        >
+                            <img src={CardanoLogo} alt="cardano logo"></img>
+                        </div>
+                    </div>
+                );
+            case Blockchain.cardano:
+            default:
+                return (
+                    <div
+                        className={`${CLASS}__select ${
+                            visible ? "visible" : "hidden"
+                        }`}
+                    >
+                        <div
+                            className={`${CLASS}__option ergo`}
+                            onClick={() => dispatch(setBlockchain(Blockchain.ergo))}
+                        >
+                            <img src={ErgoLogo} alt="ergo logo"></img>
+                        </div>
+                    </div>
+                );
+        }
+    };
 
     return (
         <div
-            className={`${CLASS} ${"cardano"}`}
-            onClick={() => handleClick()}
+            className={`${CLASS} ${blockchain}`}
+            onClick={() => setVisible(!visible)}
             ref={ref}
         >
-            <img src={CardanoLogo}></img>
-            <FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>
-            <div
-                className={`${CLASS}__select ${visible ? "visible" : "hidden"}`}
-            >
-                {/* <div className={`${CLASS}__option cardano` onClick={() => switchBlockchain('cardano')}}>
-          <img src={CardanoLogo}></img>
-        </div> */}
-                <div
-                    className={`${CLASS}__option ergo`}
-                    onClick={() => switchBlockchain("ergo")}
-                >
-                    <img src={ErgoLogo}></img>
-                </div>
-            </div>
+            <CurrentBlockchain></CurrentBlockchain>
+            <BlockchainSwitch></BlockchainSwitch>
         </div>
     );
 };
