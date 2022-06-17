@@ -65,8 +65,9 @@ const BlockchainSelector = () => {
                         }`}
                     >
                         <div
-                            className={`${CLASS}__option ergo`}
-                            onClick={() => dispatch(setBlockchain(Blockchain.ergo))}
+                            className={`${CLASS}__option ergo disabled`}
+                            // onClick={() => dispatch(setBlockchain(Blockchain.ergo))}
+                            onClick={() => {}}
                         >
                             <img src={ErgoLogo} alt="ergo logo"></img>
                         </div>
