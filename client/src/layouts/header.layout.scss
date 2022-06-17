@@ -5,6 +5,7 @@ $slide-bg: #030b13;
 .header {
     display: flex;
     align-items: center;
+    height: 40px;
 
     .header-title {
         font-size: 1.8rem;
@@ -12,6 +13,7 @@ $slide-bg: #030b13;
         color: white;
         display: flex;
         min-width: 360px;
+        height: 100%;
         flex: 1;
         align-items: center;
 
@@ -42,6 +44,7 @@ $slide-bg: #030b13;
 
     .header-wallet-selector {
         margin-right: 10px;
+        height: 100%;
     }
 
     .last {
