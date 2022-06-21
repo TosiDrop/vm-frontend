@@ -150,10 +150,14 @@ app.get("/healthz", async (req: any, res: any) => {
         const authResponse = await getFromVM("is_authenticated");
         res.send(authResponse);
       } else {
-        res.send({ error: "PSK invalid" });
+        res.status(500).json({
+          error: "PSK invalid",
+        });
       }
     } else {
-      res.send({ error: "PSK missing" });
+      res.status(500).json({
+        error: "PSK missing",
+      });
     }
   } else {
     res.status(200).json({
