@@ -11,6 +11,15 @@
         justify-content: center;
     }
 
+    &__qr {
+        .qr-address {
+            padding: 15px;
+            border-radius: 4px;
+            background-color: white;
+            height: 210px;
+        }
+    }
+
     &__send-ada-btn {
         .tosi-button {
             display: flex;
