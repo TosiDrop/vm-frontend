@@ -88,77 +88,13 @@ $fa-twitter: #55acee;
     display: none;
 }
 
+/*
+ * use mobile menu 
+ * for <1024px screen
+ */
+
 @media screen and (max-width: 1024px) {
     .menu-container {
-        padding: 0;
-        width: 280px;
-        height: 100vh;
-        background-color: var(--primary);
-        top: 0;
-        left: 0;
-        z-index: 2;
-
-        &.menu-hidden {
-            display: none;
-        }
-
-        .menu {
-            height: 100%;
-
-            .menu-content {
-                .menu-type-buttons {
-                    display: flex;
-                    justify-content: center;
-                }
-
-                border-radius: 0;
-                display: flex;
-                flex-direction: column;
-            }
-        }
-
-        .menu-list {
-            display: flex;
-            list-style-type: none;
-            margin: 0;
-            overflow: hidden;
-            flex-direction: column;
-            gap: 10px;
-            padding: 30px 0;
-
-            li {
-                flex: 1;
-                text-align: left;
-
-                a {
-                    display: inline-flex;
-                    align-items: center;
-                    height: 20px !important;
-                }
-            }
-
-            hr {
-                display: none;
-            }
-        }
-
-        .menu-filler {
-            display: flex !important;
-            flex: 1;
-        }
-    }
-
-    .gray-layer {
-        display: block;
-        position: fixed;
-        width: 100vw;
-        height: 100vh;
-        background-color: gray;
-        opacity: 0.5;
-        z-index: 1;
-
-        &.layer-hidden {
-            display: none;
-        }
+        visibility: hidden;
     }
 }
