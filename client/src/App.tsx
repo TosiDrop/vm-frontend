@@ -12,6 +12,7 @@ import { RootState } from "src/store";
 import { WalletKeys } from "./services/connectors/wallet.connector";
 import { getNetworkId } from "./services/claim.services";
 import useWallet from "./hooks/useWallet";
+import MobileMenu from "src/components/MobileMenu";
 import "./styles.scss";
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
 
     return (
         <div className={theme}>
+            <MobileMenu />
             <Modal />
             <Menu />
             <div className="body">

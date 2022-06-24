@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSun } from "@fortawesome/free-solid-svg-icons";
 import WalletSelector from "src/components/WalletSelector";
-import BlockchainSelector from "src/components/BlockchainSelector";
+// import BlockchainSelector from "src/components/BlockchainSelector";
 import logo from "../assets/tosidrop_logo.png";
 import { useDispatch } from "react-redux";
 import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
@@ -20,7 +20,7 @@ function Header() {
                 </div>
                 <p className="title-text">TosiDrop</p>
                 <div className="header-filler"></div>
-                <BlockchainSelector></BlockchainSelector>
+                {/* <BlockchainSelector></BlockchainSelector> */}
                 <div className="header-wallet-selector noselect">
                     <WalletSelector connectWallet={connectWallet} />
                 </div>
