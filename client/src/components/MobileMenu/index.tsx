@@ -1,7 +1,7 @@
 import { RootState } from "src/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
-import { setShowMenu } from "src/reducers/globalSlice";
+import { setShowMenu, toggleTheme } from "src/reducers/globalSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faWallet,
@@ -9,6 +9,8 @@ import {
     faMessage,
     faBook,
     faArrowUpRightFromSquare,
+    faSun,
+    faMoon,
 } from "@fortawesome/free-solid-svg-icons";
 import {
     faTwitter,
@@ -17,11 +19,13 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import "./index.scss";
 import { Link, useLocation } from "react-router-dom";
+import { Themes } from "src/entities/common.entities";
 
 const CLASS = "mobile-menu";
 
 const MobileMenu = () => {
     const showMenu = useSelector((state: RootState) => state.global.showMenu);
+    const theme = useSelector((state: RootState) => state.global.theme);
     const location = useLocation().pathname;
     const dispatch = useDispatch();
 
@@ -110,6 +114,26 @@ const MobileMenu = () => {
                             Docs&nbsp;
                             <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                         </a>
+                    </li>
+                    <li>
+                        <div className={`${CLASS}__list-item-special`}>
+                            <p className="icon">
+                                <FontAwesomeIcon icon={faSun} />
+                            </p>
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    checked={
+                                        theme === Themes.dark ? true : false
+                                    }
+                                    onClick={() => dispatch(toggleTheme())}
+                                />
+                                <span className="slider round"></span>
+                            </label>
+                            <p className="icon">
+                                <FontAwesomeIcon icon={faMoon} />
+                            </p>
+                        </div>
                     </li>
                 </ul>
                 <div className={`${CLASS}__social`}>
