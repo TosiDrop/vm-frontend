@@ -20,6 +20,7 @@ export interface GetRewards {
 export interface GetCustomRewards {
     request_id: string;
     deposit: number;
+    overhead_fee?: number;
     withdrawal_address: string;
 }
 
