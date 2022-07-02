@@ -3,10 +3,10 @@ name: JavaScript CI
 on:
   push:
     branches: [ master ]
-    paths: [ 'client/**','src/**','*.ts','*.json','.github/workflows/ci-js.yml' ]
+    paths: [ 'client/**','server/**', 'src/**','*.ts','*.json','.github/workflows/ci-js.yml' ]
   pull_request:
     branches: [ master ]
-    paths: [ 'client/**','src/**','*.ts','*.json','.github/workflows/ci-js.yml' ]
+    paths: [ 'client/**','server/**', 'src/**','*.ts','*.json','.github/workflows/ci-js.yml' ]
 
 jobs:
   build:
