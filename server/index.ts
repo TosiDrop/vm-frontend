@@ -302,7 +302,7 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
     if (!staking_address) return res.sendStatus(400);
 
     const submitCustomReward = await getFromVM(
-      `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`
+      `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}&unlocks_special=false`
     );
     return res.send(submitCustomReward);
   } catch (e: any) {
