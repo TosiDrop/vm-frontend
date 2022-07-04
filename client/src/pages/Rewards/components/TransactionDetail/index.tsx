@@ -31,7 +31,7 @@ const TransactionDetail = ({ numberOfTokens, deposit }: Props) => {
             });
         };
         getSettingsFromApi();
-    }, [settings]);
+    }, []);
 
     return (
         <div className={`rewards-block ${CLASS}`}>
