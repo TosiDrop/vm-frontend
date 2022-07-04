@@ -126,7 +126,7 @@ const MobileMenu = () => {
                                     checked={
                                         theme === Themes.dark ? true : false
                                     }
-                                    onClick={() => dispatch(toggleTheme())}
+                                    onChange={() => dispatch(toggleTheme())}
                                 />
                                 <span className="slider round"></span>
                             </label>
