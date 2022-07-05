@@ -116,7 +116,8 @@ const SendAdaInfo = ({
      * function to open wallet and start TX
      */
     const sendADA = async () => {
-        if (txDetail) {
+        try {
+            if (txDetail == null) throw new Error();
             setSendAdaSpinner(true);
             const txHash = await connectedWallet?.transferAda(
                 txDetail.withdrawal_address,
@@ -135,6 +136,14 @@ const SendAdaInfo = ({
                 );
             }
             setSendAdaSpinner(false);
+        } catch (e) {
+            setSendAdaSpinner(false);
+            dispatch(
+                showModal({
+                    text: "Something is wrong :(",
+                    type: ModalTypes.failure,
+                })
+            );
         }
     };
 

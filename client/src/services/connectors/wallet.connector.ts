@@ -366,7 +366,7 @@ class WalletApi {
             },
             poolDeposit: epochParams.pool_deposit,
             keyDeposit: epochParams.key_deposit,
-            coinsPerUtxoWord: epochParams.coins_per_utxo_word,
+            coinsPerUtxoWord: epochParams.coins_per_utxo_size,
             maxValSize: epochParams.max_val_size,
             priceMem: epochParams.price_mem,
             priceStep: epochParams.price_step,
