@@ -35,6 +35,7 @@ const CARDANO_NETWORK = process.env.CARDANO_NETWORK || CardanoNetwork.testnet;
 const CLAIM_ENABLED = process.env.CLAIM_ENABLED || true;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const PORT = process.env.PORT || 3000;
+const TOSIFEE = process.env.TOSIFEE || 500000;
 const VM_API_TOKEN =
   process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
 const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
@@ -177,6 +178,7 @@ app.get("/features", (req: any, res: any) => {
         ? JSON.parse(CLAIM_ENABLED.toLowerCase())
         : CLAIM_ENABLED,
     network: CARDANO_NETWORK,
+    tosi_fee: TOSIFEE,
   });
 });
 
@@ -297,13 +299,16 @@ app.get("/getrewards", async (req: any, res: any) => {
 app.get("/getcustomrewards", async (req: any, res: any) => {
   try {
     const queryObject = url.parse(req.url, true).query;
-    const { staking_address, session_id, selected } = queryObject;
+    const { staking_address, session_id, selected, unlock } = queryObject;
+    let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`
 
     if (!staking_address) return res.sendStatus(400);
-
-    const submitCustomReward = await getFromVM(
-      `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}&unlocks_special=false`
-    );
+    if (unlock) {
+      vmArgs = vmArgs + `&overhead_fee=${TOSIFEE}&unlocks_special=true`
+    } else {
+      vmArgs = vmArgs + `&unlocks_special=false`
+    }
+    const submitCustomReward = await getFromVM(vmArgs);
     return res.send(submitCustomReward);
   } catch (e: any) {
     return res.status(500).send({ error: "An error occurred." });
