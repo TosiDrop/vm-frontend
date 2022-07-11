@@ -15,6 +15,12 @@ export interface GetRewards {
         delegated_pool_ticker: string;
         delegated_pool_logo: string;
     };
+    project_locked_rewards: {
+        consolidated_promises: Assets;
+        consolidated_rewards: Assets;
+        nfts: any[];
+        assets: Assets;
+    };
 }
 
 export interface GetCustomRewards {
