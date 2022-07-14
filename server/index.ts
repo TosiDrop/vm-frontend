@@ -144,6 +144,11 @@ app.get("/health", (req: any, res: any) => {
 });
 
 app.get("/healthz", async (req: any, res: any) => {
+  try {
+    const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+  } catch (error: any) {
+    return res.status(500).send({ error: "Failed to get tip from Koios" });
+  }
   if (CLOUDFLARE_PSK) {
     if (req.headers["x-cloudflare-psk"]) {
       const myPsk = req.headers["x-cloudflare-psk"];
