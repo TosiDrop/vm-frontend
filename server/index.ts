@@ -36,6 +36,7 @@ const CLAIM_ENABLED = process.env.CLAIM_ENABLED || true;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const PORT = process.env.PORT || 3000;
 const TOSIFEE = process.env.TOSIFEE || 500000;
+const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 const VM_API_TOKEN =
   process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
 const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
@@ -309,14 +310,23 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
 
     if (!staking_address) return res.sendStatus(400);
     if (unlock) {
-      vmArgs = vmArgs + `&overhead_fee=${TOSIFEE}&unlocks_special=true`
+      if (TOSIFEE_WHITELIST) {
+        const whitelist = TOSIFEE_WHITELIST.split(",")
+	const accountsInfo = await getAccountsInfo(`${staking_address}`);
+	const accountInfo = accountsInfo[0];
+	if (whitelist.includes(accountInfo.delegated_pool)) {
+	  vmArgs += "&unlocks_special=true"
+	}
+      } else {
+        vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`
+      }
     } else {
-      vmArgs = vmArgs + `&unlocks_special=false`
+      vmArgs += "&unlocks_special=false"
     }
     const submitCustomReward = await getFromVM(vmArgs);
     return res.send(submitCustomReward);
   } catch (e: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res.status(500).send({ error: "An error occurred in getcustomrewards" });
   }
 });
 
