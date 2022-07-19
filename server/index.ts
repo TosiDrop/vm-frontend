@@ -185,6 +185,7 @@ app.get("/features", (req: any, res: any) => {
         : CLAIM_ENABLED,
     network: CARDANO_NETWORK,
     tosi_fee: TOSIFEE,
+    tosi_fee_whitelist: TOSIFEE_WHITELIST,
   });
 });
 
