@@ -5,7 +5,12 @@ import {
   EpochParams,
   PoolInfo,
 } from "../../client/src/entities/koios.entities";
-import { GetPools, GetTokens, ClaimableToken, GetRewards } from "../../client/src/entities/vm.entities";
+import {
+  GetPools,
+  GetTokens,
+  ClaimableToken,
+  GetRewards,
+} from "../../client/src/entities/vm.entities";
 import {
   ExtendedMetadata,
   Metadata,
@@ -152,36 +157,48 @@ export async function getRewards(stakeAddress: string) {
   const getRewardsResponse = await getFromVM<GetRewards>(
     `get_rewards&staking_address=${stakeAddress}`
   );
-  if (getRewardsResponse) {
-    const tokens = await getTokens();
-    if (tokens) {
-      let claimableTokens: ClaimableToken[] = [];
-      for (const key of Object.keys(getRewardsResponse.consolidated_promises)) {
-        const token = tokens[key];
-        if (token) {
-          claimableTokens.push({
-            assetId: key,
-            ticker: token.ticker,
-            logo: token.logo,
-            decimals: token.decimals,
-            amount: getRewardsResponse.consolidated_promises[key],
-          });
-        }
+  if (getRewardsResponse == null) return;
+  const tokens = await getTokens();
+  if (tokens == null) return;
+
+  const consolidatedAvailableReward: { [key: string]: number } = {};
+  const claimableTokens: ClaimableToken[] = [];
+
+  Object.keys(getRewardsResponse.consolidated_promises).forEach(
+    (assetId: string) => {
+      if (consolidatedAvailableReward[assetId]) {
+        consolidatedAvailableReward[assetId] +=
+          getRewardsResponse.consolidated_promises[assetId];
+      } else {
+        consolidatedAvailableReward[assetId] =
+          getRewardsResponse.consolidated_promises[assetId];
       }
-      for (const key of Object.keys(getRewardsResponse.consolidated_rewards)) {
-        const token = tokens[key];
-        if (token) {
-          claimableTokens.push({
-            assetId: key,
-            ticker: token.ticker,
-            logo: token.logo,
-            decimals: token.decimals,
-            amount: getRewardsResponse.consolidated_rewards[key],
-          });
-        }
-      }
-      getRewardsResponse.claimable_tokens = claimableTokens;
     }
-  }
-  return getRewardsResponse;
+  );
+
+  Object.keys(getRewardsResponse.consolidated_rewards).forEach((assetId) => {
+    if (consolidatedAvailableReward[assetId]) {
+      consolidatedAvailableReward[assetId] +=
+        getRewardsResponse.consolidated_rewards[assetId];
+    } else {
+      consolidatedAvailableReward[assetId] =
+        getRewardsResponse.consolidated_rewards[assetId];
+    }
+  });
+
+  Object.keys(consolidatedAvailableReward).forEach((assetId) => {
+    const token = tokens[assetId];
+    if (token) {
+      claimableTokens.push({
+        assetId,
+        ticker: token.ticker,
+        logo: token.logo,
+        decimals: token.decimals,
+        amount: consolidatedAvailableReward[assetId],
+        premium: false,
+      });
+    }
+  });
+
+  return claimableTokens;
 }

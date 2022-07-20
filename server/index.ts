@@ -191,14 +191,14 @@ app.get("/getrewards", async (req: any, res: any) => {
     const stakeAddress = queryObject.address as string;
     if (!stakeAddress) throw new Error();
 
-    let getRewardsResponse = await getRewards(stakeAddress);
+    let claimableTokens = await getRewards(stakeAddress);
     const accountsInfo = await getAccountsInfo(stakeAddress);
     const poolInfo = await getPoolMetadata(accountsInfo[0]);
 
     const consolidatedGetRewards = {
       pool_info: poolInfo,
-      claimable_tokens: getRewardsResponse.claimable_tokens
-    }
+      claimable_tokens: claimableTokens,
+    };
 
     return res.send(consolidatedGetRewards);
   } catch (error: any) {
