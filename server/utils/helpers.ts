@@ -162,28 +162,25 @@ export async function getRewards(stakeAddress: string) {
   if (tokens == null) return;
 
   const consolidatedAvailableReward: { [key: string]: number } = {};
+  const consolidatedAvailableRewardPremium: { [key: string]: number } = {};
   const claimableTokens: ClaimableToken[] = [];
 
-  Object.keys(getRewardsResponse.consolidated_promises).forEach(
-    (assetId: string) => {
-      if (consolidatedAvailableReward[assetId]) {
-        consolidatedAvailableReward[assetId] +=
-          getRewardsResponse.consolidated_promises[assetId];
-      } else {
-        consolidatedAvailableReward[assetId] =
-          getRewardsResponse.consolidated_promises[assetId];
-      }
-    }
-  );
+  /**
+   * handle regular tokens
+   */
 
-  Object.keys(getRewardsResponse.consolidated_rewards).forEach((assetId) => {
-    if (consolidatedAvailableReward[assetId]) {
-      consolidatedAvailableReward[assetId] +=
-        getRewardsResponse.consolidated_rewards[assetId];
-    } else {
-      consolidatedAvailableReward[assetId] =
-        getRewardsResponse.consolidated_rewards[assetId];
-    }
+  let rewardArray = [
+    getRewardsResponse.consolidated_promises,
+    getRewardsResponse.consolidated_rewards,
+  ];
+  rewardArray.forEach((reward) => {
+    Object.keys(reward).forEach((assetId: string) => {
+      if (consolidatedAvailableReward[assetId]) {
+        consolidatedAvailableReward[assetId] += reward[assetId];
+      } else {
+        consolidatedAvailableReward[assetId] = reward[assetId];
+      }
+    });
   });
 
   Object.keys(consolidatedAvailableReward).forEach((assetId) => {
@@ -196,6 +193,38 @@ export async function getRewards(stakeAddress: string) {
         decimals: token.decimals,
         amount: consolidatedAvailableReward[assetId],
         premium: false,
+      });
+    }
+  });
+
+  /**
+   * handle premium tokens
+   */
+
+  rewardArray = [
+    getRewardsResponse.project_locked_rewards.consolidated_promises,
+    getRewardsResponse.project_locked_rewards.consolidated_rewards,
+  ];
+  rewardArray.forEach((reward) => {
+    Object.keys(reward).forEach((assetId: string) => {
+      if (consolidatedAvailableRewardPremium[assetId]) {
+        consolidatedAvailableRewardPremium[assetId] += reward[assetId];
+      } else {
+        consolidatedAvailableRewardPremium[assetId] = reward[assetId];
+      }
+    });
+  });
+
+  Object.keys(consolidatedAvailableRewardPremium).forEach((assetId) => {
+    const token = tokens[assetId];
+    if (token) {
+      claimableTokens.push({
+        assetId,
+        ticker: token.ticker,
+        logo: token.logo,
+        decimals: token.decimals,
+        amount: consolidatedAvailableRewardPremium[assetId],
+        premium: true,
       });
     }
   });
