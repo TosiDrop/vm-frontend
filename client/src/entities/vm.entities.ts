@@ -44,6 +44,7 @@ export interface ClaimableToken {
     logo: string;
     decimals: number;
     amount: number;
+    premium: boolean;
 }
 
 export interface GetTokens {
