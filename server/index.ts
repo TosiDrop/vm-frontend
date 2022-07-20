@@ -251,11 +251,46 @@ app.get("/getstakekey", async (req: any, res: any) => {
 
     if (rewardAddress == null) return null;
 
-    return res.send({ staking_address: rewardAddress.to_address().to_bech32() });
+    return res.send({
+      staking_address: rewardAddress.to_address().to_bech32(),
+    });
   } catch (error: any) {
     return res.status(500).send({ error: "An error occurred." });
   }
 });
+
+async function getPoolMetadata(accountInfo: any) {
+  /**
+   * try to get pool metadata
+   * if fails, then leave without the metadata
+   */
+  try {
+    let poolInfoObj: any = null;
+    let logo = "";
+
+    const poolsInfo = await postPoolInfo([accountInfo.delegated_pool]);
+    if (!poolsInfo) throw new Error();
+
+    const poolInfo = poolsInfo[0];
+    const extendedMetadata = await getExtendedMetadata(poolInfo.meta_url);
+    if (!extendedMetadata) throw new Error();
+
+    poolInfoObj = {
+      delegated_pool_name: poolInfo.meta_json.name,
+      delegated_pool_description: poolInfo.meta_json.description,
+      total_balance: formatTokens(accountInfo.total_balance, 6, 2),
+      delegated_pool_ticker: poolInfo.meta_json.ticker,
+    };
+    logo = extendedMetadata.info.url_png_icon_64x64;
+    poolInfoObj = {
+      ...poolInfoObj,
+      delegated_pool_logo: logo,
+    };
+    return poolInfoObj;
+  } catch (e) {
+    return null;
+  }
+}
 
 app.get("/getrewards", async (req: any, res: any) => {
   try {
@@ -265,36 +300,11 @@ app.get("/getrewards", async (req: any, res: any) => {
 
     let getRewardsResponse = await getRewards(stakeAddress);
     const accountsInfo = await getAccountsInfo(stakeAddress);
-
-    /**
-     * try to get pool metadata
-     * if fails, then leave without the metadata
-     */
-    let poolInfoObj: any = null;
-    let logo = "";
-    try {
-      const accountInfo = accountsInfo[0];
-      const poolsInfo = await postPoolInfo([accountInfo.delegated_pool]);
-      if (!poolsInfo) throw new Error();
-      const poolInfo = poolsInfo[0];
-      const extendedMetadata = await getExtendedMetadata(poolInfo.meta_url);
-      if (!extendedMetadata) throw new Error();
-      poolInfoObj = {
-        delegated_pool_name: poolInfo.meta_json.name,
-        delegated_pool_description: poolInfo.meta_json.description,
-        total_balance: formatTokens(accountInfo.total_balance, 6, 2),
-        delegated_pool_ticker: poolInfo.meta_json.ticker,
-      };
-      logo = extendedMetadata.info.url_png_icon_64x64;
-      poolInfoObj = {
-        ...poolInfoObj,
-        delegated_pool_logo: logo,
-      };
-    } catch (e) {}
+    const poolInfo = await getPoolMetadata(accountsInfo[0]);
 
     getRewardsResponse = {
       ...getRewardsResponse,
-      pool_info: poolInfoObj,
+      pool_info: poolInfo,
     };
 
     return res.send(getRewardsResponse);
@@ -307,27 +317,29 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
   try {
     const queryObject = url.parse(req.url, true).query;
     const { staking_address, session_id, selected, unlock } = queryObject;
-    let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`
+    let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`;
 
     if (!staking_address) return res.sendStatus(400);
     if (unlock) {
       if (TOSIFEE_WHITELIST) {
-        const whitelist = TOSIFEE_WHITELIST.split(",")
-	const accountsInfo = await getAccountsInfo(`${staking_address}`);
-	const accountInfo = accountsInfo[0];
-	if (whitelist.includes(accountInfo.delegated_pool)) {
-	  vmArgs += "&unlocks_special=true"
-	}
+        const whitelist = TOSIFEE_WHITELIST.split(",");
+        const accountsInfo = await getAccountsInfo(`${staking_address}`);
+        const accountInfo = accountsInfo[0];
+        if (whitelist.includes(accountInfo.delegated_pool)) {
+          vmArgs += "&unlocks_special=true";
+        }
       } else {
-        vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`
+        vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
       }
     } else {
-      vmArgs += "&unlocks_special=false"
+      vmArgs += "&unlocks_special=false";
     }
     const submitCustomReward = await getFromVM(vmArgs);
     return res.send(submitCustomReward);
   } catch (e: any) {
-    return res.status(500).send({ error: "An error occurred in getcustomrewards" });
+    return res
+      .status(500)
+      .send({ error: "An error occurred in getcustomrewards" });
   }
 });
 
