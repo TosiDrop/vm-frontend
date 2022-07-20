@@ -118,13 +118,7 @@ function Rewards() {
                 setStakeAddress(address);
                 const rewards = await getRewards(address);
 
-                if (
-                    rewards &&
-                    (
-                        Object.keys(rewards.consolidated_promises).length ||
-                        Object.keys(rewards.consolidated_rewards).length
-                    )
-                ) {
+                if (rewards && Object.keys(rewards.claimable_tokens).length) {
                     setRewards(rewards);
                     setRewardsLoader(false);
                 } else {
@@ -137,6 +131,7 @@ function Rewards() {
                     setRewardsLoader(false);
                 }
             } catch (ex: any) {
+                console.log(ex);
                 switch (true) {
                     case ex?.response?.status === 404:
                     default:
