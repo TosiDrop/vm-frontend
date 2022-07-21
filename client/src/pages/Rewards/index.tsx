@@ -290,7 +290,25 @@ function Rewards() {
                         {renderStakeInfo()}
                     </div>
                     <div className={"claim-list staking-info__row"}>
-                        {rewards?.claimable_tokens?.map((token, index) => {
+                        {rewards?.claimable_tokens
+                            ?.sort((a, b) => (a.premium ? -1 : 1))
+                            .map((token, index) => {
+                                return (
+                                    <ClaimableTokenBox
+                                        key={index}
+                                        index={index}
+                                        ticker={token.ticker}
+                                        checked={checkedState[index]}
+                                        handleOnChange={handleTokenSelect}
+                                        amount={token.amount}
+                                        decimals={token.decimals}
+                                        logo={token.logo}
+                                        assetId={token.assetId}
+                                        premium={token.premium}
+                                    />
+                                );
+                            })}
+                        {/* {rewards?.claimable_tokens?.filter(c => !c.premium).map((token, index) => {
                             return (
                                 <ClaimableTokenBox
                                     key={index}
@@ -305,7 +323,7 @@ function Rewards() {
                                     premium={token.premium}
                                 />
                             );
-                        })}
+                        })} */}
                     </div>
 
                     <div className={"content-reward claim staking-info__row"}>
