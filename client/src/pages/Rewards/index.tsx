@@ -302,6 +302,7 @@ function Rewards() {
                                     decimals={token.decimals}
                                     logo={token.logo}
                                     assetId={token.assetId}
+                                    premium={token.premium}
                                 />
                             );
                         })}
