@@ -42,6 +42,10 @@ const ClaimableTokenBox = ({
                 {premium ? (
                     <span className="premium-token">
                         <FontAwesomeIcon icon={faStar} />
+                        <div className="tooltip">
+                            The star indicates premium token. Premium token
+                            requires premium fee to claim.
+                        </div>
                     </span>
                 ) : null}
             </div>
