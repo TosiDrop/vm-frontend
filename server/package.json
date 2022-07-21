@@ -15,7 +15,7 @@
     "build": "npm install",
     "clean": "rm -rf node_modules",
     "start": "node --inspect -r ts-node/register index.ts",
-    "start-dev": "nodemon --watch index.ts index.ts",
+    "start-dev": "nodemon index.ts",
     "test": "exit 0"
   },
   "proxy": "http://localhost:3000",

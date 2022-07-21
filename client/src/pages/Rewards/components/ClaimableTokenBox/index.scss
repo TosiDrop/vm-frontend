@@ -7,6 +7,10 @@
     min-width: 250px;
 
     .selection {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
         label {
             font-size: 12px;
             display: flex;
@@ -16,6 +20,36 @@
 
         input {
             margin-right: 10px;
+        }
+
+        .premium-token {
+            margin-left: auto;
+            height: fit-content;
+            display: flex;
+            align-items: center;
+            color: #ffd700;
+            position: relative;
+            cursor: pointer;
+
+            svg {
+                animation: glow 1.5s ease-out infinite;
+            }
+
+            .tooltip {
+                position: absolute;
+                visibility: hidden;
+                width: 250px;
+                padding: 14px 18px;
+                right: 20px;
+                bottom: 0;
+                background: var(--font-highlight);
+                color: var(--primary);
+                border-radius: 20px;
+            }
+
+            &:hover .tooltip {
+                visibility: visible;
+            }
         }
     }
 
@@ -38,5 +72,14 @@
 @media screen and (max-width: 1024px) {
     .claim-item {
         width: 100%;
+    }
+}
+
+@keyframes glow {
+    0% {
+        filter: drop-shadow(0px 0px 0px rgb(255, 255, 255, 1));
+    }
+    100% {
+        filter: drop-shadow(0px 0px 20px rgb(255, 255, 255, 0));
     }
 }

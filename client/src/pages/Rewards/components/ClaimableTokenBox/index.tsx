@@ -1,4 +1,5 @@
-import { getNameFromHex } from "src/services/utils.services";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 import "./index.scss";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
     decimals: number;
     logo: string;
     assetId: string;
+    premium: boolean;
 }
 
 const ClaimableTokenBox = ({
@@ -21,6 +23,7 @@ const ClaimableTokenBox = ({
     decimals,
     logo,
     assetId,
+    premium,
 }: Props) => {
     return (
         <div className="claim-item" key={index}>
@@ -36,6 +39,15 @@ const ClaimableTokenBox = ({
                     />
                     {amount / Math.pow(10, decimals)} available
                 </label>
+                {premium ? (
+                    <span className="premium-token">
+                        <FontAwesomeIcon icon={faStar} />
+                        <div className="tooltip">
+                            The star indicates premium token. Premium token
+                            requires premium fee to claim.
+                        </div>
+                    </span>
+                ) : null}
             </div>
             <div className="token-drop">
                 <div className="token-info">

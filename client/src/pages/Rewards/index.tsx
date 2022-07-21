@@ -118,13 +118,7 @@ function Rewards() {
                 setStakeAddress(address);
                 const rewards = await getRewards(address);
 
-                if (
-                    rewards &&
-                    (
-                        Object.keys(rewards.consolidated_promises).length ||
-                        Object.keys(rewards.consolidated_rewards).length
-                    )
-                ) {
+                if (rewards && Object.keys(rewards.claimable_tokens).length) {
                     setRewards(rewards);
                     setRewardsLoader(false);
                 } else {
@@ -153,6 +147,8 @@ function Rewards() {
     };
 
     const claimMyRewards = async () => {
+        let selectedPremiumToken = false;
+
         if (checkedCount === 0) return;
         if (rewards == null) return;
 
@@ -167,6 +163,9 @@ function Rewards() {
         const availableRewards = rewards.claimable_tokens;
         for (let i = 0; i < checkedState.length; i++) {
             if (checkedState[i]) {
+                if (availableRewards[i].premium) {
+                    selectedPremiumToken = true;
+                }
                 selectedTokenId.push(availableRewards[i].assetId);
             }
         }
@@ -174,11 +173,12 @@ function Rewards() {
             const res = await getCustomRewards(
                 stakeAddress,
                 stakeAddress.slice(0, 40),
-                selectedTokenId.join(",")
+                selectedTokenId.join(","),
+                selectedPremiumToken
             );
             if (res == null) throw new Error();
 
-            const depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${checkedCount}`;
+            let depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${checkedCount}`;
             navigate(depositInfoUrl, { replace: true });
         } catch (e) {
             dispatch(
@@ -295,21 +295,24 @@ function Rewards() {
                         {renderStakeInfo()}
                     </div>
                     <div className={"claim-list staking-info__row"}>
-                        {rewards?.claimable_tokens?.map((token, index) => {
-                            return (
-                                <ClaimableTokenBox
-                                    key={index}
-                                    index={index}
-                                    ticker={token.ticker}
-                                    checked={checkedState[index]}
-                                    handleOnChange={handleTokenSelect}
-                                    amount={token.amount}
-                                    decimals={token.decimals}
-                                    logo={token.logo}
-                                    assetId={token.assetId}
-                                />
-                            );
-                        })}
+                        {rewards?.claimable_tokens
+                            ?.sort((a, b) => (a.premium ? -1 : 1))
+                            .map((token, index) => {
+                                return (
+                                    <ClaimableTokenBox
+                                        key={index}
+                                        index={index}
+                                        ticker={token.ticker}
+                                        checked={checkedState[index]}
+                                        handleOnChange={handleTokenSelect}
+                                        amount={token.amount}
+                                        decimals={token.decimals}
+                                        logo={token.logo}
+                                        assetId={token.assetId}
+                                        premium={token.premium}
+                                    />
+                                );
+                            })}
                     </div>
 
                     <div className={"content-reward claim staking-info__row"}>

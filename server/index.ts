@@ -1,33 +1,24 @@
 import express from "express";
 import url from "url";
-import axios from "axios";
 import cors from "cors";
 import {
   Address,
   BaseAddress,
   RewardAddress,
 } from "@emurgo/cardano-serialization-lib-nodejs";
+import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
 import {
-  AccountAddress,
-  AccountInfo,
-  EpochParams,
-  PoolInfo,
-  Tip,
-  TransactionStatus,
-} from "../client/src/entities/koios.entities";
-import {
-  ClaimableToken,
-  GetPools,
-  GetRewards,
-  GetTokens,
-  SanitizeAddress,
-} from "../client/src/entities/vm.entities";
-import {
-  ExtendedMetadata,
-  Metadata,
-} from "../client/src/entities/common.entities";
-import { formatTokens } from "../client/src/services/utils.services";
-import { CardanoNetwork, translateAdaHandle } from "./utils";
+  CardanoNetwork,
+  translateAdaHandle,
+  getFromVM,
+  getPoolMetadata,
+  getPools,
+  getFromKoios,
+  getAccountsInfo,
+  postFromKoios,
+  getEpochParams,
+  getRewards,
+} from "./utils";
 require("dotenv").config();
 
 const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
@@ -37,9 +28,6 @@ const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const PORT = process.env.PORT || 3000;
 const TOSIFEE = process.env.TOSIFEE || 500000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
-const VM_API_TOKEN =
-  process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
-const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
 const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 
 const app = express();
@@ -60,73 +48,6 @@ process.on("SIGTERM", () => {
     console.log("Server shutting down");
   });
 });
-
-async function getFromVM<T>(params: any) {
-  return (
-    await axios.get<T>(`${VM_URL}/api.php?action=${params}`, {
-      headers: { "X-API-Token": `${VM_API_TOKEN}` },
-    })
-  ).data;
-}
-
-async function getExtendedMetadata(
-  metadataUrl: string
-): Promise<ExtendedMetadata | undefined> {
-  const metadata = (await axios.get<Metadata>(metadataUrl)).data;
-  if (metadata?.extended) {
-    const extendedMetadata = (
-      await axios.get<ExtendedMetadata>(metadata.extended)
-    ).data;
-    return extendedMetadata;
-  }
-  return undefined;
-}
-
-async function getFromKoios<T>(action: string, params?: any) {
-  if (params) {
-    return (await axios.get<T>(`${VM_KOIOS_URL}/${action}?${params}`)).data;
-  } else {
-    return (await axios.get<T>(`${VM_KOIOS_URL}/${action}`)).data;
-  }
-}
-
-async function postFromKoios<T>(action: string, params?: any) {
-  if (params) {
-    return (await axios.post<T>(`${VM_KOIOS_URL}/${action}`, params)).data;
-  } else {
-    return (await axios.post<T>(`${VM_KOIOS_URL}/${action}`)).data;
-  }
-}
-
-async function getAccountsInfo(stakeAddress: string) {
-  return getFromKoios<AccountInfo[]>(
-    "account_info",
-    `_address=${stakeAddress}`
-  );
-}
-
-async function getAccountsAddresses(stakeAddress: string) {
-  return getFromKoios<AccountAddress[]>(
-    "account_addresses",
-    `_address=${stakeAddress}`
-  );
-}
-
-async function getEpochParams(epochNo: number) {
-  return getFromKoios<EpochParams>("epoch_params", `_epoch_no=${epochNo}`);
-}
-
-async function postPoolInfo(pools: string[]) {
-  return postFromKoios<PoolInfo[]>("pool_info", { _pool_bech32_ids: pools });
-}
-
-async function getPools() {
-  return getFromVM<GetPools>("get_pools");
-}
-
-async function getTokens() {
-  return getFromVM<GetTokens>("get_tokens");
-}
 
 app.get("/getpools", async (req, res) => {
   const pools = await getPools();
@@ -251,53 +172,35 @@ app.get("/getstakekey", async (req: any, res: any) => {
 
     if (rewardAddress == null) return null;
 
-    return res.send({ staking_address: rewardAddress.to_address().to_bech32() });
+    return res.send({
+      staking_address: rewardAddress.to_address().to_bech32(),
+    });
   } catch (error: any) {
     return res.status(500).send({ error: "An error occurred." });
   }
 });
 
+/**
+ * @description get rewards available for user
+ * @query
+ * - address: user stake address
+ */
 app.get("/getrewards", async (req: any, res: any) => {
   try {
     const queryObject = url.parse(req.url, true).query;
     const stakeAddress = queryObject.address as string;
     if (!stakeAddress) throw new Error();
 
-    let getRewardsResponse = await getRewards(stakeAddress);
+    let claimableTokens = await getRewards(stakeAddress);
     const accountsInfo = await getAccountsInfo(stakeAddress);
+    const poolInfo = await getPoolMetadata(accountsInfo[0]);
 
-    /**
-     * try to get pool metadata
-     * if fails, then leave without the metadata
-     */
-    let poolInfoObj: any = null;
-    let logo = "";
-    try {
-      const accountInfo = accountsInfo[0];
-      const poolsInfo = await postPoolInfo([accountInfo.delegated_pool]);
-      if (!poolsInfo) throw new Error();
-      const poolInfo = poolsInfo[0];
-      const extendedMetadata = await getExtendedMetadata(poolInfo.meta_url);
-      if (!extendedMetadata) throw new Error();
-      poolInfoObj = {
-        delegated_pool_name: poolInfo.meta_json.name,
-        delegated_pool_description: poolInfo.meta_json.description,
-        total_balance: formatTokens(accountInfo.total_balance, 6, 2),
-        delegated_pool_ticker: poolInfo.meta_json.ticker,
-      };
-      logo = extendedMetadata.info.url_png_icon_64x64;
-      poolInfoObj = {
-        ...poolInfoObj,
-        delegated_pool_logo: logo,
-      };
-    } catch (e) {}
-
-    getRewardsResponse = {
-      ...getRewardsResponse,
-      pool_info: poolInfoObj,
+    const consolidatedGetRewards = {
+      pool_info: poolInfo,
+      claimable_tokens: claimableTokens,
     };
 
-    return res.send(getRewardsResponse);
+    return res.send(consolidatedGetRewards);
   } catch (error: any) {
     return res.status(500).send({ error: "An error occurred." });
   }
@@ -307,27 +210,29 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
   try {
     const queryObject = url.parse(req.url, true).query;
     const { staking_address, session_id, selected, unlock } = queryObject;
-    let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`
+    let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`;
 
     if (!staking_address) return res.sendStatus(400);
     if (unlock) {
       if (TOSIFEE_WHITELIST) {
-        const whitelist = TOSIFEE_WHITELIST.split(",")
-	const accountsInfo = await getAccountsInfo(`${staking_address}`);
-	const accountInfo = accountsInfo[0];
-	if (whitelist.includes(accountInfo.delegated_pool)) {
-	  vmArgs += "&unlocks_special=true"
-	}
+        const whitelist = TOSIFEE_WHITELIST.split(",");
+        const accountsInfo = await getAccountsInfo(`${staking_address}`);
+        const accountInfo = accountsInfo[0];
+        if (whitelist.includes(accountInfo.delegated_pool)) {
+          vmArgs += "&unlocks_special=true";
+        }
       } else {
-        vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`
+        vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
       }
     } else {
-      vmArgs += "&unlocks_special=false"
+      vmArgs += "&unlocks_special=false";
     }
     const submitCustomReward = await getFromVM(vmArgs);
     return res.send(submitCustomReward);
   } catch (e: any) {
-    return res.status(500).send({ error: "An error occurred in getcustomrewards" });
+    return res
+      .status(500)
+      .send({ error: "An error occurred in getcustomrewards" });
   }
 });
 
@@ -411,44 +316,6 @@ app.get("/getepochparams", async (req: any, res: any) => {
     return res.status(500).send({ error: "An error occurred." });
   }
 });
-
-async function getRewards(stakeAddress: string) {
-  const getRewardsResponse = await getFromVM<GetRewards>(
-    `get_rewards&staking_address=${stakeAddress}`
-  );
-  if (getRewardsResponse) {
-    const tokens = await getTokens();
-    if (tokens) {
-      let claimableTokens: ClaimableToken[] = [];
-      for (const key of Object.keys(getRewardsResponse.consolidated_promises)) {
-        const token = tokens[key];
-        if (token) {
-          claimableTokens.push({
-            assetId: key,
-            ticker: token.ticker,
-            logo: token.logo,
-            decimals: token.decimals,
-            amount: getRewardsResponse.consolidated_promises[key],
-          });
-        }
-      }
-      for (const key of Object.keys(getRewardsResponse.consolidated_rewards)) {
-        const token = tokens[key];
-        if (token) {
-          claimableTokens.push({
-            assetId: key,
-            ticker: token.ticker,
-            logo: token.logo,
-            decimals: token.decimals,
-            amount: getRewardsResponse.consolidated_rewards[key],
-          });
-        }
-      }
-      getRewardsResponse.claimable_tokens = claimableTokens;
-    }
-  }
-  return getRewardsResponse;
-}
 
 // Fallback to React app
 app.get("*", (req, res) => {
