@@ -18,6 +18,7 @@ import {
   postFromKoios,
   getEpochParams,
   getRewards,
+  ISettings,
 } from "./utils";
 require("dotenv").config();
 
@@ -55,7 +56,9 @@ app.get("/getpools", async (req, res) => {
 });
 
 app.get("/getsettings", async (req, res) => {
-  const settings = await getFromVM("get_settings");
+  const settings: ISettings = await getFromVM("get_settings");
+  settings.tosi_fee = Number(TOSIFEE);
+  settings.tosi_fee_whitelist = TOSIFEE_WHITELIST;
   return res.status(200).send(settings);
 });
 
@@ -105,8 +108,6 @@ app.get("/features", (req: any, res: any) => {
         ? JSON.parse(CLAIM_ENABLED.toLowerCase())
         : CLAIM_ENABLED,
     network: CARDANO_NETWORK,
-    tosi_fee: TOSIFEE,
-    tosi_fee_whitelist: TOSIFEE_WHITELIST,
   });
 });
 
@@ -227,7 +228,7 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
     } else {
       vmArgs += "&unlocks_special=false";
     }
-    
+
     const submitCustomReward = await getFromVM(vmArgs);
     return res.send(submitCustomReward);
   } catch (e: any) {
