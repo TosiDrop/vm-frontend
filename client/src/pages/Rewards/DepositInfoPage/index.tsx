@@ -21,6 +21,7 @@ enum QueryKey {
     stakeAddress = "stakeAddress",
     withdrawAddress = "withdrawAddress",
     requestId = "requestId",
+    unlock = "unlock",
 }
 
 export enum TransactionStatusDetail {
@@ -36,6 +37,9 @@ const DepositInfoPage = () => {
     const stakeAddress = searchParams.get(QueryKey.stakeAddress);
     const withdrawAddress = searchParams.get(QueryKey.withdrawAddress);
     const requestId = searchParams.get(QueryKey.requestId);
+    let unlock: boolean;
+    if (searchParams.get(QueryKey.unlock) === "true") unlock = true;
+    else unlock = false;
 
     const [txDetail, setTxDetail] = useState<GetCustomRewards>({
         deposit: 0,
@@ -116,6 +120,7 @@ const DepositInfoPage = () => {
                 transactionStatus={transactionStatus}
                 setTransactionId={setTransactionId}
                 setTransactionStatus={setTransactionStatus}
+                unlock={unlock}
             ></DepositInfo>
         </div>
     ) : null;

@@ -76,6 +76,11 @@ export async function getSettings() {
     return response.data;
 }
 
+export async function getFeatures() {
+    const response = await axios.get(`/features`);
+    return response.data;
+}
+
 export async function getStakeKey(addr: string) {
     if (addr.slice(0, 5) === "stake") {
         return { staking_address: addr };

@@ -178,7 +178,7 @@ function Rewards() {
             );
             if (res == null) throw new Error();
 
-            let depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${checkedCount}`;
+            let depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${checkedCount}&unlock=${selectedPremiumToken}`;
             navigate(depositInfoUrl, { replace: true });
         } catch (e) {
             dispatch(
