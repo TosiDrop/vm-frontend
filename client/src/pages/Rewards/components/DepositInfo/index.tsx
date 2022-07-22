@@ -17,6 +17,7 @@ interface Params {
     transactionStatus: TransactionStatusDetail;
     setTransactionId: Function;
     setTransactionStatus: Function;
+    unlock: boolean;
 }
 
 const DepositInfo = ({
@@ -26,6 +27,7 @@ const DepositInfo = ({
     transactionStatus,
     setTransactionId,
     setTransactionStatus,
+    unlock,
 }: Params) => {
     return (
         <>
@@ -67,6 +69,7 @@ const DepositInfo = ({
                 <TransactionDetail
                     numberOfTokens={checkedCount}
                     deposit={txDetail.deposit}
+                    unlock={unlock}
                 ></TransactionDetail>
             ) : null}
         </>

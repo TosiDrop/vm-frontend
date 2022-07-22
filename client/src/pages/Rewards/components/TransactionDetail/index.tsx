@@ -1,5 +1,7 @@
+import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { getSettings } from "src/services/claim.services";
+import { getFeatures, getSettings } from "src/services/claim.services";
 import "./index.scss";
 
 const CLASS = "transaction-detail";
@@ -7,27 +9,32 @@ const CLASS = "transaction-detail";
 interface Props {
     numberOfTokens: number;
     deposit: number;
+    unlock: boolean;
 }
 
 interface ISettings {
     withdrawalFee: number;
     serviceFee: number;
     txFee: number;
+    tosifee: number;
 }
 
-const TransactionDetail = ({ numberOfTokens, deposit }: Props) => {
+const TransactionDetail = ({ numberOfTokens, deposit, unlock }: Props) => {
     const [settings, setSettings] = useState<ISettings>({
         withdrawalFee: 0,
         serviceFee: 100000,
         txFee: 170000,
+        tosifee: 500000,
     });
 
     useEffect(() => {
         const getSettingsFromApi = async () => {
-            const settingsFromApi = await getSettings();
+            const settingsFromVM = await getSettings();
+            const settingsFromFeatures = await getFeatures();
             setSettings({
                 ...settings,
-                withdrawalFee: settingsFromApi.withdrawal_fee,
+                tosifee: settingsFromFeatures.tosi_fee,
+                withdrawalFee: settingsFromVM.withdrawal_fee,
             });
         };
         getSettingsFromApi();
@@ -42,16 +49,22 @@ const TransactionDetail = ({ numberOfTokens, deposit }: Props) => {
             </div>
             <div className={`${CLASS}__row`}>
                 <div>{lovelaceToAda(settings.withdrawalFee)} ADA</div>
-                <div>Withdrawal Fee</div>
+                <div>Withdrawal fee</div>
             </div>
             <div className={`${CLASS}__row`}>
                 <div>{lovelaceToAda(settings.txFee)} ADA</div>
-                <div>Transaction Fee</div>
+                <div>Transaction fee</div>
             </div>
             <div className={`${CLASS}__row`}>
                 <div>{lovelaceToAda(settings.serviceFee)} ADA</div>
-                <div>Service Fee</div>
+                <div>Service fee</div>
             </div>
+            {unlock ? (
+                <div className={`${CLASS}__row premium`}>
+                    <div>{lovelaceToAda(settings.tosifee)} ADA</div>
+                    <div>Tosi fee <FontAwesomeIcon icon={faQuestionCircle}/></div>
+                </div>
+            ) : null}
             <div className={`${CLASS}__row`}>
                 <div>{lovelaceToAda(deposit)} ADA</div>
                 <div>You Send</div>
@@ -59,10 +72,14 @@ const TransactionDetail = ({ numberOfTokens, deposit }: Props) => {
             <div className={`${CLASS}__row`}>
                 <div>
                     {lovelaceToAda(
-                        deposit -
-                            settings.withdrawalFee -
-                            settings.serviceFee -
-                            settings.txFee
+                        calcReturnedAda(
+                            deposit,
+                            settings.withdrawalFee,
+                            settings.serviceFee,
+                            settings.txFee,
+                            unlock,
+                            settings.tosifee
+                        )
                     )}{" "}
                     ADA
                 </div>
@@ -82,4 +99,17 @@ export default TransactionDetail;
 
 const lovelaceToAda = (lovelace: number) => {
     return lovelace / Math.pow(10, 6);
+};
+
+const calcReturnedAda = (
+    deposit: number,
+    withdrawalFee: number,
+    serviceFee: number,
+    txFee: number,
+    unlock: boolean,
+    tosifee: number
+) => {
+    let returnedAda = deposit - withdrawalFee - serviceFee - txFee;
+    if (unlock) returnedAda -= tosifee;
+    return returnedAda;
 };
