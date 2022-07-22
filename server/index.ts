@@ -18,7 +18,8 @@ import {
   postFromKoios,
   getEpochParams,
   getRewards,
-  ISettings,
+  IVMSettings,
+  ITosiFeatures,
 } from "./utils";
 require("dotenv").config();
 
@@ -56,9 +57,7 @@ app.get("/getpools", async (req, res) => {
 });
 
 app.get("/getsettings", async (req, res) => {
-  const settings: ISettings = await getFromVM("get_settings");
-  settings.tosi_fee = Number(TOSIFEE);
-  settings.tosi_fee_whitelist = TOSIFEE_WHITELIST;
+  const settings: IVMSettings = await getFromVM("get_settings");
   return res.status(200).send(settings);
 });
 
@@ -98,7 +97,9 @@ app.get("/healthz", async (req: any, res: any) => {
 });
 
 app.get("/features", (req: any, res: any) => {
-  res.status(200).json({
+  const features: ITosiFeatures = {
+    tosi_fee: Number(TOSIFEE),
+    tosi_fee_whitelist: TOSIFEE_WHITELIST,
     airdrop_enabled:
       typeof AIRDROP_ENABLED == "string"
         ? JSON.parse(AIRDROP_ENABLED.toLowerCase())
@@ -108,7 +109,9 @@ app.get("/features", (req: any, res: any) => {
         ? JSON.parse(CLAIM_ENABLED.toLowerCase())
         : CLAIM_ENABLED,
     network: CARDANO_NETWORK,
-  });
+  };
+
+  return res.status(200).send(features);
 });
 
 app.get("/getstakekey", async (req: any, res: any) => {
