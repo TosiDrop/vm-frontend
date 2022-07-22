@@ -213,7 +213,7 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
     let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`;
 
     if (!staking_address) return res.sendStatus(400);
-    if (unlock) {
+    if (unlock === "true") {
       if (TOSIFEE_WHITELIST) {
         const whitelist = TOSIFEE_WHITELIST.split(",");
         const accountsInfo = await getAccountsInfo(`${staking_address}`);
@@ -227,6 +227,7 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
     } else {
       vmArgs += "&unlocks_special=false";
     }
+    
     const submitCustomReward = await getFromVM(vmArgs);
     return res.send(submitCustomReward);
   } catch (e: any) {
