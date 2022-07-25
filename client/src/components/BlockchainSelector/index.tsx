@@ -13,7 +13,7 @@ const CLASS = "blockchain-selector";
 
 const BlockchainSelector = () => {
     const { ref, visible, setVisible } = useComponentVisible(false);
-    const dispatch = useDispatch(); 
+    const dispatch = useDispatch();
 
     const blockchain = useSelector(
         (state: RootState) => state.global.blockchain
@@ -50,7 +50,9 @@ const BlockchainSelector = () => {
                     >
                         <div
                             className={`${CLASS}__option cardano`}
-                            onClick={() => dispatch(setBlockchain(Blockchain.cardano))}
+                            onClick={() =>
+                                dispatch(setBlockchain(Blockchain.cardano))
+                            }
                         >
                             <img src={CardanoLogo} alt="cardano logo"></img>
                         </div>
