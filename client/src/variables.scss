@@ -2,8 +2,16 @@ $avenir-font-light: "Avenir Next Cyr Light", sans-serif;
 $avenir-font-medium: "Avenir Next Cyr Medium", sans-serif;
 
 :root {
-    --cardano-bg: linear-gradient(264.34deg,#4467bf 2.83%,#244bb0 98.67%)!important;
-    --ergo-bg: linear-gradient(264.34deg,#ff5135 2.83%,#ff8c00 98.67%)!important;
+    --cardano-bg: linear-gradient(
+        264.34deg,
+        #4467bf 2.83%,
+        #244bb0 98.67%
+    ) !important;
+    --ergo-bg: linear-gradient(
+        264.34deg,
+        #ff5135 2.83%,
+        #ff8c00 98.67%
+    ) !important;
     --body-background: linear-gradient(
             180deg,
             rgba(0, 68, 105, 0) 55.42%,

@@ -62,7 +62,13 @@ const TransactionDetail = ({ numberOfTokens, deposit, unlock }: Props) => {
             {unlock ? (
                 <div className={`${CLASS}__row premium`}>
                     <div>{lovelaceToAda(settings.tosifee)} ADA</div>
-                    <div>Tosi fee <FontAwesomeIcon icon={faQuestionCircle}/></div>
+                    <div className="tooltip-activator">
+                        Premium token fee{" "}
+                        <FontAwesomeIcon icon={faQuestionCircle} />
+                        <div className="tooltip w-64 p-3.5 rounded-2xl right-5 bottom-4">
+                            This fee is required to claim premium tokens.
+                        </div>
+                    </div>
                 </div>
             ) : null}
             <div className={`${CLASS}__row`}>

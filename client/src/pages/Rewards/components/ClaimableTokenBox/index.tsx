@@ -40,9 +40,9 @@ const ClaimableTokenBox = ({
                     {amount / Math.pow(10, decimals)} available
                 </label>
                 {premium ? (
-                    <span className="premium-token">
+                    <span className="premium-token tooltip-activator">
                         <FontAwesomeIcon icon={faStar} />
-                        <div className="tooltip w-64 p-3.5 rounded-2xl right-5 bottom-0">
+                        <div className="tooltip w-64 p-3.5 rounded-2xl right-5 bottom-5">
                             The star indicates premium token. Premium token
                             requires premium fee to claim.
                         </div>
@@ -51,7 +51,7 @@ const ClaimableTokenBox = ({
             </div>
             <div className="token-drop">
                 <div className="token-info">
-                    <img alt="" src={logo}></img>
+                    <img alt="" src={logo} className="mx-auto my-5"></img>
                     <div>
                         {ticker}
                         {/* {assetId.split(".").length > 1

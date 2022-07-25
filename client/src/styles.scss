@@ -102,3 +102,12 @@ strong {
     background: var(--font-highlight);
     color: var(--primary);
 }
+
+.tooltip-activator {
+    position: relative;
+    cursor: pointer;
+
+    &:hover .tooltip {
+        visibility: visible;
+    }
+}

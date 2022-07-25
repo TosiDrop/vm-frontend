@@ -34,15 +34,10 @@
             svg {
                 animation: glow 1.5s ease-out infinite;
             }
-
-            &:hover .tooltip {
-                visibility: visible;
-            }
         }
     }
 
     .token-info {
-        margin-top: 20px;
         text-align: center;
         color: var(--font-highlight);
 
