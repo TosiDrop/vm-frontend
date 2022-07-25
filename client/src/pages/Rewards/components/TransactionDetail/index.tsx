@@ -65,7 +65,7 @@ const TransactionDetail = ({ numberOfTokens, deposit, unlock }: Props) => {
                     <div className="tooltip-activator">
                         Premium token fee{" "}
                         <FontAwesomeIcon icon={faQuestionCircle} />
-                        <div className="tooltip w-64 p-3.5 rounded-2xl right-5 bottom-4">
+                        <div className="tooltip p-3.5 rounded-2xl right-5 bottom-4 absolute min-w-52 max-w-64">
                             This fee is required to claim premium tokens.
                         </div>
                     </div>
