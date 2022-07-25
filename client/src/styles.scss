@@ -95,3 +95,10 @@ strong {
 .premium {
     color: #ffd700;
 }
+
+.tooltip {
+    position: absolute;
+    visibility: hidden;
+    background: var(--font-highlight);
+    color: var(--primary);
+}

@@ -35,18 +35,6 @@
                 animation: glow 1.5s ease-out infinite;
             }
 
-            .tooltip {
-                position: absolute;
-                visibility: hidden;
-                width: 250px;
-                padding: 14px 18px;
-                right: 20px;
-                bottom: 0;
-                background: var(--font-highlight);
-                color: var(--primary);
-                border-radius: 20px;
-            }
-
             &:hover .tooltip {
                 visibility: visible;
             }
