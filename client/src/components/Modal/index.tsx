@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { hideModal } from "src/reducers/modalSlice";
 import { RootState } from "src/store";
 import { ModalTypes } from "src/entities/common.entities";
-import "./index.scss";
 
 function Modal() {
     const dispatch = useDispatch();
@@ -20,36 +19,41 @@ function Modal() {
         switch (modalType) {
             case ModalTypes.failure:
                 return (
-                    <span className="modal__icon-failure modal__icon ">
-                        <FontAwesomeIcon icon={faXmark} />
-                    </span>
+                    <div className="m-auto text-center text-failure">
+                        <FontAwesomeIcon className="text-3xl" icon={faXmark} />
+                    </div>
                 );
             case ModalTypes.success:
                 return (
-                    <span className="modal__icon-success modal__icon ">
-                        <FontAwesomeIcon icon={faCheck} />
-                    </span>
+                    <div className="m-auto text-center text-success">
+                        <FontAwesomeIcon className="text-3xl" icon={faCheck} />
+                    </div>
                 );
             case ModalTypes.info:
             default:
                 return (
-                    <span className="modal__icon">
-                        <FontAwesomeIcon icon={faInfoCircle} />
-                    </span>
+                    <div className="m-auto text-center text">
+                        <FontAwesomeIcon
+                            className="text-3xl"
+                            icon={faInfoCircle}
+                        />
+                    </div>
                 );
         }
     };
 
     return (
         <div
-            className={"text-modal modal" + (modalVisible ? " is-active" : "")}
+            className={`z-10 text-modal modal absolute w-full h-full flex items-center justify-center ${
+                modalVisible ? "visible" : "invisible"
+            }`}
         >
-            <div className="modal-background"></div>
-            <div className="modal-content">
+            <div className="modal-background layover absolute w-full h-full"></div>
+            <div className="background w-96 py-6 rounded-2xl z-10">
                 <div className="box">
                     <div className="modal-icon">{renderIcon()}</div>
-                    <div className="text-content">{modalText}</div>
-                    <div className="modal-buttons">
+                    <div className="mt-5 text text-center">{modalText}</div>
+                    <div className="text-center mt-5">
                         <button
                             className="tosi-button"
                             onClick={() => dispatch(hideModal())}

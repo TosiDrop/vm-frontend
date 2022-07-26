@@ -50,7 +50,7 @@ function App() {
     }, []);
 
     return (
-        <div className={theme}>
+        <div className={`${theme} w-full`}>
             <MobileMenu />
             <Modal />
             <Menu />

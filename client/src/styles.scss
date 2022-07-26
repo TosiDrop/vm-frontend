@@ -1,12 +1,5 @@
-@import "../node_modules/bulma/sass/utilities/initial-variables";
-@import "../node_modules/bulma/sass/utilities/functions";
 @import "//fonts.cdnfonts.com/css/avenir-next-cyr";
-
 @import "./variables.scss";
-
-@import "../node_modules/bulma/sass/utilities/derived-variables";
-
-@import "../node_modules/bulma/bulma";
 
 * {
     font-family: $avenir-font-medium;
@@ -37,7 +30,7 @@ strong {
 .tosi-button {
     background: var(--gradient-button-default);
     background: var(--gradient-button);
-    height: 40px;
+    padding: 10px 30px;
     box-shadow: none;
     border: 0;
     border-radius: 10px;
@@ -109,4 +102,24 @@ strong {
     &:hover .tooltip {
         visibility: visible;
     }
+}
+
+.text {
+    color: var(--font-highlight);
+}
+
+.text-failure {
+    color: #fb6b25;
+}
+
+.text-success {
+    color: #4ecc48;
+}
+
+.background {
+    background-color: var(--primary);
+}
+
+.layover {
+    background: hsla(0, 0%, 4%, 0.86);
 }
