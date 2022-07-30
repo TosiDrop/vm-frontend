@@ -27,6 +27,7 @@ const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
 const CARDANO_NETWORK = process.env.CARDANO_NETWORK || CardanoNetwork.testnet;
 const CLAIM_ENABLED = process.env.CLAIM_ENABLED || true;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
+const LOG_TYPE = process.env.LOG_TYPE || "dev";
 const PORT = process.env.PORT || 3000;
 const TOSIFEE = process.env.TOSIFEE || 500000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
@@ -35,6 +36,7 @@ const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(require("morgan")(LOG_TYPE));
 
 /**
  * Serve static files for our React app
