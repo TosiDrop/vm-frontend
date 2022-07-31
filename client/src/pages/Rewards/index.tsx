@@ -1,4 +1,4 @@
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, KeyboardEvent } from "react";
 import { GetRewards } from "../../entities/vm.entities";
@@ -293,6 +293,15 @@ function Rewards() {
                 <div className="staking-info">
                     <div className={"content-reward staked staking-info__row"}>
                         {renderStakeInfo()}
+                    </div>
+                    <div className={"premium-banner"}>
+                        <div
+                            className="premium"
+                            style={{ marginRight: "10px" }}
+                        >
+                            <FontAwesomeIcon icon={faStar} />
+                        </div>
+                        Premium tokens incur a premium token fee when claiming
                     </div>
                     <div className={"claim-list staking-info__row"}>
                         {rewards?.claimable_tokens
