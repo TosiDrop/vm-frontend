@@ -1,9 +1,6 @@
 @import "../../variables.scss";
 
 .wallet-selector-container {
-    position: relative;
-    height: 100%;
-
     .wallet-menu {
         position: absolute;
         top: 40px;
@@ -17,7 +14,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px 15px;
             color: var(--font-highlight);
             cursor: pointer;
             background-color: var(--primary);
@@ -46,7 +42,6 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 0px 15px;
         height: 100%;
         align-items: center;
         position: relative;
@@ -72,7 +67,6 @@
     }
 
     .wallet-not-connected {
-        padding: 0px 15px;
         height: 100%;
         display: flex;
         align-items: center;
@@ -83,7 +77,6 @@
     }
 
     .wallet-wrong {
-        padding: 0px 15px;
         height: 100%;
         display: flex;
         align-items: center;

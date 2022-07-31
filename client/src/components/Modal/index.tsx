@@ -49,19 +49,15 @@ function Modal() {
             }`}
         >
             <div className="modal-background layover absolute w-full h-full"></div>
-            <div className="background w-96 py-6 rounded-2xl z-10">
-                <div className="box">
-                    <div className="modal-icon">{renderIcon()}</div>
-                    <div className="mt-5 text text-center">{modalText}</div>
-                    <div className="text-center mt-5">
-                        <button
-                            className="tosi-button"
-                            onClick={() => dispatch(hideModal())}
-                        >
-                            Ok
-                        </button>
-                    </div>
-                </div>
+            <div className="background w-96 p-5 rounded-2xl z-10 flex flex-col items-center">
+                {renderIcon()}
+                <div className="mt-5 text text-center">{modalText}</div>
+                <button
+                    className="tosi-button py-2.5 px-6 rounded-lg text-center mt-5 w-fit"
+                    onClick={() => dispatch(hideModal())}
+                >
+                    Ok
+                </button>
             </div>
         </div>
     );

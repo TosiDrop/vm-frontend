@@ -14,6 +14,7 @@ import { getNetworkId } from "./services/claim.services";
 import useWallet from "./hooks/useWallet";
 import MobileMenu from "src/components/MobileMenu";
 import "./styles.scss";
+import WalletModal from "./components/WalletModal";
 
 function App() {
     const dispatch = useDispatch();
@@ -53,6 +54,7 @@ function App() {
         <div className={`${theme} w-full`}>
             <MobileMenu />
             <Modal />
+            <WalletModal />
             <Menu />
             <div className="body">
                 <Header />

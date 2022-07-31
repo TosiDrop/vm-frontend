@@ -5,6 +5,7 @@ interface ModalState {
     theme: Themes;
     showMenu: boolean;
     blockchain: Blockchain;
+    showWalletModal: boolean;
 }
 
 const initialState: ModalState = {
@@ -13,6 +14,7 @@ const initialState: ModalState = {
         : Themes.dark,
     showMenu: false,
     blockchain: Blockchain.cardano,
+    showWalletModal: false,
 };
 
 export const globalSlice = createSlice({
@@ -38,9 +40,12 @@ export const globalSlice = createSlice({
         setBlockchain: (state, action: PayloadAction<Blockchain>) => {
             state.blockchain = action.payload;
         },
+        setShowWalletModal: (state, action: PayloadAction<boolean>) => {
+            state.showWalletModal = action.payload
+        }
     },
 });
 
-export const { toggleTheme, setTheme, toggleMenu, setShowMenu, setBlockchain } =
+export const { toggleTheme, setTheme, toggleMenu, setShowMenu, setBlockchain, setShowWalletModal } =
     globalSlice.actions;
 export default globalSlice.reducer;

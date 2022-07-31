@@ -23,7 +23,7 @@ function WalletSelectorModal({
     return (
         <div
             className={
-                "wallet-modal modal" + (modalVisible ? " is-active" : "")
+                "absolute invisible wallet-modal modal" + (modalVisible ? " is-active" : "")
             }
         >
             <div className="modal-background"></div>

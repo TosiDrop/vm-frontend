@@ -1,7 +1,7 @@
 import { faLinkSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Spinner from "src/components/Spinner";
 import useComponentVisible from "src/hooks/useComponentVisible";
 import { RootState } from "src/store";
@@ -9,12 +9,14 @@ import { WalletKeys } from "../../services/connectors/wallet.connector";
 import { abbreviateAddress } from "../../services/utils.services";
 import WalletSelectorModal from "./WalletSelectorModal";
 import "./index.scss";
+import { setShowWalletModal } from "src/reducers/globalSlice";
 
 interface Props {
     connectWallet: (walletKey?: WalletKeys) => void;
 }
 
 function WalletSelector({ connectWallet }: Props) {
+    const dispatch = useDispatch() 
     const connectedWallet = useSelector(
         (state: RootState) => state.wallet.walletApi
     );
@@ -57,10 +59,10 @@ function WalletSelector({ connectWallet }: Props) {
         init();
     }, [connectedWallet?.wallet?.api, connectedWallet]);
 
-    const Connected = () => {
+    const ConnectedButton = () => {
         return (
             <div
-                className="wallet-connected"
+                className="rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"
                 onClick={() => toggleWalletMenuVisible()}
             >
                 {walletIcon ? (
@@ -84,18 +86,18 @@ function WalletSelector({ connectWallet }: Props) {
         );
     };
 
-    const NotConnected = () => (
+    const NotConnectedButton = () => (
         <div
-            className="wallet-not-connected"
-            onClick={() => modalMenu.setVisible(true)}
+            className="rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"
+            onClick={() => dispatch(setShowWalletModal(true))}
         >
             <p>Connect</p>
         </div>
     );
 
-    const WrongNetwork = () => (
+    const WrongNetworkButton = () => (
         <div
-            className={"wallet-wrong"}
+            className={"rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"}
             onClick={() => toggleWalletMenuVisible()}
         >
             <p>WRONG NETWORK</p>
@@ -103,23 +105,21 @@ function WalletSelector({ connectWallet }: Props) {
     );
 
     return (
-        <div className="wallet-selector-container">
-            <WalletSelectorModal
+        <div className="relative h-full">
+            {/* <WalletSelectorModal
                 visibilityRef={modalMenu.ref}
                 modalVisible={modalMenu.visible}
                 setModalVisible={modalMenu.setVisible}
                 connectWallet={connectWallet}
-            />
-            <div className="wallet-selector">
-                {isWrongNetwork ? (
-                    <WrongNetwork />
-                ) : connectedWallet?.wallet?.api ? (
-                    <Connected />
-                ) : (
-                    <NotConnected />
-                )}
-            </div>
-            <div
+            /> */}
+            {isWrongNetwork ? (
+                <WrongNetworkButton />
+            ) : connectedWallet?.wallet?.api ? (
+                <ConnectedButton />
+            ) : (
+                <NotConnectedButton />
+            )}
+            {/* <div
                 ref={walletMenu.ref}
                 className={
                     "wallet-menu" +
@@ -132,7 +132,7 @@ function WalletSelector({ connectWallet }: Props) {
                     <FontAwesomeIcon icon={faLinkSlash} />
                     Disconnect
                 </p>
-            </div>
+            </div> */}
         </div>
     );
 }
