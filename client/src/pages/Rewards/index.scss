@@ -29,6 +29,16 @@
         padding: 10px 30px;
     }
 
+    .premium-banner {
+        padding: 23px 30px;
+        border-radius: 20px;
+        background-color: var(--primary);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
     .content-reward {
         padding: 23px 30px;
         border-radius: 20px;
