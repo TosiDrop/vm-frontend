@@ -89,9 +89,6 @@ function WalletSelector({ connectWallet }: Props) {
                 dispatch(
                     showModal({
                         modalType: ModalTypes.wallet,
-                        details: {
-                            content: "hello",
-                        },
                     })
                 )
             }

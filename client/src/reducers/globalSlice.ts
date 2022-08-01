@@ -12,11 +12,6 @@ interface State {
     blockchain: Blockchain;
     showModal: ModalTypes | null;
     infoModalDetails: InfoModalDetails;
-    walletModalDetails: WalletModalDetails;
-}
-
-interface WalletModalDetails {
-    content: any;
 }
 
 interface InfoModalDetails {
@@ -34,9 +29,6 @@ const initialState: State = {
     infoModalDetails: {
         text: "",
         type: InfoModalTypes.info,
-    },
-    walletModalDetails: {
-        content: null,
     },
 };
 
@@ -67,14 +59,11 @@ export const globalSlice = createSlice({
             state,
             action: PayloadAction<{
                 modalType: ModalTypes;
-                details: InfoModalDetails | WalletModalDetails;
+                details?: InfoModalDetails;
             }>
         ) => {
             const { modalType, details } = action.payload;
             switch (modalType) {
-                case ModalTypes.wallet:
-                    state.walletModalDetails = details as WalletModalDetails;
-                    break;
                 case ModalTypes.info:
                     state.infoModalDetails = details as InfoModalDetails;
                     break;
