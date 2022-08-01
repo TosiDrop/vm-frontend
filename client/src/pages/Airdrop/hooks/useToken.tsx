@@ -14,8 +14,8 @@ import { getTxStatus } from "src/services/airdrop.services";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
-import { showModal } from "src/reducers/modalSlice";
-import { ModalTypes } from "src/entities/common.entities";
+import { showModal } from "src/reducers/globalSlice";
+import { ModalTypes, InfoModalTypes } from "src/entities/common.entities";
 
 const useToken = () => {
     const [addressList, setAddressList] = useState<TokenAddress[]>([]);
@@ -90,8 +90,11 @@ const useToken = () => {
                      */
                     dispatch(
                         showModal({
-                            text: "Your token UTxO has been prepared for the airdrop! Please sign the transactions to airdrop",
-                            type: ModalTypes.success,
+                            modalType: ModalTypes.info,
+                            details: {
+                                text: "Your token UTxO has been prepared for the airdrop! Please sign the transactions to airdrop",
+                                type: InfoModalTypes.success,
+                            },
                         })
                     );
                     setMultiTxTransactions(
@@ -103,8 +106,11 @@ const useToken = () => {
                      */
                     dispatch(
                         showModal({
-                            text: "Airdrop successful!",
-                            type: ModalTypes.success,
+                            modalType: ModalTypes.info,
+                            details: {
+                                text: "Airdrop successful!",
+                                type: InfoModalTypes.success,
+                            },
                         })
                     );
                 }
@@ -115,8 +121,11 @@ const useToken = () => {
                 console.log(e);
                 dispatch(
                     showModal({
-                        text: "Airdrop failed :(",
-                        type: ModalTypes.failure,
+                        modalType: ModalTypes.info,
+                        details: {
+                            text: "Airdrop failed :(",
+                            type: InfoModalTypes.failure,
+                        },
                     })
                 );
             }
@@ -138,10 +147,13 @@ const useToken = () => {
             if (!airdropRequest.valid) {
                 dispatch(
                     showModal({
-                        text: airdropRequest.errorMessage
-                            ? airdropRequest.errorMessage
-                            : "Something is wrong :(",
-                        type: ModalTypes.failure,
+                        modalType: ModalTypes.info,
+                        details: {
+                            text: airdropRequest.errorMessage
+                                ? airdropRequest.errorMessage
+                                : "Something is wrong :(",
+                            type: InfoModalTypes.failure,
+                        },
                     })
                 );
                 setLoading(false);
@@ -155,8 +167,11 @@ const useToken = () => {
             setLoading(false);
             dispatch(
                 showModal({
-                    text: "Airdrop transactions has been validated! You can now send your airdrop",
-                    type: ModalTypes.success,
+                    modalType: ModalTypes.info,
+                    details: {
+                        text: "Airdrop transactions has been validated! You can now send your airdrop",
+                        type: InfoModalTypes.success,
+                    },
                 })
             );
         }

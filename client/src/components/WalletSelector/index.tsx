@@ -9,14 +9,16 @@ import { WalletKeys } from "../../services/connectors/wallet.connector";
 import { abbreviateAddress } from "../../services/utils.services";
 import WalletSelectorModal from "./WalletSelectorModal";
 import "./index.scss";
-import { setShowWalletModal } from "src/reducers/globalSlice";
+import { showModal } from "src/reducers/globalSlice";
+import { ModalTypes } from "src/entities/common.entities";
+// import { setShowWalletModal } from "src/reducers/globalSlice";
 
 interface Props {
     connectWallet: (walletKey?: WalletKeys) => void;
 }
 
 function WalletSelector({ connectWallet }: Props) {
-    const dispatch = useDispatch() 
+    const dispatch = useDispatch();
     const connectedWallet = useSelector(
         (state: RootState) => state.wallet.walletApi
     );
@@ -89,7 +91,16 @@ function WalletSelector({ connectWallet }: Props) {
     const NotConnectedButton = () => (
         <div
             className="rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"
-            onClick={() => dispatch(setShowWalletModal(true))}
+            onClick={() =>
+                dispatch(
+                    showModal({
+                        modalType: ModalTypes.wallet,
+                        details: {
+                            content: "hello",
+                        },
+                    })
+                )
+            }
         >
             <p>Connect</p>
         </div>
@@ -97,7 +108,9 @@ function WalletSelector({ connectWallet }: Props) {
 
     const WrongNetworkButton = () => (
         <div
-            className={"rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"}
+            className={
+                "rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"
+            }
             onClick={() => toggleWalletMenuVisible()}
         >
             <p>WRONG NETWORK</p>

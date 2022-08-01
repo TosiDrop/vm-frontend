@@ -1,5 +1,5 @@
-import { ModalTypes } from "src/entities/common.entities";
-import { showModal } from "src/reducers/modalSlice";
+import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
+import { showModal } from "src/reducers/globalSlice";
 import { useState } from "react";
 import { copyContent } from "src/services/utils.services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -130,8 +130,11 @@ const SendAdaInfo = ({
             } else {
                 dispatch(
                     showModal({
-                        text: "User cancelled transaction",
-                        type: ModalTypes.failure,
+                        modalType: ModalTypes.info,
+                        details: {
+                            text: "User cancelled transaction",
+                            type: InfoModalTypes.failure,
+                        },
                     })
                 );
             }
@@ -140,8 +143,11 @@ const SendAdaInfo = ({
             setSendAdaSpinner(false);
             dispatch(
                 showModal({
-                    text: "Something is wrong :(",
-                    type: ModalTypes.failure,
+                    modalType: ModalTypes.info,
+                    details: {
+                        text: "Something is wrong :(",
+                        type: InfoModalTypes.failure,
+                    },
                 })
             );
         }

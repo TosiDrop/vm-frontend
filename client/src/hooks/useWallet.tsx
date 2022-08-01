@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { ModalTypes } from "src/entities/common.entities";
-import { showModal } from "src/reducers/modalSlice";
+import { ModalTypes, InfoModalTypes } from "src/entities/common.entities";
+import { showModal } from "src/reducers/globalSlice";
 import {
     connectWallet as connectWalletRedux,
     setIsWrongNetwork,
@@ -67,8 +67,11 @@ const useWallet = () => {
         } else {
             dispatch(
                 showModal({
-                    text: connectedWalletApi,
-                    type: ModalTypes.info,
+                    modalType: ModalTypes.info,
+                    details: {
+                        text: connectedWalletApi,
+                        type: InfoModalTypes.info,
+                    },
                 })
             );
         }
