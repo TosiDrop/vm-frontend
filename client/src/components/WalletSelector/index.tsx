@@ -74,8 +74,11 @@ function WalletSelector({ connectWallet }: Props) {
                         </p>
                     </>
                 ) : (
-                    <div className="wallet-info">
-                        Connecting <Spinner></Spinner>
+                    <div className="flex flex-row items-center">
+                        Connecting{" "}
+                        <div className="ml-3">
+                            <Spinner></Spinner>
+                        </div>
                     </div>
                 )}
             </div>
