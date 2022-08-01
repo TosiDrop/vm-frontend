@@ -1,15 +1,18 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faSun } from "@fortawesome/free-solid-svg-icons";
-import WalletSelector from "src/components/WalletSelector";
 // import BlockchainSelector from "src/components/BlockchainSelector";
+import { Themes } from "src/entities/common.entities";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import WalletSelector from "src/components/WalletSelector";
+import { RootState } from "src/store";
 import logo from "../assets/tosidrop_logo.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
 import useWallet from "src/hooks/useWallet";
 import "./header.layout.scss";
 
 function Header() {
     const dispatch = useDispatch();
+    const { theme } = useSelector((state: RootState) => state.global);
     const { connectWallet } = useWallet();
 
     return (
@@ -24,12 +27,14 @@ function Header() {
                 <div className="header-wallet-selector noselect">
                     <WalletSelector connectWallet={connectWallet} />
                 </div>
-                <div className="last">
+                <div className="ml-auto h-full text">
                     <button
-                        className="light-button button"
+                        className="h-full background rounded-lg px-5"
                         onClick={() => dispatch(toggleTheme())}
                     >
-                        <FontAwesomeIcon icon={faSun} />
+                        <FontAwesomeIcon
+                            icon={theme === Themes.dark ? faSun : faMoon}
+                        />
                     </button>
                     <button
                         className="menu-button button"
