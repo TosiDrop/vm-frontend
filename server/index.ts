@@ -226,7 +226,9 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
         const accountInfo = accountsInfo[0];
         if (whitelist.includes(accountInfo.delegated_pool)) {
           vmArgs += "&unlocks_special=true";
-        }
+	} else {
+          vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
+	}
       } else {
         vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
       }
