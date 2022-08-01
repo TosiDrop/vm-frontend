@@ -30,7 +30,7 @@ const initialState: State = {
         : Themes.dark,
     showMenu: false,
     blockchain: Blockchain.cardano,
-    showModal: ModalTypes.wallet,
+    showModal: null,
     infoModalDetails: {
         text: "",
         type: InfoModalTypes.info,

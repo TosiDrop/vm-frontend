@@ -7,11 +7,8 @@ import useComponentVisible from "src/hooks/useComponentVisible";
 import { RootState } from "src/store";
 import { WalletKeys } from "../../services/connectors/wallet.connector";
 import { abbreviateAddress } from "../../services/utils.services";
-import WalletSelectorModal from "./WalletSelectorModal";
-import "./index.scss";
 import { showModal } from "src/reducers/globalSlice";
 import { ModalTypes } from "src/entities/common.entities";
-// import { setShowWalletModal } from "src/reducers/globalSlice";
 
 interface Props {
     connectWallet: (walletKey?: WalletKeys) => void;
@@ -27,18 +24,17 @@ function WalletSelector({ connectWallet }: Props) {
     );
     const networkId = useSelector((state: RootState) => state.wallet.networkId);
 
-    const modalMenu = useComponentVisible(false);
-    const walletMenu = useComponentVisible(false);
+    const disconnectButtonMenu = useComponentVisible(false);
     const [walletAddress, setWalletAddress] = useState("");
     const [walletIcon, setWalletIcon] = useState("");
 
     const disconnectWallet = () => {
-        walletMenu.setVisible(false);
+        disconnectButtonMenu.setVisible(false);
         connectWallet();
     };
 
-    const toggleWalletMenuVisible = () => {
-        walletMenu.setVisible(!walletMenu.visible);
+    const toggleDisconnectButton = () => {
+        disconnectButtonMenu.setVisible(!disconnectButtonMenu.visible);
     };
 
     useEffect(() => {
@@ -50,11 +46,9 @@ function WalletSelector({ connectWallet }: Props) {
                     );
                     setWalletAddress(addr);
                     setWalletIcon(connectedWallet.wallet.icon);
-                    modalMenu.setVisible(false);
                 }
             } else {
                 setWalletAddress("");
-                modalMenu.setVisible(false);
             }
         }
 
@@ -65,16 +59,16 @@ function WalletSelector({ connectWallet }: Props) {
         return (
             <div
                 className="rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"
-                onClick={() => toggleWalletMenuVisible()}
+                onClick={() => toggleDisconnectButton()}
             >
                 {walletIcon ? (
                     <>
                         <img
                             src={walletIcon}
-                            className="wallet-icon"
+                            className="h-5 mr-3"
                             alt="wallet icon"
                         ></img>
-                        <p className="wallet-addr">
+                        <p>
                             {networkId === 0 ? "(testnet) " : ""}
                             {walletAddress}
                         </p>
@@ -111,20 +105,14 @@ function WalletSelector({ connectWallet }: Props) {
             className={
                 "rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"
             }
-            onClick={() => toggleWalletMenuVisible()}
+            onClick={() => toggleDisconnectButton()}
         >
             <p>WRONG NETWORK</p>
         </div>
     );
 
     return (
-        <div className="relative h-full">
-            {/* <WalletSelectorModal
-                visibilityRef={modalMenu.ref}
-                modalVisible={modalMenu.visible}
-                setModalVisible={modalMenu.setVisible}
-                connectWallet={connectWallet}
-            /> */}
+        <div className="relative h-full text">
             {isWrongNetwork ? (
                 <WrongNetworkButton />
             ) : connectedWallet?.wallet?.api ? (
@@ -132,20 +120,21 @@ function WalletSelector({ connectWallet }: Props) {
             ) : (
                 <NotConnectedButton />
             )}
-            {/* <div
-                ref={walletMenu.ref}
+            <div
+                ref={disconnectButtonMenu.ref}
                 className={
-                    "wallet-menu" +
-                    (connectedWallet?.wallet?.api && walletMenu.visible
+                    "absolute top-14 w-full background py-2.5 px-5 rounded-lg cursor-pointer" +
+                    (connectedWallet?.wallet?.api &&
+                    disconnectButtonMenu.visible
                         ? ""
                         : " hidden")
                 }
             >
                 <p onClick={disconnectWallet}>
-                    <FontAwesomeIcon icon={faLinkSlash} />
+                    <FontAwesomeIcon className="mr-3" icon={faLinkSlash} />
                     Disconnect
                 </p>
-            </div> */}
+            </div>
         </div>
     );
 }

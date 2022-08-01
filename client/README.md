@@ -6,6 +6,7 @@
 
 - for small component, e.g., wallet selector, use
   - `rounded-lg`
+  - `m-5`
   - `p-2.5`
 
 - for button
