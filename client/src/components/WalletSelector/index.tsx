@@ -58,7 +58,7 @@ function WalletSelector({ connectWallet }: Props) {
     const ConnectedButton = () => {
         return (
             <div
-                className="rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"
+                className="rounded-lg background h-full flex items-center justify-center px-5 py-2.5 cursor-pointer"
                 onClick={() => toggleDisconnectButton()}
             >
                 {walletIcon ? (
@@ -87,7 +87,7 @@ function WalletSelector({ connectWallet }: Props) {
 
     const NotConnectedButton = () => (
         <div
-            className="rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"
+            className="rounded-lg background h-full flex items-center justify-center px-5 py-2.5 cursor-pointer"
             onClick={() =>
                 dispatch(
                     showModal({

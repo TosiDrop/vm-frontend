@@ -26,7 +26,7 @@ const ClaimableTokenBox = ({
     premium,
 }: Props) => {
     return (
-        <div className="claim-item" key={index}>
+        <div className="background rounded-2xl p-5 mt-5" key={index}>
             <div className="selection">
                 <label className="noselect">
                     <input

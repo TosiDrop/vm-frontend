@@ -211,7 +211,7 @@ function Rewards() {
                 <>
                     {rewards?.pool_info?.delegated_pool_logo ? (
                         <img
-                            className="pool-logo"
+                            className="h-5 mr-2.5"
                             src={rewards?.pool_info?.delegated_pool_logo}
                             alt=""
                         />
@@ -251,7 +251,7 @@ function Rewards() {
                         rewards
                     </p>
                     <input
-                        className="mt-5 w-full rounded-lg bg-transparent border-gray-400 border p-1"
+                        className="mt-5 w-full rounded-lg bg-transparent border-gray-400 border p-1 disabled:bg-slate-700 disabled:cursor-not-allowed"
                         type="text"
                         value={searchAddress}
                         onInput={(e: KeyboardEvent<HTMLInputElement>) =>
@@ -266,9 +266,9 @@ function Rewards() {
                                 !isWrongNetwork)
                         }
                     ></input>
-                    <div className="mt-5 ">
+                    <div className="mt-5 flex flex-row items-center">
                         <button
-                            className="tosi-button py-2.5 px-5 rounded-lg flex flex-row"
+                            className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
                             disabled={!hideStakingInfo}
                             onClick={checkRewards}
                         >
@@ -281,14 +281,11 @@ function Rewards() {
                         </button>
                         <button
                             className={
-                                "tosi-cancel-button" +
+                                "tosi-button py-2.5 px-5 rounded-lg ml-5" +
                                 (hideStakingInfo ? " hidden" : "")
                             }
                             onClick={cancelClaim}
                         >
-                            <div className="tosi-cancel-icon">
-                                <FontAwesomeIcon icon={faXmark} />
-                            </div>
                             <div className="tosi-cancel-text">Cancel</div>
                         </button>
                     </div>
@@ -302,20 +299,25 @@ function Rewards() {
     function renderStakingInfoStep() {
         if (!hideStakingInfo) {
             return (
-                <div className="staking-info">
-                    <div className={"content-reward staked staking-info__row"}>
+                <div className="">
+                    <div
+                        className={
+                            "background rounded-2xl p-5 mt-5 flex flex-row items-center"
+                        }
+                    >
                         {renderStakeInfo()}
                     </div>
-                    <div className={"premium-banner"}>
-                        <div
-                            className="premium"
-                            style={{ marginRight: "10px" }}
-                        >
+                    <div
+                        className={
+                            "background rounded-2xl p-5 mt-5 flex flex-row items-center"
+                        }
+                    >
+                        <div className="premium mr-2.5">
                             <FontAwesomeIcon icon={faStar} />
                         </div>
                         Premium tokens incur a premium token fee when claiming
                     </div>
-                    <div className={"claim-list staking-info__row"}>
+                    <div className={""}>
                         {rewards?.claimable_tokens
                             ?.sort((a, b) => (a.premium ? -1 : 1))
                             .map((token, index) => {
@@ -360,7 +362,7 @@ function Rewards() {
     }
 
     return (
-        <div className="page ">
+        <div className="px-5 py-14 sm:pl-80 sm:pr-20 sm:py-14">
             <p className="text-3xl">Claim your rewards</p>
             {renderCheckRewardsStep()}
             {renderStakingInfoStep()}

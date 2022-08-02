@@ -7,10 +7,6 @@
     outline: none;
 }
 
-p {
-    font-size: 14px;
-}
-
 html {
     font-size: 14px;
 }
@@ -32,16 +28,13 @@ strong {
 .body {
     background: var(--body-background);
     overflow-x: hidden;
-    padding: 20px;
 }
 
 .tosi-button {
     background: var(--gradient-button-default);
     background: var(--gradient-button);
     color: var(--font-highlight);
-    border: 0;
     cursor: pointer;
-    font-family: inherit;
 
     &:hover {
         background: var(--gradient-button-hover-default);
@@ -53,30 +46,6 @@ strong {
         cursor: initial;
         opacity: 0.8;
     }
-}
-
-.tosi-cancel-button {
-    background: transparent;
-    height: 40px;
-    box-shadow: none;
-    border: 1px solid var(--gradient-button-default);
-    border-radius: 10px;
-    color: var(--font-highlight);
-    font-size: 15px;
-    cursor: pointer;
-    -moz-transition: all 0.8s linear;
-    -o-transition: all 0.8s linear;
-    -webkit-transition: all 0.8s linear;
-    transition: all 0.8s linear;
-}
-
-.transparent-input {
-    font-family: inherit;
-    background-color: transparent;
-    border-radius: 5px;
-    border: 1px solid var(--font-inactive-color);
-    height: 30px;
-    color: var(--font-highlight);
 }
 
 .noselect {
@@ -120,16 +89,26 @@ strong {
     color: #4ecc48;
 }
 
+.text-inactive {
+    color: var(--font-inactive-color);
+}
+
+.text-twitter {
+    color: #1c9deb;
+}
+
+.text-discord {
+    color: #6f85d4;
+}
+
+.text-telegram {
+    color: #2ca0db;
+}
+
 .background {
     background-color: var(--primary);
 }
 
 .layover {
     background: hsla(0, 0%, 4%, 0.86);
-}
-
-.page {
-    margin-right: 30px;
-    margin-bottom: 30px;
-    margin-left: 270px;
 }
