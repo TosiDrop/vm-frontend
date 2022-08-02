@@ -3,8 +3,16 @@
 
 * {
     font-family: $avenir-font-medium;
-    font-size: 14px;
     margin: 0px;
+    outline: none;
+}
+
+p {
+    font-size: 14px;
+}
+
+html {
+    font-size: 14px;
 }
 
 html,
@@ -118,4 +126,10 @@ strong {
 
 .layover {
     background: hsla(0, 0%, 4%, 0.86);
+}
+
+.page {
+    margin-right: 30px;
+    margin-bottom: 30px;
+    margin-left: 270px;
 }

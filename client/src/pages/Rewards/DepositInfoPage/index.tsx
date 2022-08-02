@@ -8,7 +8,6 @@ import { GetCustomRewards } from "src/entities/vm.entities";
 import { useEffect, useState } from "react";
 import DepositInfo from "../components/DepositInfo";
 import Loading from "src/pages/Loading";
-import "../index.scss";
 
 interface TransactionStatus {
     expected_deposit: number;

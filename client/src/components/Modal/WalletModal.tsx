@@ -21,35 +21,39 @@ export const WalletModal = () => {
                 </div>
             </div>
             <div className="w-full">
-                {window.cardano
-                    ? Object.keys(WalletKeys).map((key) => {
-                          if (window.cardano && window.cardano[key]) {
-                              const walletKey = key as WalletKeys;
-                              return (
-                                  <div
-                                      key={key}
-                                      className="w-full flex flex-row items-center cursor-pointer rounded-lg border-gray-400 border p-2.5 mt-5"
-                                      onClick={() => {
-                                          dispatch(hideModal());
-                                          connectWallet(walletKey);
-                                      }}
-                                  >
-                                      {window.cardano[key].name
-                                          .charAt(0)
-                                          .toUpperCase() +
-                                          window.cardano[key].name.slice(1)}
-                                      <img
-                                          className="ml-auto h-6"
-                                          src={window.cardano[key].icon}
-                                          alt="wallet"
-                                      ></img>
-                                  </div>
-                              );
-                          } else {
-                              return null;
-                          }
-                      })
-                    : null}
+                {window.cardano ? (
+                    Object.keys(WalletKeys).map((key) => {
+                        if (window.cardano && window.cardano[key]) {
+                            const walletKey = key as WalletKeys;
+                            return (
+                                <div
+                                    key={key}
+                                    className="w-full flex flex-row items-center cursor-pointer rounded-lg border-gray-400 border p-2.5 mt-5"
+                                    onClick={() => {
+                                        dispatch(hideModal());
+                                        connectWallet(walletKey);
+                                    }}
+                                >
+                                    {window.cardano[key].name
+                                        .charAt(0)
+                                        .toUpperCase() +
+                                        window.cardano[key].name.slice(1)}
+                                    <img
+                                        className="ml-auto h-6"
+                                        src={window.cardano[key].icon}
+                                        alt="wallet"
+                                    ></img>
+                                </div>
+                            );
+                        } else {
+                            return null;
+                        }
+                    })
+                ) : (
+                    <div className="w-full flex flex-row items-center rounded-lg border-gray-400 border p-2.5 mt-5">
+                        No wallet found :(
+                    </div>
+                )}
             </div>
         </>
     );

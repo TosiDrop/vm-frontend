@@ -27,7 +27,7 @@ function Header() {
                 <div className="header-wallet-selector noselect">
                     <WalletSelector connectWallet={connectWallet} />
                 </div>
-                <div className="ml-auto h-full text">
+                <div className="ml-auto h-full text text-base">
                     <button
                         className="h-full background rounded-lg px-5"
                         onClick={() => dispatch(toggleTheme())}

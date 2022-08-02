@@ -14,7 +14,6 @@ import { showModal } from "src/reducers/globalSlice";
 import Spinner from "src/components/Spinner";
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
 import { useNavigate } from "react-router-dom";
-import "./index.scss";
 
 function Rewards() {
     const dispatch = useDispatch();
@@ -246,13 +245,13 @@ function Rewards() {
     function renderCheckRewardsStep() {
         if (!hideCheck) {
             return (
-                <div className="content-reward check">
+                <div className="mt-5 p-5 background text rounded-2xl">
                     <p>
                         Enter your wallet/stake address or $handle to view your
                         rewards
                     </p>
                     <input
-                        className="transparent-input"
+                        className="mt-5 w-full rounded-lg bg-transparent border-gray-400 border p-1"
                         type="text"
                         value={searchAddress}
                         onInput={(e: KeyboardEvent<HTMLInputElement>) =>
@@ -267,14 +266,18 @@ function Rewards() {
                                 !isWrongNetwork)
                         }
                     ></input>
-                    <div className="content-button">
+                    <div className="mt-5 ">
                         <button
-                            className="tosi-button"
+                            className="tosi-button py-2.5 px-5 rounded-lg flex flex-row"
                             disabled={!hideStakingInfo}
                             onClick={checkRewards}
                         >
                             Check my rewards
-                            {rewardsLoader ? <Spinner></Spinner> : null}
+                            {rewardsLoader ? (
+                                <div className="ml-2.5">
+                                    <Spinner></Spinner>
+                                </div>
+                            ) : null}
                         </button>
                         <button
                             className={
@@ -357,8 +360,8 @@ function Rewards() {
     }
 
     return (
-        <div className="rewards">
-            <h1>Claim your rewards</h1>
+        <div className="page ">
+            <p className="text-3xl">Claim your rewards</p>
             {renderCheckRewardsStep()}
             {renderStakingInfoStep()}
         </div>
