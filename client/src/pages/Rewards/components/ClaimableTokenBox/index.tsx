@@ -26,9 +26,12 @@ const ClaimableTokenBox = ({
     premium,
 }: Props) => {
     return (
-        <div className="background rounded-2xl p-5 mt-5" key={index}>
-            <div className="selection">
-                <label className="noselect">
+        <div
+            className="mt-5 background rounded-2xl p-5 w-fit flex flex-col items-center w-full sm:w-64 mr-5"
+            key={index}
+        >
+            <div className="w-full flex flex-row items-center">
+                <label className="flex flex-row items-center mr-auto">
                     <input
                         type="checkbox"
                         id={`custom-checkbox-${index}`}
@@ -36,12 +39,13 @@ const ClaimableTokenBox = ({
                         value={ticker}
                         checked={checked}
                         onChange={() => handleOnChange(index)}
+                        className="mr-1"
                     />
                     {amount / Math.pow(10, decimals)} available
                 </label>
                 {premium ? (
-                    <span className="premium-token tooltip-activator">
-                        <FontAwesomeIcon icon={faStar} />
+                    <span className="premium-token tooltip-activator ml-auto">
+                        <FontAwesomeIcon className="premium" icon={faStar} />
                         <div className="tooltip w-64 p-3.5 rounded-2xl right-5 bottom-5 absolute">
                             The star indicates premium token. Premium token
                             requires premium fee to claim.
@@ -49,15 +53,13 @@ const ClaimableTokenBox = ({
                     </span>
                 ) : null}
             </div>
-            <div className="token-drop">
-                <div className="token-info">
-                    <img alt="" src={logo} className="mx-auto my-5"></img>
-                    <div>
-                        {ticker}
-                        {/* {assetId.split(".").length > 1
-                            ? getNameFromHex(assetId.split(".")[1])
-                            : getNameFromHex(assetId.split(".")[0])} */}
-                    </div>
+            <div className="mt-5">
+                <img alt="" src={logo} className=" h-24"></img>
+                <div className="text-center mt-5">
+                    {ticker}
+                    {/* {assetId.split(".").length > 1
+                        ? getNameFromHex(assetId.split(".")[1])
+                        : getNameFromHex(assetId.split(".")[0])} */}
                 </div>
             </div>
         </div>

@@ -27,7 +27,7 @@ function Rewards() {
     );
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
-    const [rewards, setRewards] = useState<GetRewards>();
+    const [rewards, setRewards] = useState<GetRewards | undefined>();
     const [searchAddress, setSearchAddress] = useState<string>("");
     const [rewardsLoader, setRewardsLoader] = useState(false);
     const [checkedState, setCheckedState] = useState(new Array<boolean>());
@@ -317,7 +317,7 @@ function Rewards() {
                         </div>
                         Premium tokens incur a premium token fee when claiming
                     </div>
-                    <div className={""}>
+                    <div className={"flex flex-row flex-wrap"}>
                         {rewards?.claimable_tokens
                             ?.sort((a, b) => (a.premium ? -1 : 1))
                             .map((token, index) => {
