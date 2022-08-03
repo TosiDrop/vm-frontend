@@ -27,7 +27,7 @@ const ClaimableTokenBox = ({
 }: Props) => {
     return (
         <div
-            className="mt-5 background rounded-2xl p-5 w-fit flex flex-col items-center w-full sm:w-64 mr-5"
+            className="mt-5 background rounded-2xl p-5 flex flex-col items-center w-full sm:w-64 sm:mr-5"
             key={index}
         >
             <div className="w-full flex flex-row items-center">

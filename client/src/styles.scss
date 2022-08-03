@@ -112,3 +112,9 @@ strong {
 .layover {
     background: hsla(0, 0%, 4%, 0.86);
 }
+
+input {
+    &:disabled {
+        background: var(--input-disabled);
+    }
+}

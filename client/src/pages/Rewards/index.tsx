@@ -251,7 +251,7 @@ function Rewards() {
                         rewards
                     </p>
                     <input
-                        className="mt-5 w-full rounded-lg bg-transparent border-gray-400 border p-1 disabled:bg-slate-700 disabled:cursor-not-allowed"
+                        className={`mt-5 w-full rounded-lg bg-transparent border-gray-400 border p-1 disabled:cursor-not-allowed`}
                         type="text"
                         value={searchAddress}
                         onInput={(e: KeyboardEvent<HTMLInputElement>) =>
@@ -338,21 +338,32 @@ function Rewards() {
                             })}
                     </div>
 
-                    <div className={"content-reward claim staking-info__row"}>
-                        <div className="text">
-                            Selected {checkedCount} token
+                    <div
+                        className={
+                            "background flex flex-row items-center p-5 mt-5 rounded-2xl"
+                        }
+                    >
+                        <div>Selected {checkedCount} token</div>
+                        <div className="ml-auto flex flex-row w-fit">
+                            <button
+                                className="tosi-button py-2.5 px-5 rounded-lg"
+                                onClick={selectAll}
+                            >
+                                {allIsSelected ? "Unselect All" : "Select All"}
+                            </button>
+                            <button
+                                className="tosi-button ml-5 py-2.5 px-5 rounded-lg flex flex-row items-center"
+                                disabled={checkedCount === 0}
+                                onClick={claimMyRewards}
+                            >
+                                Claim my rewards
+                                {claimMyRewardLoading ? (
+                                    <div className="ml-2.5">
+                                        <Spinner></Spinner>
+                                    </div>
+                                ) : null}
+                            </button>
                         </div>
-                        <button className="tosi-button" onClick={selectAll}>
-                            {allIsSelected ? "Unselect All" : "Select All"}
-                        </button>
-                        <button
-                            className="tosi-button"
-                            disabled={checkedCount === 0}
-                            onClick={claimMyRewards}
-                        >
-                            Claim my rewards
-                            {claimMyRewardLoading ? <Spinner></Spinner> : null}
-                        </button>
                     </div>
                 </div>
             );

@@ -24,9 +24,9 @@ function Menu() {
     return (
         <>
             <div
-                className={`${
-                    !showMenu ? "visible" : "invisible"
-                } fixed top-52 left-20 background text p-5 rounded-2xl min-w-40`}
+                className={
+                    "fixed top-52 left-20 background text p-5 rounded-2xl min-w-40 invisible sm:visible"
+                }
             >
                 <div className="menu">
                     <div className="menu-content">
@@ -141,10 +141,6 @@ function Menu() {
                     </div>
                 </div>
             </div>
-            <div
-                className={"gray-layer" + (!showMenu ? " layer-hidden" : "")}
-                onClick={() => dispatch(setShowMenu(false))}
-            ></div>
         </>
     );
 }
