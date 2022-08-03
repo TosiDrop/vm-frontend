@@ -4,9 +4,6 @@ import { NetworkId } from "src/entities/common.entities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { RootState } from "src/store";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
-import "./index.scss";
-
-const CLASS = "transaction-status";
 
 enum TransactionStatusDetail {
     waiting = 0,
@@ -34,7 +31,7 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
                 cardanoScanUrl = "https://testnet.cardanoscan.io/transaction";
         }
         return transactionId ? (
-            <div className={`${CLASS}__status-row`}>
+            <div className="">
                 Transaction ID:{" "}
                 <a
                     target="_blank"
@@ -53,8 +50,8 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
         switch (transactionStatus) {
             case TransactionStatusDetail.waiting:
                 return (
-                    <div className={`${CLASS}__row ${CLASS}__status`}>
-                        <div className={`${CLASS}__status-row`}>
+                    <div className="">
+                        <div className="">
                             <div>Status: </div>
                             <div>waiting for deposit</div>
                         </div>
@@ -62,45 +59,35 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
                 );
             case TransactionStatusDetail.processing:
                 return (
-                    <div className={`${CLASS}__row ${CLASS}__status`}>
+                    <div className="">
                         {renderTxId()}
-                        <div className={`${CLASS}__status-row`}>
+                        <div className="">
                             <div>Status: </div>
-                            <div className={`${CLASS}__status-processing`}>
-                                processing transaction
-                            </div>
+                            <div className="">processing transaction</div>
                             <Spinner></Spinner>
                         </div>
                     </div>
                 );
             case TransactionStatusDetail.success:
                 return (
-                    <div className={`${CLASS}__row ${CLASS}__status`}>
-                        <div className={`${CLASS}__status-row`}>
-                            <div>Status: </div>
-                            <div className={`${CLASS}__status-success`}>
-                                Transaction successful! Your tokens will arrive
-                                soon 🎉
-                            </div>
-                        </div>
-                    </div>
+                    <>
+                        Status: Transaction successful! Your tokens will arrive
+                        soon 🎉
+                    </>
                 );
             case TransactionStatusDetail.failure:
             default:
                 return (
-                    <div className={`${CLASS}__row ${CLASS}__status`}>
+                    <div className="">
                         {renderTxId()}
-                        <div className={`${CLASS}__status-row`}>
-                            <div>Status: </div>
-                            <div className={`${CLASS}__status-fail`}>
-                                transaction fails, please try again
-                            </div>
-                        </div>
+                        Status: transaction fails, please try again
                     </div>
                 );
         }
     };
-    return <div className={`rewards-block ${CLASS}`}>{renderStatus()}</div>;
+    return (
+        <div className="background rounded-2xl p-5 mt-5">{renderStatus()}</div>
+    );
 };
 
 export default TransactionStatus;

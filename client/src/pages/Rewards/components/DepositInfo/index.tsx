@@ -31,13 +31,13 @@ const DepositInfo = ({
 }: Params) => {
     return (
         <>
-            <div className={`rewards-block ${CLASS}__warning ${CLASS}`}>
-                <FontAwesomeIcon icon={faWarning} />
+            <div className="bg-yellow-400 rounded-2xl p-5 mt-5 text-black">
+                <FontAwesomeIcon className="mr-2.5" icon={faWarning} />
                 <span>
                     Please send ONLY from the wallet with the same stake key
                 </span>
             </div>
-            <div className={`rewards-block ${CLASS}`}>
+            <div className="background rounded-2xl p-5 mt-5">
                 <div className={`${CLASS}__info ${CLASS}__row`}>
                     Please complete the withdrawal process by sending{" "}
                     <b>

@@ -63,7 +63,6 @@ strong {
 }
 
 .tooltip {
-    visibility: hidden;
     background: var(--font-highlight);
     color: var(--primary);
 }
@@ -107,6 +106,10 @@ strong {
 
 .background {
     background-color: var(--primary);
+}
+
+.border-color {
+    border-color: var(--font-highlight);
 }
 
 .layover {

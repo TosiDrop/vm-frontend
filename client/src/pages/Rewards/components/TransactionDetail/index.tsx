@@ -41,27 +41,35 @@ const TransactionDetail = ({ numberOfTokens, deposit, unlock }: Props) => {
     }, []);
 
     return (
-        <div className={`rewards-block ${CLASS}`}>
-            <div className={`${CLASS}__title`}>Transaction Detail</div>
-            <div className={`${CLASS}__row`}>
-                <div>{numberOfTokens} tokens</div>
+        <div className="background rounded-2xl p-5 mt-5">
+            Transaction Detail
+            <div className="p-1 flex items-center flex-row-reverse border-b border-color">
+                <div className="w-28 text-right">{numberOfTokens} tokens</div>
                 <div>Total tokens selected</div>
             </div>
-            <div className={`${CLASS}__row`}>
-                <div>{lovelaceToAda(settings.withdrawalFee)} ADA</div>
+            <div className="p-1 flex items-center flex-row-reverse border-b border-color">
+                <div className="w-28 text-right">
+                    {lovelaceToAda(settings.withdrawalFee)} ADA
+                </div>
                 <div>Withdrawal fee</div>
             </div>
-            <div className={`${CLASS}__row`}>
-                <div>{lovelaceToAda(settings.txFee)} ADA</div>
+            <div className="p-1 flex items-center flex-row-reverse border-b border-color">
+                <div className="w-28 text-right">
+                    {lovelaceToAda(settings.txFee)} ADA
+                </div>
                 <div>Transaction fee</div>
             </div>
-            <div className={`${CLASS}__row`}>
-                <div>{lovelaceToAda(settings.serviceFee)} ADA</div>
+            <div className="p-1 flex items-center flex-row-reverse border-b border-color">
+                <div className="w-28 text-right">
+                    {lovelaceToAda(settings.serviceFee)} ADA
+                </div>
                 <div>Service fee</div>
             </div>
             {unlock ? (
-                <div className={`${CLASS}__row premium`}>
-                    <div>{lovelaceToAda(settings.tosifee)} ADA</div>
+                <div className="p-1 flex items-center flex-row-reverse border-b border-color premium">
+                    <div className="w-28 text-right">
+                        {lovelaceToAda(settings.tosifee)} ADA
+                    </div>
                     <div className="tooltip-activator">
                         Premium token fee{" "}
                         <FontAwesomeIcon icon={faQuestionCircle} />
@@ -71,12 +79,14 @@ const TransactionDetail = ({ numberOfTokens, deposit, unlock }: Props) => {
                     </div>
                 </div>
             ) : null}
-            <div className={`${CLASS}__row`}>
-                <div>{lovelaceToAda(deposit)} ADA</div>
+            <div className="p-1 flex items-center flex-row-reverse border-b border-color">
+                <div className="w-28 text-right">
+                    {lovelaceToAda(deposit)} ADA
+                </div>
                 <div>You Send</div>
             </div>
-            <div className={`${CLASS}__row`}>
-                <div>
+            <div className="p-1 flex items-center flex-row-reverse border-b border-color">
+                <div className="w-28 text-right">
                     {lovelaceToAda(
                         calcReturnedAda(
                             deposit,
@@ -91,11 +101,9 @@ const TransactionDetail = ({ numberOfTokens, deposit, unlock }: Props) => {
                 </div>
                 <div>You'll get back (Approximately)</div>
             </div>
-            <div className={`${CLASS}__row ${CLASS}__warning`}>
-                <div>
-                    The withdrawal fee is just an approximation, but it won't
-                    differ so much from the displayed value.
-                </div>
+            <div className="mt-1 text-right text-yellow-400">
+                The withdrawal fee is just an approximation, but it won't differ
+                so much from the displayed value.
             </div>
         </div>
     );
