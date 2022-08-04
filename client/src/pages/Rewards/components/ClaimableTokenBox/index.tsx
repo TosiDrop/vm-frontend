@@ -45,7 +45,7 @@ const ClaimableTokenBox = ({
                 {premium ? (
                     <span className="premium-token tooltip-activator ml-auto">
                         <FontAwesomeIcon
-                            className="text-premium"
+                            className="text-premium cursor-help"
                             icon={faStar}
                         />
                         <div className="tooltip w-64 p-3.5 rounded-2xl right-5 bottom-5 absolute">

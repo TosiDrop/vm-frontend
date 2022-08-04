@@ -69,7 +69,7 @@ const TransactionDetail = ({ numberOfTokens, deposit, unlock }: Props) => {
                     <div className="w-28 text-right">
                         {lovelaceToAda(settings.tosifee)} ADA
                     </div>
-                    <div className="tooltip-activator">
+                    <div className="tooltip-activator cursor-help">
                         Premium token fee{" "}
                         <FontAwesomeIcon icon={faQuestionCircle} />
                         <div className="tooltip p-3.5 rounded-2xl right-5 bottom-4 absolute min-w-52 max-w-64">
