@@ -1,23 +1,31 @@
 # Frontend Development Guide
 
-- for big component, e.g., modal, wallet, and main content, use
-  - `rounded-2xl`: border radius
-  - `p-5`
-  - `m-5`
+We use tailwind for CSS. Please refer to [the official documentation](https://tailwindcss.com/). If you are developing TosiDrop client, PLEASE follow the guidelines here. 
 
-- for small component, e.g., wallet selector, use
-  - `rounded-lg`
-  - `p-2.5`
+### Big component, e.g., modal, wallet, and main content
+- `rounded-2xl`
+- `p-5`
+- `m-5`
 
-- for button
-  - `py-2.5 px-6`
+### Small component, e.g., wallet selector
+- `rounded-lg`
+- `p-2.5`
+- `m-2.5`
 
-for title: `text-3xl`
+### Button
+- `rounded-lg`
+- `m-2.5`
+- `py-2.5`
+- `px-5`
+- `tosi-button`
 
-border-gray-400
-border
+### Title
+- `text-3xl`
 
-color for text:
+### Border width
+- `border`
+
+### Color for text
 - `text-green-600`: success
 - `text-red-600`: failure
 - `text-yellow-400`: warning

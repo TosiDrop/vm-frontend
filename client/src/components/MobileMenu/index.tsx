@@ -17,22 +17,15 @@ import {
     faDiscord,
     faTelegram,
 } from "@fortawesome/free-brands-svg-icons";
-import "./index.scss";
 import { Link, useLocation } from "react-router-dom";
 import { Themes } from "src/entities/common.entities";
-
-const CLASS = "mobile-menu";
+import "./index.scss";
 
 const MobileMenu = () => {
     const showMenu = useSelector((state: RootState) => state.global.showMenu);
     const theme = useSelector((state: RootState) => state.global.theme);
     const location = useLocation().pathname;
     const dispatch = useDispatch();
-
-    const getClassForMenu = (prefix: string) => {
-        if (showMenu) return `${CLASS}__${prefix}-visible`;
-        return `${CLASS}__${prefix}-hidden`;
-    };
 
     const getClassForListItem = (itemLocation: string) => {
         let compareLocation = location;
@@ -70,7 +63,7 @@ const MobileMenu = () => {
                 }`}
                 ref={ref}
             >
-                <ul className={`${CLASS}__list`}>
+                <ul>
                     <li
                         onClick={() => dispatch(setShowMenu(false))}
                         className="mb-2.5"
