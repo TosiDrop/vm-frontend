@@ -4,9 +4,9 @@ import "./index.scss";
 
 const CLASS = "spinner";
 
-const Spinner = () => {
+const Spinner = ({ className }: { className?: string }) => {
     return (
-        <div className={CLASS}>
+        <div className={`${className} ${CLASS}`}>
             <div className={`${CLASS}__container`}>
                 <FontAwesomeIcon icon={faCircleNotch} />
             </div>

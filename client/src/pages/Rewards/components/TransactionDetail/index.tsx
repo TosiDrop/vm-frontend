@@ -66,7 +66,7 @@ const TransactionDetail = ({ numberOfTokens, deposit, unlock }: Props) => {
                 <div>Service fee</div>
             </div>
             {unlock ? (
-                <div className="p-1 flex items-center flex-row-reverse border-b border-color premium">
+                <div className="p-1 flex items-center flex-row-reverse border-b border-color text-premium">
                     <div className="w-28 text-right">
                         {lovelaceToAda(settings.tosifee)} ADA
                     </div>

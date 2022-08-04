@@ -16,3 +16,8 @@ for title: `text-3xl`
 
 border-gray-400
 border
+
+color for text:
+- `text-green-600`: success
+- `text-red-600`: failure
+- `text-yellow-400`: warning

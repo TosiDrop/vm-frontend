@@ -32,12 +32,12 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
         }
         return transactionId ? (
             <div className="">
-                Transaction ID:{" "}
+                Transaction ID:
                 <a
                     target="_blank"
                     rel="noreferrer"
-                    style={{ marginLeft: "5px" }}
                     href={`${cardanoScanUrl}/${transactionId}`}
+                    className="text-violet-500 ml-2.5"
                 >
                     {transactionId}{" "}
                     <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
@@ -49,30 +49,25 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
     const renderStatus = () => {
         switch (transactionStatus) {
             case TransactionStatusDetail.waiting:
-                return (
-                    <div className="">
-                        <div className="">
-                            <div>Status: </div>
-                            <div>waiting for deposit</div>
-                        </div>
-                    </div>
-                );
+                return <>Status: waiting for deposit</>;
             case TransactionStatusDetail.processing:
                 return (
                     <div className="">
                         {renderTxId()}
-                        <div className="">
-                            <div>Status: </div>
-                            <div className="">processing transaction</div>
-                            <Spinner></Spinner>
+                        <div className="flex flex-row items-center">
+                            Status: processing transaction{" "}
+                            <Spinner className="ml-2.5"></Spinner>
                         </div>
                     </div>
                 );
             case TransactionStatusDetail.success:
                 return (
                     <>
-                        Status: Transaction successful! Your tokens will arrive
-                        soon 🎉
+                        Status:{" "}
+                        <span className="text-green-600">
+                            Transaction successful! Your tokens will arrive soon
+                            🎉
+                        </span>
                     </>
                 );
             case TransactionStatusDetail.failure:
@@ -80,7 +75,10 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
                 return (
                     <div className="">
                         {renderTxId()}
-                        Status: transaction fails, please try again
+                        Status:{" "}
+                        <span className="text-red-600">
+                            transaction fails, please try again
+                        </span>
                     </div>
                 );
         }
