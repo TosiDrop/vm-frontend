@@ -312,7 +312,7 @@ function Rewards() {
                             "background rounded-2xl p-5 mt-5 flex flex-row items-center"
                         }
                     >
-                        <div className="premium mr-2.5">
+                        <div className="text-premium mr-2.5">
                             <FontAwesomeIcon icon={faStar} />
                         </div>
                         Premium tokens incur a premium token fee when claiming
@@ -373,7 +373,7 @@ function Rewards() {
     }
 
     return (
-        <div className="px-5 py-14 sm:pl-80 sm:pr-20 sm:py-14">
+        <div className="px-5 py-14 sm:pl-80 sm:pr-20">
             <p className="text-3xl">Claim your rewards</p>
             {renderCheckRewardsStep()}
             {renderStakingInfoStep()}

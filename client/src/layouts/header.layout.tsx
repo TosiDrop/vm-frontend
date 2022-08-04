@@ -15,29 +15,48 @@ function Header() {
     const { connectWallet } = useWallet();
 
     return (
-        <div className="flex flex-row items-center w-full p-5 pb-0">
-            <div className="h-full flex flex-row items-center">
-                <img src={logo} className="h-10 logo" alt="tosidrop logo"></img>
-                <p className="ml-2.5 font-semibold text-lg">TosiDrop</p>
+        <>
+            {/* Web header */}
+            <div className="flex-row items-center w-full p-5 pb-0 hidden sm:flex">
+                <div className="h-full flex flex-row items-center">
+                    <img
+                        src={logo}
+                        className="h-10 logo"
+                        alt="tosidrop logo"
+                    ></img>
+                    <p className="ml-2.5 font-semibold text-lg">TosiDrop</p>
+                </div>
+                <div className="flex flex-row items-center ml-auto">
+                    <WalletSelector connectWallet={connectWallet} />
+                    <button
+                        className="h-full background rounded-lg px-5 py-2.5 ml-2.5"
+                        onClick={() => dispatch(toggleTheme())}
+                    >
+                        <FontAwesomeIcon
+                            icon={theme === Themes.dark ? faSun : faMoon}
+                        />
+                    </button>
+                </div>
             </div>
-            <div className="flex flex-row items-center ml-auto">
-                <WalletSelector connectWallet={connectWallet} />
-                <button
-                    className="h-full background rounded-lg px-5 py-2.5 ml-2.5"
-                    onClick={() => dispatch(toggleTheme())}
-                >
-                    <FontAwesomeIcon
-                        icon={theme === Themes.dark ? faSun : faMoon}
-                    />
-                </button>
-                <button
-                    className="background rounded-lg px-5 py-2.5 ml-2.5 sm:hidden"
-                    onClick={() => dispatch(toggleMenu())}
-                >
-                    <FontAwesomeIcon icon={faBars} />
-                </button>
+
+            {/* Mobile header */}
+            <div className="flex flex-row items-center justify-center h-fit m-5 mb-0 visible sm:hidden">
+                <div className="flex flex-row items-center mr-auto">
+                    <button
+                        className="background rounded-lg px-5 py-2.5"
+                        onClick={() => dispatch(toggleMenu())}
+                    >
+                        <FontAwesomeIcon icon={faBars} />
+                    </button>
+                </div>
+                <p className="font-semibold text-2xl">TosiDrop</p>
+                <img
+                    src={logo}
+                    className="h-10 logo ml-auto"
+                    alt="tosidrop logo"
+                ></img>
             </div>
-        </div>
+        </>
     );
 }
 

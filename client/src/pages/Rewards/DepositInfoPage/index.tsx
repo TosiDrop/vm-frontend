@@ -110,7 +110,7 @@ const DepositInfoPage = () => {
     return loading ? (
         <Loading />
     ) : selectedTokens && stakeAddress && withdrawAddress && requestId ? (
-        <div className="px-5 py-14 sm:pl-80 sm:pr-20 sm:py-14 text">
+        <div className="px-5 py-14 sm:pl-80 sm:pr-20 text">
             <p className="text-3xl">Claim your rewards</p>
             <DepositInfo
                 txDetail={txDetail}
