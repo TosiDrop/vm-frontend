@@ -7,14 +7,13 @@ import {
     getRewards,
     getStakeKey,
 } from "../../services/claim.services";
-import { ModalTypes } from "../../entities/common.entities";
+import { ModalTypes, InfoModalTypes } from "../../entities/common.entities";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
-import { showModal } from "src/reducers/modalSlice";
+import { showModal } from "src/reducers/globalSlice";
 import Spinner from "src/components/Spinner";
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
 import { useNavigate } from "react-router-dom";
-import "./index.scss";
 
 function Rewards() {
     const dispatch = useDispatch();
@@ -28,7 +27,7 @@ function Rewards() {
     );
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
-    const [rewards, setRewards] = useState<GetRewards>();
+    const [rewards, setRewards] = useState<GetRewards | undefined>();
     const [searchAddress, setSearchAddress] = useState<string>("");
     const [rewardsLoader, setRewardsLoader] = useState(false);
     const [checkedState, setCheckedState] = useState(new Array<boolean>());
@@ -124,8 +123,11 @@ function Rewards() {
                 } else {
                     dispatch(
                         showModal({
-                            text: "No rewards found for the account, yet.",
-                            type: ModalTypes.info,
+                            modalType: ModalTypes.info,
+                            details: {
+                                text: "No rewards found for the account, yet.",
+                                type: InfoModalTypes.info,
+                            },
                         })
                     );
                     setRewardsLoader(false);
@@ -136,8 +138,11 @@ function Rewards() {
                     default:
                         dispatch(
                             showModal({
-                                text: "Account not found.",
-                                type: ModalTypes.info,
+                                modalType: ModalTypes.info,
+                                details: {
+                                    text: "Account not found.",
+                                    type: InfoModalTypes.info,
+                                },
                             })
                         );
                         setRewardsLoader(false);
@@ -183,8 +188,11 @@ function Rewards() {
         } catch (e) {
             dispatch(
                 showModal({
-                    text: "Something went wrong. Please try again later.",
-                    type: ModalTypes.failure,
+                    modalType: ModalTypes.info,
+                    details: {
+                        text: "Something went wrong. Please try again later.",
+                        type: InfoModalTypes.failure,
+                    },
                 })
             );
             setClaimMyRewardLoading(false);
@@ -203,7 +211,7 @@ function Rewards() {
                 <>
                     {rewards?.pool_info?.delegated_pool_logo ? (
                         <img
-                            className="pool-logo"
+                            className="h-5 mr-2.5"
                             src={rewards?.pool_info?.delegated_pool_logo}
                             alt=""
                         />
@@ -237,13 +245,13 @@ function Rewards() {
     function renderCheckRewardsStep() {
         if (!hideCheck) {
             return (
-                <div className="content-reward check">
+                <div className="mt-5 p-5 background text rounded-2xl">
                     <p>
                         Enter your wallet/stake address or $handle to view your
                         rewards
                     </p>
                     <input
-                        className="transparent-input"
+                        className={`mt-5 w-full rounded-lg bg-transparent border-gray-400 border p-1 disabled:cursor-not-allowed`}
                         type="text"
                         value={searchAddress}
                         onInput={(e: KeyboardEvent<HTMLInputElement>) =>
@@ -258,25 +266,26 @@ function Rewards() {
                                 !isWrongNetwork)
                         }
                     ></input>
-                    <div className="content-button">
+                    <div className="mt-5 flex flex-row items-center">
                         <button
-                            className="tosi-button"
+                            className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
                             disabled={!hideStakingInfo}
                             onClick={checkRewards}
                         >
                             Check my rewards
-                            {rewardsLoader ? <Spinner></Spinner> : null}
+                            {rewardsLoader ? (
+                                <div className="ml-2.5">
+                                    <Spinner></Spinner>
+                                </div>
+                            ) : null}
                         </button>
                         <button
                             className={
-                                "tosi-cancel-button" +
+                                "tosi-button py-2.5 px-5 rounded-lg ml-5" +
                                 (hideStakingInfo ? " hidden" : "")
                             }
                             onClick={cancelClaim}
                         >
-                            <div className="tosi-cancel-icon">
-                                <FontAwesomeIcon icon={faXmark} />
-                            </div>
                             <div className="tosi-cancel-text">Cancel</div>
                         </button>
                     </div>
@@ -290,20 +299,25 @@ function Rewards() {
     function renderStakingInfoStep() {
         if (!hideStakingInfo) {
             return (
-                <div className="staking-info">
-                    <div className={"content-reward staked staking-info__row"}>
+                <div className="">
+                    <div
+                        className={
+                            "background rounded-2xl p-5 mt-5 flex flex-row items-center"
+                        }
+                    >
                         {renderStakeInfo()}
                     </div>
-                    <div className={"premium-banner"}>
-                        <div
-                            className="premium"
-                            style={{ marginRight: "10px" }}
-                        >
+                    <div
+                        className={
+                            "background rounded-2xl p-5 mt-5 flex flex-row items-center"
+                        }
+                    >
+                        <div className="text-premium mr-2.5">
                             <FontAwesomeIcon icon={faStar} />
                         </div>
                         Premium tokens incur a premium token fee when claiming
                     </div>
-                    <div className={"claim-list staking-info__row"}>
+                    <div className={"flex flex-row flex-wrap"}>
                         {rewards?.claimable_tokens
                             ?.sort((a, b) => (a.premium ? -1 : 1))
                             .map((token, index) => {
@@ -324,21 +338,32 @@ function Rewards() {
                             })}
                     </div>
 
-                    <div className={"content-reward claim staking-info__row"}>
-                        <div className="text">
-                            Selected {checkedCount} token
+                    <div
+                        className={
+                            "background flex flex-row items-center p-5 mt-5 rounded-2xl"
+                        }
+                    >
+                        <div>Selected {checkedCount} token</div>
+                        <div className="ml-auto flex flex-row w-fit">
+                            <button
+                                className="tosi-button py-2.5 px-5 rounded-lg"
+                                onClick={selectAll}
+                            >
+                                {allIsSelected ? "Unselect All" : "Select All"}
+                            </button>
+                            <button
+                                className="tosi-button ml-5 py-2.5 px-5 rounded-lg flex flex-row items-center"
+                                disabled={checkedCount === 0}
+                                onClick={claimMyRewards}
+                            >
+                                Claim my rewards
+                                {claimMyRewardLoading ? (
+                                    <div className="ml-2.5">
+                                        <Spinner></Spinner>
+                                    </div>
+                                ) : null}
+                            </button>
                         </div>
-                        <button className="tosi-button" onClick={selectAll}>
-                            {allIsSelected ? "Unselect All" : "Select All"}
-                        </button>
-                        <button
-                            className="tosi-button"
-                            disabled={checkedCount === 0}
-                            onClick={claimMyRewards}
-                        >
-                            Claim my rewards
-                            {claimMyRewardLoading ? <Spinner></Spinner> : null}
-                        </button>
                     </div>
                 </div>
             );
@@ -348,8 +373,8 @@ function Rewards() {
     }
 
     return (
-        <div className="rewards">
-            <h1>Claim your rewards</h1>
+        <div className="px-5 py-14 sm:pl-80 sm:pr-20">
+            <p className="text-3xl">Claim your rewards</p>
             {renderCheckRewardsStep()}
             {renderStakingInfoStep()}
         </div>

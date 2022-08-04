@@ -1,12 +1,12 @@
 export interface GetRewards {
-    total_rewards: number;
-    consolidated_promises: Assets;
-    consolidated_rewards: Assets;
-    nfts: any[];
-    assets: Assets;
-    min_balance: number;
-    vending_address: string;
-    withdrawal_fee: string;
+    total_rewards?: number;
+    consolidated_promises?: Assets;
+    consolidated_rewards?: Assets;
+    nfts?: any[];
+    assets?: Assets;
+    min_balance?: number;
+    vending_address?: string;
+    withdrawal_fee?: string;
     claimable_tokens: ClaimableToken[];
     pool_info: {
         delegated_pool_name: string;
@@ -15,7 +15,7 @@ export interface GetRewards {
         delegated_pool_ticker: string;
         delegated_pool_logo: string;
     };
-    project_locked_rewards: {
+    project_locked_rewards?: {
         consolidated_promises: Assets;
         consolidated_rewards: Assets;
         nfts: any[];

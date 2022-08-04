@@ -1,45 +1,62 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faSun } from "@fortawesome/free-solid-svg-icons";
-import WalletSelector from "src/components/WalletSelector";
 // import BlockchainSelector from "src/components/BlockchainSelector";
+import { Themes } from "src/entities/common.entities";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import WalletSelector from "src/components/WalletSelector";
+import { RootState } from "src/store";
 import logo from "../assets/tosidrop_logo.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
 import useWallet from "src/hooks/useWallet";
-import "./header.layout.scss";
 
 function Header() {
     const dispatch = useDispatch();
+    const { theme } = useSelector((state: RootState) => state.global);
     const { connectWallet } = useWallet();
 
     return (
-        <div className="header">
-            <div className="header-title">
-                <div className="logo-container">
-                    <img src={logo} className="logo" alt=""></img>
+        <>
+            {/* Web header */}
+            <div className="flex-row items-center w-full p-5 pb-0 hidden sm:flex">
+                <div className="h-full flex flex-row items-center">
+                    <img
+                        src={logo}
+                        className="h-10 logo"
+                        alt="tosidrop logo"
+                    ></img>
+                    <p className="ml-2.5 font-semibold text-lg">TosiDrop</p>
                 </div>
-                <p className="title-text">TosiDrop</p>
-                <div className="header-filler"></div>
-                {/* <BlockchainSelector></BlockchainSelector> */}
-                <div className="header-wallet-selector noselect">
+                <div className="flex flex-row items-center ml-auto">
                     <WalletSelector connectWallet={connectWallet} />
-                </div>
-                <div className="last">
                     <button
-                        className="light-button button"
+                        className="h-full background rounded-lg px-5 py-2.5 ml-2.5"
                         onClick={() => dispatch(toggleTheme())}
                     >
-                        <FontAwesomeIcon icon={faSun} />
+                        <FontAwesomeIcon
+                            icon={theme === Themes.dark ? faSun : faMoon}
+                        />
                     </button>
+                </div>
+            </div>
+
+            {/* Mobile header */}
+            <div className="flex flex-row items-center justify-center h-fit m-5 mb-0 visible sm:hidden">
+                <div className="flex flex-row items-center mr-auto">
                     <button
-                        className="menu-button button"
+                        className="background rounded-lg px-5 py-2.5"
                         onClick={() => dispatch(toggleMenu())}
                     >
                         <FontAwesomeIcon icon={faBars} />
                     </button>
                 </div>
+                <p className="font-semibold text-2xl">TosiDrop</p>
+                <img
+                    src={logo}
+                    className="h-10 logo ml-auto"
+                    alt="tosidrop logo"
+                ></img>
             </div>
-        </div>
+        </>
     );
 }
 

@@ -1,20 +1,21 @@
 import { faLinkSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Spinner from "src/components/Spinner";
 import useComponentVisible from "src/hooks/useComponentVisible";
 import { RootState } from "src/store";
 import { WalletKeys } from "../../services/connectors/wallet.connector";
 import { abbreviateAddress } from "../../services/utils.services";
-import WalletSelectorModal from "./WalletSelectorModal";
-import "./index.scss";
+import { showModal } from "src/reducers/globalSlice";
+import { ModalTypes } from "src/entities/common.entities";
 
 interface Props {
     connectWallet: (walletKey?: WalletKeys) => void;
 }
 
 function WalletSelector({ connectWallet }: Props) {
+    const dispatch = useDispatch();
     const connectedWallet = useSelector(
         (state: RootState) => state.wallet.walletApi
     );
@@ -23,18 +24,17 @@ function WalletSelector({ connectWallet }: Props) {
     );
     const networkId = useSelector((state: RootState) => state.wallet.networkId);
 
-    const modalMenu = useComponentVisible(false);
-    const walletMenu = useComponentVisible(false);
+    const disconnectButtonMenu = useComponentVisible(false);
     const [walletAddress, setWalletAddress] = useState("");
     const [walletIcon, setWalletIcon] = useState("");
 
     const disconnectWallet = () => {
-        walletMenu.setVisible(false);
+        disconnectButtonMenu.setVisible(false);
         connectWallet();
     };
 
-    const toggleWalletMenuVisible = () => {
-        walletMenu.setVisible(!walletMenu.visible);
+    const toggleDisconnectButton = () => {
+        disconnectButtonMenu.setVisible(!disconnectButtonMenu.visible);
     };
 
     useEffect(() => {
@@ -46,90 +46,92 @@ function WalletSelector({ connectWallet }: Props) {
                     );
                     setWalletAddress(addr);
                     setWalletIcon(connectedWallet.wallet.icon);
-                    modalMenu.setVisible(false);
                 }
             } else {
                 setWalletAddress("");
-                modalMenu.setVisible(false);
             }
         }
 
         init();
     }, [connectedWallet?.wallet?.api, connectedWallet]);
 
-    const Connected = () => {
+    const ConnectedButton = () => {
         return (
             <div
-                className="wallet-connected"
-                onClick={() => toggleWalletMenuVisible()}
+                className="rounded-lg background h-full flex items-center justify-center px-5 py-2.5 cursor-pointer"
+                onClick={() => toggleDisconnectButton()}
             >
                 {walletIcon ? (
                     <>
                         <img
                             src={walletIcon}
-                            className="wallet-icon"
+                            className="h-5 mr-3"
                             alt="wallet icon"
                         ></img>
-                        <p className="wallet-addr">
+                        <p>
                             {networkId === 0 ? "(testnet) " : ""}
                             {walletAddress}
                         </p>
                     </>
                 ) : (
-                    <div className="wallet-info">
-                        Connecting <Spinner></Spinner>
+                    <div className="flex flex-row items-center">
+                        Connecting{" "}
+                        <div className="ml-3">
+                            <Spinner></Spinner>
+                        </div>
                     </div>
                 )}
             </div>
         );
     };
 
-    const NotConnected = () => (
+    const NotConnectedButton = () => (
         <div
-            className="wallet-not-connected"
-            onClick={() => modalMenu.setVisible(true)}
+            className="rounded-lg background h-full flex items-center justify-center px-5 py-2.5 cursor-pointer"
+            onClick={() =>
+                dispatch(
+                    showModal({
+                        modalType: ModalTypes.wallet,
+                    })
+                )
+            }
         >
             <p>Connect</p>
         </div>
     );
 
-    const WrongNetwork = () => (
+    const WrongNetworkButton = () => (
         <div
-            className={"wallet-wrong"}
-            onClick={() => toggleWalletMenuVisible()}
+            className={
+                "rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"
+            }
+            onClick={() => toggleDisconnectButton()}
         >
             <p>WRONG NETWORK</p>
         </div>
     );
 
     return (
-        <div className="wallet-selector-container">
-            <WalletSelectorModal
-                visibilityRef={modalMenu.ref}
-                modalVisible={modalMenu.visible}
-                setModalVisible={modalMenu.setVisible}
-                connectWallet={connectWallet}
-            />
-            <div className="wallet-selector">
-                {isWrongNetwork ? (
-                    <WrongNetwork />
-                ) : connectedWallet?.wallet?.api ? (
-                    <Connected />
-                ) : (
-                    <NotConnected />
-                )}
-            </div>
+        <div className="relative h-full text">
+            {isWrongNetwork ? (
+                <WrongNetworkButton />
+            ) : connectedWallet?.wallet?.api ? (
+                <ConnectedButton />
+            ) : (
+                <NotConnectedButton />
+            )}
             <div
-                ref={walletMenu.ref}
+                ref={disconnectButtonMenu.ref}
                 className={
-                    "wallet-menu" +
-                    (connectedWallet?.wallet?.api && walletMenu.visible
+                    "absolute top-14 w-full background py-2.5 px-5 rounded-lg cursor-pointer" +
+                    (connectedWallet?.wallet?.api &&
+                    disconnectButtonMenu.visible
                         ? ""
                         : " hidden")
                 }
             >
                 <p onClick={disconnectWallet}>
-                    <FontAwesomeIcon icon={faLinkSlash} />
+                    <FontAwesomeIcon className="mr-3" icon={faLinkSlash} />
                     Disconnect
                 </p>
             </div>

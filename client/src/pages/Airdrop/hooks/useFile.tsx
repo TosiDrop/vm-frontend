@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { csvToArray, splitAmountArray } from "../utils";
-import { showModal } from "src/reducers/modalSlice";
-import { ModalTypes } from "src/entities/common.entities";
+import { showModal } from "src/reducers/globalSlice";
+import { ModalTypes, InfoModalTypes } from "src/entities/common.entities";
 
 const useFile = ({ handleAddressList }: { handleAddressList: Function }) => {
     const fileRef = useRef<any>(null);
@@ -21,8 +21,11 @@ const useFile = ({ handleAddressList }: { handleAddressList: Function }) => {
             } catch (e) {
                 dispatch(
                     showModal({
-                        text: "Invalid CSV file. Please refer to the documentation for the correct format.",
-                        type: ModalTypes.failure,
+                        modalType: ModalTypes.info,
+                        details: {
+                            text: "Invalid CSV file. Please refer to the documentation for the correct format.",
+                            type: InfoModalTypes.failure,
+                        },
                     })
                 );
             }
