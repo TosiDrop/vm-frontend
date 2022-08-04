@@ -1,17 +1,14 @@
-@import "../node_modules/bulma/sass/utilities/initial-variables";
-@import "../node_modules/bulma/sass/utilities/functions";
 @import "//fonts.cdnfonts.com/css/avenir-next-cyr";
-
 @import "./variables.scss";
-
-@import "../node_modules/bulma/sass/utilities/derived-variables";
-
-@import "../node_modules/bulma/bulma";
 
 * {
     font-family: $avenir-font-medium;
-    font-size: 14px;
     margin: 0px;
+    outline: none;
+}
+
+html {
+    font-size: 14px;
 }
 
 html,
@@ -31,20 +28,13 @@ strong {
 .body {
     background: var(--body-background);
     overflow-x: hidden;
-    padding: 20px;
 }
 
 .tosi-button {
     background: var(--gradient-button-default);
     background: var(--gradient-button);
-    height: 40px;
-    box-shadow: none;
-    border: 0;
-    border-radius: 10px;
     color: var(--font-highlight);
-    font-size: 15px;
     cursor: pointer;
-    font-family: inherit;
 
     &:hover {
         background: var(--gradient-button-hover-default);
@@ -58,30 +48,6 @@ strong {
     }
 }
 
-.tosi-cancel-button {
-    background: transparent;
-    height: 40px;
-    box-shadow: none;
-    border: 1px solid var(--gradient-button-default);
-    border-radius: 10px;
-    color: var(--font-highlight);
-    font-size: 15px;
-    cursor: pointer;
-    -moz-transition: all 0.8s linear;
-    -o-transition: all 0.8s linear;
-    -webkit-transition: all 0.8s linear;
-    transition: all 0.8s linear;
-}
-
-.transparent-input {
-    font-family: inherit;
-    background-color: transparent;
-    border-radius: 5px;
-    border: 1px solid var(--font-inactive-color);
-    height: 30px;
-    color: var(--font-highlight);
-}
-
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -92,21 +58,66 @@ strong {
                                     supported by Chrome, Edge, Opera and Firefox */
 }
 
-.premium {
+.text-premium {
     color: #ffd700;
 }
 
 .tooltip {
-    visibility: hidden;
     background: var(--font-highlight);
     color: var(--primary);
+    visibility: hidden;
 }
 
 .tooltip-activator {
     position: relative;
-    cursor: pointer;
 
     &:hover .tooltip {
         visibility: visible;
+    }
+}
+
+.text {
+    color: var(--font-highlight);
+}
+
+.text-failure {
+    color: #fb6b25;
+}
+
+.text-success {
+    color: #4ecc48;
+}
+
+.text-inactive {
+    color: var(--font-inactive-color);
+}
+
+.text-twitter {
+    color: #1c9deb;
+}
+
+.text-discord {
+    color: #6f85d4;
+}
+
+.text-telegram {
+    color: #2ca0db;
+}
+
+.background {
+    background-color: var(--primary);
+}
+
+.border-color {
+    border-color: var(--font-highlight);
+}
+
+.layover {
+    background: hsla(0, 0%, 4%, 0.86);
+}
+
+input {
+    &:disabled {
+        background: var(--input-disabled);
     }
 }

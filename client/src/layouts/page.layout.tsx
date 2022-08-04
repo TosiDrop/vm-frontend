@@ -5,7 +5,6 @@ import RewardsHistory from "../pages/RewardsHistory";
 import Feedback from "../pages/Feedback";
 import Airdrop from "../pages/Airdrop";
 import DepositInfoPage from "src/pages/Rewards/DepositInfoPage";
-import "./page.layout.scss";
 
 function Page() {
     return (

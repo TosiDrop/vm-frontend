@@ -4,13 +4,16 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
-    minWidth: {
-      '52': '208px',
+    extend: {
+      minWidth: {
+        '40': '10rem',
+        '52': '13rem',
+      },
+      maxWidth: {
+        '64': '16rem',
+        '52': '13rem',
+      }
     },
-    maxWidth: {
-      '64': '256px',
-    }
   },
   plugins: [],
 }

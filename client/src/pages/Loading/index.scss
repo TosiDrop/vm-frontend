@@ -1,14 +1,5 @@
-.loading-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    &__logo {
-        width: 75px;
-        animation: spin-logo infinite 1s ease-in-out;
-        margin-top: 200px;
-        margin-bottom: 20px;
-    }
+.spinning-logo {
+    animation: spin-logo infinite 1s ease-in-out;
 }
 
 @keyframes spin-logo {

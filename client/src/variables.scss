@@ -67,6 +67,7 @@ $avenir-font-medium: "Avenir Next Cyr Medium", sans-serif;
         #0c2548 50%,
         #052744 100%
     );
+    --input-disabled: rgba(51, 65, 85, 1);
 }
 
 .theme-light {
@@ -123,4 +124,5 @@ $avenir-font-medium: "Avenir Next Cyr Medium", sans-serif;
     );
     --gradient-button-hover-default: #2360a770;
     --gradient-button-disabled: rgba(0, 0, 0, 0.39);
+    --input-disabled: rgba(0, 0, 0, 0.39);
 }

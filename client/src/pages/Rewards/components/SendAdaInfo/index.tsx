@@ -1,5 +1,5 @@
-import { ModalTypes } from "src/entities/common.entities";
-import { showModal } from "src/reducers/modalSlice";
+import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
+import { showModal } from "src/reducers/globalSlice";
 import { useState } from "react";
 import { copyContent } from "src/services/utils.services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,9 +9,6 @@ import Spinner from "src/components/Spinner";
 import { isTxHash } from "src/pages/Rewards/utils/common.function";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
-import "./index.scss";
-
-const CLASS = "send-ada-info";
 
 interface Params {
     txDetail: any;
@@ -42,6 +39,8 @@ const SendAdaInfo = ({
     const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
 
     const triggerTooltip = () => {
+        if (txDetail == null) return;
+        copyContent(txDetail ? txDetail.withdrawal_address : "");
         setShowToolTip(true);
         setTimeout(() => {
             setShowToolTip(false);
@@ -54,8 +53,8 @@ const SendAdaInfo = ({
     const renderQRCode = (txDetail: any) => {
         if (txDetail == null) return null;
         return (
-            <div className={`${CLASS}__row ${CLASS}__qr`}>
-                <div className="qr-address">
+            <div className="mt-5 w-full flex justify-center">
+                <div className="bg-white rounded-lg p-2.5 w-fit">
                     <QRCode value={txDetail.withdrawal_address} size={180} />
                 </div>
             </div>
@@ -68,9 +67,17 @@ const SendAdaInfo = ({
     const renderSendAdaButton = () => {
         if (connectedWallet?.wallet?.api && !isWrongNetwork) {
             return (
-                <div className={`${CLASS}__row ${CLASS}__send-ada-btn`}>
-                    <button className="tosi-button" onClick={sendADA}>
-                        Send ADA {sendAdaSpinner ? <Spinner></Spinner> : null}
+                <div className="w-full flex justify-center mt-5">
+                    <button
+                        className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
+                        onClick={sendADA}
+                    >
+                        Send ADA{" "}
+                        {sendAdaSpinner ? (
+                            <div className="ml-2.5">
+                                <Spinner></Spinner>
+                            </div>
+                        ) : null}
                     </button>
                 </div>
             );
@@ -84,30 +91,22 @@ const SendAdaInfo = ({
      */
     const renderManualCopy = () => {
         return (
-            <div className={`${CLASS}__address ${CLASS}__row`}>
-                <div
-                    className={"tooltip-icon" + (showToolTip ? "" : " hidden")}
-                >
-                    copied
-                </div>
-                <div
-                    className="icon"
-                    onClick={() => {
-                        if (txDetail == null) return;
-                        copyContent(
-                            txDetail ? txDetail.withdrawal_address : ""
-                        );
-                        triggerTooltip();
-                    }}
-                >
-                    <FontAwesomeIcon icon={faCopy} />
-                </div>
-                <input
-                    className="transparent-input"
-                    type="text"
-                    disabled={true}
-                    value={txDetail?.withdrawal_address}
+            <div className="flex flex-row items-center w-full mt-5 relative">
+                <FontAwesomeIcon
+                    className="mr-2.5 cursor-pointer"
+                    onClick={() => triggerTooltip()}
+                    icon={faCopy}
                 />
+                <div className="p-1 rounded-lg border border-gray-400 grow overflow-auto">
+                    {txDetail?.withdrawal_address}
+                </div>
+                <div
+                    className={`p-2.5 left-8 rounded-lg absolute tooltip ${
+                        showToolTip ? "visible" : "invisible"
+                    }`}
+                >
+                    copied!
+                </div>
             </div>
         );
     };
@@ -130,8 +129,11 @@ const SendAdaInfo = ({
             } else {
                 dispatch(
                     showModal({
-                        text: "User cancelled transaction",
-                        type: ModalTypes.failure,
+                        modalType: ModalTypes.info,
+                        details: {
+                            text: "User cancelled transaction",
+                            type: InfoModalTypes.failure,
+                        },
                     })
                 );
             }
@@ -140,16 +142,19 @@ const SendAdaInfo = ({
             setSendAdaSpinner(false);
             dispatch(
                 showModal({
-                    text: "Something is wrong :(",
-                    type: ModalTypes.failure,
+                    modalType: ModalTypes.info,
+                    details: {
+                        text: "Something is wrong :(",
+                        type: InfoModalTypes.failure,
+                    },
                 })
             );
         }
     };
 
     return (
-        <div className={`rewards-block ${CLASS}`}>
-            <div className={`${CLASS}__row`}>Deposit Address</div>
+        <div className="background rounded-2xl p-5 mt-5">
+            Deposit Address
             {renderManualCopy()}
             {renderQRCode(txDetail)}
             {renderSendAdaButton()}

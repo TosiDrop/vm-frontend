@@ -13,7 +13,6 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import { RootState } from "src/store";
-import "./menu.layout.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { setShowMenu } from "src/reducers/globalSlice";
 
@@ -25,7 +24,9 @@ function Menu() {
     return (
         <>
             <div
-                className={"menu-container" + (!showMenu ? " menu-hidden" : "")}
+                className={
+                    "fixed top-52 left-20 background text p-5 rounded-2xl min-w-40 invisible sm:visible"
+                }
             >
                 <div className="menu">
                     <div className="menu-content">
@@ -33,15 +34,18 @@ function Menu() {
                             <li>
                                 <Link
                                     to="/"
-                                    className={
+                                    className={`${
                                         location === "/" ||
                                         location === "/claim/"
-                                            ? "menu-list-selected"
-                                            : ""
-                                    }
+                                            ? "text"
+                                            : "text-inactive"
+                                    } flex flex-row items-center`}
                                 >
                                     <p className="icon">
-                                        <FontAwesomeIcon icon={faWallet} />
+                                        <FontAwesomeIcon
+                                            className="mr-2.5"
+                                            icon={faWallet}
+                                        />
                                     </p>
                                     Claim
                                 </Link>
@@ -49,31 +53,37 @@ function Menu() {
                             <li>
                                 <Link
                                     to="/airdrop"
-                                    className={
+                                    className={`${
                                         location === "/airdrop"
-                                            ? "menu-list-selected"
-                                            : ""
-                                    }
+                                            ? "text"
+                                            : "text-inactive"
+                                    } flex flex-row items-center mt-2.5`}
                                 >
                                     <p className="icon">
-                                        <FontAwesomeIcon icon={faPaperPlane} />
+                                        <FontAwesomeIcon
+                                            className="mr-2.5"
+                                            icon={faPaperPlane}
+                                        />
                                     </p>
                                     Airdrop
                                 </Link>
                             </li>
-                            {/* <li><Link to="/history"><p className="icon"><FontAwesomeIcon icon={faClockRotateLeft} /></p>History</Link></li> */}
-                            {/* <li><Link to="/dashboard"><p className="icon"><FontAwesomeIcon icon={faChartColumn} /></p>Dashboard</Link></li> */}
+                            {/* <li><Link to="/history"><p className="icon"><FontAwesomeIcon className="mr-2.5"  icon={faClockRotateLeft} /></p>History</Link></li> */}
+                            {/* <li><Link to="/dashboard"><p className="icon"><FontAwesomeIcon className="mr-2.5"  icon={faChartColumn} /></p>Dashboard</Link></li> */}
                             <li>
                                 <Link
                                     to="/feedback"
-                                    className={
+                                    className={`${
                                         location === "/feedback"
-                                            ? "menu-list-selected"
-                                            : ""
-                                    }
+                                            ? "text"
+                                            : "text-inactive"
+                                    } flex flex-row items-center mt-2.5`}
                                 >
                                     <p className="icon">
-                                        <FontAwesomeIcon icon={faMessage} />
+                                        <FontAwesomeIcon
+                                            className="mr-2.5"
+                                            icon={faMessage}
+                                        />
                                     </p>
                                     Feedback
                                 </Link>
@@ -83,23 +93,28 @@ function Menu() {
                                     target="_blank"
                                     rel="noreferrer"
                                     href="https://docs.tosidrop.io/"
+                                    className="flex flex-row items-center mt-2.5 text-inactive"
                                 >
                                     <p className="icon">
-                                        <FontAwesomeIcon icon={faBook} />
+                                        <FontAwesomeIcon
+                                            className="mr-2.5"
+                                            icon={faBook}
+                                        />
                                     </p>
                                     Docs&nbsp;
                                     <FontAwesomeIcon
+                                        className="mr-2.5"
                                         icon={faArrowUpRightFromSquare}
                                     />
                                 </a>
                             </li>
                         </ul>
-                        <div className="menu-filler"></div>
-                        <div className="social">
+                        <div className="mt-5 w-full text-center">
                             <a
                                 href="https://twitter.com/TosiDrop"
                                 target="_blank"
                                 rel="noreferrer"
+                                className="text-twitter"
                             >
                                 <FontAwesomeIcon icon={faTwitter} />
                             </a>
@@ -107,6 +122,7 @@ function Menu() {
                                 href="https://discord.gg/C32Mm3j4fG"
                                 target="_blank"
                                 rel="noreferrer"
+                                className="ml-2.5 text-discord"
                             >
                                 <FontAwesomeIcon icon={faDiscord} />
                             </a>
@@ -114,6 +130,7 @@ function Menu() {
                                 href="https://t.me/+FdDUmLsW8jI0YmUx"
                                 target="_blank"
                                 rel="noreferrer"
+                                className="ml-2.5 text-telegram"
                             >
                                 <FontAwesomeIcon icon={faTelegram} />
                             </a>
@@ -124,10 +141,6 @@ function Menu() {
                     </div>
                 </div>
             </div>
-            <div
-                className={"gray-layer" + (!showMenu ? " layer-hidden" : "")}
-                onClick={() => dispatch(setShowMenu(false))}
-            ></div>
         </>
     );
 }

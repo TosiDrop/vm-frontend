@@ -1,66 +1,40 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faCheck,
-    faInfoCircle,
-    faXmark,
-} from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { hideModal } from "src/reducers/modalSlice";
-import { RootState } from "src/store";
 import { ModalTypes } from "src/entities/common.entities";
-import "./index.scss";
+import useClickOutside from "src/hooks/useClickOutside";
+import { hideModal } from "src/reducers/globalSlice";
+import { RootState } from "src/store";
+import { InfoModal } from "./InfoModal";
+import { WalletModal } from "./WalletModal";
 
 function Modal() {
+    const { showModal } = useSelector((state: RootState) => state.global);
+    const ref = useClickOutside(() => dispatch(hideModal()));
     const dispatch = useDispatch();
-    const modalVisible = useSelector((state: RootState) => state.modal.show);
-    const modalText = useSelector((state: RootState) => state.modal.text);
-    const modalType = useSelector((state: RootState) => state.modal.type);
 
-    const renderIcon = () => {
-        switch (modalType) {
-            case ModalTypes.failure:
-                return (
-                    <span className="modal__icon-failure modal__icon ">
-                        <FontAwesomeIcon icon={faXmark} />
-                    </span>
-                );
-            case ModalTypes.success:
-                return (
-                    <span className="modal__icon-success modal__icon ">
-                        <FontAwesomeIcon icon={faCheck} />
-                    </span>
-                );
+    const renderModalContent = () => {
+        switch (showModal) {
             case ModalTypes.info:
+                return <InfoModal />;
+            case ModalTypes.wallet:
+                return <WalletModal />;
             default:
-                return (
-                    <span className="modal__icon">
-                        <FontAwesomeIcon icon={faInfoCircle} />
-                    </span>
-                );
+                return null;
         }
     };
 
-    return (
+    return showModal != null ? (
         <div
-            className={"text-modal modal" + (modalVisible ? " is-active" : "")}
+            className={`z-10 text-modal modal absolute w-full h-full flex items-center justify-center`}
         >
-            <div className="modal-background"></div>
-            <div className="modal-content">
-                <div className="box">
-                    <div className="modal-icon">{renderIcon()}</div>
-                    <div className="text-content">{modalText}</div>
-                    <div className="modal-buttons">
-                        <button
-                            className="tosi-button"
-                            onClick={() => dispatch(hideModal())}
-                        >
-                            Ok
-                        </button>
-                    </div>
-                </div>
+            <div className="modal-background layover absolute w-full h-full"></div>
+            <div
+                className="background w-full max-w-sm m-5 p-5 rounded-2xl z-10 flex flex-col items-center text"
+                ref={ref}
+            >
+                {renderModalContent()}
             </div>
         </div>
-    );
+    ) : null;
 }
 
 export default Modal;
