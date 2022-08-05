@@ -16,6 +16,7 @@ import {
     faTwitter,
     faDiscord,
     faTelegram,
+    faMedium,
 } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import { Themes } from "src/entities/common.entities";
@@ -162,6 +163,14 @@ const MobileMenu = () => {
                         className="text-xl text-telegram"
                     >
                         <FontAwesomeIcon icon={faTelegram} />
+                    </a>
+                    <a
+                        href="https://medium.com/@tosidrop"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xl text"
+                    >
+                        <FontAwesomeIcon icon={faMedium} />
                     </a>
                 </div>
             </div>
