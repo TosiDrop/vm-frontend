@@ -14,6 +14,7 @@ import { getNetworkId } from "./services/claim.services";
 import useWallet from "./hooks/useWallet";
 import MobileMenu from "src/components/MobileMenu";
 import "./styles.scss";
+import CatalystPopUp from "./components/CatalystPopUp";
 
 function App() {
     const dispatch = useDispatch();
@@ -51,6 +52,7 @@ function App() {
 
     return (
         <div className={`${theme} w-full text`}>
+            <CatalystPopUp></CatalystPopUp>
             <MobileMenu />
             <Modal />
             <Menu />
