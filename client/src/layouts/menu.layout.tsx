@@ -10,6 +10,7 @@ import {
     faTwitter,
     faDiscord,
     faTelegram,
+    faMedium,
 } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import { RootState } from "src/store";
@@ -133,6 +134,14 @@ function Menu() {
                                 className="ml-2.5 text-telegram"
                             >
                                 <FontAwesomeIcon icon={faTelegram} />
+                            </a>
+                            <a
+                                href="https://medium.com/@tosidrop"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="ml-2.5 text"
+                            >
+                                <FontAwesomeIcon icon={faMedium} />
                             </a>
                             {/* <a href='https://github.com/anetabtc' target='_blank' rel="noreferrer">
                             <FontAwesomeIcon icon={faGithub} />
