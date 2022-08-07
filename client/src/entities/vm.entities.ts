@@ -1,12 +1,4 @@
-export interface GetRewards {
-    total_rewards?: number;
-    consolidated_promises?: Assets;
-    consolidated_rewards?: Assets;
-    nfts?: any[];
-    assets?: Assets;
-    min_balance?: number;
-    vending_address?: string;
-    withdrawal_fee?: string;
+export interface GetRewardsDto {
     claimable_tokens: ClaimableToken[];
     pool_info: {
         delegated_pool_name: string;
@@ -15,6 +7,14 @@ export interface GetRewards {
         delegated_pool_ticker: string;
         delegated_pool_logo: string;
     };
+    total_rewards?: number;
+    consolidated_promises?: Assets;
+    consolidated_rewards?: Assets;
+    nfts?: any[];
+    assets?: Assets;
+    min_balance?: number;
+    vending_address?: string;
+    withdrawal_fee?: string;
     project_locked_rewards?: {
         consolidated_promises: Assets;
         consolidated_rewards: Assets;
@@ -45,6 +45,7 @@ export interface ClaimableToken {
     decimals: number;
     amount: number;
     premium: boolean;
+    selected?: boolean;
 }
 
 export interface GetTokens {

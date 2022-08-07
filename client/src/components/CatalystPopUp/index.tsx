@@ -5,7 +5,7 @@ import useComponentVisible from "src/hooks/useComponentVisible";
 
 const CatalystPopUp = () => {
     const CATALYST_LINK = "https://linktr.ee/tosidrop.catalystf9";
-    const {visible, setVisible, ref} = useComponentVisible(false)
+    const { visible, setVisible, ref } = useComponentVisible(false);
 
     useEffect(() => {
         setTimeout(() => {
@@ -15,7 +15,7 @@ const CatalystPopUp = () => {
 
     return (
         <div
-            className={`w-full max-w-md px-5 pb-5 absolute text bottom-0 left-0 duration-200 ${
+            className={`z-50 w-full max-w-md px-5 pb-5 absolute text bottom-0 left-0 duration-200 ${
                 visible ? "translate-x-0" : "-translate-x-full"
             }`}
             ref={ref}
@@ -34,8 +34,8 @@ const CatalystPopUp = () => {
                 <p className="mt-5">
                     TosiDrop is building cross-chain infrastructure for Ergo and
                     Cardano. Check out our catalyst proposals on Project
-                    Catalyst F9 and vote for us! Let’s
-                    build a better future together.
+                    Catalyst F9 and vote for us! Let’s build a better future
+                    together.
                 </p>
                 <div className="flex w-full mt-5">
                     <a

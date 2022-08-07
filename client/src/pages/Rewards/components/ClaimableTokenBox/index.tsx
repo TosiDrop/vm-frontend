@@ -27,8 +27,9 @@ const ClaimableTokenBox = ({
 }: Props) => {
     return (
         <div
-            className="mt-5 background rounded-2xl p-5 flex flex-col items-center w-full sm:w-64 sm:mr-5"
+            className="cursor-pointer mt-5 background rounded-2xl p-5 flex flex-col items-center w-full sm:w-64 sm:mr-5"
             key={index}
+            onClick={() => handleOnChange(index)}
         >
             <div className="w-full flex flex-row items-center">
                 <label className="flex flex-row items-center mr-auto">
@@ -38,8 +39,8 @@ const ClaimableTokenBox = ({
                         name={ticker}
                         value={ticker}
                         checked={checked}
-                        onChange={() => handleOnChange(index)}
                         className="mr-1"
+                        onChange={() => {}}
                     />
                     {amount / Math.pow(10, decimals)} available
                 </label>
