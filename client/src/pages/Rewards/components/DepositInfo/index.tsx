@@ -44,10 +44,10 @@ const DepositInfo = ({
                     </b>{" "}
                     using one of the following options:
                     <ul>
-                        <li>manual transfer to the address below,</li>
-                        <li>transfer by scanning the QR code, or</li>
+                        <li>• manual transfer to the address below,</li>
+                        <li>• transfer by scanning the QR code, or</li>
                         <li>
-                            <b>Send ADA</b> button (if your wallet is
+                            • <b>Send ADA</b> button (if your wallet is
                             connected).
                         </li>
                     </ul>

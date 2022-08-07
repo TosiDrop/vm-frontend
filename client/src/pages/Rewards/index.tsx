@@ -1,7 +1,7 @@
 import { faXmark, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState, KeyboardEvent } from "react";
-import { GetRewards } from "../../entities/vm.entities";
+import { useEffect, useState, KeyboardEvent, useCallback } from "react";
+import { ClaimableToken } from "../../entities/vm.entities";
 import {
     getCustomRewards,
     getRewards,
@@ -27,34 +27,26 @@ function Rewards() {
     );
     const [hideCheck, setHideCheck] = useState(false);
     const [hideStakingInfo, setHideStakingInfo] = useState(true);
-    const [rewards, setRewards] = useState<GetRewards | undefined>();
+
+    const [claimableTokens, setClaimableTokens] = useState<ClaimableToken[]>(
+        []
+    );
+    const [poolInfo, setPoolInfo] = useState<any>(null);
+    const [numberOfSelectedTokens, setNumberOfSelectedTokens] = useState(0);
+
     const [searchAddress, setSearchAddress] = useState<string>("");
     const [rewardsLoader, setRewardsLoader] = useState(false);
-    const [checkedState, setCheckedState] = useState(new Array<boolean>());
-    const [checkedCount, setCheckedCount] = useState(0);
-    const [allIsSelected, setAllIsSelected] = useState<boolean>(false);
     const [stakeAddress, setStakeAddress] = useState<string>("");
     const [claimMyRewardLoading, setClaimMyRewardLoading] =
         useState<boolean>(false);
 
-    /**
-     * check if every token is selected
-     */
     useEffect(() => {
-        setAllIsSelected(checkedState.every((i) => i));
-    }, [checkedState]);
-
-    useEffect(() => {
-        if (rewards?.claimable_tokens.length) {
-            setCheckedState(
-                new Array(rewards.claimable_tokens.length).fill(false)
-            );
+        if (claimableTokens.length) {
             setHideStakingInfo(false);
         } else {
-            setCheckedState([]);
             setHideStakingInfo(true);
         }
-    }, [rewards?.claimable_tokens]);
+    }, [claimableTokens]);
 
     useEffect(() => {
         async function init() {
@@ -68,37 +60,38 @@ function Rewards() {
         init();
     }, [connectedWallet?.wallet?.api, connectedWallet, isWrongNetwork]);
 
+    const getNumberOfSelectedTokens = useCallback(() => {
+        return claimableTokens.reduce((prev, token) => {
+            if (token.selected) {
+                prev += 1;
+            }
+            return prev;
+        }, 0);
+    }, [claimableTokens]);
+
     /**
      * select/unselect all tokens
      */
     const selectAll = () => {
-        let updatedCheckedState;
-        if (allIsSelected) {
-            updatedCheckedState = checkedState.map(() => false);
+        const updatedClaimableTokens = [...claimableTokens];
+        if (numberOfSelectedTokens < claimableTokens.length) {
+            updatedClaimableTokens.forEach((token) => (token.selected = true));
         } else {
-            updatedCheckedState = checkedState.map(() => true);
+            updatedClaimableTokens.forEach((token) => (token.selected = false));
         }
-
-        setCheckedState(updatedCheckedState);
-        const updatedCheckedCount = updatedCheckedState.filter(
-            (check) => check
-        ).length;
-        setCheckedCount(updatedCheckedCount);
+        setClaimableTokens(updatedClaimableTokens);
+        setNumberOfSelectedTokens(getNumberOfSelectedTokens());
     };
 
     /**
      * handle token select
      */
     const handleTokenSelect = (position: number) => {
-        const updatedCheckedState = checkedState.map((item, index) =>
-            index === position ? !item : item
-        );
-
-        setCheckedState(updatedCheckedState);
-        const updatedCheckedCount = updatedCheckedState.filter(
-            (check) => check
-        ).length;
-        setCheckedCount(updatedCheckedCount);
+        const updatedClaimableTokens = [...claimableTokens];
+        updatedClaimableTokens[position].selected =
+            !updatedClaimableTokens[position].selected;
+        setClaimableTokens(updatedClaimableTokens);
+        setNumberOfSelectedTokens(getNumberOfSelectedTokens());
     };
 
     const checkRewards = async () => {
@@ -115,10 +108,16 @@ function Rewards() {
                 address = address.staking_address;
 
                 setStakeAddress(address);
-                const rewards = await getRewards(address);
-
-                if (rewards && Object.keys(rewards.claimable_tokens).length) {
-                    setRewards(rewards);
+                const getRewardsDto = await getRewards(address);
+                if (getRewardsDto == null) throw new Error();
+                if (getRewardsDto.claimable_tokens.length !== 0) {
+                    setClaimableTokens(
+                        getRewardsDto.claimable_tokens.map((token) => {
+                            token.selected = false;
+                            return token;
+                        })
+                    );
+                    setPoolInfo(getRewardsDto.pool_info);
                     setRewardsLoader(false);
                 } else {
                     dispatch(
@@ -152,28 +151,21 @@ function Rewards() {
     };
 
     const claimMyRewards = async () => {
-        let selectedPremiumToken = false;
-
-        if (checkedCount === 0) return;
-        if (rewards == null) return;
-
-        /**
-         * get tx info for custom withdrawal
-         */
-        if (rewards == null) return;
+        if (numberOfSelectedTokens === 0) return;
 
         setClaimMyRewardLoading(true);
+        let selectedPremiumToken = false;
 
-        const selectedTokenId = [];
-        const availableRewards = rewards.claimable_tokens;
-        for (let i = 0; i < checkedState.length; i++) {
-            if (checkedState[i]) {
-                if (availableRewards[i].premium) {
+        const selectedTokenId: string[] = [];
+        claimableTokens.forEach((token) => {
+            if (token.selected) {
+                if (token.premium) {
                     selectedPremiumToken = true;
                 }
-                selectedTokenId.push(availableRewards[i].assetId);
+                selectedTokenId.push(token.assetId);
             }
-        }
+        });
+
         try {
             const res = await getCustomRewards(
                 stakeAddress,
@@ -183,7 +175,7 @@ function Rewards() {
             );
             if (res == null) throw new Error();
 
-            let depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${checkedCount}&unlock=${selectedPremiumToken}`;
+            let depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}`;
             navigate(depositInfoUrl, { replace: true });
         } catch (e) {
             dispatch(
@@ -201,18 +193,17 @@ function Rewards() {
     };
 
     const cancelClaim = async () => {
-        setRewards(undefined);
-        setSearchAddress("");
+        setClaimableTokens([]);
     };
 
     const renderStakeInfo = () => {
-        if (rewards?.pool_info) {
+        if (poolInfo != null) {
             return (
                 <>
-                    {rewards?.pool_info?.delegated_pool_logo ? (
+                    {poolInfo.delegated_pool_logo ? (
                         <img
                             className="h-5 mr-2.5"
-                            src={rewards?.pool_info?.delegated_pool_logo}
+                            src={poolInfo.delegated_pool_logo}
                             alt=""
                         />
                     ) : (
@@ -221,17 +212,15 @@ function Rewards() {
                     <div className="pool-info">
                         <div className="staking-info">
                             Currently staking&nbsp;
-                            <strong>
-                                {rewards?.pool_info?.total_balance} ADA
-                            </strong>
+                            <strong>{poolInfo.total_balance} ADA</strong>
                             &nbsp;with&nbsp;
                             <strong className="no-break">
-                                [{rewards?.pool_info?.delegated_pool_name}
+                                [{poolInfo.delegated_pool_name}
                                 ]&nbsp;
-                                {rewards?.pool_info?.delegated_pool_description}
+                                {poolInfo.delegated_pool_description}
                             </strong>
                             <strong className="no-break-mobile">
-                                [{rewards?.pool_info?.delegated_pool_name}]
+                                [{poolInfo.delegated_pool_name}]
                             </strong>
                         </div>
                     </div>
@@ -318,15 +307,25 @@ function Rewards() {
                         Premium tokens incur a premium token fee when claiming
                     </div>
                     <div className={"flex flex-row flex-wrap"}>
-                        {rewards?.claimable_tokens
-                            ?.sort((a, b) => (a.premium ? -1 : 1))
+                        {claimableTokens
+                            .sort((a, b) => {
+                                if (a.premium && b.premium) {
+                                    if (a.ticker < b.ticker) {
+                                        return -1;
+                                    } else {
+                                        return 1;
+                                    }
+                                } else {
+                                    return a.premium ? -1 : 1;
+                                }
+                            })
                             .map((token, index) => {
                                 return (
                                     <ClaimableTokenBox
                                         key={index}
                                         index={index}
                                         ticker={token.ticker}
-                                        checked={checkedState[index]}
+                                        checked={token.selected || false}
                                         handleOnChange={handleTokenSelect}
                                         amount={token.amount}
                                         decimals={token.decimals}
@@ -343,17 +342,20 @@ function Rewards() {
                             "background flex flex-row items-center p-5 mt-5 rounded-2xl"
                         }
                     >
-                        <div>Selected {checkedCount} token</div>
+                        <div>Selected {numberOfSelectedTokens} token</div>
                         <div className="ml-auto flex flex-row w-fit">
                             <button
                                 className="tosi-button py-2.5 px-5 rounded-lg"
                                 onClick={selectAll}
                             >
-                                {allIsSelected ? "Unselect All" : "Select All"}
+                                {numberOfSelectedTokens ===
+                                claimableTokens.length
+                                    ? "Unselect All"
+                                    : "Select All"}
                             </button>
                             <button
                                 className="tosi-button ml-5 py-2.5 px-5 rounded-lg flex flex-row items-center"
-                                disabled={checkedCount === 0}
+                                disabled={numberOfSelectedTokens === 0}
                                 onClick={claimMyRewards}
                             >
                                 Claim my rewards

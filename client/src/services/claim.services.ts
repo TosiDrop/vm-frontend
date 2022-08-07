@@ -1,11 +1,11 @@
 import { NetworkId } from "src/entities/common.entities";
 import { EpochParams, TransactionStatus } from "src/entities/koios.entities";
-import { GetRewards, GetCustomRewards } from "../entities/vm.entities";
+import { GetRewardsDto, GetCustomRewards } from "../entities/vm.entities";
 import axios from "axios";
 
 export async function getRewards(
     address: string
-): Promise<GetRewards | undefined> {
+): Promise<GetRewardsDto | undefined> {
     const response = await axios.get(`/getrewards?address=${address}`);
     if (response && response.data) {
         return response.data;

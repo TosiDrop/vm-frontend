@@ -9,7 +9,7 @@ import {
     GetPools,
     GetTokens,
     ClaimableToken,
-    GetRewards,
+    GetRewardsDto,
 } from "../../client/src/entities/vm.entities";
 import {
     ExtendedMetadata,
@@ -156,7 +156,7 @@ export async function getPoolMetadata(accountInfo: any) {
 }
 
 export async function getRewards(stakeAddress: string) {
-    const getRewardsResponse = await getFromVM<GetRewards>(
+    const getRewardsResponse = await getFromVM<GetRewardsDto>(
         `get_rewards&staking_address=${stakeAddress}`
     );
     if (getRewardsResponse == null) return;
