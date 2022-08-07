@@ -15,7 +15,7 @@ const CatalystPopUp = () => {
 
     return (
         <div
-            className={`w-full max-w-md px-5 pb-5 absolute text bottom-0 left-0 duration-200 ${
+            className={`z-50 w-full max-w-md px-5 pb-5 absolute text bottom-0 left-0 duration-200 ${
                 visible ? "translate-x-0" : "-translate-x-full"
             }`}
             ref={ref}
