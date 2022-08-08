@@ -73,7 +73,7 @@ app.get("/healthz", async (req: any, res: any) => {
   try {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
   } catch (error: any) {
-    return res.status(500).send({ error: "Failed to get tip from Koios" });
+    return res.status(502).send({ error: "Failed to get tip from Koios" });
   }
   if (CLOUDFLARE_PSK) {
     if (req.headers["x-cloudflare-psk"]) {
@@ -82,12 +82,12 @@ app.get("/healthz", async (req: any, res: any) => {
         const authResponse = await getFromVM("is_authenticated");
         res.send(authResponse);
       } else {
-        res.status(500).json({
+        res.status(403).json({
           error: "PSK invalid",
         });
       }
     } else {
-      res.status(500).json({
+      res.status(401).json({
         error: "PSK missing",
       });
     }
