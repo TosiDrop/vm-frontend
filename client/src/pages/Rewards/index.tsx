@@ -112,10 +112,22 @@ function Rewards() {
                 if (getRewardsDto == null) throw new Error();
                 if (getRewardsDto.claimable_tokens.length !== 0) {
                     setClaimableTokens(
-                        getRewardsDto.claimable_tokens.map((token) => {
-                            token.selected = false;
-                            return token;
-                        })
+                        getRewardsDto.claimable_tokens
+                            .map((token) => {
+                                token.selected = false;
+                                return token;
+                            })
+                            .sort((a, b) => {
+                                if (a.premium === b.premium) {
+                                    if (a.ticker < b.ticker) {
+                                        return -1;
+                                    } else {
+                                        return 1;
+                                    }
+                                } else {
+                                    return a.premium ? -1 : 1;
+                                }
+                            })
                     );
                     setPoolInfo(getRewardsDto.pool_info);
                     setRewardsLoader(false);
@@ -307,34 +319,22 @@ function Rewards() {
                         Premium tokens incur a premium token fee when claiming
                     </div>
                     <div className={"flex flex-row flex-wrap"}>
-                        {claimableTokens
-                            .sort((a, b) => {
-                                if (a.premium && b.premium) {
-                                    if (a.ticker < b.ticker) {
-                                        return -1;
-                                    } else {
-                                        return 1;
-                                    }
-                                } else {
-                                    return a.premium ? -1 : 1;
-                                }
-                            })
-                            .map((token, index) => {
-                                return (
-                                    <ClaimableTokenBox
-                                        key={index}
-                                        index={index}
-                                        ticker={token.ticker}
-                                        checked={token.selected || false}
-                                        handleOnChange={handleTokenSelect}
-                                        amount={token.amount}
-                                        decimals={token.decimals}
-                                        logo={token.logo}
-                                        assetId={token.assetId}
-                                        premium={token.premium}
-                                    />
-                                );
-                            })}
+                        {claimableTokens.map((token, index) => {
+                            return (
+                                <ClaimableTokenBox
+                                    key={index}
+                                    index={index}
+                                    ticker={token.ticker}
+                                    checked={token.selected || false}
+                                    handleOnChange={handleTokenSelect}
+                                    amount={token.amount}
+                                    decimals={token.decimals}
+                                    logo={token.logo}
+                                    assetId={token.assetId}
+                                    premium={token.premium}
+                                />
+                            );
+                        })}
                     </div>
 
                     <div
