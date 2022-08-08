@@ -5,7 +5,7 @@ import "./index.scss";
 interface Props {
     index: number;
     ticker: string;
-    checked: boolean;
+    selected: boolean;
     handleOnChange: Function;
     amount: number;
     decimals: number;
@@ -17,7 +17,7 @@ interface Props {
 const ClaimableTokenBox = ({
     index,
     ticker,
-    checked,
+    selected,
     handleOnChange,
     amount,
     decimals,
@@ -27,23 +27,14 @@ const ClaimableTokenBox = ({
 }: Props) => {
     return (
         <div
-            className="cursor-pointer mt-5 background rounded-2xl p-5 flex flex-col items-center w-full sm:w-64 sm:mr-5"
+            className={`box-border cursor-pointer mt-5 background rounded-2xl p-5 flex flex-col items-center w-full sm:w-64 sm:mr-5 border-2 duration-200 ${
+                selected ? "border-selected" : "border-transparent"
+            }`}
             key={index}
             onClick={() => handleOnChange(index)}
         >
             <div className="w-full flex flex-row items-center">
-                <label className="flex flex-row items-center mr-auto">
-                    <input
-                        type="checkbox"
-                        id={`custom-checkbox-${index}`}
-                        name={ticker}
-                        value={ticker}
-                        checked={checked}
-                        className="mr-1"
-                        onChange={() => {}}
-                    />
-                    {amount / Math.pow(10, decimals)} available
-                </label>
+                <div>{amount / Math.pow(10, decimals)} available</div>
                 {premium ? (
                     <span className="premium-token tooltip-activator ml-auto">
                         <FontAwesomeIcon
@@ -59,12 +50,7 @@ const ClaimableTokenBox = ({
             </div>
             <div className="mt-5">
                 <img alt="" src={logo} className=" h-24"></img>
-                <div className="text-center mt-5">
-                    {ticker}
-                    {/* {assetId.split(".").length > 1
-                        ? getNameFromHex(assetId.split(".")[1])
-                        : getNameFromHex(assetId.split(".")[0])} */}
-                </div>
+                <div className="text-center mt-5">{ticker}</div>
             </div>
         </div>
     );

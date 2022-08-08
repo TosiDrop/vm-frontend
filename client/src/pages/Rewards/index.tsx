@@ -325,7 +325,7 @@ function Rewards() {
                                     key={index}
                                     index={index}
                                     ticker={token.ticker}
-                                    checked={token.selected || false}
+                                    selected={token.selected || false}
                                     handleOnChange={handleTokenSelect}
                                     amount={token.amount}
                                     decimals={token.decimals}

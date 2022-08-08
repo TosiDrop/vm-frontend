@@ -125,3 +125,7 @@ input {
         background: var(--input-disabled);
     }
 }
+
+.border-selected {
+    border-color: var(--font-highlight);
+}
