@@ -18,6 +18,11 @@ machine and run the containers. You can disable installing Docker by setting
 ./runme.sh
 ```
 
+### Logging
+Access logging is enabled in the server. It uses Morgan and the type of logs
+which are output can be controlled by setting `LOG_TYPE` to a valid Morgan
+log type, such as `LOG_TYPE=combined` for Apache Combined Log Format.
+
 ### Mainnet
 For Mainnet, you'll want to set the following variables to point to a mainnet
 instance of the backends. Also, make sure API token (and PSK) matches mainnet.
