@@ -260,6 +260,11 @@ function Rewards() {
                                 (e.target as HTMLInputElement).value
                             )
                         }
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                checkRewards();
+                            }
+                        }}
                         disabled={
                             !hideStakingInfo ||
                             (typeof connectedWallet?.wallet?.api !==
