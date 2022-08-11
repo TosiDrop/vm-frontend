@@ -13,6 +13,7 @@ import {
   getFromVM,
   getPoolMetadata,
   getPools,
+  getTokens,
   getFromKoios,
   getAccountsInfo,
   postFromKoios,
@@ -56,6 +57,11 @@ process.on("SIGTERM", () => {
 app.get("/getpools", async (req, res) => {
   const pools = await getPools();
   return res.status(200).send(pools);
+});
+
+app.get("/gettokens", async (req, res) => {
+  const tokens = await getTokens();
+  return res.status(200).send(tokens);
 });
 
 app.get("/getsettings", async (req, res) => {
