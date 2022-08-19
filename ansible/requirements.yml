@@ -5,3 +5,4 @@ collections:
 roles:
   - src: geerlingguy.docker
     version: 4.1.1
+  - src: datadog.datadog
