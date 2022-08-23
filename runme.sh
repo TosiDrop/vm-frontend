@@ -25,6 +25,7 @@ else
 		KOIOS_URL=https://koios.rest/api/v0
 		VM_URL=https://vm.adaseal.eu
 	fi
+	read -p "Datadog API Key: " DATADOG_API_KEY
 	echo "VM_BRANCH=${VM_BRANCH}" > ${__repo}/.env
 	echo "CARDANO_NETWORK=${CARDANO_NETWORK}" >> ${__repo}/.env
 	echo "KOIOS_URL=${KOIOS_URL}" >> ${__repo}/.env
@@ -34,6 +35,7 @@ else
 		echo "CLOUDFLARE_PSK=${CLOUDFLARE_PSK}" >> ${__repo}/.env
 	fi
 	. ${__repo}/.env # source our config
+	echo "DATADOG_API_KEY=${DATADOG_API_KEY}" > ${__repo}/.env
 fi
 
 VM_BRANCH=${VM_BRANCH:-master}
