@@ -1,5 +1,7 @@
 ---
 - name: Create Datadog
+  roles:
+    - { role: Datadog.datadog, become: yes }
   vars:
     datadog_api_key: "8f9dc60952d61d0e999d6c3e667c86bd"
     datadog_agent_major_version: 7
