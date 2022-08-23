@@ -31,11 +31,12 @@ else
 	echo "KOIOS_URL=${KOIOS_URL}" >> ${__repo}/.env
 	echo "VM_URL=${VM_URL}" >> ${__repo}/.env
 	echo "VM_API_TOKEN=${VM_API_TOKEN}" >> ${__repo}/.env
+	echo "DATADOG_API_KEY=${DATADOG_API_KEY}" >> ${__repo}/.env
 	if test -n "${CLOUDFLARE_PSK}"; then
 		echo "CLOUDFLARE_PSK=${CLOUDFLARE_PSK}" >> ${__repo}/.env
 	fi
 	. ${__repo}/.env # source our config
-	echo "DATADOG_API_KEY=${DATADOG_API_KEY}" > ${__repo}/.env
+	
 fi
 
 VM_BRANCH=${VM_BRANCH:-master}
