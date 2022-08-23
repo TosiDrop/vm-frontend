@@ -74,7 +74,8 @@ ansible-playbook ${__repo}/ansible/local.yml \
 	-e MANAGE_DOCKER=${MANAGE_DOCKER:-true} \
 	-e vm_frontend_version=${VM_BRANCH} \
 	-e vm_frontend_port=${PORT:-3000} \
-	-e DATADOG_API_KEY=${DATADOG_API_KEY} \
+	-e DATADOG_API_KEY=${DATADOG_API_KEY:-changeme} \
+	-e MANAGE_DATADOG=${MANAGE_DATADOG:-false}
 	-e ansible_python_interpreter=${__repo}/.venv/bin/python3 \
 	--diff \
 	-c local \
