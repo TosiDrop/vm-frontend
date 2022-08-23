@@ -47,4 +47,4 @@
             - datadog
       when: manage_datadog | bool        
       vars:
-        datadog_api_key: "{{ DATADOG_API_KEY }}""
+        datadog_api_key: "{{ DATADOG_API_KEY }}"
