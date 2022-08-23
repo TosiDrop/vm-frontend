@@ -48,3 +48,6 @@
       when: manage_datadog | bool        
       vars:
         datadog_api_key: "{{ DATADOG_API_KEY }}"
+        logs_enabled: true
+        logs_config:
+          container_collect_all: true
