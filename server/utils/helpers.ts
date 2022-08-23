@@ -48,8 +48,7 @@ export async function translateAdaHandle(
     handle = handle.slice(1); // remove $
     if (!handle.length) return null; // check if handle is $
     const handleInHex = Buffer.from(handle).toString("hex");
-    const url = `${koiosUrl}/asset_address_list?_asset_policy=${policyId}&_asset_name=${handleInHex}`;
-    const data = (await axios.get(url)).data;
+    const data = getFromKoios("asset_address_list", `_asset_policy=${policyId}&_asset_name=${handleInHex}`);
     if (!data.length) return null;
     const address = data[0].payment_address;
     return address;

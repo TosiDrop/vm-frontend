@@ -25,7 +25,7 @@ import {
 require("dotenv").config();
 
 const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
-const CARDANO_NETWORK = process.env.CARDANO_NETWORK || CardanoNetwork.testnet;
+const CARDANO_NETWORK = process.env.CARDANO_NETWORK || CardanoNetwork.preview;
 const CLAIM_ENABLED = process.env.CLAIM_ENABLED || true;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const LOG_TYPE = process.env.LOG_TYPE || "dev";
@@ -148,10 +148,10 @@ app.get("/getstakekey", async (req: any, res: any) => {
         break;
       case prefix === "addr_":
         if (CARDANO_NETWORK === CardanoNetwork.mainnet)
-          return res.send({ error: "Inserted address is for testnet" });
+          return res.send({ error: "Inserted address is for a testnet" });
         break;
       case prefix === "addr1":
-        if (CARDANO_NETWORK === CardanoNetwork.testnet)
+        if (CARDANO_NETWORK === CardanoNetwork.preprod || CARDANO_NETWORK === CardanoNetwork.preview)
           return res.send({ error: "Inserted address is for mainnet" });
         break;
       case prefix === "stake":
@@ -167,7 +167,8 @@ app.get("/getstakekey", async (req: any, res: any) => {
       case CardanoNetwork.mainnet:
         rewardAddressBytes.set([0xe1], 0);
         break;
-      case CardanoNetwork.testnet:
+      case CardanoNetwork.preprod:
+      case CardanoNetwork.preview:
       default:
         rewardAddressBytes.set([0xe0], 0);
         break;

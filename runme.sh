@@ -9,7 +9,7 @@ if test -e ${__repo}/.env; then
 	. ${__repo}/.env # source our config
 else
 	echo "Configuring .env"
-	read -p "Cardano network (mainnet/testnet): " CARDANO_NETWORK
+	read -p "Cardano network (mainnet/preprod/preview): " CARDANO_NETWORK
 	read -p "VM API token: " VM_API_TOKEN
 	read -p "Cloudflare Pre-Shared Key: " CLOUDFLARE_PSK
 	if test -z "${CARDANO_NETWORK}"; then
@@ -80,6 +80,6 @@ ansible-playbook ${__repo}/ansible/local.yml \
 set +e
 # Find images from our repo tagged as <none> (orphaned layers)
 echo "Cleaning up leftover Docker images"
-docker images | grep '<none>' | grep 'ghcr.io/tosidrop/vm-frontend' | awk '{print $3}' | xargs docker rmi
+docker images | grep '<none>' | grep 'ghcr.io/tosidrop/vm-frontend' | awk '{print $3}' | xargs docker rmi &>/dev/null
 # Don't exit w/ 1 if above fails
 exit 0

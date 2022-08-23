@@ -8,7 +8,7 @@ import { RootState } from "src/store";
 import { WalletKeys } from "../../services/connectors/wallet.connector";
 import { abbreviateAddress } from "../../services/utils.services";
 import { showModal } from "src/reducers/globalSlice";
-import { ModalTypes } from "src/entities/common.entities";
+import { ModalTypes, NetworkId } from "src/entities/common.entities";
 
 interface Props {
     connectWallet: (walletKey?: WalletKeys) => void;
@@ -69,7 +69,12 @@ function WalletSelector({ connectWallet }: Props) {
                             alt="wallet icon"
                         ></img>
                         <p>
-                            {networkId === 0 ? "(testnet) " : ""}
+                            {switch (networkId) {
+                                case NetworkId.preprod: "(preprod) ";
+                                case NetworkId.preview: "(preview) ";
+                                case NetworkId.mainnet:
+                                default: "";
+                            }}
                             {walletAddress}
                         </p>
                     </>
