@@ -4,6 +4,7 @@
   become: true
   vars:
     manage_docker: "{{ MANAGE_DOCKER | default('true') }}"
+    manage_datadog: "{{ MANAGE_DATADOG | default('true') }}"
   tasks:
     - name: nodePlaybook | Update apt cache
       apt:
@@ -37,3 +38,13 @@
             - vm_frontend
       tags:
         - always
+
+    - name: nodePlaybook | install DataDog
+      include_role:
+        name: datadog.datadog
+        apply:
+          tags:
+            - datadog
+      when: manage_datadog | bool        
+      vars:
+        datadog_api_key: "{{ DATADOG_API_KEY }}""
