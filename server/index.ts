@@ -260,7 +260,7 @@ app.get("/txstatus", async (req, res) => {
     const queryObject = url.parse(req.url, true).query;
     const { request_id, session_id } = queryObject;
 
-    if (!request_id || !session_id) return res.status(400).send({ "Missing request or session ID in /txstatus" });
+    if (!request_id || !session_id) return res.status(400).send({ error: "Missing request or session ID in /txstatus" });
 
     const txStatus = await getFromVM(
       `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`
