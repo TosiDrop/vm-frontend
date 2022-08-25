@@ -188,7 +188,9 @@ app.get("/getstakekey", async (req: any, res: any) => {
       staking_address: rewardAddress.to_address().to_bech32(),
     });
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res
+      .status(500)
+      .send({ error: "An error occurred in /getstakekey" });
   }
 });
 
@@ -201,7 +203,7 @@ app.get("/getrewards", async (req: any, res: any) => {
   try {
     const queryObject = url.parse(req.url, true).query;
     const stakeAddress = queryObject.address as string;
-    if (!stakeAddress) throw new Error();
+    if (!stakeAddress) return res.status(418).send({ error: "No address provided to /getrewards" });
 
     let claimableTokens = await getRewards(stakeAddress);
     const accountsInfo = await getAccountsInfo(stakeAddress);
@@ -214,7 +216,9 @@ app.get("/getrewards", async (req: any, res: any) => {
 
     return res.send(consolidatedGetRewards);
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res
+      .status(500)
+      .send({ error: "An error occurred in /getrewards" });
   }
 });
 
@@ -247,7 +251,7 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
   } catch (e: any) {
     return res
       .status(500)
-      .send({ error: "An error occurred in getcustomrewards" });
+      .send({ error: "An error occurred in /getcustomrewards" });
   }
 });
 
@@ -256,14 +260,16 @@ app.get("/txstatus", async (req, res) => {
     const queryObject = url.parse(req.url, true).query;
     const { request_id, session_id } = queryObject;
 
-    if (!request_id || !session_id) return res.sendStatus(400);
+    if (!request_id || !session_id) return res.status(400).send({ error: "Missing request or session ID in /txstatus" });
 
     const txStatus = await getFromVM(
       `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`
     );
     return res.send(txStatus);
   } catch (e: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res
+    .status(500)
+    .send({ error: "An error occurred in /txstatus" });
   }
 });
 
@@ -279,7 +285,9 @@ app.get("/gettransactionstatus", async (req: any, res: any) => {
       res.send({ error: "Tx hash seems invalid" });
     }
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res
+    .status(500)
+    .send({ error: "An error occurred in /gettransactionstatus" });
   }
 });
 
@@ -293,7 +301,9 @@ app.get("/getabsslot", async (req: any, res: any) => {
           : 0,
     });
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res
+    .status(500)
+    .send({ error: "An error occurred in /getabsslot" });
   }
 });
 
@@ -307,7 +317,9 @@ app.get("/getblock", async (req: any, res: any) => {
           : 0,
     });
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res
+      .status(500)
+      .send({ error: "An error occurred in /getblock" });
   }
 });
 
@@ -316,7 +328,9 @@ app.get("/gettip", async (req: any, res: any) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     res.send(getTipResponse[0]);
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res
+      .status(500)
+      .send({ error: "An error occurred in /gettip" });
   }
 });
 
@@ -328,7 +342,9 @@ app.get("/getepochparams", async (req: any, res: any) => {
     );
     res.send(getEpochParamsResponse);
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res
+      .status(500)
+      .send({ error: "An error occurred in /getepochparams" });
   }
 });
 
