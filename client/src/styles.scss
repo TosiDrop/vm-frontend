@@ -2,130 +2,130 @@
 @import "./variables.scss";
 
 * {
-    font-family: $avenir-font-medium;
-    margin: 0px;
-    outline: none;
+  font-family: $avenir-font-medium;
+  margin: 0px;
+  outline: none;
 }
 
 html {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 html,
 body,
 #root,
 .body {
-    width: 100vw;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 strong {
-    color: inherit;
+  color: inherit;
 }
 
 .body {
-    background: var(--body-background);
-    overflow-x: hidden;
+  background: var(--body-background);
+  overflow-x: hidden;
 }
 
 .tosi-button {
-    background: var(--gradient-button-default);
-    background: var(--gradient-button);
-    color: var(--font-highlight);
-    cursor: pointer;
+  background: var(--gradient-button-default);
+  background: var(--gradient-button);
+  color: var(--font-highlight);
+  cursor: pointer;
 
-    &:hover {
-        background: var(--gradient-button-hover-default);
-        background: var(--gradient-button-hover);
-    }
+  &:hover {
+    background: var(--gradient-button-hover-default);
+    background: var(--gradient-button-hover);
+  }
 
-    &:disabled {
-        background: var(--gradient-button-disabled) !important;
-        cursor: initial;
-        opacity: 0.8;
-    }
+  &:disabled {
+    background: var(--gradient-button-disabled) !important;
+    cursor: initial;
+    opacity: 0.8;
+  }
 }
 
 .noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
 }
 
 .text-premium {
-    color: #ffd700;
+  color: #ffd700;
 }
 
 .tooltip {
-    background: var(--font-highlight);
-    color: var(--primary);
-    visibility: hidden;
+  background: var(--font-highlight);
+  color: var(--primary);
+  visibility: hidden;
 }
 
 .tooltip-activator {
-    position: relative;
+  position: relative;
 
-    &:hover .tooltip {
-        visibility: visible;
-    }
+  &:hover .tooltip {
+    visibility: visible;
+  }
 }
 
 .text {
-    color: var(--font-highlight);
+  color: var(--font-highlight);
 }
 
 .text-failure {
-    color: #fb6b25;
+  color: #fb6b25;
 }
 
 .text-success {
-    color: #4ecc48;
+  color: #4ecc48;
 }
 
 .text-inactive {
-    color: var(--font-inactive-color);
+  color: var(--font-inactive-color);
 }
 
 .text-twitter {
-    color: #1c9deb;
+  color: #1c9deb;
 }
 
 .text-discord {
-    color: #6f85d4;
+  color: #6f85d4;
 }
 
 .text-telegram {
-    color: #2ca0db;
+  color: #2ca0db;
 }
 
 .background {
-    background-color: var(--primary);
+  background-color: var(--primary);
 }
 
 .body-background {
-    background: var(--body-background);
+  background: var(--body-background);
 }
 
 .border-color {
-    border-color: var(--font-highlight);
+  border-color: var(--font-highlight);
 }
 
 .layover {
-    background: hsla(0, 0%, 4%, 0.86);
+  background: hsla(0, 0%, 4%, 0.86);
 }
 
 input {
-    &:disabled {
-        background: var(--input-disabled);
-    }
+  &:disabled {
+    background: var(--input-disabled);
+  }
 }
 
 .border-selected {
-    border-color: var(--font-highlight);
+  border-color: var(--font-highlight);
 }
