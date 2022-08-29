@@ -16,28 +16,22 @@ function Header() {
 
   return (
     <>
-        {/* Web header */}
-        <div className="flex-row items-center w-full p-5 pb-0 hidden sm:flex">
-            <div className="h-full flex flex-row items-center">
-                <img
-                    src={logo}
-                    className="h-10 logo"
-                    alt="tosidrop logo"
-                ></img>
-                <p className="ml-2.5 font-semibold text-lg">TosiDrop</p>
-            </div>
-            <div className="flex flex-row items-center ml-auto">
-                <WalletSelector connectWallet={connectWallet} />
-                <button
-                    className="h-full background rounded-lg px-5 py-2.5 ml-2.5"
-                    onClick={() => dispatch(toggleTheme())}
-                >
-                    <FontAwesomeIcon
-                        icon={theme === Themes.dark ? faSun : faMoon}
-                    />
-                </button>
-            </div>
+      {/* Web header */}
+      <div className="flex-row items-center w-full p-5 pb-0 hidden sm:flex">
+        <div className="h-full flex flex-row items-center">
+          <img src={logo} className="h-10 logo" alt="tosidrop logo"></img>
+          <p className="ml-2.5 font-semibold text-lg">TosiDrop</p>
         </div>
+        <div className="flex flex-row items-center ml-auto">
+          <WalletSelector connectWallet={connectWallet} />
+          <button
+            className="h-full background rounded-lg px-5 py-2.5 ml-2.5"
+            onClick={() => dispatch(toggleTheme())}
+          >
+            <FontAwesomeIcon icon={theme === Themes.dark ? faSun : faMoon} />
+          </button>
+        </div>
+      </div>
 
       {/* Mobile header */}
       <div className="flex flex-row items-center justify-center h-fit m-5 mb-0 visible sm:hidden">
