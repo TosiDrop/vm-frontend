@@ -22,6 +22,7 @@ import {
   IVMSettings,
   ITosiFeatures,
 } from "./utils";
+import { ICustomRewards } from "./utils/entities";
 require("dotenv").config();
 
 const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
@@ -227,18 +228,22 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
     const queryObject = url.parse(req.url, true).query;
     const { staking_address, session_id, selected, unlock } = queryObject;
     let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`;
+    let isWhitelisted = false
 
     if (!staking_address) return res.sendStatus(400);
+    console.log('>>>>>>>>>>>>',TOSIFEE_WHITELIST)
     if (unlock === "true") {
       if (TOSIFEE_WHITELIST) {
         const whitelist = TOSIFEE_WHITELIST.split(",");
         const accountsInfo = await getAccountsInfo(`${staking_address}`);
         const accountInfo = accountsInfo[0];
+        console.log('>>>>>>>>>>>>',accountInfo.delegated_pool)
         if (whitelist.includes(accountInfo.delegated_pool)) {
           vmArgs += "&unlocks_special=true";
-	} else {
+          isWhitelisted = true
+        } else {
           vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
-	}
+        }
       } else {
         vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
       }
@@ -246,8 +251,21 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
       vmArgs += "&unlocks_special=false";
     }
 
-    const submitCustomReward = await getFromVM(vmArgs);
-    return res.send(submitCustomReward);
+    const submitCustomReward: any = await getFromVM(vmArgs);
+
+    if (submitCustomReward == null) {
+      throw new Error()
+    }
+
+    const customReward: ICustomRewards = {
+      request_id: submitCustomReward.request_id,
+      deposit: submitCustomReward.deposit,
+      overhead_fee: submitCustomReward.overhead_fee,
+      withdrawal_address: submitCustomReward.withdrawal_address,
+      is_whitelisted: isWhitelisted
+    }
+
+    return res.send(customReward);
   } catch (e: any) {
     return res
       .status(500)

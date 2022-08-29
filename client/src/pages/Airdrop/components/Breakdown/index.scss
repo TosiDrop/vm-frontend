@@ -1,13 +1,13 @@
 .breakdown {
-    &__warning {
-        margin-top: 10px;
-        color: #ffcc00;
+  &__warning {
+    margin-top: 10px;
+    color: #ffcc00;
+  }
+  &__table {
+    tr {
+      td {
+        min-width: 150px;
+      }
     }
-    &__table {
-        tr {
-            td {
-                min-width: 150px;
-            }
-        }
-    }
+  }
 }

@@ -1,12 +1,12 @@
 .spinning-logo {
-    animation: spin-logo infinite 1s ease-in-out;
+  animation: spin-logo infinite 1s ease-in-out;
 }
 
 @keyframes spin-logo {
-    0% {
-        transform: rotateZ(0deg);
-    }
-    100% {
-        transform: rotateZ(360deg);
-    }
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
 }
