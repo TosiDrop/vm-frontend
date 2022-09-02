@@ -46,8 +46,8 @@
           # Configure haproxy to detect Koios frontend
           haproxy:
             instances:
-            - use_openmetrics: true
-              openmetrics_endpoint: http://localhost:8053>/metrics
+              - use_openmetrics: true
+                openmetrics_endpoint: http://localhost:8053>/metrics
         datadog_config:
           apm_config:
             enabled: false
