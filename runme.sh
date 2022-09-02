@@ -9,9 +9,10 @@ if test -e ${__repo}/.env; then
 	. ${__repo}/.env # source our config
 else
 	echo "Configuring .env"
-	read -p "Cardano network (mainnet/testnet): " CARDANO_NETWORK
+	read -p "Cardano network [mainnet|preview|preprod]: " CARDANO_NETWORK
 	read -p "VM API token: " VM_API_TOKEN
-	read -p "Cloudflare Pre-Shared Key: " CLOUDFLARE_PSK
+	read -p "Cloudflare Pre-Shared Key (optional): " CLOUDFLARE_PSK
+	read -p "DataDog API key (optional): " DD_API_KEY
 	if test -z "${CARDANO_NETWORK}"; then
 		CARDANO_NETWORK=testnet
 	fi
@@ -32,6 +33,9 @@ else
 	echo "VM_API_TOKEN=${VM_API_TOKEN}" >> ${__repo}/.env
 	if test -n "${CLOUDFLARE_PSK}"; then
 		echo "CLOUDFLARE_PSK=${CLOUDFLARE_PSK}" >> ${__repo}/.env
+	fi
+	if test -n "${DD_API_KEY}"; then
+		echo "DD_API_KEY=${DD_API_KEY}" >> ${__repo}/.env
 	fi
 	. ${__repo}/.env # source our config
 fi
@@ -67,7 +71,9 @@ pip install ansible==5.1.0 docker requests
 ansible-galaxy install -r ${__repo}/ansible/requirements.yml
 ansible-playbook ${__repo}/ansible/local.yml \
 	-e REPO=${__repo} \
+	-e DD_API_KEY=${DD_API_KEY:-changeme} \
 	-e DOCKER_USERS=${DOCKER_USERS:-ubuntu} \
+	-e MANAGE_DATADOG=${MANAGE_DATADOG:-false} \
 	-e MANAGE_DOCKER=${MANAGE_DOCKER:-true} \
 	-e vm_frontend_version=${VM_BRANCH} \
 	-e vm_frontend_port=${PORT:-3000} \

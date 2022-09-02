@@ -3,6 +3,7 @@
   gather_facts: true
   become: true
   vars:
+    manage_datadog: "{{ MANAGE_DATADOG | default('false') }}"
     manage_docker: "{{ MANAGE_DOCKER | default('true') }}"
   tasks:
     - name: nodePlaybook | Update apt cache
@@ -28,6 +29,33 @@
       tags:
         - always
       when: manage_docker | bool
+
+    - name: nodePlaybook | install DataDog
+      include_role:
+        name: datadog.datadog
+        apply:
+          tags:
+            - datadog
+      when: manage_datadog | bool
+      vars:
+        datadog_api_key: "{{ DD_API_KEY }}"
+        datadog_site: "datadoghq.com"
+        datadog_additional_groups:
+          - docker
+        datadog_checks:
+          # Configure haproxy to detect Koios frontend
+          haproxy:
+            instances:
+              - use_openmetrics: true
+                openmetrics_endpoint: http://localhost:8053>/metrics
+        datadog_config:
+          apm_config:
+            enabled: false
+          logs_enabled: true
+          process_config:
+            enabled: "false" # string, per docs
+          tags:
+            - product:tosidrop
 
     - name: nodePlaybook | include vm_frontend role
       include_role:
