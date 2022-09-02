@@ -3,5 +3,6 @@ collections:
   - name: community.general
 # From Galaxy
 roles:
+  - src: datadog.datadog
   - src: geerlingguy.docker
     version: 4.1.1
