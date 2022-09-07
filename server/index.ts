@@ -22,6 +22,7 @@ import {
   IVMSettings,
   ITosiFeatures,
 } from "./utils";
+import { ICustomRewards } from "./utils/entities";
 require("dotenv").config();
 
 const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
@@ -189,7 +190,7 @@ app.get("/getstakekey", async (req: any, res: any) => {
       staking_address: rewardAddress.to_address().to_bech32(),
     });
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res.status(500).send({ error: "An error occurred in /getstakekey" });
   }
 });
 
@@ -202,7 +203,10 @@ app.get("/getrewards", async (req: any, res: any) => {
   try {
     const queryObject = url.parse(req.url, true).query;
     const stakeAddress = queryObject.address as string;
-    if (!stakeAddress) throw new Error();
+    if (!stakeAddress)
+      return res
+        .status(418)
+        .send({ error: "No address provided to /getrewards" });
 
     let claimableTokens = await getRewards(stakeAddress);
     const accountsInfo = await getAccountsInfo(stakeAddress);
@@ -215,7 +219,7 @@ app.get("/getrewards", async (req: any, res: any) => {
 
     return res.send(consolidatedGetRewards);
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res.status(500).send({ error: "An error occurred in /getrewards" });
   }
 });
 
@@ -224,6 +228,7 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
     const queryObject = url.parse(req.url, true).query;
     const { staking_address, session_id, selected, unlock } = queryObject;
     let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`;
+    let isWhitelisted = false;
 
     if (!staking_address) return res.sendStatus(400);
     if (unlock === "true") {
@@ -233,9 +238,10 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
         const accountInfo = accountsInfo[0];
         if (whitelist.includes(accountInfo.delegated_pool)) {
           vmArgs += "&unlocks_special=true";
-	} else {
+          isWhitelisted = true;
+        } else {
           vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
-	}
+        }
       } else {
         vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
       }
@@ -243,12 +249,25 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
       vmArgs += "&unlocks_special=false";
     }
 
-    const submitCustomReward = await getFromVM(vmArgs);
-    return res.send(submitCustomReward);
+    const submitCustomReward: any = await getFromVM(vmArgs);
+
+    if (submitCustomReward == null) {
+      throw new Error();
+    }
+
+    const customReward: ICustomRewards = {
+      request_id: submitCustomReward.request_id,
+      deposit: submitCustomReward.deposit,
+      overhead_fee: submitCustomReward.overhead_fee,
+      withdrawal_address: submitCustomReward.withdrawal_address,
+      is_whitelisted: isWhitelisted,
+    };
+
+    return res.send(customReward);
   } catch (e: any) {
     return res
       .status(500)
-      .send({ error: "An error occurred in getcustomrewards" });
+      .send({ error: "An error occurred in /getcustomrewards" });
   }
 });
 
@@ -257,14 +276,17 @@ app.get("/txstatus", async (req, res) => {
     const queryObject = url.parse(req.url, true).query;
     const { request_id, session_id } = queryObject;
 
-    if (!request_id || !session_id) return res.sendStatus(400);
+    if (!request_id || !session_id)
+      return res
+        .status(400)
+        .send({ error: "Missing request or session ID in /txstatus" });
 
     const txStatus = await getFromVM(
       `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`
     );
     return res.send(txStatus);
   } catch (e: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res.status(500).send({ error: "An error occurred in /txstatus" });
   }
 });
 
@@ -280,7 +302,9 @@ app.get("/gettransactionstatus", async (req: any, res: any) => {
       res.send({ error: "Tx hash seems invalid" });
     }
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res
+      .status(500)
+      .send({ error: "An error occurred in /gettransactionstatus" });
   }
 });
 
@@ -294,7 +318,7 @@ app.get("/getabsslot", async (req: any, res: any) => {
           : 0,
     });
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res.status(500).send({ error: "An error occurred in /getabsslot" });
   }
 });
 
@@ -308,7 +332,7 @@ app.get("/getblock", async (req: any, res: any) => {
           : 0,
     });
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res.status(500).send({ error: "An error occurred in /getblock" });
   }
 });
 
@@ -317,7 +341,7 @@ app.get("/gettip", async (req: any, res: any) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     res.send(getTipResponse[0]);
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res.status(500).send({ error: "An error occurred in /gettip" });
   }
 });
 
@@ -329,7 +353,9 @@ app.get("/getepochparams", async (req: any, res: any) => {
     );
     res.send(getEpochParamsResponse);
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred." });
+    return res
+      .status(500)
+      .send({ error: "An error occurred in /getepochparams" });
   }
 });
 

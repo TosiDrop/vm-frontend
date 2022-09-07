@@ -1,95 +1,95 @@
 export enum PaymentStatus {
-    Awaiting,
-    AwaitingConfirmations,
-    Sent,
-    Completed,
+  Awaiting,
+  AwaitingConfirmations,
+  Sent,
+  Completed,
 }
 
 export interface ExtendedMetadata {
-    itn: Itn;
-    info: Info;
-    "my-pool-ids": MyPoolIDS;
-    "when-satured-then-recommend": MyPoolIDS;
+  itn: Itn;
+  info: Info;
+  "my-pool-ids": MyPoolIDS;
+  "when-satured-then-recommend": MyPoolIDS;
 }
 
 export interface Metadata {
-    name: string;
-    description: string;
-    ticker: string;
-    homepage: string;
-    extended: string;
+  name: string;
+  description: string;
+  ticker: string;
+  homepage: string;
+  extended: string;
 }
 
 export interface Info {
-    url_png_icon_64x64: string;
-    url_png_logo: string;
-    location: string;
-    social: Social;
-    about: About;
-    rss: string;
+  url_png_icon_64x64: string;
+  url_png_logo: string;
+  location: string;
+  social: Social;
+  about: About;
+  rss: string;
 }
 
 export interface About {
-    me: string;
-    server: string;
+  me: string;
+  server: string;
 }
 
 export interface Social {
-    twitter_handle: string;
-    github_handle: string;
+  twitter_handle: string;
+  github_handle: string;
 }
 
 export interface Itn {
-    owner: string;
-    witness: string;
+  owner: string;
+  witness: string;
 }
 
 export interface MyPoolIDS {
-    [key: string]: string;
+  [key: string]: string;
 }
 
 export interface TokenTransactionHashRequest {
-    address: string;
-    afterBlock: number;
-    tokens: TokenTransactionHashRequestTokens[];
+  address: string;
+  afterBlock: number;
+  tokens: TokenTransactionHashRequestTokens[];
 }
 
 export interface TokenTransactionHashRequestTokens {
-    policyId: string;
-    quantity: string;
+  policyId: string;
+  quantity: string;
 }
 
 export interface PaymentTransactionHashRequest {
-    address: string;
-    toAddress: string;
-    afterBlock: number;
-    adaToSend: number;
+  address: string;
+  toAddress: string;
+  afterBlock: number;
+  adaToSend: number;
 }
 
 export enum NetworkId {
-    mainnet,
-    preprod,
-    preview,
-    undefined,
+  mainnet,
+  preprod,
+  preview,
+  undefined,
 }
 
 export enum ModalTypes {
-    wallet,
-    info,
+  wallet,
+  info,
 }
 
 export enum InfoModalTypes {
-    info,
-    failure,
-    success,
+  info,
+  failure,
+  success,
 }
 
 export enum Themes {
-    light = "theme-light",
-    dark = "theme-dark",
+  light = "theme-light",
+  dark = "theme-dark",
 }
 
 export enum Blockchain {
-    cardano = "cardano",
-    ergo = "ergo",
+  cardano = "cardano",
+  ergo = "ergo",
 }

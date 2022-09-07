@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    connectWallet as connectWalletRedux,
-    setNetworkId,
+  connectWallet as connectWalletRedux,
+  setNetworkId,
 } from "src/reducers/walletSlice";
 import Modal from "src/components/Modal";
 import Header from "./layouts/header.layout";
@@ -17,51 +17,51 @@ import "./styles.scss";
 import CatalystPopUp from "./components/CatalystPopUp";
 
 function App() {
-    const dispatch = useDispatch();
-    const theme = useSelector((state: RootState) => state.global.theme);
+  const dispatch = useDispatch();
+  const theme = useSelector((state: RootState) => state.global.theme);
 
-    const { connectWallet, getWalletApi } = useWallet();
+  const { connectWallet, getWalletApi } = useWallet();
 
-    /**
-     * run on mount, hence disabling eslint
-     */
-    useEffect(() => {
-        const init = async () => {
-            /**
-             * get network id first
-             */
-            const networkIdResponse = await getNetworkId();
-            dispatch(setNetworkId(networkIdResponse.network));
+  /**
+   * run on mount, hence disabling eslint
+   */
+  useEffect(() => {
+    const init = async () => {
+      /**
+       * get network id first
+       */
+      const networkIdResponse = await getNetworkId();
+      dispatch(setNetworkId(networkIdResponse.network));
 
-            /**
-             * then init wallet
-             */
-            const walletKey = localStorage.getItem("wallet-provider");
+      /**
+       * then init wallet
+       */
+      const walletKey = localStorage.getItem("wallet-provider");
 
-            if (walletKey) {
-                connectWallet(walletKey as WalletKeys);
-            } else {
-                const walletApi = await getWalletApi();
-                dispatch(connectWalletRedux(walletApi));
-            }
-        };
-        init();
+      if (walletKey) {
+        connectWallet(walletKey as WalletKeys);
+      } else {
+        const walletApi = await getWalletApi();
+        dispatch(connectWalletRedux(walletApi));
+      }
+    };
+    init();
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return (
-        <div className={`${theme} w-full text`}>
-            <CatalystPopUp></CatalystPopUp>
-            <MobileMenu />
-            <Modal />
-            <Menu />
-            <div className="body">
-                <Header />
-                <Page />
-            </div>
-        </div>
-    );
+  return (
+    <div className={`${theme} w-full text`}>
+      <CatalystPopUp></CatalystPopUp>
+      <MobileMenu />
+      <Modal />
+      <Menu />
+      <div className="body">
+        <Header />
+        <Page />
+      </div>
+    </div>
+  );
 }
 
 export default App;

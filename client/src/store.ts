@@ -3,14 +3,14 @@ import walletReducer from "src/reducers/walletSlice";
 import globalReducer from "src/reducers/globalSlice";
 
 const store = configureStore({
-    reducer: {
-        wallet: walletReducer,
-        global: globalReducer,
-    },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
-            serializableCheck: false,
-        }),
+  reducer: {
+    wallet: walletReducer,
+    global: globalReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;

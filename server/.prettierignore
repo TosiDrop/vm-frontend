@@ -1,0 +1,6 @@
+# Ignore everything:
+/*
+
+# Except:
+!index.ts
+!/utils
