@@ -152,7 +152,7 @@ app.get("/getstakekey", async (req: any, res: any) => {
           return res.send({ error: "Inserted address is for a testnet" });
         break;
       case prefix === "addr1":
-        if (CARDANO_NETWORK === CardanoNetwork.preprod || CARDANO_NETWORK === CardanoNetwork.preview)
+        if (CARDANO_NETWORK === CardanoNetwork.preview)
           return res.send({ error: "Inserted address is for mainnet" });
         break;
       case prefix === "stake":
@@ -168,7 +168,6 @@ app.get("/getstakekey", async (req: any, res: any) => {
       case CardanoNetwork.mainnet:
         rewardAddressBytes.set([0xe1], 0);
         break;
-      case CardanoNetwork.preprod:
       case CardanoNetwork.preview:
       default:
         rewardAddressBytes.set([0xe0], 0);

@@ -56,9 +56,6 @@ export async function getEpochParams(): Promise<EpochParams[]> {
 export async function getNetworkId(): Promise<{ network: NetworkId }> {
   const response = await axios.get(`/features`);
   if (response && response.data) {
-    if (response.data.network === "preprod") {
-      return { network: NetworkId.preprod };
-    }
     if (response.data.network === "preview") {
       return { network: NetworkId.preview };
     }

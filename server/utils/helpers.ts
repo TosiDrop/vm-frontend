@@ -37,10 +37,6 @@ export async function translateAdaHandle(
       urlPrefix = "api";
       policyId = "f0ff48bbb7bbe9d59a40f1ce90e9e9d0ff5002ec48f232b49ca0fb9a";
       break;
-    case CardanoNetwork.preprod:
-      urlPrefix = "preprod";
-      policyId = "CHANGEME";
-      break;
     case CardanoNetwork.preview:
     default:
       urlPrefix = "preview";
