@@ -63,7 +63,7 @@ function WalletSelector({ connectWallet }: Props) {
           <>
             <img src={walletIcon} className="h-5 mr-3" alt="wallet icon"></img>
             <p>
-              {networkId === 0 ? "(testnet) " : ""}
+              {networkId === 0 ? "(preview) " : ""}
               {walletAddress}
             </p>
           </>

@@ -9,7 +9,7 @@ if test -e ${__repo}/.env; then
 	. ${__repo}/.env # source our config
 else
 	echo "Configuring .env"
-	read -p "Cardano network [mainnet|preview|preprod]: " CARDANO_NETWORK
+	read -p "Cardano network [mainnet|preview]: " CARDANO_NETWORK
 	read -p "VM API token: " VM_API_TOKEN
 	read -p "Cloudflare Pre-Shared Key (optional): " CLOUDFLARE_PSK
 	read -p "DataDog API key (optional): " DD_API_KEY
@@ -20,8 +20,8 @@ else
 		echo "You must give an API token!"
 		exit 1
 	fi
-	KOIOS_URL=https://testnet.koios.rest/api/v0
-	VM_URL=https://vmtest.adaseal.eu
+	KOIOS_URL=https://preview.koios.rest/api/v0
+	VM_URL=https://vmprev.adaseal.eu
 	if test "${CARDANO_NETWORK}" == "mainnet"; then
 		KOIOS_URL=https://koios.rest/api/v0
 		VM_URL=https://vm.adaseal.eu
@@ -86,6 +86,6 @@ ansible-playbook ${__repo}/ansible/local.yml \
 set +e
 # Find images from our repo tagged as <none> (orphaned layers)
 echo "Cleaning up leftover Docker images"
-docker images | grep '<none>' | grep 'ghcr.io/tosidrop/vm-frontend' | awk '{print $3}' | xargs docker rmi
+docker images | grep '<none>' | grep 'ghcr.io/tosidrop/vm-frontend' | awk '{print $3}' | xargs docker rmi &>/dev/null
 # Don't exit w/ 1 if above fails
 exit 0

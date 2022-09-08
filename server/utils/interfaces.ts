@@ -1,6 +1,6 @@
 export enum CardanoNetwork {
+  preview = "preview",
   mainnet = "mainnet",
-  testnet = "testnet",
 }
 
 export interface IVMSettings {
