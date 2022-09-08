@@ -67,8 +67,8 @@ export interface PaymentTransactionHashRequest {
 }
 
 export enum NetworkId {
-  mainnet,
   preprod,
+  mainnet,
   preview,
   undefined,
 }

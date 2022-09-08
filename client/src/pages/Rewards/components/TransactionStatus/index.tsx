@@ -26,7 +26,7 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
       case NetworkId.mainnet:
         cardanoScanUrl = "https://cardanoscan.io/transaction";
         break;
-      case NetworkId.testnet:
+      case NetworkId.preview:
       default:
         cardanoScanUrl = "https://testnet.cardanoscan.io/transaction";
     }
