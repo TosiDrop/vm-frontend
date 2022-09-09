@@ -14,7 +14,7 @@ else
 	read -p "Cloudflare Pre-Shared Key (optional): " CLOUDFLARE_PSK
 	read -p "DataDog API key (optional): " DD_API_KEY
 	if test -z "${CARDANO_NETWORK}"; then
-		CARDANO_NETWORK=testnet
+		CARDANO_NETWORK=preview
 	fi
 	if test -z "${VM_API_TOKEN}"; then
 		echo "You must give an API token!"
