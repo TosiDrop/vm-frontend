@@ -51,15 +51,13 @@ function App() {
   }, []);
 
   return (
-    <div className={`${theme} w-full text`}>
+    <div className={`${theme} w-full max-w-7xl text flex flex-col`}>
       <CatalystPopUp></CatalystPopUp>
       <MobileMenu />
       <Modal />
       <Menu />
-      <div className="body">
-        <Header />
-        <Page />
-      </div>
+      <Header />
+      <Page />
     </div>
   );
 }

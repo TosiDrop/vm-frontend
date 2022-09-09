@@ -97,7 +97,7 @@ function WalletSelector({ connectWallet }: Props) {
   const WrongNetworkButton = () => (
     <div
       className={
-        "rounded-lg background h-full flex items-center justify-center px-5 cursor-pointer"
+        "rounded-lg background h-full flex items-center justify-center px-5 py-2.5 cursor-pointer"
       }
       onClick={() => toggleDisconnectButton()}
     >

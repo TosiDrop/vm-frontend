@@ -13,21 +13,22 @@ html {
 
 html,
 body,
-#root,
-.body {
+#root {
   width: 100vw;
   height: 100vh;
   margin: 0;
   padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+#root {
+  background: var(--body-background);
+  overflow-x: hidden;
 }
 
 strong {
   color: inherit;
-}
-
-.body {
-  background: var(--body-background);
-  overflow-x: hidden;
 }
 
 .tosi-button {
