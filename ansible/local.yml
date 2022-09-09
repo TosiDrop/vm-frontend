@@ -47,7 +47,7 @@
           haproxy:
             instances:
               - use_openmetrics: true
-                openmetrics_endpoint: http://localhost:8053>/metrics
+                openmetrics_endpoint: http://localhost:8053/metrics
         datadog_config:
           apm_config:
             enabled: false
