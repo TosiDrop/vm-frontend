@@ -96,7 +96,8 @@ const TransactionDetail = ({
               settings.serviceFee,
               settings.txFee,
               unlock,
-              settings.tosifee
+              settings.tosifee,
+              isWhitelisted
             )
           )}{" "}
           ADA
@@ -123,9 +124,10 @@ const calcReturnedAda = (
   serviceFee: number,
   txFee: number,
   unlock: boolean,
-  tosifee: number
+  tosifee: number,
+  whitelisted: boolean,
 ) => {
   let returnedAda = deposit - withdrawalFee - serviceFee - txFee;
-  if (unlock) returnedAda -= tosifee;
+  if (unlock && !whitelisted) returnedAda -= tosifee;
   return returnedAda;
 };
