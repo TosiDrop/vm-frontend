@@ -39,7 +39,7 @@
       when: manage_datadog | bool
       vars:
         datadog_api_key: "{{ DD_API_KEY }}"
-        datadog_site: "datadoghq.com"
+        datadog_site: "us5.datadoghq.com"
         datadog_additional_groups:
           - docker
         datadog_checks:
