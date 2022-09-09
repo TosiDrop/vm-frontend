@@ -21,14 +21,14 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
   const networkId = useSelector((state: RootState) => state.wallet.networkId);
 
   const renderTxId = () => {
-    let cardanoScanUrl = "";
+    let cexplorerUrl = "";
     switch (networkId) {
       case NetworkId.mainnet:
-        cardanoScanUrl = "https://cardanoscan.io/transaction";
+        cexplorerUrl = "https://cexplorer.io/tx";
         break;
       case NetworkId.preview:
       default:
-        cardanoScanUrl = "https://testnet.cardanoscan.io/transaction";
+        cexplorerUrl = "https://preview.cexplorer.io/tx";
     }
     return transactionId ? (
       <div className="">
@@ -36,7 +36,7 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
         <a
           target="_blank"
           rel="noreferrer"
-          href={`${cardanoScanUrl}/${transactionId}`}
+          href={`${cexplorerUrl}/${transactionId}`}
           className="text-violet-500 ml-2.5"
         >
           {transactionId} <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
