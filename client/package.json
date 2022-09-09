@@ -7,7 +7,7 @@
     "npm": ">=8"
   },
   "dependencies": {
-    "@emurgo/cardano-serialization-lib-asmjs": "^10.0.4",
+    "@emurgo/cardano-serialization-lib-asmjs": "^11.0.5",
     "@emurgo/cip14-js": "^3.0.1",
     "@fortawesome/fontawesome-common-types": "^6.1.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -38,7 +38,7 @@
   "scripts": {
     "start": "PORT=3001 react-scripts --max-old-space-size=4096 start",
     "clean": "rm -rf build/* node_modules",
-    "build": "npm install && react-scripts --max_old_space_size=4096 build",
+    "build": "npm install && react-scripts --max_old_space_size=8192 build",
     "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
     "fmt": "npx prettier --tab-width 4 --write src"
