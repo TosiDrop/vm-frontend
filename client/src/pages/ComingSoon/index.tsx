@@ -1,7 +1,4 @@
 import Page from "src/layouts/page";
-import "./index.scss";
-
-const CLASS = "comingsoon-page";
 
 const ComingSoonPage = () => {
   return (
