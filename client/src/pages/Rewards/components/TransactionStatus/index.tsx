@@ -81,9 +81,7 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
         );
     }
   };
-  return (
-    <div className="background rounded-2xl p-5 mt-5">{renderStatus()}</div>
-  );
+  return <div className="background rounded-2xl p-5">{renderStatus()}</div>;
 };
 
 export default TransactionStatus;

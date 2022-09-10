@@ -46,7 +46,7 @@ const TransactionDetail = ({
   }, []);
 
   return (
-    <div className="background rounded-2xl p-5 mt-5">
+    <div className="background rounded-2xl p-5">
       Transaction Detail
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
         <div className="w-28 text-right">{numberOfTokens} tokens</div>

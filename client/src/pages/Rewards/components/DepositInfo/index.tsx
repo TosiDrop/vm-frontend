@@ -29,12 +29,12 @@ const DepositInfo = ({
   unlock,
 }: Params) => {
   return (
-    <>
-      <div className="bg-yellow-400 rounded-2xl p-5 mt-5 text-black">
+    <div className="flex flex-col gap-4">
+      <div className="bg-yellow-400 rounded-2xl p-5 text-black">
         <FontAwesomeIcon className="mr-2.5" icon={faWarning} />
         <span>Please send ONLY from the wallet with the same stake key</span>
       </div>
-      <div className="background rounded-2xl p-5 mt-5">
+      <div className="background rounded-2xl p-5">
         <div className={`${CLASS}__info ${CLASS}__row`}>
           Please complete the withdrawal process by sending{" "}
           <b>{formatTokens(txDetail?.deposit.toString(), 6, 1)} ADA</b> using
@@ -67,7 +67,7 @@ const DepositInfo = ({
           isWhitelisted={txDetail.is_whitelisted}
         ></TransactionDetail>
       ) : null}
-    </>
+    </div>
   );
 };
 
