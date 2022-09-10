@@ -27,7 +27,7 @@ const ClaimableTokenBox = ({
 }: Props) => {
   return (
     <div
-      className={`box-border cursor-pointer mt-5 background rounded-2xl p-5 flex flex-col items-center w-full sm:w-64 sm:mr-5 border-2 duration-200 ${
+      className={`box-border cursor-pointer background rounded-2xl p-5 flex flex-col gap-4 items-center w-full sm:w-60 border-2 duration-200 ${
         selected ? "border-selected" : "border-transparent"
       }`}
       key={index}
@@ -48,10 +48,8 @@ const ClaimableTokenBox = ({
           </span>
         ) : null}
       </div>
-      <div className="mt-5">
-        <img alt="" src={logo} className=" h-24"></img>
-        <div className="text-center mt-5">{ticker}</div>
-      </div>
+      <img alt="" src={logo} className=" h-24"></img>
+      <div className="text-center">{ticker}</div>
     </div>
   );
 };
