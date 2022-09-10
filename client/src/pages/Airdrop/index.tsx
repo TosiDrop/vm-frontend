@@ -14,9 +14,7 @@ import { WalletKeys } from "src/services/connectors/wallet.connector";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../Loading";
-import "./index.scss";
-
-const CLASS = "airdrop-page";
+import Page from "src/layouts/page";
 
 const AirdropPage = () => {
   const {
@@ -62,82 +60,89 @@ const AirdropPage = () => {
   return initialLoading ? (
     <Loading></Loading>
   ) : enabled ? (
-    <div className={CLASS}>
-      <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
-      {walletName.toLowerCase() !== WalletKeys.nami.toLowerCase() ? (
-        <div className={`${CLASS}__content ${CLASS}__warning`}>
-          <FontAwesomeIcon icon={faWarning} />
-          <span>
-            This feature is working properly ONLY for Nami wallet. The use of
-            other wallets is not recommended.
-          </span>
-        </div>
-      ) : null}
-      <div className={`${CLASS}__content ${CLASS}__select`}>
-        <Select tokens={tokens} setSelectedToken={setSelectedToken}></Select>
-        <input
-          ref={fileRef}
-          id="file-upload"
-          type="file"
-          accept=".csv"
-          onChange={() => parseFile()}
-          hidden
-        />
-        <label className={`${CLASS}__button`} htmlFor="file-upload">
-          Upload Addresses
-        </label>
-      </div>
-      {addressList.length ? (
-        <div className={`${CLASS}__content ${CLASS}__address-list`}>
-          <div className={`${CLASS}__address-list-header`}>
-            <h1>Address List</h1>
-            <span>{addressList.length} address added</span>
+    <Page>
+      <>
+        <p className="text-3xl">Airdrop Tokens</p>
+        <div className="">
+          {walletName.toLowerCase() !== WalletKeys.nami.toLowerCase() ? (
+            <div className="">
+              <FontAwesomeIcon icon={faWarning} />
+              <span>
+                This feature is working properly ONLY for Nami wallet. The use
+                of other wallets is not recommended.
+              </span>
+            </div>
+          ) : null}
+          <div className="">
+            <Select
+              tokens={tokens}
+              setSelectedToken={setSelectedToken}
+            ></Select>
+            <input
+              ref={fileRef}
+              id="file-upload"
+              type="file"
+              accept=".csv"
+              onChange={() => parseFile()}
+              hidden
+            />
+            <label className="" htmlFor="file-upload">
+              Upload Addresses
+            </label>
           </div>
-          {addressList.map((addr: TokenAddress, i: number) => {
-            return (
-              <div key={i} className={`${CLASS}__address-list-address`}>
-                {shortenAddress(addr.address)}: {addr.tokenAmount}
+          {addressList.length ? (
+            <div className="">
+              <div className="">
+                <h1>Address List</h1>
+                <span>{addressList.length} address added</span>
               </div>
-            );
-          })}
+              {addressList.map((addr: TokenAddress, i: number) => {
+                return (
+                  <div key={i} className="">
+                    {shortenAddress(addr.address)}: {addr.tokenAmount}
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
+          <div className="">
+            <h1>Airdrop Breakdown</h1>
+            <Breakdown
+              selectedToken={selectedToken}
+              addressList={addressList}
+              totalToken={totalToken}
+              validated={validated}
+              airdropDetail={airdropDetail}
+            ></Breakdown>
+          </div>
+          {multiTxTransactions.length ? (
+            <div className="">
+              <h1>Airdrop Transactions</h1>
+              {multiTxTransactions.map((tx: any, i: number) => {
+                return (
+                  <TransactionBar
+                    key={tx.cborHex}
+                    cborHex={tx.cborHex}
+                    description={tx.description}
+                    i={i}
+                  ></TransactionBar>
+                );
+              })}
+            </div>
+          ) : null}
+          {!multiTxTransactions.length ? (
+            <button
+              className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
+              onClick={() => exec()}
+              disabled={!Boolean(addressList.length) || selectedToken == null}
+            >
+              {getBtnText()}
+              {loading ? <Spinner></Spinner> : null}
+            </button>
+          ) : null}
         </div>
-      ) : null}
-      <div className={`${CLASS}__content ${CLASS}__info`}>
-        <h1>Airdrop Breakdown</h1>
-        <Breakdown
-          selectedToken={selectedToken}
-          addressList={addressList}
-          totalToken={totalToken}
-          validated={validated}
-          airdropDetail={airdropDetail}
-        ></Breakdown>
-      </div>
-      {multiTxTransactions.length ? (
-        <div className={`${CLASS}__content ${CLASS}__info`}>
-          <h1>Airdrop Transactions</h1>
-          {multiTxTransactions.map((tx: any, i: number) => {
-            return (
-              <TransactionBar
-                key={tx.cborHex}
-                cborHex={tx.cborHex}
-                description={tx.description}
-                i={i}
-              ></TransactionBar>
-            );
-          })}
-        </div>
-      ) : null}
-      {!multiTxTransactions.length ? (
-        <button
-          className={`${CLASS}__button ${CLASS}__button-airdrop`}
-          onClick={() => exec()}
-          disabled={!Boolean(addressList.length) || selectedToken == null}
-        >
-          {getBtnText()}
-          {loading ? <Spinner></Spinner> : null}
-        </button>
-      ) : null}
-    </div>
+      </>
+    </Page>
   ) : (
     <ComingSoon />
   );

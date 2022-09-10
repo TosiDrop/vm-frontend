@@ -4,11 +4,8 @@ import { sleep, transact } from "../../utils";
 import { getTxStatus } from "src/services/airdrop.services";
 import Spinner from "../../../../components/Spinner";
 import { RootState } from "src/store";
-import "./index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-
-const CLASS = "transaction-bar";
 
 interface Props {
   cborHex: string;
@@ -47,10 +44,7 @@ const TransactionBar = ({ cborHex, description, i }: Props) => {
     switch (status) {
       case TxStatus.toSign:
         return (
-          <button
-            className={`${CLASS}__button ${CLASS}__button-airdrop`}
-            onClick={() => signTx()}
-          >
+          <button className="" onClick={() => signTx()}>
             Sign
           </button>
         );
@@ -65,7 +59,7 @@ const TransactionBar = ({ cborHex, description, i }: Props) => {
   };
 
   return (
-    <div className={`${CLASS}`}>
+    <div className="">
       Transaction {i + 1}
       {renderStatus()}
     </div>
