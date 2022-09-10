@@ -14,6 +14,7 @@ import { showModal } from "src/reducers/globalSlice";
 import Spinner from "src/components/Spinner";
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
 import { useNavigate } from "react-router-dom";
+import Page from "src/layouts/page";
 
 function Rewards() {
   const dispatch = useDispatch();
@@ -244,7 +245,7 @@ function Rewards() {
   function renderCheckRewardsStep() {
     if (!hideCheck) {
       return (
-        <div className="mt-5 p-5 background text rounded-2xl">
+        <div className="p-5 background text rounded-2xl">
           <p>Enter your wallet/stake address or $handle to view your rewards</p>
           <input
             className={`mt-5 w-full rounded-lg bg-transparent border-gray-400 border p-1 disabled:cursor-not-allowed`}
@@ -371,11 +372,13 @@ function Rewards() {
   }
 
   return (
-    <div className="px-5 py-14 sm:pl-80 sm:pr-20">
-      <p className="text-3xl">Claim your rewards</p>
-      {renderCheckRewardsStep()}
-      {renderStakingInfoStep()}
-    </div>
+    <Page>
+      <>
+        <p className="text-3xl">Claim your rewards</p>
+        {renderCheckRewardsStep()}
+        {renderStakingInfoStep()}
+      </>
+    </Page>
   );
 }
 

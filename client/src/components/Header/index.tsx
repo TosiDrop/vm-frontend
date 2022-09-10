@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import WalletSelector from "src/components/WalletSelector";
 import { RootState } from "src/store";
-import logo from "../assets/tosidrop_logo.png";
+import logo from "src/assets/tosidrop_logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
 import useWallet from "src/hooks/useWallet";

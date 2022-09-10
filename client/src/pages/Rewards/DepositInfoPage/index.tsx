@@ -8,6 +8,7 @@ import { GetCustomRewards } from "src/entities/vm.entities";
 import { useEffect, useState } from "react";
 import DepositInfo from "../components/DepositInfo";
 import Loading from "src/pages/Loading";
+import Page from "src/layouts/page";
 
 interface TransactionStatus {
   expected_deposit: number;
@@ -114,18 +115,20 @@ const DepositInfoPage = () => {
   return loading ? (
     <Loading />
   ) : selectedTokens && stakeAddress && withdrawAddress && requestId ? (
-    <div className="px-5 py-14 sm:pl-80 sm:pr-20 text">
-      <p className="text-3xl">Claim your rewards</p>
-      <DepositInfo
-        txDetail={txDetail}
-        checkedCount={checkedCount}
-        transactionId={transactionId}
-        transactionStatus={transactionStatus}
-        setTransactionId={setTransactionId}
-        setTransactionStatus={setTransactionStatus}
-        unlock={unlock}
-      ></DepositInfo>
-    </div>
+    <Page>
+      <>
+        <p className="text-3xl">Claim your rewards</p>
+        <DepositInfo
+          txDetail={txDetail}
+          checkedCount={checkedCount}
+          transactionId={transactionId}
+          transactionStatus={transactionStatus}
+          setTransactionId={setTransactionId}
+          setTransactionStatus={setTransactionStatus}
+          unlock={unlock}
+        ></DepositInfo>
+      </>
+    </Page>
   ) : null;
 };
 

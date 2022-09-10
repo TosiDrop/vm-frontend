@@ -41,7 +41,7 @@
     "build": "npm install && react-scripts --max_old_space_size=8192 build",
     "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
-    "fmt": "npx prettier --tab-width 4 --write src"
+    "format": "npx prettier --write src"
   },
   "proxy": "http://localhost:3000",
   "eslintConfig": {

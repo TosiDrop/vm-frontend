@@ -24,7 +24,7 @@ function Modal() {
 
   return showModal != null ? (
     <div
-      className={`z-10 text-modal modal absolute w-full h-full flex items-center justify-center`}
+      className={`z-10 text-modal modal absolute top-0 left-0 w-full h-full flex items-center justify-center`}
     >
       <div className="modal-background layover absolute w-full h-full"></div>
       <div

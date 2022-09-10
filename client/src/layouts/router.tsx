@@ -6,7 +6,7 @@ import Feedback from "../pages/Feedback";
 import Airdrop from "../pages/Airdrop";
 import DepositInfoPage from "src/pages/Rewards/DepositInfoPage";
 
-function Page() {
+const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<Rewards />} />
@@ -18,6 +18,6 @@ function Page() {
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
-}
+};
 
-export default Page;
+export default Router;

@@ -1,20 +1,19 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   connectWallet as connectWalletRedux,
   setNetworkId,
 } from "src/reducers/walletSlice";
 import Modal from "src/components/Modal";
-import Header from "./layouts/header.layout";
-import Menu from "./layouts/menu.layout";
-import Page from "./layouts/page.layout";
+import Header from "src/components/Header";
+import Router from "src/layouts/router";
 import { RootState } from "src/store";
-import { WalletKeys } from "./services/connectors/wallet.connector";
-import { getNetworkId } from "./services/claim.services";
-import useWallet from "./hooks/useWallet";
-import MobileMenu from "src/components/MobileMenu";
-import "./styles.scss";
-import CatalystPopUp from "./components/CatalystPopUp";
+import { WalletKeys } from "src/services/connectors/wallet.connector";
+import { getNetworkId } from "src/services/claim.services";
+import useWallet from "src/hooks/useWallet";
+import CatalystPopUp from "src/components/CatalystPopUp";
+import "src/styles.scss";
 
 function App() {
   const dispatch = useDispatch();
@@ -51,13 +50,13 @@ function App() {
   }, []);
 
   return (
-    <div className={`${theme} w-full max-w-7xl text flex flex-col`}>
-      <CatalystPopUp></CatalystPopUp>
-      <MobileMenu />
-      <Modal />
-      <Menu />
-      <Header />
-      <Page />
+    <div className={`app ${theme}`}>
+      <div className="w-full max-w-7xl text flex flex-col">
+        <CatalystPopUp></CatalystPopUp>
+        <Modal />
+        <Header />
+        <Router />
+      </div>
     </div>
   );
 }
