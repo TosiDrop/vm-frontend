@@ -14,6 +14,7 @@ import { getNetworkId } from "src/services/common";
 import useWallet from "src/hooks/useWallet";
 import CatalystPopUp from "src/components/CatalystPopUp";
 import "src/styles.scss";
+import Footer from "./components/Footer";
 
 function App() {
   const dispatch = useDispatch();
@@ -51,11 +52,12 @@ function App() {
 
   return (
     <div className={`app ${theme}`}>
-      <div className="w-full max-w-7xl text flex flex-col">
+      <div className="w-full max-w-7xl min-h-full text flex flex-col">
         <CatalystPopUp></CatalystPopUp>
         <Modal />
         <Header />
         <Router />
+        <Footer></Footer>
       </div>
     </div>
   );

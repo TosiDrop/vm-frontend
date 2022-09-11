@@ -28,7 +28,7 @@ function Modal() {
     >
       <div className="modal-background layover absolute w-full h-full"></div>
       <div
-        className="background w-full max-w-sm m-5 p-5 rounded-2xl z-10 flex flex-col items-center text"
+        className="background w-full max-w-sm m-5 p-5 rounded-2xl z-10 flex flex-col gap-4 items-center text"
         ref={ref}
       >
         {renderModalContent()}
