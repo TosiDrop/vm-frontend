@@ -15,6 +15,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../Loading";
 import Page from "src/layouts/page";
+import WarningBanner from "./components/WarningBanner";
+import { getFeatures } from "src/services/common";
 
 const AirdropPage = () => {
   const {
@@ -36,11 +38,14 @@ const AirdropPage = () => {
   const [enabled, setEnabled] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
+  const init = async () => {
+    const features = await getFeatures();
+    setEnabled(features.airdrop_enabled ?? false);
+    setInitialLoading(false);
+  };
+
   useEffect(() => {
-    axios.get("/features").then((res) => {
-      setEnabled(res.data.airdrop_enabled);
-      setInitialLoading(false);
-    });
+    init();
   }, []);
 
   const getBtnText = () => {
@@ -63,17 +68,11 @@ const AirdropPage = () => {
     <Page>
       <>
         <p className="text-3xl">Airdrop Tokens</p>
-        <div className="">
-          {walletName.toLowerCase() !== WalletKeys.nami.toLowerCase() ? (
-            <div className="">
-              <FontAwesomeIcon icon={faWarning} />
-              <span>
-                This feature is working properly ONLY for Nami wallet. The use
-                of other wallets is not recommended.
-              </span>
-            </div>
-          ) : null}
-          <div className="">
+        <div className="flex flex-col gap-4">
+          <WarningBanner
+            isShown={walletName.toLowerCase() !== WalletKeys.nami.toLowerCase()}
+          />
+          <div className="background rounded-2xl p-5 flex flex-row items-center gap-2">
             <Select
               tokens={tokens}
               setSelectedToken={setSelectedToken}
@@ -86,7 +85,10 @@ const AirdropPage = () => {
               onChange={() => parseFile()}
               hidden
             />
-            <label className="" htmlFor="file-upload">
+            <label
+              className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center w-full justify-center"
+              htmlFor="file-upload"
+            >
               Upload Addresses
             </label>
           </div>
@@ -105,8 +107,8 @@ const AirdropPage = () => {
               })}
             </div>
           ) : null}
-          <div className="">
-            <h1>Airdrop Breakdown</h1>
+          <div className="background p-5 rounded-2xl gap-2">
+            <div>Airdrop Breakdown</div>
             <Breakdown
               selectedToken={selectedToken}
               addressList={addressList}

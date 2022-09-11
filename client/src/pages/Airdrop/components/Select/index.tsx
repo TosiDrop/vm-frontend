@@ -48,8 +48,14 @@ const Select = ({ tokens, setSelectedToken }: Props) => {
   }, [tokens]);
 
   return (
-    <div ref={ref} className="">
-      <div className="" onClick={() => !disabled && setVisible(!visible)}>
+    <div
+      ref={ref}
+      className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center w-full justify-center"
+    >
+      <div
+        className="flex items-center gap-2"
+        onClick={() => !disabled && setVisible(!visible)}
+      >
         {getBtnText()}
       </div>
       <div className="">

@@ -1,7 +1,7 @@
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TransactionDetail from "../TransactionDetail";
-import { formatTokens } from "src/services/utils.services";
+import { formatTokens } from "src/utils";
 import { GetCustomRewards } from "src/entities/vm.entities";
 import SendAdaInfo from "../SendAdaInfo";
 import TransactionStatus from "../TransactionStatus";

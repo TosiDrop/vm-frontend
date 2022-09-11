@@ -1,7 +1,7 @@
 import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
 import { showModal } from "src/reducers/globalSlice";
 import { useState } from "react";
-import { copyContent } from "src/services/utils.services";
+import { copyContent } from "src/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import QRCode from "react-qr-code";

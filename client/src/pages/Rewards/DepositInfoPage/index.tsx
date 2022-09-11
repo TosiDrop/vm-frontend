@@ -3,7 +3,7 @@
  */
 
 import { useSearchParams } from "react-router-dom";
-import { getTxStatus } from "src/services/claim.services";
+import { getTxStatus } from "src/services/claim";
 import { GetCustomRewards } from "src/entities/vm.entities";
 import { useEffect, useState } from "react";
 import DepositInfo from "../components/DepositInfo";

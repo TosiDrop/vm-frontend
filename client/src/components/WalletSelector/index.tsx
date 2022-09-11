@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Spinner from "src/components/Spinner";
 import useComponentVisible from "src/hooks/useComponentVisible";
 import { RootState } from "src/store";
-import { WalletKeys } from "../../services/connectors/wallet.connector";
-import { abbreviateAddress } from "../../services/utils.services";
+import { WalletKeys } from "src/services/connectors/wallet.connector";
+import { abbreviateAddress } from "src/utils";
 import { showModal } from "src/reducers/globalSlice";
 import { ModalTypes } from "src/entities/common.entities";
 

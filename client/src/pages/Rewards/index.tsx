@@ -5,11 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { ClaimableToken } from "src/entities/vm.entities";
-import {
-  getCustomRewards,
-  getRewards,
-  getStakeKey,
-} from "src/services/claim.services";
+import { getCustomRewards, getRewards } from "src/services/claim";
 import { ModalTypes, InfoModalTypes } from "src/entities/common.entities";
 import { RootState } from "src/store";
 import { showModal } from "src/reducers/globalSlice";
@@ -17,6 +13,7 @@ import Spinner from "src/components/Spinner";
 import Page from "src/layouts/page";
 
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
+import { getStakeKey } from "src/services/common";
 
 function Rewards() {
   const dispatch = useDispatch();

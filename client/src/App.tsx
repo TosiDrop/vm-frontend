@@ -10,7 +10,7 @@ import Header from "src/components/Header";
 import Router from "src/layouts/router";
 import { RootState } from "src/store";
 import { WalletKeys } from "src/services/connectors/wallet.connector";
-import { getNetworkId } from "src/services/claim.services";
+import { getNetworkId } from "src/services/common";
 import useWallet from "src/hooks/useWallet";
 import CatalystPopUp from "src/components/CatalystPopUp";
 import "src/styles.scss";

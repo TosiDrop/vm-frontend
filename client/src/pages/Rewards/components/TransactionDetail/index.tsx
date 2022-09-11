@@ -1,7 +1,7 @@
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { getFeatures, getSettings } from "src/services/claim.services";
+import { getFeatures, getSettings } from "src/services/common";
 
 const CLASS = "transaction-detail";
 
