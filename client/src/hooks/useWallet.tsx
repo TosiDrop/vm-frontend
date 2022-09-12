@@ -5,7 +5,7 @@ import {
   connectWallet as connectWalletRedux,
   setIsWrongNetwork,
 } from "src/reducers/walletSlice";
-import { getNetworkId } from "src/services/claim.services";
+import { getNetworkId } from "src/services/common";
 import WalletApi, {
   Cardano,
   WalletKeys,

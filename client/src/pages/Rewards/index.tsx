@@ -1,19 +1,19 @@
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, KeyboardEvent, useCallback } from "react";
-import { ClaimableToken } from "../../entities/vm.entities";
-import {
-  getCustomRewards,
-  getRewards,
-  getStakeKey,
-} from "../../services/claim.services";
-import { ModalTypes, InfoModalTypes } from "../../entities/common.entities";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import { ClaimableToken } from "src/entities/vm.entities";
+import { getCustomRewards, getRewards } from "src/services/claim";
+import { ModalTypes, InfoModalTypes } from "src/entities/common.entities";
 import { RootState } from "src/store";
 import { showModal } from "src/reducers/globalSlice";
 import Spinner from "src/components/Spinner";
+import Page from "src/layouts/page";
+
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
-import { useNavigate } from "react-router-dom";
+import { getStakeKey } from "src/services/common";
 
 function Rewards() {
   const dispatch = useDispatch();
@@ -244,10 +244,10 @@ function Rewards() {
   function renderCheckRewardsStep() {
     if (!hideCheck) {
       return (
-        <div className="mt-5 p-5 background text rounded-2xl">
+        <div className="p-5 background text rounded-2xl flex flex-col gap-4">
           <p>Enter your wallet/stake address or $handle to view your rewards</p>
           <input
-            className={`mt-5 w-full rounded-lg bg-transparent border-gray-400 border p-1 disabled:cursor-not-allowed`}
+            className={`w-full rounded-lg bg-transparent border-gray-400 border p-1 disabled:cursor-not-allowed`}
             type="text"
             value={searchAddress}
             onInput={(e: KeyboardEvent<HTMLInputElement>) =>
@@ -264,7 +264,7 @@ function Rewards() {
                 !isWrongNetwork)
             }
           ></input>
-          <div className="mt-5 flex flex-row items-center">
+          <div className="flex flex-row items-center">
             <button
               className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
               disabled={!hideStakingInfo}
@@ -297,25 +297,23 @@ function Rewards() {
   function renderStakingInfoStep() {
     if (!hideStakingInfo) {
       return (
-        <div className="">
+        <div className="flex flex-col gap-4">
           <div
-            className={
-              "background rounded-2xl p-5 mt-5 flex flex-row items-center"
-            }
+            className={"background rounded-2xl p-5 flex flex-row items-center"}
           >
             {renderStakeInfo()}
           </div>
           <div
             className={
-              "background rounded-2xl p-5 mt-5 flex flex-row items-center"
+              "background rounded-2xl p-5 flex flex-row items-center gap-2"
             }
           >
-            <div className="text-premium mr-2.5">
+            <div className="text-premium">
               <FontAwesomeIcon icon={faStar} />
             </div>
             Premium tokens incur a premium token fee when claiming
           </div>
-          <div className={"flex flex-row flex-wrap"}>
+          <div className={"flex flex-row flex-wrap gap-4"}>
             {claimableTokens.map((token, index) => {
               return (
                 <ClaimableTokenBox
@@ -335,9 +333,7 @@ function Rewards() {
           </div>
 
           <div
-            className={
-              "background flex flex-row items-center p-5 mt-5 rounded-2xl"
-            }
+            className={"background flex flex-row items-center p-5 rounded-2xl"}
           >
             <div>Selected {numberOfSelectedTokens} token</div>
             <div className="ml-auto flex flex-row w-fit">
@@ -371,11 +367,15 @@ function Rewards() {
   }
 
   return (
-    <div className="px-5 py-14 sm:pl-80 sm:pr-20">
-      <p className="text-3xl">Claim your rewards</p>
-      {renderCheckRewardsStep()}
-      {renderStakingInfoStep()}
-    </div>
+    <Page>
+      <>
+        <p className="text-3xl">Claim your rewards</p>
+        <div className="flex flex-col gap-4">
+          {renderCheckRewardsStep()}
+          {renderStakingInfoStep()}
+        </div>
+      </>
+    </Page>
   );
 }
 

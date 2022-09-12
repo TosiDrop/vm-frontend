@@ -4,10 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import WalletSelector from "src/components/WalletSelector";
 import { RootState } from "src/store";
-import logo from "../assets/tosidrop_logo.png";
+import logo from "src/assets/tosidrop_logo.png";
+import logoLight from "src/assets/tosidrop-light.png"
+import logoDark from "src/assets/tosidrop-dark.png"
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
 import useWallet from "src/hooks/useWallet";
+import { Link } from "react-router-dom";
 
 function Header() {
   const dispatch = useDispatch();
@@ -18,10 +21,11 @@ function Header() {
     <>
       {/* Web header */}
       <div className="flex-row items-center w-full p-5 pb-0 hidden sm:flex">
-        <div className="h-full flex flex-row items-center">
-          <img src={logo} className="h-10 logo" alt="tosidrop logo"></img>
-          <p className="ml-2.5 font-semibold text-lg">TosiDrop</p>
-        </div>
+        <Link to="/">
+          <div className="h-full">
+            <img src={theme === Themes.dark ? logoDark : logoLight} className="h-10 logo" alt="tosidrop logo"></img>
+          </div>
+        </Link>
         <div className="flex flex-row items-center ml-auto">
           <WalletSelector connectWallet={connectWallet} />
           <button

@@ -20,7 +20,7 @@ export const WalletModal = () => {
           <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
         </div>
       </div>
-      <div className="w-full">
+      <div className="w-full flex flex-col gap-4">
         {window.cardano ? (
           Object.keys(WalletKeys).map((key) => {
             if (window.cardano && window.cardano[key]) {
@@ -28,7 +28,7 @@ export const WalletModal = () => {
               return (
                 <div
                   key={key}
-                  className="w-full flex flex-row items-center cursor-pointer rounded-lg border-gray-400 border p-2.5 mt-5"
+                  className="w-full flex flex-row items-center cursor-pointer rounded-lg border-gray-400 border p-2.5"
                   onClick={() => {
                     dispatch(hideModal());
                     connectWallet(walletKey);
@@ -48,7 +48,7 @@ export const WalletModal = () => {
             }
           })
         ) : (
-          <div className="w-full flex flex-row items-center rounded-lg border-gray-400 border p-2.5 mt-5">
+          <div className="w-full flex flex-row items-center rounded-lg border-gray-400 border p-2.5">
             No wallet found :(
           </div>
         )}

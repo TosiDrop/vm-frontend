@@ -1,7 +1,7 @@
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { getFeatures, getSettings } from "src/services/claim.services";
+import { getFeatures, getSettings } from "src/services/common";
 
 const CLASS = "transaction-detail";
 
@@ -46,7 +46,7 @@ const TransactionDetail = ({
   }, []);
 
   return (
-    <div className="background rounded-2xl p-5 mt-5">
+    <div className="background rounded-2xl p-5">
       Transaction Detail
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
         <div className="w-28 text-right">{numberOfTokens} tokens</div>
@@ -125,7 +125,7 @@ const calcReturnedAda = (
   txFee: number,
   unlock: boolean,
   tosifee: number,
-  whitelisted: boolean,
+  whitelisted: boolean
 ) => {
   let returnedAda = deposit - withdrawalFee - serviceFee - txFee;
   if (unlock && !whitelisted) returnedAda -= tosifee;

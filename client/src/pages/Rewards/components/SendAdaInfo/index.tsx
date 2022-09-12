@@ -1,7 +1,7 @@
 import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
 import { showModal } from "src/reducers/globalSlice";
 import { useState } from "react";
-import { copyContent } from "src/services/utils.services";
+import { copyContent } from "src/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import QRCode from "react-qr-code";
@@ -53,7 +53,7 @@ const SendAdaInfo = ({
   const renderQRCode = (txDetail: any) => {
     if (txDetail == null) return null;
     return (
-      <div className="mt-5 w-full flex justify-center">
+      <div className="w-full flex justify-center">
         <div className="bg-white rounded-lg p-2.5 w-fit">
           <QRCode value={txDetail.withdrawal_address} size={180} />
         </div>
@@ -67,7 +67,7 @@ const SendAdaInfo = ({
   const renderSendAdaButton = () => {
     if (connectedWallet?.wallet?.api && !isWrongNetwork) {
       return (
-        <div className="w-full flex justify-center mt-5">
+        <div className="w-full flex justify-center">
           <button
             className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
             onClick={sendADA}
@@ -91,7 +91,7 @@ const SendAdaInfo = ({
    */
   const renderManualCopy = () => {
     return (
-      <div className="flex flex-row items-center w-full mt-5 relative">
+      <div className="flex flex-row items-center w-full relative">
         <FontAwesomeIcon
           className="mr-2.5 cursor-pointer"
           onClick={() => triggerTooltip()}
@@ -153,7 +153,7 @@ const SendAdaInfo = ({
   };
 
   return (
-    <div className="background rounded-2xl p-5 mt-5">
+    <div className="background rounded-2xl p-5 flex flex-col gap-4">
       Deposit Address
       {renderManualCopy()}
       {renderQRCode(txDetail)}

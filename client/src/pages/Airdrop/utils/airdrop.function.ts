@@ -26,7 +26,7 @@ import {
   submitSignedTx,
   getTokenDetails,
   validateAirdrop,
-} from "src/services/airdrop.services";
+} from "src/services/airdrop";
 
 let Buffer = require("buffer").Buffer;
 

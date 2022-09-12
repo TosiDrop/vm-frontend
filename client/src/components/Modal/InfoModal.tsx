@@ -42,9 +42,9 @@ export const InfoModal = () => {
   return (
     <>
       {renderIcon()}
-      <div className="mt-5 text-center">{text}</div>
+      <div className="text-center">{text}</div>
       <button
-        className="tosi-button py-2.5 px-6 rounded-lg text-center mt-5 w-fit"
+        className="tosi-button py-2.5 px-6 rounded-lg text-center w-fit"
         onClick={() => dispatch(hideModal())}
       >
         Ok

@@ -3,10 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "src/store";
 import useComponentVisible from "src/hooks/useComponentVisible";
 import { Token, getRealAmount } from "../../utils";
-import "./index.scss";
 import Spinner from "../../../../components/Spinner";
-
-const CLASS = "token-select";
 
 interface Props {
   tokens: Token[];
@@ -53,24 +50,20 @@ const Select = ({ tokens, setSelectedToken }: Props) => {
   return (
     <div
       ref={ref}
-      className={`${CLASS} ${disabled ? `${CLASS}__disabled` : ""}`}
+      className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center w-full justify-center"
     >
       <div
-        className={`${CLASS}__select-btn`}
+        className="flex items-center gap-2"
         onClick={() => !disabled && setVisible(!visible)}
       >
         {getBtnText()}
       </div>
-      <div
-        className={`${CLASS}__options ${
-          visible ? `${CLASS}__options-visible` : ""
-        }`}
-      >
+      <div className="">
         {tokens.map((token) => {
           return (
             <div
               key={token.ticker}
-              className={`${CLASS}__option`}
+              className=""
               onClick={() => selectOption(token)}
             >
               <span>{token.ticker}</span>

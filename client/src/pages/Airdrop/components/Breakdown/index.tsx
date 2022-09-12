@@ -1,5 +1,4 @@
 import { AirdropDetail, Token, TokenAddress } from "../../utils";
-import "./index.scss";
 
 interface Props {
   selectedToken: Token | null;
@@ -8,8 +7,6 @@ interface Props {
   validated: boolean;
   airdropDetail: AirdropDetail;
 }
-
-const CLASS = "breakdown";
 
 const Breakdown = ({
   selectedToken,
@@ -20,7 +17,7 @@ const Breakdown = ({
 }: Props) => {
   return (
     <>
-      <table className={`${CLASS}__table`}>
+      <table className="">
         <tbody>
           <tr>
             <td>Selected Token</td>
@@ -55,7 +52,7 @@ const Breakdown = ({
         </tbody>
       </table>
       {airdropDetail.multiTx ? (
-        <div className={`${CLASS}__warning`}>
+        <div className="">
           IMPORTANT: This airdrop needs multiple transactions. The first
           transaction will modify your UTxO for the airdrop. After the UTxO is
           modified, please sign all the airdrop transactions.

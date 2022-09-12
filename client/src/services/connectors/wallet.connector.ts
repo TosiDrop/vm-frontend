@@ -2,7 +2,7 @@ import Loader from "./loader";
 import { Buffer } from "buffer";
 import { Address } from "@emurgo/cardano-serialization-lib-asmjs";
 import { NetworkId } from "src/entities/common.entities";
-import { getEpochParams } from "src/services/claim.services";
+import { getEpochParams } from "src/services/common";
 
 declare global {
   interface Window {

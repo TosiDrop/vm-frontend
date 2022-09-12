@@ -10,7 +10,7 @@ import {
   sleep,
   getAirdrop,
 } from "../utils";
-import { getTxStatus } from "src/services/airdrop.services";
+import { getTxStatus } from "src/services/airdrop";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";

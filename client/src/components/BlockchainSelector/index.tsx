@@ -7,7 +7,6 @@ import { setBlockchain } from "src/reducers/globalSlice";
 import CardanoLogo from "src/assets/cardano-logo.png";
 import ErgoLogo from "src/assets/ergo-logo.png";
 import useComponentVisible from "src/hooks/useComponentVisible";
-import "./index.scss";
 
 const CLASS = "blockchain-selector";
 
