@@ -128,6 +128,6 @@ const calcReturnedAda = (
   whitelisted: boolean
 ) => {
   let returnedAda = deposit - withdrawalFee - serviceFee - txFee;
-  //if (unlock && !whitelisted) returnedAda -= tosifee;
+  if (unlock) returnedAda -= tosifee;
   return returnedAda;
 };
