@@ -22,14 +22,14 @@ function Header() {
       {/* Web header */}
       <div className="flex-row items-center w-full p-5 pb-0 hidden sm:flex">
         <Link to="/">
-          <div className="h-full">
+          <div className="">
             <img src={theme === Themes.dark ? logoDark : logoLight} className="h-10 logo" alt="tosidrop logo"></img>
           </div>
         </Link>
         <div className="flex flex-row items-center ml-auto">
           <WalletSelector connectWallet={connectWallet} />
           <button
-            className="h-full background rounded-lg px-5 py-2.5 ml-2.5"
+            className="background rounded-lg px-5 py-2.5 ml-2.5"
             onClick={() => dispatch(toggleTheme())}
           >
             <FontAwesomeIcon icon={theme === Themes.dark ? faSun : faMoon} />

@@ -56,7 +56,7 @@ function WalletSelector({ connectWallet }: Props) {
   const ConnectedButton = () => {
     return (
       <div
-        className="rounded-lg background h-full flex items-center justify-center px-5 py-2.5 cursor-pointer"
+        className="rounded-lg background flex items-center justify-center px-5 py-2.5 cursor-pointer"
         onClick={() => toggleDisconnectButton()}
       >
         {walletIcon ? (
@@ -81,7 +81,7 @@ function WalletSelector({ connectWallet }: Props) {
 
   const NotConnectedButton = () => (
     <div
-      className="rounded-lg background h-full flex items-center justify-center px-5 py-2.5 cursor-pointer"
+      className="rounded-lg background flex items-center justify-center px-5 py-2.5 cursor-pointer"
       onClick={() =>
         dispatch(
           showModal({
@@ -97,7 +97,7 @@ function WalletSelector({ connectWallet }: Props) {
   const WrongNetworkButton = () => (
     <div
       className={
-        "rounded-lg background h-full flex items-center justify-center px-5 py-2.5 cursor-pointer"
+        "rounded-lg background flex items-center justify-center px-5 py-2.5 cursor-pointer"
       }
       onClick={() => toggleDisconnectButton()}
     >
@@ -106,7 +106,7 @@ function WalletSelector({ connectWallet }: Props) {
   );
 
   return (
-    <div className="relative h-full text">
+    <div className="relative text">
       {isWrongNetwork ? (
         <WrongNetworkButton />
       ) : connectedWallet?.wallet?.api ? (
