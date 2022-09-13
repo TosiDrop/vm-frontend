@@ -33,15 +33,17 @@ export enum TransactionStatusDetail {
 }
 
 const DepositInfoPage = () => {
+  /**
+   * parse query parameters from URL
+   */
   const [searchParams] = useSearchParams();
   const selectedTokens = searchParams.get(QueryKey.selectedTokens);
   const stakeAddress = searchParams.get(QueryKey.stakeAddress);
   const withdrawAddress = searchParams.get(QueryKey.withdrawAddress);
-  const isWhitelisted = Boolean(searchParams.get(QueryKey.isWhitelisted));
   const requestId = searchParams.get(QueryKey.requestId);
-  let unlock: boolean;
-  if (searchParams.get(QueryKey.unlock) === "true") unlock = true;
-  else unlock = false;
+  const isWhitelisted =
+    searchParams.get(QueryKey.isWhitelisted) === "true" ? true : false;
+  const unlock = searchParams.get(QueryKey.unlock) === "true" ? true : false;
 
   const [txDetail, setTxDetail] = useState<GetCustomRewards>({
     deposit: 0,

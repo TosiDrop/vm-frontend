@@ -56,23 +56,21 @@ function WalletSelector({ connectWallet }: Props) {
   const ConnectedButton = () => {
     return (
       <div
-        className="rounded-lg background h-full flex items-center justify-center px-5 py-2.5 cursor-pointer"
+        className="rounded-lg background flex items-center justify-center px-5 py-2.5 cursor-pointer flex items-center gap-2"
         onClick={() => toggleDisconnectButton()}
       >
         {walletIcon ? (
           <>
-            <img src={walletIcon} className="h-5 mr-3" alt="wallet icon"></img>
+            <img src={walletIcon} className="h-5" alt="wallet icon"></img>
             <p>
               {networkId === 0 ? "(preview) " : ""}
               {walletAddress}
             </p>
           </>
         ) : (
-          <div className="flex flex-row items-center">
-            Connecting{" "}
-            <div className="ml-3">
-              <Spinner></Spinner>
-            </div>
+          <div className="flex flex-row items-center gap-2">
+            Connecting
+            <Spinner></Spinner>
           </div>
         )}
       </div>
@@ -81,7 +79,7 @@ function WalletSelector({ connectWallet }: Props) {
 
   const NotConnectedButton = () => (
     <div
-      className="rounded-lg background h-full flex items-center justify-center px-5 py-2.5 cursor-pointer"
+      className="rounded-lg background flex items-center justify-center px-5 py-2.5 cursor-pointer"
       onClick={() =>
         dispatch(
           showModal({
@@ -97,7 +95,7 @@ function WalletSelector({ connectWallet }: Props) {
   const WrongNetworkButton = () => (
     <div
       className={
-        "rounded-lg background h-full flex items-center justify-center px-5 py-2.5 cursor-pointer"
+        "rounded-lg background flex items-center justify-center px-5 py-2.5 cursor-pointer"
       }
       onClick={() => toggleDisconnectButton()}
     >
@@ -106,7 +104,7 @@ function WalletSelector({ connectWallet }: Props) {
   );
 
   return (
-    <div className="relative h-full text">
+    <div className="relative text">
       {isWrongNetwork ? (
         <WrongNetworkButton />
       ) : connectedWallet?.wallet?.api ? (
@@ -117,16 +115,15 @@ function WalletSelector({ connectWallet }: Props) {
       <div
         ref={disconnectButtonMenu.ref}
         className={
-          "absolute top-14 w-full background py-2.5 px-5 rounded-lg cursor-pointer" +
+          "absolute top-14 w-full background py-2.5 px-5 rounded-lg cursor-pointer flex items-center gap-2" +
           (connectedWallet?.wallet?.api && disconnectButtonMenu.visible
             ? ""
             : " hidden")
         }
+        onClick={disconnectWallet}
       >
-        <p onClick={disconnectWallet}>
-          <FontAwesomeIcon className="mr-3" icon={faLinkSlash} />
-          Disconnect
-        </p>
+        <FontAwesomeIcon icon={faLinkSlash} />
+        Disconnect
       </div>
     </div>
   );
