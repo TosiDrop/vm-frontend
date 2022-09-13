@@ -1,6 +1,6 @@
 import logo from "src/assets/tosidrop_logo.png";
 import Page from "src/layouts/page";
-import './index.scss'
+import "./index.scss";
 
 const Loading = () => {
   return (

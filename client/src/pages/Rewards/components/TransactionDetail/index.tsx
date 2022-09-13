@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
-import { getFeatures, getSettings } from "src/services/common";
 
-const CLASS = "transaction-detail";
+import { getFeatures, getSettings } from "src/services/common";
+import { lovelaceToAda } from "src/utils";
 
 interface Props {
   numberOfTokens: number;
@@ -45,6 +45,13 @@ const TransactionDetail = ({
     getSettingsFromApi();
   }, []);
 
+  const calcReturnedAda = () => {
+    let returnedAda =
+      deposit - settings.withdrawalFee - settings.serviceFee - settings.txFee;
+    if (unlock && !isWhitelisted) returnedAda -= settings.tosifee;
+    return returnedAda;
+  };
+
   return (
     <div className="background rounded-2xl p-5">
       Transaction Detail
@@ -70,7 +77,7 @@ const TransactionDetail = ({
         </div>
         <div>Service fee</div>
       </div>
-      {unlock ? (
+      {unlock && !isWhitelisted ? (
         <div className="p-1 flex items-center flex-row-reverse border-b border-color text-premium">
           <div className="w-28 text-right">
             {lovelaceToAda(settings.tosifee)} ADA
@@ -89,18 +96,7 @@ const TransactionDetail = ({
       </div>
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
         <div className="w-28 text-right">
-          {lovelaceToAda(
-            calcReturnedAda(
-              deposit,
-              settings.withdrawalFee,
-              settings.serviceFee,
-              settings.txFee,
-              unlock,
-              settings.tosifee,
-              isWhitelisted
-            )
-          )}{" "}
-          ADA
+          {lovelaceToAda(calcReturnedAda())} ADA
         </div>
         <div>You'll get back (Approximately)</div>
       </div>
@@ -113,21 +109,3 @@ const TransactionDetail = ({
 };
 
 export default TransactionDetail;
-
-const lovelaceToAda = (lovelace: number) => {
-  return lovelace / Math.pow(10, 6);
-};
-
-const calcReturnedAda = (
-  deposit: number,
-  withdrawalFee: number,
-  serviceFee: number,
-  txFee: number,
-  unlock: boolean,
-  tosifee: number,
-  whitelisted: boolean
-) => {
-  let returnedAda = deposit - withdrawalFee - serviceFee - txFee;
-  if (unlock) returnedAda -= tosifee;
-  return returnedAda;
-};
