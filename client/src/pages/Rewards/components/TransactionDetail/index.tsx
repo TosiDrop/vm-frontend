@@ -70,7 +70,7 @@ const TransactionDetail = ({
         </div>
         <div>Service fee</div>
       </div>
-      {unlock && !isWhitelisted ? (
+      {unlock ? (
         <div className="p-1 flex items-center flex-row-reverse border-b border-color text-premium">
           <div className="w-28 text-right">
             {lovelaceToAda(settings.tosifee)} ADA
@@ -128,6 +128,6 @@ const calcReturnedAda = (
   whitelisted: boolean
 ) => {
   let returnedAda = deposit - withdrawalFee - serviceFee - txFee;
-  if (unlock && !whitelisted) returnedAda -= tosifee;
+  //if (unlock && !whitelisted) returnedAda -= tosifee;
   return returnedAda;
 };
