@@ -1,13 +1,14 @@
-import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
-import { showModal } from "src/reducers/globalSlice";
 import { useState } from "react";
-import { copyContent } from "src/utils";
+import copy from "copy-to-clipboard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import QRCode from "react-qr-code";
+import { useDispatch, useSelector } from "react-redux";
+
+import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
+import { showModal } from "src/reducers/globalSlice";
 import Spinner from "src/components/Spinner";
 import { isTxHash } from "src/pages/Rewards/utils/common.function";
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
 
 interface Params {
@@ -40,7 +41,7 @@ const SendAdaInfo = ({
 
   const triggerTooltip = () => {
     if (txDetail == null) return;
-    copyContent(txDetail ? txDetail.withdrawal_address : "");
+    copy(txDetail ? txDetail.withdrawal_address : "");
     setShowToolTip(true);
     setTimeout(() => {
       setShowToolTip(false);
@@ -97,9 +98,13 @@ const SendAdaInfo = ({
           onClick={() => triggerTooltip()}
           icon={faCopy}
         />
-        <div className="p-1 rounded-lg border border-gray-400 grow overflow-auto">
-          {txDetail?.withdrawal_address}
-        </div>
+        <input
+          className={`w-full rounded-lg bg-transparent border-gray-400 border p-1`}
+          type="text"
+          value={txDetail?.withdrawal_address}
+          disabled={true}
+          id="withdraw-address"
+        ></input>
         <div
           className={`p-2.5 left-8 rounded-lg absolute tooltip ${
             showToolTip ? "visible" : "invisible"
