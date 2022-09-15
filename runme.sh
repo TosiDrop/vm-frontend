@@ -2,6 +2,8 @@
 
 __repo=$(cd $(dirname ${BASH_SOURCE[0]}); pwd -P)
 
+VM_BRANCH=${VM_BRANCH:-master}
+
 ###
 # Check for .env
 cd ${__repo}
@@ -40,8 +42,6 @@ else
 	. ${__repo}/.env # source our config
 fi
 
-VM_BRANCH=${VM_BRANCH:-master}
-
 ###
 # Check for updates
 cd ${__repo}
@@ -75,8 +75,8 @@ ansible-playbook ${__repo}/ansible/local.yml \
 	-e DOCKER_USERS=${DOCKER_USERS:-ubuntu} \
 	-e MANAGE_DATADOG=${MANAGE_DATADOG:-false} \
 	-e MANAGE_DOCKER=${MANAGE_DOCKER:-true} \
-	-e vm_frontend_version=${VM_BRANCH} \
-	-e vm_frontend_port=${PORT:-3000} \
+	-e vm_frontend_version=${VM_IMAGE_TAG:-${VM_BRANCH}} \
+	-e vm_frontend_port=${VM_PORT:-3000} \
 	-e ansible_python_interpreter=${__repo}/.venv/bin/python3 \
 	--diff \
 	-c local \
