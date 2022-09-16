@@ -10,6 +10,8 @@ import { showModal } from "src/reducers/globalSlice";
 import Spinner from "src/components/Spinner";
 import { isTxHash } from "src/pages/Rewards/utils/common.function";
 import { RootState } from "src/store";
+import Copyable from "src/components/Copyable";
+import { lovelaceToAda } from "src/utils";
 
 interface Params {
   txDetail: any;
@@ -160,7 +162,14 @@ const SendAdaInfo = ({
   return (
     <div className="background rounded-2xl p-5 flex flex-col gap-4">
       Deposit Address
-      {renderManualCopy()}
+      <div className="flex flex-row items-center gap-2">
+        <div className="whitespace-nowrap">Deposit Address</div>
+        <Copyable text={txDetail.withdrawal_address}></Copyable>
+      </div>
+      <div className="flex flex-row items-center gap-2">
+        <div className="whitespace-nowrap">Deposit Amount</div>
+        <Copyable text={String(lovelaceToAda(txDetail.deposit))}></Copyable>
+      </div>
       {renderQRCode(txDetail)}
       {renderSendAdaButton()}
     </div>

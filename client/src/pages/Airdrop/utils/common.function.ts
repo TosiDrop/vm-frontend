@@ -2,7 +2,7 @@ import { TokenAddress } from "./index";
 let Buffer = require("buffer").Buffer;
 
 export const lovelaceToAda = (lovelace: number) => {
-  const ada = (lovelace / Math.pow(10, 6)).toFixed(2);
+  const ada = lovelace / Math.pow(10, 6);
   return Number(ada);
 };
 
