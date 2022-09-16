@@ -1,3 +1,5 @@
+import version from "src/version";
+
 export default () => {
   return (
     <div className="mt-auto w-full flex flex-col items-center opacity-50 p-5 text-xs sm:text-sm">
@@ -6,6 +8,9 @@ export default () => {
       </div>
       <div className="break-all text-center">
         eTOSI: 94180232cc0d91447178a0a995e2c14c57fbf03b06d5d87d5f79226094f52ffc
+      </div>
+      <div className="break-all text-center">
+        TosiDrop UI version: {version}
       </div>
     </div>
   );
