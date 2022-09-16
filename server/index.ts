@@ -24,6 +24,7 @@ import {
 } from "./utils";
 import { ICustomRewards } from "./utils/entities";
 require("dotenv").config();
+const openapi = require("@wesleytodd/openapi");
 
 const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
 const CARDANO_NETWORK = process.env.CARDANO_NETWORK || CardanoNetwork.preview;
@@ -35,10 +36,21 @@ const TOSIFEE = process.env.TOSIFEE || 500000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 
+const oapi = openapi({
+  openapi: '3.0.0',
+  info: {
+    title: 'TosiDrop',
+    description: 'Generated API docs for TosiDrop',
+    version: '1',
+  }
+});
+
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(require("morgan")(LOG_TYPE));
+app.use(oapi);
+app.use('/swaggerui', oapi.swaggerui);
 
 /**
  * Serve static files for our React app
@@ -55,17 +67,59 @@ process.on("SIGTERM", () => {
   });
 });
 
-app.get("/getpools", async (req, res) => {
+const resp200Ok = {
+  responses: {
+    200: {
+      description: 'Success',
+      content: {
+        'application/json': {
+	  schema: {
+	    type: 'object'
+	  }
+	}
+      }
+    }
+  }
+}
+
+const resp200Ok500Bad = {
+  responses: {
+    200: {
+      description: 'Success',
+      content: {
+        'application/json': {
+	  schema: {
+	    type: 'object'
+	  }
+	}
+      }
+    },
+    500: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
+app.get("/api/getpools", oapi.path(resp200Ok), async (req, res) => {
   const pools = await getPools();
   return res.status(200).send(pools);
 });
 
-app.get("/gettokens", async (req, res) => {
+app.get("/api/gettokens", oapi.path(resp200Ok), async (req, res) => {
   const tokens = await getTokens();
   return res.status(200).send(tokens);
 });
 
-app.get("/getsettings", async (req, res) => {
+app.get("/api/getsettings", oapi.path(resp200Ok), async (req, res) => {
   const settings: IVMSettings = await getFromVM("get_settings");
   return res.status(200).send(settings);
 });
@@ -123,14 +177,61 @@ app.get("/features", (req: any, res: any) => {
   return res.status(200).send(features);
 });
 
-app.get("/getstakekey", async (req: any, res: any) => {
+app.get("/api/getstakekey", oapi.path({
+  description: 'Return a stake address from a given address string. Resolves adahandles.',
+  parameters: [
+    {
+      name: "address",
+      in: "query",
+      required: true
+    }
+  ],
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      staking_address: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    },
+    400: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    },
+    500: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    }
+  }
+}), async (req: any, res: any) => {
   try {
     const queryObject = url.parse(req.url, true).query;
     let address = queryObject.address as string;
     let translatedAddress;
 
-    if (!address) return res.send({ error: "Address seems invalid" });
-    if (!VM_KOIOS_URL) return res.send({ error: "KOIOS URL is not defined" });
+    if (!address) return res.status(400).send({ error: "Address seems invalid" });
+    if (!VM_KOIOS_URL) return res.status(500).send({ error: "KOIOS URL is not defined" });
 
     const prefix = address.slice(0, 5);
 
@@ -149,18 +250,18 @@ app.get("/getstakekey", async (req: any, res: any) => {
         break;
       case prefix === "addr_":
         if (CARDANO_NETWORK === CardanoNetwork.mainnet)
-          return res.send({ error: "Inserted address is for a testnet" });
+          return res.status(400).send({ error: "Inserted address is for a testnet" });
         break;
       case prefix === "addr1":
         if (CARDANO_NETWORK === CardanoNetwork.preview)
-          return res.send({ error: "Inserted address is for mainnet" });
+          return res.status(400).send({ error: "Inserted address is for mainnet" });
         break;
       case prefix === "stake":
         // We were given a stake address, pass it through
         return res.send({ staking_address: address });
         break;
       default:
-        return res.send({ error: "Address seems invalid" });
+        return res.status(400).send({ error: "Address seems invalid" });
     }
 
     let rewardAddressBytes = new Uint8Array(29);
@@ -198,13 +299,61 @@ app.get("/getstakekey", async (req: any, res: any) => {
  * @query
  * - address: user stake address
  */
-app.get("/getrewards", async (req: any, res: any) => {
+app.get("/api/getrewards", oapi.path({
+  description: 'Return available rewards from a given stake address.',
+  parameters: [
+    {
+      name: "address",
+      in: "query",
+      required: true
+    }
+  ],
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      pool_info: { type: 'object' },
+              claimable_tokens: { type: 'object' }
+	    }
+	  }
+	}
+      }
+    },
+    400: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    },
+    500: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    }
+  }
+}), async (req: any, res: any) => {
   try {
     const queryObject = url.parse(req.url, true).query;
     const stakeAddress = queryObject.address as string;
     if (!stakeAddress)
       return res
-        .status(418)
+        .status(400)
         .send({ error: "No address provided to /getrewards" });
 
     let claimableTokens = await getRewards(stakeAddress);
@@ -222,14 +371,80 @@ app.get("/getrewards", async (req: any, res: any) => {
   }
 });
 
-app.get("/getcustomrewards", async (req: any, res: any) => {
+app.get("/api/getcustomrewards", oapi.path({
+  description: 'Return available rewards from a given stake address.',
+  parameters: [
+    {
+      name: "staking_address",
+      in: "query",
+      required: true
+    },
+    {
+      name: "session_id",
+      in: "query",
+      required: true
+    },
+    {
+      name: "selected",
+      in: "query",
+      required: true
+    },
+    {
+      name: "unlock",
+      in: "query",
+      required: false
+    }
+  ],
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      request_id: { type: 'string' },
+	      deposit: { type: 'number' },
+	      overhead_fee: { type: 'number' },
+	      withdrawal_address: { type: 'string' },
+	      is_whitelisted: { type: 'boolean' }
+	    }
+	  }
+	}
+      }
+    },
+    400: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    },
+    500: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    }
+  }
+}), async (req: any, res: any) => {
   try {
     const queryObject = url.parse(req.url, true).query;
     const { staking_address, session_id, selected, unlock } = queryObject;
     let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`;
     let isWhitelisted = false;
 
-    if (!staking_address) return res.sendStatus(400);
+    if (!staking_address) return res.status(400).send({ error: 'staking_address required'});
     if (unlock === "true") {
       if (TOSIFEE_WHITELIST) {
         const whitelist = TOSIFEE_WHITELIST.split(",");
@@ -270,7 +485,56 @@ app.get("/getcustomrewards", async (req: any, res: any) => {
   }
 });
 
-app.get("/txstatus", async (req, res) => {
+app.get("/api/txstatus", oapi.path({
+  description: 'Return status of a transaction from request_id and session_id',
+  parameters: [
+    {
+      name: "request_id",
+      in: "query",
+      required: true
+    },
+    {
+      name: "session_id",
+      in: "query",
+      required: true
+    }
+  ],
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object'
+	  }
+	}
+      }
+    },
+    400: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    },
+    500: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    }
+  }
+}), async (req, res) => {
   try {
     const queryObject = url.parse(req.url, true).query;
     const { request_id, session_id } = queryObject;
@@ -289,7 +553,51 @@ app.get("/txstatus", async (req, res) => {
   }
 });
 
-app.get("/gettransactionstatus", async (req: any, res: any) => {
+app.get("/api/gettransactionstatus", oapi.path({
+  description: 'Return status of a transaction from txHash',
+  parameters: [
+    {
+      name: "txHash",
+      in: "query",
+      required: true
+    }
+  ],
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object'
+	  }
+	}
+      }
+    },
+    400: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    },
+    500: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    }
+  }
+}), async (req: any, res: any) => {
   try {
     const queryObject = url.parse(req.url, true).query;
     if (queryObject.txHash) {
@@ -298,7 +606,7 @@ app.get("/gettransactionstatus", async (req: any, res: any) => {
       >(`tx_status`, { _tx_hashes: [queryObject.txHash] });
       res.send(getTransactionStatusResponse);
     } else {
-      res.send({ error: "Tx hash seems invalid" });
+      res.status(400).send({ error: "Tx hash seems invalid" });
     }
   } catch (error: any) {
     return res
@@ -307,7 +615,7 @@ app.get("/gettransactionstatus", async (req: any, res: any) => {
   }
 });
 
-app.get("/getabsslot", async (req: any, res: any) => {
+app.get("/api/getabsslot", oapi.path(resp200Ok500Bad), async (req: any, res: any) => {
   try {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     res.send({
@@ -321,7 +629,7 @@ app.get("/getabsslot", async (req: any, res: any) => {
   }
 });
 
-app.get("/getblock", async (req: any, res: any) => {
+app.get("/api/getblock", oapi.path(resp200Ok500Bad), async (req: any, res: any) => {
   try {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     res.send({
@@ -335,7 +643,7 @@ app.get("/getblock", async (req: any, res: any) => {
   }
 });
 
-app.get("/gettip", async (req: any, res: any) => {
+app.get("/api/gettip", oapi.path(resp200Ok500Bad), async (req: any, res: any) => {
   try {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     res.send(getTipResponse[0]);
@@ -344,7 +652,7 @@ app.get("/gettip", async (req: any, res: any) => {
   }
 });
 
-app.get("/getepochparams", async (req: any, res: any) => {
+app.get("/api/getepochparams", oapi.path(resp200Ok500Bad), async (req: any, res: any) => {
   try {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     const getEpochParamsResponse = await getEpochParams(

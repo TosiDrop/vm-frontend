@@ -22,6 +22,7 @@
   "keywords": [],
   "dependencies": {
     "@emurgo/cardano-serialization-lib-nodejs": "^11.0.5",
+    "@wesleytodd/openapi": "^0.1.0",
     "axios": "^0.26.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",

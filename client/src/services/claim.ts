@@ -5,7 +5,7 @@ import axios from "axios";
 export async function getRewards(
   address: string
 ): Promise<GetRewardsDto | undefined> {
-  const response = await axios.get(`/getrewards?address=${address}`);
+  const response = await axios.get(`/api/getrewards?address=${address}`);
   if (response && response.data) {
     return response.data;
   }
@@ -19,7 +19,7 @@ export async function getCustomRewards(
   unlock: boolean
 ): Promise<GetCustomRewards | undefined> {
   const response = await axios.get(
-    `/getcustomrewards?staking_address=${staking_address}&session_id=${session_id}&selected=${selected}&unlock=${
+    `/api/getcustomrewards?staking_address=${staking_address}&session_id=${session_id}&selected=${selected}&unlock=${
       unlock ? "true" : "false"
     }`
   );
@@ -32,7 +32,7 @@ export async function getCustomRewards(
 export async function getTransactionStatus(
   txHash: string
 ): Promise<TransactionStatus[] | undefined> {
-  const response = await axios.get(`/gettransactionstatus?txHash=${txHash}`);
+  const response = await axios.get(`/api/gettransactionstatus?txHash=${txHash}`);
   if (response && response.data) {
     return response.data;
   }
@@ -41,7 +41,7 @@ export async function getTransactionStatus(
 
 export async function getTxStatus(request_id: string, session_id: string) {
   const response = await axios.get(
-    `/txstatus?request_id=${request_id}&session_id=${session_id}`
+    `/api/txstatus?request_id=${request_id}&session_id=${session_id}`
   );
   return response.data;
 }

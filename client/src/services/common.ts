@@ -8,7 +8,7 @@ export async function getFeatures() {
 }
 
 export async function getSettings() {
-  const response = await axios.get(`/getsettings`);
+  const response = await axios.get(`/api/getsettings`);
   return response.data;
 }
 
@@ -16,12 +16,12 @@ export async function getStakeKey(addr: string) {
   if (addr.slice(0, 5) === "stake") {
     return { staking_address: addr };
   }
-  const response = await axios.get(`/getstakekey?address=${addr}`);
+  const response = await axios.get(`/api/getstakekey?address=${addr}`);
   return response.data;
 }
 
 export async function getBlock(): Promise<{ block_no: number }> {
-  const response = await axios.get(`/getblock`);
+  const response = await axios.get(`/api/getblock`);
   if (response && response.data) {
     return response.data;
   }
@@ -29,7 +29,7 @@ export async function getBlock(): Promise<{ block_no: number }> {
 }
 
 export async function getEpochParams(): Promise<EpochParams[]> {
-  const response = await axios.get(`/getepochparams`);
+  const response = await axios.get(`/api/getepochparams`);
   return response.data[0];
 }
 
