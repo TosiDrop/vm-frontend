@@ -485,6 +485,71 @@ app.get("/api/getcustomrewards", oapi.path({
   }
 });
 
+app.get("/api/getdeliveredrewards", oapi.path({
+  description: 'Return delivered rewards from a given stake address.',
+  parameters: [
+    {
+      name: "staking_address",
+      in: "query",
+      required: true
+    }
+  ],
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object'
+	  }
+	}
+      }
+    },
+    400: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    },
+    500: {
+      content: {
+        'application/json': {
+          schema: {
+	    type: 'object',
+	    properties: {
+	      error: { type: 'string' }
+	    }
+	  }
+	}
+      }
+    }
+  }
+}), async (req: any, res: any) => {
+  try {
+    const stakeAddress = queryObject.address as string;
+    let vmArgs = `delivered_rewards&staking_address=${stakeAddress}`;
+    if (!stakeAddress)
+      return res
+        .status(400)
+        .send({ error: "No address provided to /getdeliveredrewards" });
+
+    const deliveredRewards : any = await getFromVM(vmArgs);
+    if (deliveredRewards == null) {
+      throw new Error();
+    }
+    return res.send(deliveredRewards);
+  } catch (e: any) {
+    return res
+      .status(500)
+      .send({ error: "An error occurred in /getcustomrewards" });
+  }
+});
+
 app.get("/api/txstatus", oapi.path({
   description: 'Return status of a transaction from request_id and session_id',
   parameters: [
