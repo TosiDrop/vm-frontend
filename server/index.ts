@@ -531,6 +531,7 @@ app.get("/api/getdeliveredrewards", oapi.path({
   }
 }), async (req: any, res: any) => {
   try {
+    const queryObject = url.parse(req.url, true).query;
     const stakeAddress = queryObject.address as string;
     let vmArgs = `delivered_rewards&staking_address=${stakeAddress}`;
     if (!stakeAddress)
