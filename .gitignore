@@ -16,10 +16,8 @@ node_modules
 .DS_Store
 .vscode
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 .venv
 /logs
 !/logs/.keep
