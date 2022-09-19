@@ -17,6 +17,9 @@ const useErrorHandler = () => {
     } else if (e.response) {
       // handle error thrown by frontend
       text = e.message;
+    } else {
+      // might be error from wallet
+      text = e;
     }
 
     dispatch(
