@@ -12,7 +12,6 @@ import { RootState } from "src/store";
 import { WalletKeys } from "src/services/connectors/wallet.connector";
 import { getNetworkId } from "src/services/common";
 import useWallet from "src/hooks/useWallet";
-import CatalystPopUp from "src/components/CatalystPopUp";
 import "src/styles.scss";
 import Footer from "./components/Footer";
 
@@ -53,7 +52,6 @@ function App() {
   return (
     <div className={`app ${theme}`}>
       <div className="w-full max-w-7xl min-h-full text flex flex-col">
-        <CatalystPopUp></CatalystPopUp>
         <Modal />
         <Header />
         <Router />
