@@ -57,32 +57,32 @@ const TransactionDetail = ({
       Transaction Detail
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
         <div className="w-28 text-right">{numberOfTokens} tokens</div>
-        <div>Total tokens selected</div>
+        <div className="text-right">Total tokens selected</div>
       </div>
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
         <div className="w-28 text-right">
           {lovelaceToAda(settings.withdrawalFee)} ADA
         </div>
-        <div>Withdrawal fee</div>
+        <div className="text-right">Withdrawal fee</div>
       </div>
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
         <div className="w-28 text-right">
           {lovelaceToAda(settings.txFee)} ADA
         </div>
-        <div>Transaction fee</div>
+        <div className="text-right">Transaction fee</div>
       </div>
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
         <div className="w-28 text-right">
           {lovelaceToAda(settings.serviceFee)} ADA
         </div>
-        <div>Service fee</div>
+        <div className="text-right">Service fee</div>
       </div>
       {unlock && !isWhitelisted ? (
         <div className="p-1 flex items-center flex-row-reverse border-b border-color text-premium">
           <div className="w-28 text-right">
             {lovelaceToAda(settings.tosifee)} ADA
           </div>
-          <div className="tooltip-activator cursor-help">
+          <div className="tooltip-activator cursor-help text-right">
             Premium token fee <FontAwesomeIcon icon={faQuestionCircle} />
             <div className="tooltip p-3.5 rounded-2xl right-5 bottom-4 absolute min-w-52 max-w-64">
               This fee is required to claim premium tokens.
@@ -92,13 +92,13 @@ const TransactionDetail = ({
       ) : null}
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
         <div className="w-28 text-right">{lovelaceToAda(deposit)} ADA</div>
-        <div>You Send</div>
+        <div className="text-right">You Send</div>
       </div>
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
         <div className="w-28 text-right">
           {lovelaceToAda(calcReturnedAda())} ADA
         </div>
-        <div>You'll get back (Approximately)</div>
+        <div className="text-right">You'll get back (Approximately)</div>
       </div>
       <div className="mt-1 text-right text-yellow-400">
         The withdrawal fee is just an approximation, but it won't differ so much
