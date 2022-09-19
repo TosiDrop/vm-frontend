@@ -37,12 +37,12 @@ const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 
 const oapi = openapi({
-  openapi: '3.0.0',
+  openapi: "3.0.0",
   info: {
-    title: 'TosiDrop',
-    description: 'Generated API docs for TosiDrop',
-    version: '1',
-  }
+    title: "TosiDrop",
+    description: "Generated API docs for TosiDrop",
+    version: "1",
+  },
 });
 
 const app = express();
@@ -50,7 +50,7 @@ app.use(cors());
 app.use(express.json());
 app.use(require("morgan")(LOG_TYPE));
 app.use(oapi);
-app.use('/swaggerui', oapi.swaggerui);
+app.use("/swaggerui", oapi.swaggerui);
 
 /**
  * Serve static files for our React app
@@ -70,44 +70,44 @@ process.on("SIGTERM", () => {
 const resp200Ok = {
   responses: {
     200: {
-      description: 'Success',
+      description: "Success",
       content: {
-        'application/json': {
-	  schema: {
-	    type: 'object'
-	  }
-	}
-      }
-    }
-  }
-}
+        "application/json": {
+          schema: {
+            type: "object",
+          },
+        },
+      },
+    },
+  },
+};
 
 const resp200Ok500Bad = {
   responses: {
     200: {
-      description: 'Success',
+      description: "Success",
       content: {
-        'application/json': {
-	  schema: {
-	    type: 'object'
-	  }
-	}
-      }
+        "application/json": {
+          schema: {
+            type: "object",
+          },
+        },
+      },
     },
     500: {
       content: {
-        'application/json': {
+        "application/json": {
           schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
-    }
-  }
-}
+            type: "object",
+            properties: {
+              error: { type: "string" },
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
 app.get("/api/getpools", oapi.path(resp200Ok), async (req, res) => {
   const pools = await getPools();
@@ -177,560 +177,621 @@ app.get("/features", (req: any, res: any) => {
   return res.status(200).send(features);
 });
 
-app.get("/api/getstakekey", oapi.path({
-  description: 'Return a stake address from a given address string. Resolves adahandles.',
-  parameters: [
-    {
-      name: "address",
-      in: "query",
-      required: true
-    }
-  ],
-  responses: {
-    200: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      staking_address: { type: 'string' }
-	    }
-	  }
-	}
-      }
+app.get(
+  "/api/getstakekey",
+  oapi.path({
+    description:
+      "Return a stake address from a given address string. Resolves adahandles.",
+    parameters: [
+      {
+        name: "address",
+        in: "query",
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                staking_address: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
     },
-    400: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
-    },
-    500: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
-    }
-  }
-}), async (req: any, res: any) => {
-  try {
-    const queryObject = url.parse(req.url, true).query;
-    let address = queryObject.address as string;
-    let translatedAddress;
+  }),
+  async (req: any, res: any) => {
+    try {
+      const queryObject = url.parse(req.url, true).query;
+      let address = queryObject.address as string;
+      let translatedAddress;
 
-    if (!address) return res.status(400).send({ error: "Address seems invalid" });
-    if (!VM_KOIOS_URL) return res.status(500).send({ error: "KOIOS URL is not defined" });
-
-    const prefix = address.slice(0, 5);
-
-    switch (true) {
-      /**
-       * for ADA Handle, translate the handle
-       * to a functional address
-       */
-      case prefix[0] === "$":
-        translatedAddress = await translateAdaHandle(
-          address,
-          CARDANO_NETWORK,
-          VM_KOIOS_URL
-        );
-        address = translatedAddress;
-        break;
-      case prefix === "addr_":
-        if (CARDANO_NETWORK === CardanoNetwork.mainnet)
-          return res.status(400).send({ error: "Inserted address is for a testnet" });
-        break;
-      case prefix === "addr1":
-        if (CARDANO_NETWORK === CardanoNetwork.preview)
-          return res.status(400).send({ error: "Inserted address is for mainnet" });
-        break;
-      case prefix === "stake":
-        // We were given a stake address, pass it through
-        return res.send({ staking_address: address });
-        break;
-      default:
+      if (!address)
         return res.status(400).send({ error: "Address seems invalid" });
+      if (!VM_KOIOS_URL)
+        return res.status(500).send({ error: "KOIOS URL is not defined" });
+
+      const prefix = address.slice(0, 5);
+
+      switch (true) {
+        /**
+         * for ADA Handle, translate the handle
+         * to a functional address
+         */
+        case prefix[0] === "$":
+          translatedAddress = await translateAdaHandle(
+            address,
+            CARDANO_NETWORK,
+            VM_KOIOS_URL
+          );
+          address = translatedAddress;
+          break;
+        case prefix === "addr_":
+          if (CARDANO_NETWORK === CardanoNetwork.mainnet)
+            return res
+              .status(400)
+              .send({ error: "Inserted address is for a testnet" });
+          break;
+        case prefix === "addr1":
+          if (CARDANO_NETWORK === CardanoNetwork.preview)
+            return res
+              .status(400)
+              .send({ error: "Inserted address is for mainnet" });
+          break;
+        case prefix === "stake":
+          // We were given a stake address, pass it through
+          return res.send({ staking_address: address });
+          break;
+        default:
+          return res.status(400).send({ error: "Address seems invalid" });
+      }
+
+      let rewardAddressBytes = new Uint8Array(29);
+      switch (CARDANO_NETWORK) {
+        case CardanoNetwork.mainnet:
+          rewardAddressBytes.set([0xe1], 0);
+          break;
+        case CardanoNetwork.preview:
+        default:
+          rewardAddressBytes.set([0xe0], 0);
+          break;
+      }
+
+      const addressObject = Address.from_bech32(address);
+      const baseAddress = BaseAddress.from_address(addressObject);
+      if (baseAddress == null) return null;
+      rewardAddressBytes.set(
+        baseAddress.stake_cred().to_bytes().slice(4, 32),
+        1
+      );
+
+      let rewardAddress = RewardAddress.from_address(
+        Address.from_bytes(rewardAddressBytes)
+      );
+
+      if (rewardAddress == null) return null;
+
+      return res.send({
+        staking_address: rewardAddress.to_address().to_bech32(),
+      });
+    } catch (error: any) {
+      return res
+        .status(500)
+        .send({
+          error:
+            "Fails to get the stake key. Are you sure the inserted address is correct?",
+        });
     }
-
-    let rewardAddressBytes = new Uint8Array(29);
-    switch (CARDANO_NETWORK) {
-      case CardanoNetwork.mainnet:
-        rewardAddressBytes.set([0xe1], 0);
-        break;
-      case CardanoNetwork.preview:
-      default:
-        rewardAddressBytes.set([0xe0], 0);
-        break;
-    }
-
-    const addressObject = Address.from_bech32(address);
-    const baseAddress = BaseAddress.from_address(addressObject);
-    if (baseAddress == null) return null;
-    rewardAddressBytes.set(baseAddress.stake_cred().to_bytes().slice(4, 32), 1);
-
-    let rewardAddress = RewardAddress.from_address(
-      Address.from_bytes(rewardAddressBytes)
-    );
-
-    if (rewardAddress == null) return null;
-
-    return res.send({
-      staking_address: rewardAddress.to_address().to_bech32(),
-    });
-  } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred in /getstakekey" });
   }
-});
+);
 
 /**
  * @description get rewards available for user
  * @query
  * - address: user stake address
  */
-app.get("/api/getrewards", oapi.path({
-  description: 'Return available rewards from a given stake address.',
-  parameters: [
-    {
-      name: "address",
-      in: "query",
-      required: true
-    }
-  ],
-  responses: {
-    200: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      pool_info: { type: 'object' },
-              claimable_tokens: { type: 'object' }
-	    }
-	  }
-	}
-      }
+app.get(
+  "/api/getrewards",
+  oapi.path({
+    description: "Return available rewards from a given stake address.",
+    parameters: [
+      {
+        name: "address",
+        in: "query",
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                pool_info: { type: "object" },
+                claimable_tokens: { type: "object" },
+              },
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
     },
-    400: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
-    },
-    500: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
-    }
-  }
-}), async (req: any, res: any) => {
-  try {
-    const queryObject = url.parse(req.url, true).query;
-    const stakeAddress = queryObject.address as string;
-    if (!stakeAddress)
+  }),
+  async (req: any, res: any) => {
+    try {
+      const queryObject = url.parse(req.url, true).query;
+      const stakeAddress = queryObject.address as string;
+      if (!stakeAddress)
+        return res
+          .status(400)
+          .send({ error: "No address provided to /getrewards" });
+
+      let claimableTokens = await getRewards(stakeAddress);
+      const accountsInfo = await getAccountsInfo(stakeAddress);
+      const poolInfo = await getPoolMetadata(accountsInfo[0]);
+
+      const consolidatedGetRewards = {
+        pool_info: poolInfo,
+        claimable_tokens: claimableTokens,
+      };
+
+      return res.send(consolidatedGetRewards);
+    } catch (error: any) {
       return res
-        .status(400)
-        .send({ error: "No address provided to /getrewards" });
-
-    let claimableTokens = await getRewards(stakeAddress);
-    const accountsInfo = await getAccountsInfo(stakeAddress);
-    const poolInfo = await getPoolMetadata(accountsInfo[0]);
-
-    const consolidatedGetRewards = {
-      pool_info: poolInfo,
-      claimable_tokens: claimableTokens,
-    };
-
-    return res.send(consolidatedGetRewards);
-  } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred in /getrewards" });
-  }
-});
-
-app.get("/api/getcustomrewards", oapi.path({
-  description: 'Return available rewards from a given stake address.',
-  parameters: [
-    {
-      name: "staking_address",
-      in: "query",
-      required: true
-    },
-    {
-      name: "session_id",
-      in: "query",
-      required: true
-    },
-    {
-      name: "selected",
-      in: "query",
-      required: true
-    },
-    {
-      name: "unlock",
-      in: "query",
-      required: false
-    }
-  ],
-  responses: {
-    200: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      request_id: { type: 'string' },
-	      deposit: { type: 'number' },
-	      overhead_fee: { type: 'number' },
-	      withdrawal_address: { type: 'string' },
-	      is_whitelisted: { type: 'boolean' }
-	    }
-	  }
-	}
-      }
-    },
-    400: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
-    },
-    500: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
+        .status(500)
+        .send({ error: "An error occurred in /getrewards" });
     }
   }
-}), async (req: any, res: any) => {
-  try {
-    const queryObject = url.parse(req.url, true).query;
-    const { staking_address, session_id, selected, unlock } = queryObject;
-    let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`;
-    let isWhitelisted = false;
+);
 
-    if (!staking_address) return res.status(400).send({ error: 'staking_address required'});
-    if (unlock === "true") {
-      if (TOSIFEE_WHITELIST) {
-        const whitelist = TOSIFEE_WHITELIST.split(",");
-        const accountsInfo = await getAccountsInfo(`${staking_address}`);
-        const accountInfo = accountsInfo[0];
-        if (whitelist.includes(accountInfo.delegated_pool)) {
-          vmArgs += "&unlocks_special=true";
-          isWhitelisted = true;
+app.get(
+  "/api/getcustomrewards",
+  oapi.path({
+    description: "Return available rewards from a given stake address.",
+    parameters: [
+      {
+        name: "staking_address",
+        in: "query",
+        required: true,
+      },
+      {
+        name: "session_id",
+        in: "query",
+        required: true,
+      },
+      {
+        name: "selected",
+        in: "query",
+        required: true,
+      },
+      {
+        name: "unlock",
+        in: "query",
+        required: false,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                request_id: { type: "string" },
+                deposit: { type: "number" },
+                overhead_fee: { type: "number" },
+                withdrawal_address: { type: "string" },
+                is_whitelisted: { type: "boolean" },
+              },
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+  }),
+  async (req: any, res: any) => {
+    try {
+      const queryObject = url.parse(req.url, true).query;
+      const { staking_address, session_id, selected, unlock } = queryObject;
+      let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`;
+      let isWhitelisted = false;
+
+      if (!staking_address)
+        return res.status(400).send({ error: "staking_address required" });
+      if (unlock === "true") {
+        if (TOSIFEE_WHITELIST) {
+          const whitelist = TOSIFEE_WHITELIST.split(",");
+          const accountsInfo = await getAccountsInfo(`${staking_address}`);
+          const accountInfo = accountsInfo[0];
+          if (whitelist.includes(accountInfo.delegated_pool)) {
+            vmArgs += "&unlocks_special=true";
+            isWhitelisted = true;
+          } else {
+            vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
+          }
         } else {
           vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
         }
       } else {
-        vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
+        vmArgs += "&unlocks_special=false";
       }
-    } else {
-      vmArgs += "&unlocks_special=false";
-    }
 
-    const submitCustomReward: any = await getFromVM(vmArgs);
+      const submitCustomReward: any = await getFromVM(vmArgs);
 
-    if (submitCustomReward == null) {
-      throw new Error();
-    }
-
-    const customReward: ICustomRewards = {
-      request_id: submitCustomReward.request_id,
-      deposit: submitCustomReward.deposit,
-      overhead_fee: submitCustomReward.overhead_fee,
-      withdrawal_address: submitCustomReward.withdrawal_address,
-      is_whitelisted: isWhitelisted,
-    };
-
-    return res.send(customReward);
-  } catch (e: any) {
-    return res
-      .status(500)
-      .send({ error: "An error occurred in /getcustomrewards" });
-  }
-});
-
-app.get("/api/getdeliveredrewards", oapi.path({
-  description: 'Return delivered rewards from a given stake address.',
-  parameters: [
-    {
-      name: "staking_address",
-      in: "query",
-      required: true
-    }
-  ],
-  responses: {
-    200: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object'
-	  }
-	}
+      if (submitCustomReward == null) {
+        throw new Error();
       }
-    },
-    400: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
-    },
-    500: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
-    }
-  }
-}), async (req: any, res: any) => {
-  try {
-    const queryObject = url.parse(req.url, true).query;
-    const stakeAddress = queryObject.address as string;
-    let vmArgs = `delivered_rewards&staking_address=${stakeAddress}`;
-    if (!stakeAddress)
+
+      const customReward: ICustomRewards = {
+        request_id: submitCustomReward.request_id,
+        deposit: submitCustomReward.deposit,
+        overhead_fee: submitCustomReward.overhead_fee,
+        withdrawal_address: submitCustomReward.withdrawal_address,
+        is_whitelisted: isWhitelisted,
+      };
+
+      return res.send(customReward);
+    } catch (e: any) {
       return res
-        .status(400)
-        .send({ error: "No address provided to /getdeliveredrewards" });
-
-    const deliveredRewards : any = await getFromVM(vmArgs);
-    if (deliveredRewards == null) {
-      throw new Error();
-    }
-    return res.send(deliveredRewards);
-  } catch (e: any) {
-    return res
-      .status(500)
-      .send({ error: "An error occurred in /getcustomrewards" });
-  }
-});
-
-app.get("/api/txstatus", oapi.path({
-  description: 'Return status of a transaction from request_id and session_id',
-  parameters: [
-    {
-      name: "request_id",
-      in: "query",
-      required: true
-    },
-    {
-      name: "session_id",
-      in: "query",
-      required: true
-    }
-  ],
-  responses: {
-    200: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object'
-	  }
-	}
-      }
-    },
-    400: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
-    },
-    500: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
+        .status(500)
+        .send({ error: "An error occurred in /getcustomrewards" });
     }
   }
-}), async (req, res) => {
-  try {
-    const queryObject = url.parse(req.url, true).query;
-    const { request_id, session_id } = queryObject;
+);
 
-    if (!request_id || !session_id)
+app.get(
+  "/api/getdeliveredrewards",
+  oapi.path({
+    description: "Return delivered rewards from a given stake address.",
+    parameters: [
+      {
+        name: "staking_address",
+        in: "query",
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+  }),
+  async (req: any, res: any) => {
+    try {
+      const queryObject = url.parse(req.url, true).query;
+      const stakeAddress = queryObject.address as string;
+      let vmArgs = `delivered_rewards&staking_address=${stakeAddress}`;
+      if (!stakeAddress)
+        return res
+          .status(400)
+          .send({ error: "No address provided to /getdeliveredrewards" });
+
+      const deliveredRewards: any = await getFromVM(vmArgs);
+      if (deliveredRewards == null) {
+        throw new Error();
+      }
+      return res.send(deliveredRewards);
+    } catch (e: any) {
       return res
-        .status(400)
-        .send({ error: "Missing request or session ID in /txstatus" });
-
-    const txStatus = await getFromVM(
-      `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`
-    );
-    return res.send(txStatus);
-  } catch (e: any) {
-    return res.status(500).send({ error: "An error occurred in /txstatus" });
-  }
-});
-
-app.get("/api/gettransactionstatus", oapi.path({
-  description: 'Return status of a transaction from txHash',
-  parameters: [
-    {
-      name: "txHash",
-      in: "query",
-      required: true
+        .status(500)
+        .send({ error: "An error occurred in /getcustomrewards" });
     }
-  ],
-  responses: {
-    200: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object'
-	  }
-	}
-      }
+  }
+);
+
+app.get(
+  "/api/txstatus",
+  oapi.path({
+    description:
+      "Return status of a transaction from request_id and session_id",
+    parameters: [
+      {
+        name: "request_id",
+        in: "query",
+        required: true,
+      },
+      {
+        name: "session_id",
+        in: "query",
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
     },
-    400: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
-      }
+  }),
+  async (req, res) => {
+    try {
+      const queryObject = url.parse(req.url, true).query;
+      const { request_id, session_id } = queryObject;
+
+      if (!request_id || !session_id)
+        return res
+          .status(400)
+          .send({ error: "Missing request or session ID in /txstatus" });
+
+      const txStatus = await getFromVM(
+        `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`
+      );
+      return res.send(txStatus);
+    } catch (e: any) {
+      return res.status(500).send({ error: "An error occurred in /txstatus" });
+    }
+  }
+);
+
+app.get(
+  "/api/gettransactionstatus",
+  oapi.path({
+    description: "Return status of a transaction from txHash",
+    parameters: [
+      {
+        name: "txHash",
+        in: "query",
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
     },
-    500: {
-      content: {
-        'application/json': {
-          schema: {
-	    type: 'object',
-	    properties: {
-	      error: { type: 'string' }
-	    }
-	  }
-	}
+  }),
+  async (req: any, res: any) => {
+    try {
+      const queryObject = url.parse(req.url, true).query;
+      if (queryObject.txHash) {
+        const getTransactionStatusResponse = await postFromKoios<
+          TransactionStatus[]
+        >(`tx_status`, { _tx_hashes: [queryObject.txHash] });
+        res.send(getTransactionStatusResponse);
+      } else {
+        res.status(400).send({ error: "Tx hash seems invalid" });
       }
+    } catch (error: any) {
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /gettransactionstatus" });
     }
   }
-}), async (req: any, res: any) => {
-  try {
-    const queryObject = url.parse(req.url, true).query;
-    if (queryObject.txHash) {
-      const getTransactionStatusResponse = await postFromKoios<
-        TransactionStatus[]
-      >(`tx_status`, { _tx_hashes: [queryObject.txHash] });
-      res.send(getTransactionStatusResponse);
-    } else {
-      res.status(400).send({ error: "Tx hash seems invalid" });
+);
+
+app.get(
+  "/api/getabsslot",
+  oapi.path(resp200Ok500Bad),
+  async (req: any, res: any) => {
+    try {
+      const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+      res.send({
+        abs_slot:
+          getTipResponse && getTipResponse.length
+            ? getTipResponse[0].abs_slot
+            : 0,
+      });
+    } catch (error: any) {
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /getabsslot" });
     }
-  } catch (error: any) {
-    return res
-      .status(500)
-      .send({ error: "An error occurred in /gettransactionstatus" });
   }
-});
+);
 
-app.get("/api/getabsslot", oapi.path(resp200Ok500Bad), async (req: any, res: any) => {
-  try {
-    const getTipResponse = await getFromKoios<Tip[]>(`tip`);
-    res.send({
-      abs_slot:
-        getTipResponse && getTipResponse.length
-          ? getTipResponse[0].abs_slot
-          : 0,
-    });
-  } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred in /getabsslot" });
+app.get(
+  "/api/getblock",
+  oapi.path(resp200Ok500Bad),
+  async (req: any, res: any) => {
+    try {
+      const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+      res.send({
+        block_no:
+          getTipResponse && getTipResponse.length
+            ? getTipResponse[0].block_no
+            : 0,
+      });
+    } catch (error: any) {
+      return res.status(500).send({ error: "An error occurred in /getblock" });
+    }
   }
-});
+);
 
-app.get("/api/getblock", oapi.path(resp200Ok500Bad), async (req: any, res: any) => {
-  try {
-    const getTipResponse = await getFromKoios<Tip[]>(`tip`);
-    res.send({
-      block_no:
-        getTipResponse && getTipResponse.length
-          ? getTipResponse[0].block_no
-          : 0,
-    });
-  } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred in /getblock" });
+app.get(
+  "/api/gettip",
+  oapi.path(resp200Ok500Bad),
+  async (req: any, res: any) => {
+    try {
+      const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+      res.send(getTipResponse[0]);
+    } catch (error: any) {
+      return res.status(500).send({ error: "An error occurred in /gettip" });
+    }
   }
-});
+);
 
-app.get("/api/gettip", oapi.path(resp200Ok500Bad), async (req: any, res: any) => {
-  try {
-    const getTipResponse = await getFromKoios<Tip[]>(`tip`);
-    res.send(getTipResponse[0]);
-  } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred in /gettip" });
+app.get(
+  "/api/getepochparams",
+  oapi.path(resp200Ok500Bad),
+  async (req: any, res: any) => {
+    try {
+      const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+      const getEpochParamsResponse = await getEpochParams(
+        getTipResponse && getTipResponse.length ? getTipResponse[0].epoch_no : 0
+      );
+      res.send(getEpochParamsResponse);
+    } catch (error: any) {
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /getepochparams" });
+    }
   }
-});
-
-app.get("/api/getepochparams", oapi.path(resp200Ok500Bad), async (req: any, res: any) => {
-  try {
-    const getTipResponse = await getFromKoios<Tip[]>(`tip`);
-    const getEpochParamsResponse = await getEpochParams(
-      getTipResponse && getTipResponse.length ? getTipResponse[0].epoch_no : 0
-    );
-    res.send(getEpochParamsResponse);
-  } catch (error: any) {
-    return res
-      .status(500)
-      .send({ error: "An error occurred in /getepochparams" });
-  }
-});
+);
 
 // Fallback to React app
 app.get("*", (req, res) => {

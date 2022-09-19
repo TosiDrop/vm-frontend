@@ -32,7 +32,9 @@ export async function getCustomRewards(
 export async function getTransactionStatus(
   txHash: string
 ): Promise<TransactionStatus[] | undefined> {
-  const response = await axios.get(`/api/gettransactionstatus?txHash=${txHash}`);
+  const response = await axios.get(
+    `/api/gettransactionstatus?txHash=${txHash}`
+  );
   if (response && response.data) {
     return response.data;
   }

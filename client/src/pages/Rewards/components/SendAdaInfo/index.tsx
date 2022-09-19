@@ -10,6 +10,9 @@ import { showModal } from "src/reducers/globalSlice";
 import Spinner from "src/components/Spinner";
 import { isTxHash } from "src/pages/Rewards/utils/common.function";
 import { RootState } from "src/store";
+import Copyable from "src/components/Copyable";
+import { lovelaceToAda } from "src/utils";
+import useErrorHandler from "src/hooks/useErrorHandler";
 
 interface Params {
   txDetail: any;
@@ -30,6 +33,7 @@ const SendAdaInfo = ({
   setTransactionStatus,
 }: Params) => {
   const dispatch = useDispatch();
+  const { handleError } = useErrorHandler();
   const connectedWallet = useSelector(
     (state: RootState) => state.wallet.walletApi
   );
@@ -121,46 +125,37 @@ const SendAdaInfo = ({
    */
   const sendADA = async () => {
     try {
-      if (txDetail == null) throw new Error();
+      if (txDetail == null) throw new Error("Transaction not found");
       setSendAdaSpinner(true);
       const txHash = await connectedWallet?.transferAda(
         txDetail.withdrawal_address,
         txDetail.deposit.toString()
       );
-      if (!txHash) return;
+      if (!txHash) throw new Error("Fail to hash transaction");
       if (isTxHash(txHash)) {
         setTransactionStatus(TransactionStatusDetail.processing);
         setTransactionId(txHash);
       } else {
-        dispatch(
-          showModal({
-            modalType: ModalTypes.info,
-            details: {
-              text: "User cancelled transaction",
-              type: InfoModalTypes.failure,
-            },
-          })
-        );
+        throw new Error("Fail to hash transaction");
       }
-      setSendAdaSpinner(false);
     } catch (e) {
+      handleError(e);
+    } finally {
       setSendAdaSpinner(false);
-      dispatch(
-        showModal({
-          modalType: ModalTypes.info,
-          details: {
-            text: "Something is wrong :(",
-            type: InfoModalTypes.failure,
-          },
-        })
-      );
     }
   };
 
   return (
     <div className="background rounded-2xl p-5 flex flex-col gap-4">
       Deposit Address
-      {renderManualCopy()}
+      <div className="flex flex-row items-center gap-2">
+        <div className="whitespace-nowrap">Deposit Address</div>
+        <Copyable text={txDetail.withdrawal_address}></Copyable>
+      </div>
+      <div className="flex flex-row items-center gap-2">
+        <div className="whitespace-nowrap">Deposit Amount</div>
+        <Copyable text={String(lovelaceToAda(txDetail.deposit))}></Copyable>
+      </div>
       {renderQRCode(txDetail)}
       {renderSendAdaButton()}
     </div>

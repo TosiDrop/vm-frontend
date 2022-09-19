@@ -14,6 +14,7 @@ import Page from "src/layouts/page";
 
 import ClaimableTokenBox from "./components/ClaimableTokenBox";
 import { getStakeKey } from "src/services/common";
+import useErrorHandler from "src/hooks/useErrorHandler";
 
 function Rewards() {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ function Rewards() {
   const connectedWallet = useSelector(
     (state: RootState) => state.wallet.walletApi
   );
+  const { handleError } = useErrorHandler();
 
   const isWrongNetwork = useSelector(
     (state: RootState) => state.wallet.isWrongNetwork
@@ -139,23 +141,11 @@ function Rewards() {
               },
             })
           );
-          setRewardsLoader(false);
         }
-      } catch (ex: any) {
-        switch (true) {
-          case ex?.response?.status === 404:
-          default:
-            dispatch(
-              showModal({
-                modalType: ModalTypes.info,
-                details: {
-                  text: "Account not found.",
-                  type: InfoModalTypes.info,
-                },
-              })
-            );
-            setRewardsLoader(false);
-        }
+      } catch (e: any) {
+        handleError(e);
+      } finally {
+        setRewardsLoader(false);
       }
     }
   };
@@ -188,17 +178,9 @@ function Rewards() {
       let depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}&isWhitelisted=${res.is_whitelisted}`;
       navigate(depositInfoUrl, { replace: true });
     } catch (e) {
-      dispatch(
-        showModal({
-          modalType: ModalTypes.info,
-          details: {
-            text: "Something went wrong. Please try again later.",
-            type: InfoModalTypes.failure,
-          },
-        })
-      );
+      handleError(e);
+    } finally {
       setClaimMyRewardLoading(false);
-      return;
     }
   };
 
