@@ -9,9 +9,7 @@ export default () => {
       <div className="break-all text-center">
         eTOSI: 94180232cc0d91447178a0a995e2c14c57fbf03b06d5d87d5f79226094f52ffc
       </div>
-      <div className="break-all text-center">
-        UI version: {version}
-      </div>
+      <div className="break-all text-center">UI version: {version}</div>
     </div>
   );
 };

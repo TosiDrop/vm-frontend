@@ -85,7 +85,7 @@ class WalletApi {
       try {
         return await window.cardano[WalletKeys[walletKey]].enable();
       } catch (error: any) {
-        return (error.message || error.info) as string;
+        throw new Error(error.message || error.info);
       }
     }
   }
@@ -256,7 +256,7 @@ class WalletApi {
           Buffer.from(transaction.to_bytes(), "hex").toString("hex")
         );
       } catch (error: any) {
-        return (error.message || error.info) as string;
+        throw new Error(error.message || error.info);
       }
 
       const signedTx = this.serialLib.Transaction.new(
