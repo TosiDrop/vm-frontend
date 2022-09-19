@@ -290,7 +290,7 @@ app.get("/api/getstakekey", oapi.path({
       staking_address: rewardAddress.to_address().to_bech32(),
     });
   } catch (error: any) {
-    return res.status(500).send({ error: "An error occurred in /getstakekey" });
+    return res.status(500).send({ error: "Fails to get the stake key. Are you sure the inserted address is correct?" });
   }
 });
 
