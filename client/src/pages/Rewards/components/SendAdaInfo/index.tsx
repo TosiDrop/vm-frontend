@@ -1,12 +1,7 @@
 import { useState } from "react";
-import copy from "copy-to-clipboard";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import QRCode from "react-qr-code";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
-import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
-import { showModal } from "src/reducers/globalSlice";
 import Spinner from "src/components/Spinner";
 import { isTxHash } from "src/pages/Rewards/utils/common.function";
 import { RootState } from "src/store";
@@ -32,7 +27,6 @@ const SendAdaInfo = ({
   setTransactionId,
   setTransactionStatus,
 }: Params) => {
-  const dispatch = useDispatch();
   const { handleError } = useErrorHandler();
   const connectedWallet = useSelector(
     (state: RootState) => state.wallet.walletApi
@@ -40,17 +34,7 @@ const SendAdaInfo = ({
   const isWrongNetwork = useSelector(
     (state: RootState) => state.wallet.isWrongNetwork
   );
-  const [showToolTip, setShowToolTip] = useState(false);
   const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
-
-  const triggerTooltip = () => {
-    if (txDetail == null) return;
-    copy(txDetail ? txDetail.withdrawal_address : "");
-    setShowToolTip(true);
-    setTimeout(() => {
-      setShowToolTip(false);
-    }, 1000);
-  };
 
   /**
    * render QR Code
@@ -89,35 +73,6 @@ const SendAdaInfo = ({
     } else {
       return null;
     }
-  };
-
-  /**
-   * render input for manual copy
-   */
-  const renderManualCopy = () => {
-    return (
-      <div className="flex flex-row items-center w-full relative">
-        <FontAwesomeIcon
-          className="mr-2.5 cursor-pointer"
-          onClick={() => triggerTooltip()}
-          icon={faCopy}
-        />
-        <input
-          className={`w-full rounded-lg bg-transparent border-gray-400 border p-1`}
-          type="text"
-          value={txDetail?.withdrawal_address}
-          disabled={true}
-          id="withdraw-address"
-        ></input>
-        <div
-          className={`p-2.5 left-8 rounded-lg absolute tooltip ${
-            showToolTip ? "visible" : "invisible"
-          }`}
-        >
-          copied!
-        </div>
-      </div>
-    );
   };
 
   /**

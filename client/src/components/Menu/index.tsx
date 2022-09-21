@@ -14,14 +14,9 @@ import {
   faGithub,
 } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
-import { RootState } from "src/store";
-import { useDispatch, useSelector } from "react-redux";
-import { setShowMenu } from "src/reducers/globalSlice";
 
 function Menu() {
   const location = useLocation().pathname;
-  const dispatch = useDispatch();
-  const showMenu = useSelector((state: RootState) => state.global.showMenu);
 
   return (
     <div
