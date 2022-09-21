@@ -11,6 +11,7 @@ import {
   faDiscord,
   faTelegram,
   faMedium,
+  faGithub,
 } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import { RootState } from "src/store";
@@ -25,7 +26,7 @@ function Menu() {
   return (
     <div
       className={
-        "background text-lg p-5 rounded-2xl w-52 h-fit hidden sm:block"
+        "background text-lg p-5 rounded-2xl w-56 h-fit hidden sm:block"
       }
     >
       <div className="menu">
@@ -92,7 +93,7 @@ function Menu() {
               </a>
             </li>
           </ul>
-          <div className="mt-5 w-full text-center">
+          <div className="mt-5 w-full flex flex-row items-center justify-center gap-2">
             <a
               href="https://twitter.com/TosiDrop"
               target="_blank"
@@ -105,7 +106,7 @@ function Menu() {
               href="https://discord.gg/C32Mm3j4fG"
               target="_blank"
               rel="noreferrer"
-              className="ml-2.5 text-discord"
+              className="text-discord"
             >
               <FontAwesomeIcon icon={faDiscord} />
             </a>
@@ -113,7 +114,7 @@ function Menu() {
               href="https://t.me/+FdDUmLsW8jI0YmUx"
               target="_blank"
               rel="noreferrer"
-              className="ml-2.5 text-telegram"
+              className="text-telegram"
             >
               <FontAwesomeIcon icon={faTelegram} />
             </a>
@@ -121,13 +122,18 @@ function Menu() {
               href="https://medium.com/@tosidrop"
               target="_blank"
               rel="noreferrer"
-              className="ml-2.5 text"
+              className="text"
             >
               <FontAwesomeIcon icon={faMedium} />
             </a>
-            {/* <a href='https://github.com/anetabtc' target='_blank' rel="noreferrer">
-                            <FontAwesomeIcon icon={faGithub} />
-                        </a> */}
+            <a
+              href="https://github.com/TosiDrop/vm-frontend"
+              target="_blank"
+              rel="noreferrer"
+              className="text"
+            >
+              <FontAwesomeIcon icon={faGithub} />
+            </a>
           </div>
         </div>
       </div>
