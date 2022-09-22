@@ -1,10 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBook,
+  faArrowUpRightFromSquare,
   faWallet,
   faPaperPlane,
   faMessage,
-  faBook,
-  faArrowUpRightFromSquare,
+  faClockRotateLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTwitter,
@@ -14,9 +15,53 @@ import {
   faGithub,
 } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
+import { PageRoute, MenuItem } from "src/entities/common.entities";
+
+export const menuItems: Record<string, MenuItem> = {
+  claim: {
+    text: "Claim",
+    to: PageRoute.home,
+    activeRoute: [PageRoute.claim, PageRoute.home],
+    icon: faWallet,
+  },
+  history: {
+    text: "History",
+    to: PageRoute.history,
+    activeRoute: [PageRoute.history],
+    icon: faClockRotateLeft,
+  },
+  airdrop: {
+    text: "Airdrop",
+    to: PageRoute.airdrop,
+    activeRoute: [PageRoute.airdrop],
+    icon: faPaperPlane,
+  },
+  feedback: {
+    text: "Feedback",
+    to: PageRoute.feedback,
+    activeRoute: [PageRoute.feedback],
+    icon: faMessage,
+  },
+};
 
 function Menu() {
   const location = useLocation().pathname;
+
+  const LinkButton = ({ menuItem }: { menuItem: MenuItem }) => {
+    return (
+      <Link
+        to={menuItem.to}
+        className={`${
+          menuItem.activeRoute.includes(location as PageRoute)
+            ? "text"
+            : "text-inactive"
+        } flex flex-row items-center gap-2`}
+      >
+        <FontAwesomeIcon className="w-4" icon={menuItem.icon} />
+        {menuItem.text}
+      </Link>
+    );
+  };
 
   return (
     <div
@@ -26,69 +71,27 @@ function Menu() {
     >
       <div className="menu">
         <div className="menu-content">
-          <ul className="menu-list">
-            <li>
-              <Link
-                to="/"
-                className={`${
-                  location === "/" || location === "/claim/"
-                    ? "text"
-                    : "text-inactive"
-                } flex flex-row items-center`}
-              >
-                <p className="icon">
-                  <FontAwesomeIcon className="mr-2.5" icon={faWallet} />
-                </p>
-                Claim
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/airdrop"
-                className={`${
-                  location === "/airdrop" ? "text" : "text-inactive"
-                } flex flex-row items-center mt-2.5`}
-              >
-                <p className="icon">
-                  <FontAwesomeIcon className="mr-2.5" icon={faPaperPlane} />
-                </p>
-                Airdrop
-              </Link>
-            </li>
-            {/* <li><Link to="/history"><p className="icon"><FontAwesomeIcon className="mr-2.5"  icon={faClockRotateLeft} /></p>History</Link></li> */}
-            {/* <li><Link to="/dashboard"><p className="icon"><FontAwesomeIcon className="mr-2.5"  icon={faChartColumn} /></p>Dashboard</Link></li> */}
-            <li>
-              <Link
-                to="/feedback"
-                className={`${
-                  location === "/feedback" ? "text" : "text-inactive"
-                } flex flex-row items-center mt-2.5`}
-              >
-                <p className="icon">
-                  <FontAwesomeIcon className="mr-2.5" icon={faMessage} />
-                </p>
-                Feedback
-              </Link>
-            </li>
-            <li>
+          <div className="flex flex-col gap-2">
+            {Object.values(menuItems).map((menuItem: MenuItem) => (
+              <LinkButton menuItem={menuItem} />
+            ))}
+            <div>
               <a
                 target="_blank"
                 rel="noreferrer"
                 href="https://docs.tosidrop.io/"
-                className="flex flex-row items-center mt-2.5 text-inactive"
+                className="flex flex-row items-center gap-2 text-inactive"
               >
-                <p className="icon">
-                  <FontAwesomeIcon className="mr-2.5" icon={faBook} />
-                </p>
-                Docs&nbsp;
+                <FontAwesomeIcon className="w-4" icon={faBook} />
+                Docs
                 <FontAwesomeIcon
-                  className="mr-2.5"
+                  className="w-4"
                   icon={faArrowUpRightFromSquare}
                 />
               </a>
-            </li>
-          </ul>
-          <div className="mt-5 w-full flex flex-row items-center justify-center gap-2">
+            </div>
+          </div>
+          <div className="mt-5 w-full text-center flex gap-2 items-center justify-center">
             <a
               href="https://twitter.com/TosiDrop"
               target="_blank"
