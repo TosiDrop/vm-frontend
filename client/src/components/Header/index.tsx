@@ -42,7 +42,7 @@ function Header() {
       </div>
 
       {/* Mobile header */}
-      <div className="flex flex-row items-center justify-center h-fit m-5 mb-0 visible sm:hidden">
+      <div className="w-full flex flex-row items-center justify-center p-5 pb-0 h-fit sm:hidden">
         <div className="flex flex-row items-center mr-auto">
           <button
             className="background rounded-lg px-5 py-2.5"

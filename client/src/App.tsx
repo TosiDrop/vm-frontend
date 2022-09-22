@@ -51,7 +51,7 @@ function App() {
 
   return (
     <div className={`app ${theme}`}>
-      <div className="w-full max-w-7xl min-h-full text flex flex-col">
+      <div className="w-full text flex flex-col items-center">
         <Modal />
         <Header />
         <Router />
