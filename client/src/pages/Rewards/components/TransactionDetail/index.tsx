@@ -13,10 +13,9 @@ interface Props {
 }
 
 interface ISettings {
-  withdrawalFee: number;
-  serviceFee: number;
+  vmFee: number;
   txFee: number;
-  tosifee: number;
+  tosiFee: number;
 }
 
 const TransactionDetail = ({
@@ -26,10 +25,9 @@ const TransactionDetail = ({
   isWhitelisted,
 }: Props) => {
   const [settings, setSettings] = useState<ISettings>({
-    withdrawalFee: 0,
-    serviceFee: 100000,
-    txFee: 170000,
-    tosifee: 500000,
+    vmFee: 0,
+    txFee: 180000,
+    tosiFee: 500000,
   });
 
   useEffect(() => {
@@ -38,17 +36,22 @@ const TransactionDetail = ({
       const settingsFromFeatures = await getFeatures();
       setSettings({
         ...settings,
-        tosifee: settingsFromFeatures.tosi_fee,
-        withdrawalFee: settingsFromVM.withdrawal_fee,
+        tosiFee: settingsFromFeatures.tosi_fee,
+        vmFee: settingsFromVM.withdrawal_fee,
       });
     };
     getSettingsFromApi();
   }, []);
 
+  const calcTxFee = () => {
+    let txCalc = (numberOfTokens / 5 * settings.txFee).toFixed(6);
+    if (Number(txCalc) >= Number(settings.txFee)) return Number(txCalc);
+    return Number(settings.txFee);
+  };
+
   const calcReturnedAda = () => {
-    let returnedAda =
-      deposit - settings.withdrawalFee - settings.serviceFee - settings.txFee;
-    if (unlock && !isWhitelisted) returnedAda -= settings.tosifee;
+    let returnedAda = deposit - settings.vmFee - calcTxFee();
+    if (unlock && !isWhitelisted) returnedAda -= settings.tosiFee;
     return returnedAda;
   };
 
@@ -61,26 +64,20 @@ const TransactionDetail = ({
       </div>
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
         <div className="w-28 text-right">
-          {lovelaceToAda(settings.withdrawalFee)} ADA
+          {lovelaceToAda(settings.vmFee)} ADA
         </div>
-        <div className="text-right">Withdrawal fee</div>
+        <div className="text-right">Processing fee</div>
       </div>
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
         <div className="w-28 text-right">
-          {lovelaceToAda(settings.txFee)} ADA
+          {lovelaceToAda(calcTxFee())} ADA
         </div>
         <div className="text-right">Transaction fee</div>
-      </div>
-      <div className="p-1 flex items-center flex-row-reverse border-b border-color">
-        <div className="w-28 text-right">
-          {lovelaceToAda(settings.serviceFee)} ADA
-        </div>
-        <div className="text-right">Service fee</div>
       </div>
       {unlock && !isWhitelisted ? (
         <div className="p-1 flex items-center flex-row-reverse border-b border-color text-premium">
           <div className="w-28 text-right">
-            {lovelaceToAda(settings.tosifee)} ADA
+            {lovelaceToAda(settings.tosiFee)} ADA
           </div>
           <div className="tooltip-activator cursor-help text-right">
             Premium token fee <FontAwesomeIcon icon={faQuestionCircle} />
@@ -101,7 +98,7 @@ const TransactionDetail = ({
         <div className="text-right">You'll get back (Approximately)</div>
       </div>
       <div className="mt-1 text-right text-yellow-400">
-        The withdrawal fee is just an approximation, but it won't differ so much
+        The transaction fee is just an approximation, but it won't differ so much
         from the displayed value.
       </div>
     </div>
