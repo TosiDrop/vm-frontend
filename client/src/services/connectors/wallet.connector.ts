@@ -21,6 +21,7 @@ export async function Cardano() {
 
 export enum WalletKeys {
   anetawallet = "anetawallet",
+  cardwallet = "cardwallet",
   eternl = "eternl",
   flint = "flint",
   gerowallet = "gerowallet",
