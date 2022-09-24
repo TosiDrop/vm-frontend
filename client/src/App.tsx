@@ -14,6 +14,7 @@ import { getNetworkId } from "src/services/common";
 import useWallet from "src/hooks/useWallet";
 import "src/styles.scss";
 import Footer from "./components/Footer";
+import AppPopUp from "./components/AppPopUp";
 
 function App() {
   const dispatch = useDispatch();
@@ -52,6 +53,7 @@ function App() {
   return (
     <div className={`app ${theme}`}>
       <div className="w-full text flex flex-col items-center">
+        <AppPopUp></AppPopUp>
         <Modal />
         <Header />
         <Router />
