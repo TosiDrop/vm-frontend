@@ -1,9 +1,6 @@
 name: JavaScript CI
 
 on:
-  push:
-    branches: [ master ]
-    paths: [ 'client/**','server/**', 'src/**','*.ts','*.json','.github/workflows/ci-js.yml' ]
   pull_request:
     branches: [ master ]
     paths: [ 'client/**','server/**', 'src/**','*.ts','*.json','.github/workflows/ci-js.yml' ]
