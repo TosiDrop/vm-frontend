@@ -303,12 +303,10 @@ app.get(
         staking_address: rewardAddress.to_address().to_bech32(),
       });
     } catch (error: any) {
-      return res
-        .status(500)
-        .send({
-          error:
-            "Fails to get the stake key. Are you sure the inserted address is correct?",
-        });
+      return res.status(500).send({
+        error:
+          "Fails to get the stake key. Are you sure the inserted address is correct?",
+      });
     }
   }
 );
@@ -376,7 +374,7 @@ app.get(
       if (!stakeAddress)
         return res
           .status(400)
-          .send({ error: "No address provided to /getrewards" });
+          .send({ error: "No address provided to /api/getrewards" });
 
       let claimableTokens = await getRewards(stakeAddress);
       const accountsInfo = await getAccountsInfo(stakeAddress);
@@ -391,7 +389,7 @@ app.get(
     } catch (error: any) {
       return res
         .status(500)
-        .send({ error: "An error occurred in /getrewards" });
+        .send({ error: "An error occurred in /api/getrewards" });
     }
   }
 );
@@ -510,7 +508,7 @@ app.get(
     } catch (e: any) {
       return res
         .status(500)
-        .send({ error: "An error occurred in /getcustomrewards" });
+        .send({ error: "An error occurred in /api/getcustomrewards" });
     }
   }
 );
@@ -570,7 +568,7 @@ app.get(
       if (!stakeAddress)
         return res
           .status(400)
-          .send({ error: "No address provided to /getdeliveredrewards" });
+          .send({ error: "No address provided to /api/getdeliveredrewards" });
 
       const deliveredRewards: any = await getFromVM(vmArgs);
       if (deliveredRewards == null) {
@@ -580,7 +578,7 @@ app.get(
     } catch (e: any) {
       return res
         .status(500)
-        .send({ error: "An error occurred in /getcustomrewards" });
+        .send({ error: "An error occurred in /api/getcustomrewards" });
     }
   }
 );
@@ -646,14 +644,16 @@ app.get(
       if (!request_id || !session_id)
         return res
           .status(400)
-          .send({ error: "Missing request or session ID in /txstatus" });
+          .send({ error: "Missing request or session ID in /api/txstatus" });
 
       const txStatus = await getFromVM(
         `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`
       );
       return res.send(txStatus);
     } catch (e: any) {
-      return res.status(500).send({ error: "An error occurred in /txstatus" });
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/txstatus" });
     }
   }
 );
@@ -719,7 +719,7 @@ app.get(
     } catch (error: any) {
       return res
         .status(500)
-        .send({ error: "An error occurred in /gettransactionstatus" });
+        .send({ error: "An error occurred in /api/gettransactionstatus" });
     }
   }
 );
@@ -739,7 +739,7 @@ app.get(
     } catch (error: any) {
       return res
         .status(500)
-        .send({ error: "An error occurred in /getabsslot" });
+        .send({ error: "An error occurred in /api/getabsslot" });
     }
   }
 );
@@ -757,7 +757,9 @@ app.get(
             : 0,
       });
     } catch (error: any) {
-      return res.status(500).send({ error: "An error occurred in /getblock" });
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/getblock" });
     }
   }
 );
@@ -770,7 +772,9 @@ app.get(
       const getTipResponse = await getFromKoios<Tip[]>(`tip`);
       res.send(getTipResponse[0]);
     } catch (error: any) {
-      return res.status(500).send({ error: "An error occurred in /gettip" });
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/gettip" });
     }
   }
 );
@@ -788,7 +792,7 @@ app.get(
     } catch (error: any) {
       return res
         .status(500)
-        .send({ error: "An error occurred in /getepochparams" });
+        .send({ error: "An error occurred in /api/getepochparams" });
     }
   }
 );
