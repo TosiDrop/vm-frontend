@@ -18,6 +18,12 @@ machine and run the containers. You can disable installing Docker by setting
 ./runme.sh
 ```
 
+## Dev usage
+
+You can run `npm install` and `npm run` from the client and server folders as needed. They also each have a readme you should check out.
+
+Make sure your npm version is decently modern.
+
 ### Logging
 Access logging is enabled in the server. It uses Morgan and the type of logs
 which are output can be controlled by setting `LOG_TYPE` to a valid Morgan
