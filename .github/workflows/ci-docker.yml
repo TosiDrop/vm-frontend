@@ -1,9 +1,6 @@
 name: Docker CI
 
 on:
-  push:
-    branches: [ master ]
-    paths: [ 'Dockerfile','client/**','public/**','server/**','src/**','*.ts','*.json','.github/workflows/ci-docker.yml' ]
   pull_request:
     branches: [ master ]
     paths: [ 'Dockerfile','client/**','public/**','server/**','src/**','*.ts','*.json','.github/workflows/ci-docker.yml' ]
