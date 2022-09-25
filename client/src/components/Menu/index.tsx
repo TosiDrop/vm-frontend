@@ -113,39 +113,38 @@ function Menu() {
   };
 
   return (
-    <div
-      className={
-        "background text-lg p-5 rounded-2xl w-56 h-fit hidden sm:block"
-      }
-    >
-      <div className="menu">
-        <div className="menu-content">
-          <div className="flex flex-col gap-2">
-            {Object.values(menuItems).map((menuItem: MenuItem) => (
-              <LinkButton menuItem={menuItem} />
-            ))}
-            <div>
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href="https://docs.tosidrop.io/"
-                className="flex flex-row items-center gap-2 text-inactive"
-              >
-                <FontAwesomeIcon className="w-4" icon={faBook} />
-                Docs
-                <FontAwesomeIcon
-                  className="w-4"
-                  icon={faArrowUpRightFromSquare}
-                />
-              </a>
+    <div className="hidden sm:flex flex-col gap-8">
+      <p className="text-3xl opacity-0">_</p>
+      <div className={"background text-lg p-5 rounded-2xl w-56 h-fit"}>
+        <div className="menu">
+          <div className="menu-content">
+            <div className="flex flex-col gap-2">
+              {Object.values(menuItems).map((menuItem: MenuItem) => (
+                <LinkButton menuItem={menuItem} />
+              ))}
+              <div>
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href="https://docs.tosidrop.io/"
+                  className="flex flex-row items-center gap-2 text-inactive"
+                >
+                  <FontAwesomeIcon className="w-4" icon={faBook} />
+                  Docs
+                  <FontAwesomeIcon
+                    className="w-4"
+                    icon={faArrowUpRightFromSquare}
+                  />
+                </a>
+              </div>
             </div>
-          </div>
-          <div className="mt-5 w-full text-center flex gap-2 items-center justify-center">
-            {Object.values(socialMediaItems).map(
-              (socialMediaItem: SocialMediaItem) => (
-                <SocialMediaButton socialMediaItem={socialMediaItem} />
-              )
-            )}
+            <div className="mt-5 w-full text-center flex gap-2 items-center justify-center">
+              {Object.values(socialMediaItems).map(
+                (socialMediaItem: SocialMediaItem) => (
+                  <SocialMediaButton socialMediaItem={socialMediaItem} />
+                )
+              )}
+            </div>
           </div>
         </div>
       </div>
