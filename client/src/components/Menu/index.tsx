@@ -24,12 +24,12 @@ export const menuItems: Record<string, MenuItem> = {
     activeRoute: [PageRoute.claim, PageRoute.home],
     icon: faWallet,
   },
-  history: {
-    text: "History",
-    to: PageRoute.history,
-    activeRoute: [PageRoute.history],
-    icon: faClockRotateLeft,
-  },
+  // history: {
+  //   text: "History",
+  //   to: PageRoute.history,
+  //   activeRoute: [PageRoute.history],
+  //   icon: faClockRotateLeft,
+  // },
   airdrop: {
     text: "Airdrop",
     to: PageRoute.airdrop,
