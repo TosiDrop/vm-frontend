@@ -7,7 +7,7 @@ interface Props {
 
 const Page = ({ children }: Props) => {
   return (
-    <div className="w-full max-w-7xl p-5 pt-14 flex flex-row gap-8">
+    <div className="w-full max-w-8xl p-5 pt-14 flex flex-row gap-8">
       <Menu></Menu>
       <MobileMenu></MobileMenu>
       <div className="w-full flex flex-col gap-8">{children}</div>

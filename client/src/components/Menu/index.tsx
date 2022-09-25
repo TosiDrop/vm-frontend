@@ -1,133 +1,150 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBook,
+  faArrowUpRightFromSquare,
   faWallet,
   faPaperPlane,
   faMessage,
-  faBook,
-  faArrowUpRightFromSquare,
+  faClockRotateLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTwitter,
   faDiscord,
   faTelegram,
   faMedium,
+  faGithub,
 } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
-import { RootState } from "src/store";
-import { useDispatch, useSelector } from "react-redux";
-import { setShowMenu } from "src/reducers/globalSlice";
+import {
+  PageRoute,
+  MenuItem,
+  SocialMediaItem,
+} from "src/entities/common.entities";
+
+export const socialMediaItems: Record<string, SocialMediaItem> = {
+  twitter: {
+    url: "https://twitter.com/TosiDrop",
+    colorClassname: "text-twitter",
+    icon: faTwitter,
+  },
+  discord: {
+    url: "https://discord.gg/C32Mm3j4fG",
+    colorClassname: "text-discord",
+    icon: faDiscord,
+  },
+  telegram: {
+    url: "https://t.me/+FdDUmLsW8jI0YmUx",
+    colorClassname: "text-telegram",
+    icon: faTelegram,
+  },
+  medium: {
+    url: "https://medium.com/@tosidrop",
+    colorClassname: "text",
+    icon: faMedium,
+  },
+  github: {
+    url: "https://github.com/TosiDrop/vm-frontend",
+    colorClassname: "text",
+    icon: faGithub,
+  },
+};
+
+export const menuItems: Record<string, MenuItem> = {
+  claim: {
+    text: "Claim",
+    to: PageRoute.home,
+    activeRoute: [PageRoute.claim, PageRoute.home],
+    icon: faWallet,
+  },
+  // history: {
+  //   text: "History",
+  //   to: PageRoute.history,
+  //   activeRoute: [PageRoute.history],
+  //   icon: faClockRotateLeft,
+  // },
+  airdrop: {
+    text: "Airdrop",
+    to: PageRoute.airdrop,
+    activeRoute: [PageRoute.airdrop],
+    icon: faPaperPlane,
+  },
+  feedback: {
+    text: "Feedback",
+    to: PageRoute.feedback,
+    activeRoute: [PageRoute.feedback],
+    icon: faMessage,
+  },
+};
 
 function Menu() {
   const location = useLocation().pathname;
-  const dispatch = useDispatch();
-  const showMenu = useSelector((state: RootState) => state.global.showMenu);
+
+  const LinkButton = ({ menuItem }: { menuItem: MenuItem }) => {
+    return (
+      <Link
+        to={menuItem.to}
+        className={`${
+          menuItem.activeRoute.includes(location as PageRoute)
+            ? "text"
+            : "text-inactive"
+        } flex flex-row items-center gap-2`}
+      >
+        <FontAwesomeIcon className="w-4" icon={menuItem.icon} />
+        {menuItem.text}
+      </Link>
+    );
+  };
+
+  const SocialMediaButton = ({
+    socialMediaItem,
+  }: {
+    socialMediaItem: SocialMediaItem;
+  }) => {
+    return (
+      <a
+        href={socialMediaItem.url}
+        target="_blank"
+        rel="noreferrer"
+        className={socialMediaItem.colorClassname}
+      >
+        <FontAwesomeIcon icon={socialMediaItem.icon} />
+      </a>
+    );
+  };
 
   return (
-    <div
-      className={
-        "background text-lg p-5 rounded-2xl w-52 h-fit hidden sm:block"
-      }
-    >
-      <div className="menu">
-        <div className="menu-content">
-          <ul className="menu-list">
-            <li>
-              <Link
-                to="/"
-                className={`${
-                  location === "/" || location === "/claim/"
-                    ? "text"
-                    : "text-inactive"
-                } flex flex-row items-center`}
-              >
-                <p className="icon">
-                  <FontAwesomeIcon className="mr-2.5" icon={faWallet} />
-                </p>
-                Claim
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/airdrop"
-                className={`${
-                  location === "/airdrop" ? "text" : "text-inactive"
-                } flex flex-row items-center mt-2.5`}
-              >
-                <p className="icon">
-                  <FontAwesomeIcon className="mr-2.5" icon={faPaperPlane} />
-                </p>
-                Airdrop
-              </Link>
-            </li>
-            {/* <li><Link to="/history"><p className="icon"><FontAwesomeIcon className="mr-2.5"  icon={faClockRotateLeft} /></p>History</Link></li> */}
-            {/* <li><Link to="/dashboard"><p className="icon"><FontAwesomeIcon className="mr-2.5"  icon={faChartColumn} /></p>Dashboard</Link></li> */}
-            <li>
-              <Link
-                to="/feedback"
-                className={`${
-                  location === "/feedback" ? "text" : "text-inactive"
-                } flex flex-row items-center mt-2.5`}
-              >
-                <p className="icon">
-                  <FontAwesomeIcon className="mr-2.5" icon={faMessage} />
-                </p>
-                Feedback
-              </Link>
-            </li>
-            <li>
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href="https://docs.tosidrop.io/"
-                className="flex flex-row items-center mt-2.5 text-inactive"
-              >
-                <p className="icon">
-                  <FontAwesomeIcon className="mr-2.5" icon={faBook} />
-                </p>
-                Docs&nbsp;
-                <FontAwesomeIcon
-                  className="mr-2.5"
-                  icon={faArrowUpRightFromSquare}
-                />
-              </a>
-            </li>
-          </ul>
-          <div className="mt-5 w-full text-center">
-            <a
-              href="https://twitter.com/TosiDrop"
-              target="_blank"
-              rel="noreferrer"
-              className="text-twitter"
-            >
-              <FontAwesomeIcon icon={faTwitter} />
-            </a>
-            <a
-              href="https://discord.gg/C32Mm3j4fG"
-              target="_blank"
-              rel="noreferrer"
-              className="ml-2.5 text-discord"
-            >
-              <FontAwesomeIcon icon={faDiscord} />
-            </a>
-            <a
-              href="https://t.me/+FdDUmLsW8jI0YmUx"
-              target="_blank"
-              rel="noreferrer"
-              className="ml-2.5 text-telegram"
-            >
-              <FontAwesomeIcon icon={faTelegram} />
-            </a>
-            <a
-              href="https://medium.com/@tosidrop"
-              target="_blank"
-              rel="noreferrer"
-              className="ml-2.5 text"
-            >
-              <FontAwesomeIcon icon={faMedium} />
-            </a>
-            {/* <a href='https://github.com/anetabtc' target='_blank' rel="noreferrer">
-                            <FontAwesomeIcon icon={faGithub} />
-                        </a> */}
+    <div className="hidden sm:flex flex-col gap-8">
+      <p className="text-3xl opacity-0">_</p>
+      <div className={"background text-lg p-5 rounded-2xl w-56 h-fit"}>
+        <div className="menu">
+          <div className="menu-content">
+            <div className="flex flex-col gap-2">
+              {Object.values(menuItems).map((menuItem: MenuItem) => (
+                <LinkButton menuItem={menuItem} />
+              ))}
+              <div>
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href="https://docs.tosidrop.io/"
+                  className="flex flex-row items-center gap-2 text-inactive"
+                >
+                  <FontAwesomeIcon className="w-4" icon={faBook} />
+                  Docs
+                  <FontAwesomeIcon
+                    className="w-4"
+                    icon={faArrowUpRightFromSquare}
+                  />
+                </a>
+              </div>
+            </div>
+            <div className="mt-5 w-full text-center flex gap-2 items-center justify-center">
+              {Object.values(socialMediaItems).map(
+                (socialMediaItem: SocialMediaItem) => (
+                  <SocialMediaButton socialMediaItem={socialMediaItem} />
+                )
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+
 export enum PaymentStatus {
   Awaiting,
   AwaitingConfirmations,
@@ -91,4 +93,26 @@ export enum Themes {
 export enum Blockchain {
   cardano = "cardano",
   ergo = "ergo",
+}
+
+export enum PageRoute {
+  home = "/",
+  claim = "/claim",
+  history = "/history",
+  dashboard = "/dashboard",
+  feedback = "/feedback",
+  airdrop = "/airdrop",
+}
+
+export interface MenuItem {
+  text: string;
+  to: PageRoute;
+  activeRoute: PageRoute[];
+  icon: IconDefinition;
+}
+
+export interface SocialMediaItem {
+  icon: IconDefinition;
+  url: string;
+  colorClassname: string; // for text color
 }

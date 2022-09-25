@@ -29,10 +29,10 @@ const AppPopUp = () => {
           ></FontAwesomeIcon>
         </div>
         <p className="mt-5">
-          The TosiDrop application has moved to a new home at <b>app.tosidrop.io</b>!
-          Please, update any bookmarks and authorize your wallet to the app and
-          check that the site is <b>app.tosidrop.io</b> in your browser. Bookmark it
-          to be safe.
+          The TosiDrop application has moved to a new home at{" "}
+          <b>app.tosidrop.io</b>! Please, update any bookmarks and authorize
+          your wallet to the app and check that the site is{" "}
+          <b>app.tosidrop.io</b> in your browser. Bookmark it to be safe.
         </p>
       </div>
     </div>

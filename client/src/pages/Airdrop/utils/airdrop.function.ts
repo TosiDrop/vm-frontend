@@ -4,7 +4,6 @@ import {
   AssetDetailFromAPI,
   PolicyIDAndAssetNameToAdaAddressMap,
   AIRDROP_API_REG,
-  AIRDROP_API_TX,
   AdaAddress,
   AirdropRequestBody,
   TransactionInfo,

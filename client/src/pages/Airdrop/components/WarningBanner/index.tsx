@@ -5,7 +5,7 @@ interface Props {
   isShown: boolean;
 }
 
-export default ({ isShown }: Props) => {
+const WarningBanner = ({ isShown }: Props) => {
   return isShown ? (
     <div className="bg-yellow-400 rounded-2xl p-5 text-black flex gap-2 items-center">
       <FontAwesomeIcon icon={faWarning} />
@@ -16,3 +16,5 @@ export default ({ isShown }: Props) => {
     </div>
   ) : null;
 };
+
+export default WarningBanner;

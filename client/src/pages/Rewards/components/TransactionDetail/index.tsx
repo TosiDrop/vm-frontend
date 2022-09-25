@@ -44,7 +44,7 @@ const TransactionDetail = ({
   }, []);
 
   const calcTxFee = () => {
-    let txCalc = (numberOfTokens / 5 * settings.txFee).toFixed(6);
+    let txCalc = ((numberOfTokens / 5) * settings.txFee).toFixed(6);
     if (Number(txCalc) >= Number(settings.txFee)) return Number(txCalc);
     return Number(settings.txFee);
   };
@@ -69,9 +69,7 @@ const TransactionDetail = ({
         <div className="text-right">Processing fee</div>
       </div>
       <div className="p-1 flex items-center flex-row-reverse border-b border-color">
-        <div className="w-28 text-right">
-          {lovelaceToAda(calcTxFee())} ADA
-        </div>
+        <div className="w-28 text-right">{lovelaceToAda(calcTxFee())} ADA</div>
         <div className="text-right">Transaction fee</div>
       </div>
       {unlock && !isWhitelisted ? (
@@ -98,8 +96,8 @@ const TransactionDetail = ({
         <div className="text-right">You'll get back (Approximately)</div>
       </div>
       <div className="mt-1 text-right text-yellow-400">
-        The transaction fee is just an approximation, but it won't differ so much
-        from the displayed value.
+        The transaction fee is just an approximation, but it won't differ so
+        much from the displayed value.
       </div>
     </div>
   );

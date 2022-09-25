@@ -4,9 +4,6 @@ import { useEffect, useRef } from "react";
 import { setShowMenu, toggleTheme } from "src/reducers/globalSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faWallet,
-  faPaperPlane,
-  faMessage,
   faBook,
   faArrowUpRightFromSquare,
   faSun,
@@ -19,7 +16,13 @@ import {
   faMedium,
 } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
-import { Themes } from "src/entities/common.entities";
+import {
+  MenuItem,
+  PageRoute,
+  SocialMediaItem,
+  Themes,
+} from "src/entities/common.entities";
+import { menuItems, socialMediaItems } from "../Menu";
 import "./index.scss";
 
 const MobileMenu = () => {
@@ -27,15 +30,6 @@ const MobileMenu = () => {
   const theme = useSelector((state: RootState) => state.global.theme);
   const location = useLocation().pathname;
   const dispatch = useDispatch();
-
-  const getClassForListItem = (itemLocation: string) => {
-    let compareLocation = location;
-    if (location === "/claim/") {
-      compareLocation = "/";
-    }
-
-    return `${compareLocation === itemLocation ? "text" : "text-inactive"}`;
-  };
 
   const ref = useRef(null);
 
@@ -51,6 +45,39 @@ const MobileMenu = () => {
     };
   }, [dispatch]);
 
+  const LinkButton = ({ menuItem }: { menuItem: MenuItem }) => (
+    <div onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
+      <Link
+        to={menuItem.to}
+        className={`${
+          menuItem.activeRoute.includes(location as PageRoute)
+            ? "text"
+            : "text-inactive"
+        }`}
+      >
+        <FontAwesomeIcon className="mr-2.5" icon={menuItem.icon} />
+        {menuItem.text}
+      </Link>
+    </div>
+  );
+
+  const SocialMediaButton = ({
+    socialMediaItem,
+  }: {
+    socialMediaItem: SocialMediaItem;
+  }) => {
+    return (
+      <a
+        href={socialMediaItem.url}
+        target="_blank"
+        rel="noreferrer"
+        className={`text-xl ${socialMediaItem.colorClassname}`}
+      >
+        <FontAwesomeIcon icon={socialMediaItem.icon} />
+      </a>
+    );
+  };
+
   return (
     <div className="absolute top-0 left-0 z-10 w-0 h-0">
       <div
@@ -64,26 +91,11 @@ const MobileMenu = () => {
         }`}
         ref={ref}
       >
-        <ul>
-          <li onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
-            <Link to="/" className={getClassForListItem("/")}>
-              <FontAwesomeIcon className="mr-2.5" icon={faWallet} />
-              Claim
-            </Link>
-          </li>
-          <li onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
-            <Link to="/airdrop" className={getClassForListItem("/airdrop")}>
-              <FontAwesomeIcon className="mr-2.5" icon={faPaperPlane} />
-              Airdrop
-            </Link>
-          </li>
-          <li onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
-            <Link to="/feedback" className={getClassForListItem("/feedback")}>
-              <FontAwesomeIcon className="mr-2.5" icon={faMessage} />
-              Feedback
-            </Link>
-          </li>
-          <li onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
+        <div>
+          {Object.values(menuItems).map((menuItem: MenuItem) => (
+            <LinkButton menuItem={menuItem}></LinkButton>
+          ))}
+          <div onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
             <a
               target="_blank"
               rel="noreferrer"
@@ -94,8 +106,8 @@ const MobileMenu = () => {
               Docs&nbsp;
               <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
             </a>
-          </li>
-          <li className="mb-2.5">
+          </div>
+          <div className="mb-2.5">
             <div className={`text flex items-center`}>
               <FontAwesomeIcon icon={faSun} />
               <label className="switch mx-2.5">
@@ -108,41 +120,14 @@ const MobileMenu = () => {
               </label>
               <FontAwesomeIcon icon={faMoon} />
             </div>
-          </li>
-        </ul>
-        <div className="mt-10 flex items-center justify-center gap-5">
-          <a
-            href="https://twitter.com/TosiDrop"
-            target="_blank"
-            rel="noreferrer"
-            className="text-xl text-twitter"
-          >
-            <FontAwesomeIcon icon={faTwitter} />
-          </a>
-          <a
-            href="https://discord.gg/C32Mm3j4fG"
-            target="_blank"
-            rel="noreferrer"
-            className="text-xl text-discord"
-          >
-            <FontAwesomeIcon icon={faDiscord} />
-          </a>
-          <a
-            href="https://t.me/+FdDUmLsW8jI0YmUx"
-            target="_blank"
-            rel="noreferrer"
-            className="text-xl text-telegram"
-          >
-            <FontAwesomeIcon icon={faTelegram} />
-          </a>
-          <a
-            href="https://medium.com/@tosidrop"
-            target="_blank"
-            rel="noreferrer"
-            className="text-xl text"
-          >
-            <FontAwesomeIcon icon={faMedium} />
-          </a>
+          </div>
+        </div>
+        <div className="mt-10 flex items-center justify-center gap-4">
+          {Object.values(socialMediaItems).map(
+            (socialMediaItem: SocialMediaItem) => (
+              <SocialMediaButton socialMediaItem={socialMediaItem} />
+            )
+          )}
         </div>
       </div>
     </div>
