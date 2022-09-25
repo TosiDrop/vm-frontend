@@ -110,3 +110,9 @@ export interface MenuItem {
   activeRoute: PageRoute[];
   icon: IconDefinition;
 }
+
+export interface SocialMediaItem {
+  icon: IconDefinition;
+  url: string;
+  colorClassname: string; // for text color
+}

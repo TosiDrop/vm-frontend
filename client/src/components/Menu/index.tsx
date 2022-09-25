@@ -15,7 +15,39 @@ import {
   faGithub,
 } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
-import { PageRoute, MenuItem } from "src/entities/common.entities";
+import {
+  PageRoute,
+  MenuItem,
+  SocialMediaItem,
+} from "src/entities/common.entities";
+
+export const socialMediaItems: Record<string, SocialMediaItem> = {
+  twitter: {
+    url: "https://twitter.com/TosiDrop",
+    colorClassname: "text-twitter",
+    icon: faTwitter,
+  },
+  discord: {
+    url: "https://discord.gg/C32Mm3j4fG",
+    colorClassname: "text-discord",
+    icon: faDiscord,
+  },
+  telegram: {
+    url: "https://t.me/+FdDUmLsW8jI0YmUx",
+    colorClassname: "text-telegram",
+    icon: faTelegram,
+  },
+  medium: {
+    url: "https://medium.com/@tosidrop",
+    colorClassname: "text",
+    icon: faMedium,
+  },
+  github: {
+    url: "https://github.com/TosiDrop/vm-frontend",
+    colorClassname: "text",
+    icon: faGithub,
+  },
+};
 
 export const menuItems: Record<string, MenuItem> = {
   claim: {
@@ -63,6 +95,23 @@ function Menu() {
     );
   };
 
+  const SocialMediaButton = ({
+    socialMediaItem,
+  }: {
+    socialMediaItem: SocialMediaItem;
+  }) => {
+    return (
+      <a
+        href={socialMediaItem.url}
+        target="_blank"
+        rel="noreferrer"
+        className={socialMediaItem.colorClassname}
+      >
+        <FontAwesomeIcon icon={socialMediaItem.icon} />
+      </a>
+    );
+  };
+
   return (
     <div
       className={
@@ -92,46 +141,11 @@ function Menu() {
             </div>
           </div>
           <div className="mt-5 w-full text-center flex gap-2 items-center justify-center">
-            <a
-              href="https://twitter.com/TosiDrop"
-              target="_blank"
-              rel="noreferrer"
-              className="text-twitter"
-            >
-              <FontAwesomeIcon icon={faTwitter} />
-            </a>
-            <a
-              href="https://discord.gg/C32Mm3j4fG"
-              target="_blank"
-              rel="noreferrer"
-              className="text-discord"
-            >
-              <FontAwesomeIcon icon={faDiscord} />
-            </a>
-            <a
-              href="https://t.me/+FdDUmLsW8jI0YmUx"
-              target="_blank"
-              rel="noreferrer"
-              className="text-telegram"
-            >
-              <FontAwesomeIcon icon={faTelegram} />
-            </a>
-            <a
-              href="https://medium.com/@tosidrop"
-              target="_blank"
-              rel="noreferrer"
-              className="text"
-            >
-              <FontAwesomeIcon icon={faMedium} />
-            </a>
-            <a
-              href="https://github.com/TosiDrop/vm-frontend"
-              target="_blank"
-              rel="noreferrer"
-              className="text"
-            >
-              <FontAwesomeIcon icon={faGithub} />
-            </a>
+            {Object.values(socialMediaItems).map(
+              (socialMediaItem: SocialMediaItem) => (
+                <SocialMediaButton socialMediaItem={socialMediaItem} />
+              )
+            )}
           </div>
         </div>
       </div>

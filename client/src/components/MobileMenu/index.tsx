@@ -16,8 +16,13 @@ import {
   faMedium,
 } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
-import { MenuItem, PageRoute, Themes } from "src/entities/common.entities";
-import { menuItems } from "../Menu";
+import {
+  MenuItem,
+  PageRoute,
+  SocialMediaItem,
+  Themes,
+} from "src/entities/common.entities";
+import { menuItems, socialMediaItems } from "../Menu";
 import "./index.scss";
 
 const MobileMenu = () => {
@@ -40,7 +45,7 @@ const MobileMenu = () => {
     };
   }, [dispatch]);
 
-  const LinkItem = ({ menuItem }: { menuItem: MenuItem }) => (
+  const LinkButton = ({ menuItem }: { menuItem: MenuItem }) => (
     <div onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
       <Link
         to={menuItem.to}
@@ -55,6 +60,23 @@ const MobileMenu = () => {
       </Link>
     </div>
   );
+
+  const SocialMediaButton = ({
+    socialMediaItem,
+  }: {
+    socialMediaItem: SocialMediaItem;
+  }) => {
+    return (
+      <a
+        href={socialMediaItem.url}
+        target="_blank"
+        rel="noreferrer"
+        className={`text-xl ${socialMediaItem.colorClassname}`}
+      >
+        <FontAwesomeIcon icon={socialMediaItem.icon} />
+      </a>
+    );
+  };
 
   return (
     <div className="absolute top-0 left-0 z-10 w-0 h-0">
@@ -71,7 +93,7 @@ const MobileMenu = () => {
       >
         <div>
           {Object.values(menuItems).map((menuItem: MenuItem) => (
-            <LinkItem menuItem={menuItem}></LinkItem>
+            <LinkButton menuItem={menuItem}></LinkButton>
           ))}
           <div onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
             <a
@@ -100,39 +122,12 @@ const MobileMenu = () => {
             </div>
           </div>
         </div>
-        <div className="mt-10 flex items-center justify-center gap-5">
-          <a
-            href="https://twitter.com/TosiDrop"
-            target="_blank"
-            rel="noreferrer"
-            className="text-xl text-twitter"
-          >
-            <FontAwesomeIcon icon={faTwitter} />
-          </a>
-          <a
-            href="https://discord.gg/C32Mm3j4fG"
-            target="_blank"
-            rel="noreferrer"
-            className="text-xl text-discord"
-          >
-            <FontAwesomeIcon icon={faDiscord} />
-          </a>
-          <a
-            href="https://t.me/+FdDUmLsW8jI0YmUx"
-            target="_blank"
-            rel="noreferrer"
-            className="text-xl text-telegram"
-          >
-            <FontAwesomeIcon icon={faTelegram} />
-          </a>
-          <a
-            href="https://medium.com/@tosidrop"
-            target="_blank"
-            rel="noreferrer"
-            className="text-xl text"
-          >
-            <FontAwesomeIcon icon={faMedium} />
-          </a>
+        <div className="mt-10 flex items-center justify-center gap-4">
+          {Object.values(socialMediaItems).map(
+            (socialMediaItem: SocialMediaItem) => (
+              <SocialMediaButton socialMediaItem={socialMediaItem} />
+            )
+          )}
         </div>
       </div>
     </div>
