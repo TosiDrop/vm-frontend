@@ -99,7 +99,7 @@ export async function getAccountsInfo(stakeAddress: string) {
 
 export async function getAccountsAddresses(stakeAddress: string) {
   return postFromKoios<AccountAddress[]>("account_addresses", {
-    stake_addresses: [stakeAddress],
+    _stake_addresses: [stakeAddress],
   });
 }
 
