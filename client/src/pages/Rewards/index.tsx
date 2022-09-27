@@ -207,12 +207,9 @@ function Rewards() {
               <strong>{poolInfo.total_balance} ADA</strong>
               &nbsp;with&nbsp;
               <strong className="no-break">
-                [{poolInfo.delegated_pool_name}
-                ]&nbsp;
-                {poolInfo.delegated_pool_description}
-              </strong>
-              <strong className="no-break-mobile">
-                [{poolInfo.delegated_pool_name}]
+                {poolInfo.delegated_pool_name}
+                &nbsp;
+                [{poolInfo.delegated_pool_ticker}]
               </strong>
             </div>
           </div>
