@@ -10,13 +10,13 @@ import { PageRoute } from "src/entities/common.entities";
 const Router = () => {
   return (
     <Routes>
-      <Route path={PageRoute.home} element={<Rewards />} />
-      <Route path={PageRoute.claim} element={<DepositInfoPage />} />
-      <Route path={PageRoute.history} element={<RewardsHistory />} />
-      <Route path={PageRoute.dashboard} element={<Dashboard />} />
-      <Route path={PageRoute.feedback} element={<Feedback />} />
-      <Route path={PageRoute.airdrop} element={<Airdrop />} />
-      <Route path="*" element={<Navigate to={PageRoute.home} />} />
+      <Route path={PageRoute.claimCardano} element={<Rewards />} />
+      <Route path={PageRoute.depositCardano} element={<DepositInfoPage />} />
+      <Route path={PageRoute.historyCardano} element={<RewardsHistory />} />
+      <Route path={PageRoute.dashboardCardano} element={<Dashboard />} />
+      <Route path={PageRoute.feedbackCardano} element={<Feedback />} />
+      <Route path={PageRoute.airdropCardano} element={<Airdrop />} />
+      <Route path="*" element={<Navigate to={PageRoute.claimCardano} />} />
     </Routes>
   );
 };

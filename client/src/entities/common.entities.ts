@@ -96,12 +96,18 @@ export enum Blockchain {
 }
 
 export enum PageRoute {
-  home = "/",
-  claim = "/claim",
-  history = "/history",
-  dashboard = "/dashboard",
-  feedback = "/feedback",
-  airdrop = "/airdrop",
+  claimCardano = "/cardano/claim",
+  depositCardano = "/cardano/deposit",
+  historyCardano = "/cardano/history",
+  dashboardCardano = "/cardano/dashboard",
+  feedbackCardano = "/cardano/feedback",
+  airdropCardano = "/cardano/airdrop",
+  claimErgo = "/ergo/claim",
+  depositErgo = "/cardano/deposit",
+  historyErgo = "/ergo/history",
+  dashboardErgo = "/ergo/dashboard",
+  feedbackErgo = "/ergo/feedback",
+  airdropErgo = "/ergo/airdrop",
 }
 
 export interface MenuItem {

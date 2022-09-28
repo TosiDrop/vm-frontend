@@ -52,8 +52,8 @@ export const socialMediaItems: Record<string, SocialMediaItem> = {
 export const menuItems: Record<string, MenuItem> = {
   claim: {
     text: "Claim",
-    to: PageRoute.home,
-    activeRoute: [PageRoute.claim, PageRoute.home],
+    to: PageRoute.claimCardano,
+    activeRoute: [PageRoute.claimCardano, PageRoute.depositCardano],
     icon: faWallet,
   },
   // history: {
@@ -64,14 +64,14 @@ export const menuItems: Record<string, MenuItem> = {
   // },
   airdrop: {
     text: "Airdrop",
-    to: PageRoute.airdrop,
-    activeRoute: [PageRoute.airdrop],
+    to: PageRoute.airdropCardano,
+    activeRoute: [PageRoute.airdropCardano],
     icon: faPaperPlane,
   },
   feedback: {
     text: "Feedback",
-    to: PageRoute.feedback,
-    activeRoute: [PageRoute.feedback],
+    to: PageRoute.feedbackCardano,
+    activeRoute: [PageRoute.feedbackCardano],
     icon: faMessage,
   },
 };
