@@ -5,7 +5,7 @@ import {
   faWallet,
   faPaperPlane,
   faMessage,
-  faClockRotateLeft,
+  // faClockRotateLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTwitter,
@@ -120,7 +120,7 @@ function Menu() {
           <div className="menu-content">
             <div className="flex flex-col gap-2">
               {Object.values(menuItems).map((menuItem: MenuItem) => (
-                <LinkButton menuItem={menuItem} />
+                <LinkButton key={menuItem.text} menuItem={menuItem} />
               ))}
               <div>
                 <a
@@ -141,7 +141,10 @@ function Menu() {
             <div className="mt-5 w-full text-center flex gap-2 items-center justify-center">
               {Object.values(socialMediaItems).map(
                 (socialMediaItem: SocialMediaItem) => (
-                  <SocialMediaButton socialMediaItem={socialMediaItem} />
+                  <SocialMediaButton
+                    key={socialMediaItem.url}
+                    socialMediaItem={socialMediaItem}
+                  />
                 )
               )}
             </div>

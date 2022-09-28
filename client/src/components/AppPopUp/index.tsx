@@ -1,6 +1,6 @@
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useComponentVisible from "src/hooks/useComponentVisible";
 
 const AppPopUp = () => {
@@ -10,7 +10,7 @@ const AppPopUp = () => {
     setTimeout(() => {
       setVisible(true);
     }, 1500);
-  }, []);
+  }, [setVisible]);
 
   return (
     <div

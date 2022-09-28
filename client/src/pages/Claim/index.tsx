@@ -6,7 +6,11 @@ import { useNavigate } from "react-router-dom";
 
 import { ClaimableToken } from "src/entities/vm.entities";
 import { getCustomRewards, getRewards } from "src/services/claim";
-import { ModalTypes, InfoModalTypes, PageRoute } from "src/entities/common.entities";
+import {
+  ModalTypes,
+  InfoModalTypes,
+  PageRoute,
+} from "src/entities/common.entities";
 import { RootState } from "src/store";
 import { showModal } from "src/reducers/globalSlice";
 import Spinner from "src/components/Spinner";
@@ -208,8 +212,7 @@ function Claim() {
               &nbsp;with&nbsp;
               <strong className="no-break">
                 {poolInfo.delegated_pool_name}
-                &nbsp;
-                [{poolInfo.delegated_pool_ticker}]
+                &nbsp; [{poolInfo.delegated_pool_ticker}]
               </strong>
             </div>
           </div>
