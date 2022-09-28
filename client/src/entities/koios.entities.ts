@@ -1,4 +1,5 @@
 export interface AccountInfo {
+  stake_address?: string;
   status: string;
   delegated_pool: string;
   total_balance: string;
