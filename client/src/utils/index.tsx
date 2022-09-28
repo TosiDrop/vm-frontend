@@ -13,3 +13,7 @@ export const abbreviateAddress = (
 export const lovelaceToAda = (lovelace: number) => {
   return lovelace / Math.pow(10, 6);
 };
+
+export const isTxHash = (txHash: string) => {
+  return txHash.length === 64 && txHash.indexOf(" ") === -1;
+};

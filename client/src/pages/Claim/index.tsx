@@ -6,17 +6,17 @@ import { useNavigate } from "react-router-dom";
 
 import { ClaimableToken } from "src/entities/vm.entities";
 import { getCustomRewards, getRewards } from "src/services/claim";
-import { ModalTypes, InfoModalTypes } from "src/entities/common.entities";
+import { ModalTypes, InfoModalTypes, PageRoute } from "src/entities/common.entities";
 import { RootState } from "src/store";
 import { showModal } from "src/reducers/globalSlice";
 import Spinner from "src/components/Spinner";
 import Page from "src/layouts/page";
 
-import ClaimableTokenBox from "./components/ClaimableTokenBox";
+import ClaimableTokenBox from "src/components/Claim/ClaimableTokenBox";
 import { getStakeKey } from "src/services/common";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
-function Rewards() {
+function Claim() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const connectedWallet = useSelector(
@@ -175,7 +175,7 @@ function Rewards() {
       );
       if (res == null) throw new Error();
 
-      let depositInfoUrl = `/claim/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}&isWhitelisted=${res.is_whitelisted}`;
+      let depositInfoUrl = `${PageRoute.depositCardano}/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}&isWhitelisted=${res.is_whitelisted}`;
       navigate(depositInfoUrl, { replace: true });
     } catch (e) {
       handleError(e);
@@ -358,4 +358,4 @@ function Rewards() {
   );
 }
 
-export default Rewards;
+export default Claim;

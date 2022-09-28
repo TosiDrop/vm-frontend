@@ -1,18 +1,18 @@
-import useFile from "./hooks/useFile";
-import { TokenAddress, shortenAddress } from "./utils";
-import useToken from "./hooks/useToken";
-import Select from "./components/Select";
-import TransactionBar from "./components/TransactionBar";
+import useFile from "src/components/Airdrop/hooks/useFile";
+import { TokenAddress, shortenAddress } from "src/components/Airdrop/utils";
+import useToken from "src/components/Airdrop/hooks/useToken";
+import Select from "../../components/Airdrop/components/Select";
+import TransactionBar from "../../components/Airdrop/components/TransactionBar";
 import { useEffect, useState } from "react";
 import ComingSoon from "../ComingSoon";
 import Spinner from "../../components/Spinner";
-import Breakdown from "./components/Breakdown";
+import Breakdown from "../../components/Airdrop/components/Breakdown";
 import { RootState } from "src/store";
 import { useSelector } from "react-redux";
 import { WalletKeys } from "src/services/connectors/wallet.connector";
 import Loading from "../Loading";
 import Page from "src/layouts/page";
-import WarningBanner from "./components/WarningBanner";
+import WarningBanner from "../../components/Airdrop/components/WarningBanner";
 import { getFeatures } from "src/services/common";
 
 const AirdropPage = () => {

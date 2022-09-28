@@ -122,3 +122,10 @@ export interface SocialMediaItem {
   url: string;
   colorClassname: string; // for text color
 }
+
+export enum TransactionStatusDetail {
+  waiting = 0,
+  processing = 1,
+  failure = 2,
+  success = 3,
+}

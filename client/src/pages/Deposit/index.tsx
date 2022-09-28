@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { getTxStatus } from "src/services/claim";
 import { GetCustomRewards } from "src/entities/vm.entities";
 import { useEffect, useState } from "react";
-import DepositInfo from "../components/DepositInfo";
+import DepositInfo from "src/components/Claim/DepositInfo";
 import Loading from "src/pages/Loading";
 import Page from "src/layouts/page";
 
