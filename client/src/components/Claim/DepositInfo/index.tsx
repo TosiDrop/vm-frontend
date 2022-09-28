@@ -6,8 +6,8 @@ import { GetCustomRewards } from "src/entities/vm.entities";
 
 import SendAdaInfo from "../SendAdaInfo";
 import TransactionStatus from "../TransactionStatus";
-import { TransactionStatusDetail } from "../../DepositInfoPage";
 import TransactionDetail from "../TransactionDetail";
+import { TransactionStatusDetail } from "src/entities/common.entities";
 
 interface Params {
   txDetail: GetCustomRewards | undefined;

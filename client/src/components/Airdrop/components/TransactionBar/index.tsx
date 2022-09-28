@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { sleep, transact } from "../../utils";
+import { sleep, transact } from "src/components/Airdrop/utils";
 import { getTxStatus } from "src/services/airdrop";
-import Spinner from "../../../../components/Spinner";
+import Spinner from "../../../Spinner";
 import { RootState } from "src/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "src/store";
 import useComponentVisible from "src/hooks/useComponentVisible";
-import { Token, getRealAmount } from "../../utils";
-import Spinner from "../../../../components/Spinner";
+import { Token, getRealAmount } from "src/components/Airdrop/utils";
+import Spinner from "../../../Spinner";
 
 interface Props {
   tokens: Token[];

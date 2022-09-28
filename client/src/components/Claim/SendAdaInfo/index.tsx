@@ -3,7 +3,7 @@ import QRCode from "react-qr-code";
 import { useSelector } from "react-redux";
 
 import Spinner from "src/components/Spinner";
-import { isTxHash } from "src/pages/Rewards/utils/common.function";
+import { isTxHash } from "src/utils";
 import { RootState } from "src/store";
 import Copyable from "src/components/Copyable";
 import { lovelaceToAda } from "src/utils";

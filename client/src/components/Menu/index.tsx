@@ -5,7 +5,7 @@ import {
   faWallet,
   faPaperPlane,
   faMessage,
-  faClockRotateLeft,
+  // faClockRotateLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTwitter,
@@ -52,8 +52,8 @@ export const socialMediaItems: Record<string, SocialMediaItem> = {
 export const menuItems: Record<string, MenuItem> = {
   claim: {
     text: "Claim",
-    to: PageRoute.home,
-    activeRoute: [PageRoute.claim, PageRoute.home],
+    to: PageRoute.claimCardano,
+    activeRoute: [PageRoute.claimCardano, PageRoute.depositCardano],
     icon: faWallet,
   },
   // history: {
@@ -64,14 +64,14 @@ export const menuItems: Record<string, MenuItem> = {
   // },
   airdrop: {
     text: "Airdrop",
-    to: PageRoute.airdrop,
-    activeRoute: [PageRoute.airdrop],
+    to: PageRoute.airdropCardano,
+    activeRoute: [PageRoute.airdropCardano],
     icon: faPaperPlane,
   },
   feedback: {
     text: "Feedback",
-    to: PageRoute.feedback,
-    activeRoute: [PageRoute.feedback],
+    to: PageRoute.feedbackCardano,
+    activeRoute: [PageRoute.feedbackCardano],
     icon: faMessage,
   },
 };
@@ -120,7 +120,7 @@ function Menu() {
           <div className="menu-content">
             <div className="flex flex-col gap-2">
               {Object.values(menuItems).map((menuItem: MenuItem) => (
-                <LinkButton menuItem={menuItem} />
+                <LinkButton key={menuItem.text} menuItem={menuItem} />
               ))}
               <div>
                 <a
@@ -141,7 +141,10 @@ function Menu() {
             <div className="mt-5 w-full text-center flex gap-2 items-center justify-center">
               {Object.values(socialMediaItems).map(
                 (socialMediaItem: SocialMediaItem) => (
-                  <SocialMediaButton socialMediaItem={socialMediaItem} />
+                  <SocialMediaButton
+                    key={socialMediaItem.url}
+                    socialMediaItem={socialMediaItem}
+                  />
                 )
               )}
             </div>

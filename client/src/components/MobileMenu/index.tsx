@@ -9,12 +9,6 @@ import {
   faSun,
   faMoon,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faTwitter,
-  faDiscord,
-  faTelegram,
-  faMedium,
-} from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import {
   MenuItem,
@@ -48,6 +42,7 @@ const MobileMenu = () => {
   const LinkButton = ({ menuItem }: { menuItem: MenuItem }) => (
     <div onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
       <Link
+        key={menuItem.text}
         to={menuItem.to}
         className={`${
           menuItem.activeRoute.includes(location as PageRoute)
@@ -93,7 +88,7 @@ const MobileMenu = () => {
       >
         <div>
           {Object.values(menuItems).map((menuItem: MenuItem) => (
-            <LinkButton menuItem={menuItem}></LinkButton>
+            <LinkButton menuItem={menuItem} key={menuItem.text}></LinkButton>
           ))}
           <div onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
             <a
@@ -125,7 +120,10 @@ const MobileMenu = () => {
         <div className="mt-10 flex items-center justify-center gap-4">
           {Object.values(socialMediaItems).map(
             (socialMediaItem: SocialMediaItem) => (
-              <SocialMediaButton socialMediaItem={socialMediaItem} />
+              <SocialMediaButton
+                key={socialMediaItem.url}
+                socialMediaItem={socialMediaItem}
+              />
             )
           )}
         </div>

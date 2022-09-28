@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AIRDROP_API_TX, AIRDROP_API_REG } from "src/pages/Airdrop/utils";
+import { AIRDROP_API_TX, AIRDROP_API_REG } from "src/components/Airdrop/utils";
 
 export const submitTxRequest = async (requestBody: any) => {
   const txData = await axios.post(
