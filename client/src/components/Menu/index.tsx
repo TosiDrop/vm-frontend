@@ -43,7 +43,7 @@ export const socialMediaItems: Record<string, SocialMediaItem> = {
     icon: faMedium,
   },
   github: {
-    url: "https://github.com/TosiDrop/vm-frontend",
+    url: "https://github.com/TosiDrop",
     colorClassname: "text",
     icon: faGithub,
   },
