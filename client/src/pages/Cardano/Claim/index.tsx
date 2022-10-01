@@ -19,6 +19,7 @@ import Page from "src/layouts/page";
 import ClaimableTokenBox from "src/components/Claim/ClaimableTokenBox";
 import { getStakeKey } from "src/services/common";
 import useErrorHandler from "src/hooks/useErrorHandler";
+import Cardano from "src/layouts/cardano";
 
 function Claim() {
   const dispatch = useDispatch();
@@ -179,7 +180,7 @@ function Claim() {
       );
       if (res == null) throw new Error();
 
-      let depositInfoUrl = `${PageRoute.depositCardano}/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}&isWhitelisted=${res.is_whitelisted}`;
+      let depositInfoUrl = `${PageRoute.depositCardano}?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}&isWhitelisted=${res.is_whitelisted}`;
       navigate(depositInfoUrl, { replace: true });
     } catch (e) {
       handleError(e);
@@ -349,15 +350,17 @@ function Claim() {
   }
 
   return (
-    <Page>
-      <>
-        <p className="text-3xl">Claim your rewards</p>
-        <div className="flex flex-col gap-4">
-          {renderCheckRewardsStep()}
-          {renderStakingInfoStep()}
-        </div>
-      </>
-    </Page>
+    <Cardano>
+      <Page>
+        <>
+          <p className="text-3xl">Claim your rewards</p>
+          <div className="flex flex-col gap-4">
+            {renderCheckRewardsStep()}
+            {renderStakingInfoStep()}
+          </div>
+        </>
+      </Page>
+    </Cardano>
   );
 }
 

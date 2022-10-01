@@ -84,8 +84,8 @@ export const menuItems: Record<string, MenuItem> = {
   },*/
   feedback: {
     text: "Feedback",
-    to: PageRoute.feedbackCardano,
-    activeRoute: [PageRoute.feedbackCardano],
+    to: PageRoute.feedback,
+    activeRoute: [PageRoute.feedback],
     icon: faMessage,
   },
 };

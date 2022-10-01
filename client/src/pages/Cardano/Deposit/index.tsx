@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import DepositInfo from "src/components/Claim/DepositInfo";
 import Loading from "src/pages/Loading";
 import Page from "src/layouts/page";
+import Cardano from "src/layouts/cardano";
 
 interface TransactionStatus {
   expected_deposit: number;
@@ -114,24 +115,30 @@ const DepositInfoPage = () => {
     };
   }, [requestId, stakeAddress, withdrawAddress, isWhitelisted]);
 
-  return loading ? (
-    <Loading />
-  ) : selectedTokens && stakeAddress && withdrawAddress && requestId ? (
-    <Page>
-      <>
-        <p className="text-3xl">Claim your rewards</p>
-        <DepositInfo
-          txDetail={txDetail}
-          checkedCount={checkedCount}
-          transactionId={transactionId}
-          transactionStatus={transactionStatus}
-          setTransactionId={setTransactionId}
-          setTransactionStatus={setTransactionStatus}
-          unlock={unlock}
-        ></DepositInfo>
-      </>
-    </Page>
-  ) : null;
+  return (
+    <Cardano>
+      {loading ? (
+        <Loading />
+      ) : selectedTokens && stakeAddress && withdrawAddress && requestId ? (
+        <Page>
+          <>
+            <p className="text-3xl">Claim your rewards</p>
+            <DepositInfo
+              txDetail={txDetail}
+              checkedCount={checkedCount}
+              transactionId={transactionId}
+              transactionStatus={transactionStatus}
+              setTransactionId={setTransactionId}
+              setTransactionStatus={setTransactionStatus}
+              unlock={unlock}
+            ></DepositInfo>
+          </>
+        </Page>
+      ) : (
+        <></>
+      )}
+    </Cardano>
+  );
 };
 
 export default DepositInfoPage;

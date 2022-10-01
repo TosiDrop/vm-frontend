@@ -1,29 +1,21 @@
-import { Suspense, lazy } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { PageRoute } from "src/entities/common.entities";
-
-const Airdrop = lazy(() => import("../pages/Airdrop"));
-const Claim = lazy(() => import("..//pages/Claim"));
-const ClaimHistory = lazy(() => import("../pages/ClaimHistory"));
-const DepositInfoPage = lazy(() => import("src/pages/Deposit"));
-const Dashboard = lazy(() => import("../pages/Dashboard"));
-const Projects = lazy(() => import("../pages/Projects"));
-const Feedback = lazy(() => import("../pages/Feedback"));
+import Airdrop from "src/pages/Cardano/Airdrop";
+import Claim from "src/pages/Cardano/Claim";
+import DepositInfoPage from "src/pages/Cardano/Deposit";
+import Feedback from "src/pages/Feedback";
+import Projects from "src/pages/Projects";
 
 const Router = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Routes>
-        <Route path={PageRoute.claimCardano} element={<Claim />} />
-        <Route path={PageRoute.depositCardano} element={<DepositInfoPage />} />
-        <Route path={PageRoute.historyCardano} element={<ClaimHistory />} />
-        <Route path={PageRoute.projectsCardano} element={<Projects />} />
-        <Route path={PageRoute.dashboardCardano} element={<Dashboard />} />
-        <Route path={PageRoute.feedbackCardano} element={<Feedback />} />
-        <Route path={PageRoute.airdropCardano} element={<Airdrop />} />
-        <Route path="*" element={<Navigate to={PageRoute.claimCardano} />} />
-      </Routes>
-    </Suspense>
+    <Routes>
+      <Route path={PageRoute.claimCardano} element={<Claim />} />
+      <Route path={PageRoute.depositCardano} element={<DepositInfoPage />} />
+      <Route path={PageRoute.projectsCardano} element={<Projects />} />
+      <Route path={PageRoute.airdropCardano} element={<Airdrop />} />
+      <Route path={PageRoute.feedback} element={<Feedback />} />
+      <Route path="*" element={<Navigate to={PageRoute.claimCardano} />} />
+    </Routes>
   );
 };
 
