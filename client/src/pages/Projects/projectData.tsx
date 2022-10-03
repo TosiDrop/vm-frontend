@@ -30,8 +30,8 @@ export class ProjectURLs {
     public docs?: string,
     public github?: string,
     public cardanoScan?: string,
-    public poolpm?: string,
-  ) { }
+    public poolpm?: string
+  ) {}
 
   render(): JSX.Element[] {
     var elements: JSX.Element[] = [];
@@ -78,8 +78,8 @@ export class ProjectLogos {
     public logoDefault: string,
     public logoDark?: string,
     public logoCompact?: string,
-    public logoCompactDark?: string,
-  ) { }
+    public logoCompactDark?: string
+  ) {}
 
   render(theme: Themes): JSX.Element {
     let logo = this.logoDefault;
@@ -101,18 +101,18 @@ export class ProjectDescs {
   constructor(
     public descShort: string,
     public descLong?: string,
-    public claimDesc?: string,
-  ) { }
+    public claimDesc?: string
+  ) {}
 }
 
 export class ProjectTokenInfo {
   constructor(
     public token: string,
     public totalSupply: number,
-    public policyID: string,
-    //public marketCap: number; //Need to pull this info dynamically, will likely be a method instead of an member
-    //public fdMarketCap: number; //Need to pull this info dynamically, will likely be a method instead of an member
-  ) { }
+    public policyID: string
+  ) //public marketCap: number; //Need to pull this info dynamically, will likely be a method instead of an member
+  //public fdMarketCap: number; //Need to pull this info dynamically, will likely be a method instead of an member
+  {}
 }
 
 export class ProjectData {
@@ -120,51 +120,49 @@ export class ProjectData {
     public logos: ProjectLogos,
     public descs: ProjectDescs,
     public token: ProjectTokenInfo,
-    public urls: ProjectURLs,
-  ) { }
+    public urls: ProjectURLs
+  ) {}
 
   render(theme: Themes): JSX.Element {
     return (
       <div className="rounded-2xl background px-2.5 py-2.5 mt-5 mb-5 items-center text-base text-left flex flex-wrap md:flex-row">
-      <div className="basis-7/12 flex flex-row grow items-center">
-        <div className="m-2.5 p-2.5 basis-3/12">
-          {this.logos.render(theme)}
-        </div>
-        <div className="m-2.5 p-2.5 basis-9/12 grow md:border-r">
-          {this.descs.descShort}
-        </div>
-      </div>
-
-      <div className="basis-5/12 flex flex-row grow items-center">
-        <div className="m-2.5 p-2.5 basis-1/4 ">
-          <div>Token:</div>
-          <div className="font-bold">{this.token.token}</div>
-        </div>
-        <div className="m-2.5 p-2.5 basis-1/4 ">
-          <div>Total Supply:</div>
-          <div className="font-bold text-sm">
-            {this.token.totalSupply.toLocaleString("en-US")}
+        <div className="basis-7/12 flex flex-row grow items-center">
+          <div className="m-2.5 p-2.5 basis-3/12">
+            {this.logos.render(theme)}
+          </div>
+          <div className="m-2.5 p-2.5 basis-9/12 grow md:border-r">
+            {this.descs.descShort}
           </div>
         </div>
-        <div className="m-2.5 p-2.5 basis-2/4 text-2xl">
-          {this.urls.render()}
+
+        <div className="basis-5/12 flex flex-row grow items-center">
+          <div className="m-2.5 p-2.5 basis-1/4 ">
+            <div>Token:</div>
+            <div className="font-bold">{this.token.token}</div>
+          </div>
+          <div className="m-2.5 p-2.5 basis-1/4 ">
+            <div>Total Supply:</div>
+            <div className="font-bold text-sm">
+              {this.token.totalSupply.toLocaleString("en-US")}
+            </div>
+          </div>
+          <div className="m-2.5 p-2.5 basis-2/4 text-2xl">
+            {this.urls.render()}
+          </div>
         </div>
       </div>
-    </div>
-    )
+    );
   }
-
 }
 
 export const sampleData: ProjectData[] = [
-
-  new ProjectData(      
-    new ProjectLogos(LogoAneta,LogoAnetaDark,LogoAnetaCompact,undefined),
+  new ProjectData(
+    new ProjectLogos(LogoAneta, LogoAnetaDark, LogoAnetaCompact, undefined),
     new ProjectDescs(
-        "AnetaBTC is a fully on-chain, decentralized protocol that allows Bitcoin to be directly wrapped on the Ergo and Cardano blockchains.",
-        "AnetaBTC is a fully on-chain, decentralized protocol that allows Bitcoin to be directly wrapped on the Ergo and Cardano blockchains. Rooted in the fundamentals of decentralization, anetaBTC is backed by a strong global community, and is developing infrastrucrture throughout both Cardano and Ergo to advance the adoption and functionality of both platforms. anetaBTC is on target to release their wrapping protocol on the Ergo tesnet in Q4 2022. cNETA, the Cardano native token of anetaBTC, represents governance and revenue rights over the anetBTC protocol, including ownership of anetaBTC’s community owned NETA Liquidity Fund, which holds 8+ assets and over $1 million in total value.",
-        "Must be staking to one of the follwing pools: NETA1, NETA2, ..."
-    ),      
+      "AnetaBTC is a fully on-chain, decentralized protocol that allows Bitcoin to be directly wrapped on the Ergo and Cardano blockchains.",
+      "AnetaBTC is a fully on-chain, decentralized protocol that allows Bitcoin to be directly wrapped on the Ergo and Cardano blockchains. Rooted in the fundamentals of decentralization, anetaBTC is backed by a strong global community, and is developing infrastrucrture throughout both Cardano and Ergo to advance the adoption and functionality of both platforms. anetaBTC is on target to release their wrapping protocol on the Ergo tesnet in Q4 2022. cNETA, the Cardano native token of anetaBTC, represents governance and revenue rights over the anetBTC protocol, including ownership of anetaBTC’s community owned NETA Liquidity Fund, which holds 8+ assets and over $1 million in total value.",
+      "Must be staking to one of the follwing pools: NETA1, NETA2, ..."
+    ),
     new ProjectTokenInfo(
       "cNETA",
       1000000000,
@@ -180,17 +178,22 @@ export const sampleData: ProjectData[] = [
       undefined, // docs
       undefined, // github
       "https://cardanoscan.io/token/b34b3ea80060ace9427bda98690a73d33840e27aaa8d6edb7f0c757a634e455441", // cardanoeScan
-      undefined, // poolpm
+      undefined // poolpm
     )
   ),
 
-  new ProjectData(      
-    new ProjectLogos(LogoMinswap, LogoMinswapDark, LogoMinswapCompact, LogoMinswapCompactDark),
+  new ProjectData(
+    new ProjectLogos(
+      LogoMinswap,
+      LogoMinswapDark,
+      LogoMinswapCompact,
+      LogoMinswapCompactDark
+    ),
     new ProjectDescs(
       "Minswap is a Decentralized Exchange (DEX)",
       undefined,
       undefined
-    ),      
+    ),
     new ProjectTokenInfo(
       "MIN",
       5000000000,
@@ -206,17 +209,17 @@ export const sampleData: ProjectData[] = [
       "https://docs.minswap.org/", // docs
       undefined, // github
       "https://cardanoscan.io/token/29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c64d494e", // cardanoScan
-      undefined, // poolpm
+      undefined // poolpm
     )
   ),
 
-  new ProjectData(      
-    new ProjectLogos(LogoArdana,undefined,LogoArdanaCompact,undefined),
+  new ProjectData(
+    new ProjectLogos(LogoArdana, undefined, LogoArdanaCompact, undefined),
     new ProjectDescs(
       "Ardana is a decentralized stablecoin hub which will bring the necessary DeFi primitives needed to bootstrap & maintain any economy to Cardano.",
       undefined,
       undefined
-    ),      
+    ),
     new ProjectTokenInfo(
       "DANA",
       125000000,
@@ -232,8 +235,7 @@ export const sampleData: ProjectData[] = [
       "https://docs.ardana.org/", // docs
       undefined, // github
       "https://cardanoscan.io/token/c88bbd1848db5ea665b1fffbefba86e8dcd723b5085348e8a8d2260f44414e41", // cardanoScan
-      undefined, // poolpm
+      undefined // poolpm
     )
   ),
-
 ];
