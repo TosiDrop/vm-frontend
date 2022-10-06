@@ -20,6 +20,7 @@ import { CardanoNetwork } from ".";
 require("dotenv").config();
 
 let Buffer = require("buffer").Buffer;
+const KOIOS_VERSION = process.env.KOIOS_VERSION || "1.0.7"
 const VM_API_TOKEN =
   process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
 const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
@@ -92,15 +93,23 @@ export async function postFromKoios<T>(action: string, params?: any) {
 }
 
 export async function getAccountsInfo(stakeAddress: string) {
-  return postFromKoios<AccountInfo[]>("account_info", {
-    _stake_addresses: [stakeAddress],
-  });
+  if (KOIOS_VERSION === "1.0.7") {
+    return postFromKoios<AccountInfo[]>("account_info", {
+      _stake_addresses: [stakeAddress],
+    });
+  } else {
+    return getFromKoios<AccountInfo[]>("account_info", `_address=${stakeAddress}`);
+  }
 }
 
 export async function getAccountsAddresses(stakeAddress: string) {
-  return postFromKoios<AccountAddress[]>("account_addresses", {
-    _stake_addresses: [stakeAddress],
-  });
+  if (KOIOS_VERSION === "1.0.7") {
+    return postFromKoios<AccountAddress[]>("account_addresses", {
+      _stake_addresses: [stakeAddress],
+    });
+  } else {
+    return getFromKoios<AccountAddress[]>("account_addresses", `_address=${stakeAddress}`);
+  }
 }
 
 export async function getEpochParams(epochNo: number) {
