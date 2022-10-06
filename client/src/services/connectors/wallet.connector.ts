@@ -20,12 +20,14 @@ export async function Cardano() {
 }
 
 export enum WalletKeys {
-  nami = "nami",
+  anetawallet = "anetawallet",
+  cardwallet = "cardwallet",
   eternl = "eternl",
   flint = "flint",
-  typhoncip30 = "typhoncip30",
   gerowallet = "gerowallet",
-  anetawallet = "anetawallet",
+  nami = "nami",
+  nufi = "nufi",
+  typhoncip30 = "typhoncip30",
 }
 
 const ERROR = {
