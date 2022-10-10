@@ -2,6 +2,8 @@
 
 __repo=$(cd $(dirname ${BASH_SOURCE[0]}); pwd -P)
 
+VM_BRANCH=${VM_BRANCH:-master}
+
 ###
 # Check for .env
 cd ${__repo}
@@ -9,18 +11,19 @@ if test -e ${__repo}/.env; then
 	. ${__repo}/.env # source our config
 else
 	echo "Configuring .env"
-	read -p "Cardano network (mainnet/testnet): " CARDANO_NETWORK
+	read -p "Cardano network [mainnet|preview]: " CARDANO_NETWORK
 	read -p "VM API token: " VM_API_TOKEN
-	read -p "Cloudflare Pre-Shared Key: " CLOUDFLARE_PSK
+	read -p "Cloudflare Pre-Shared Key (optional): " CLOUDFLARE_PSK
+	read -p "DataDog API key (optional): " DD_API_KEY
 	if test -z "${CARDANO_NETWORK}"; then
-		CARDANO_NETWORK=testnet
+		CARDANO_NETWORK=preview
 	fi
 	if test -z "${VM_API_TOKEN}"; then
 		echo "You must give an API token!"
 		exit 1
 	fi
-	KOIOS_URL=https://testnet.koios.rest/api/v0
-	VM_URL=https://vmtest.adaseal.eu
+	KOIOS_URL=https://preview.koios.rest/api/v0
+	VM_URL=https://vmprev.adaseal.eu
 	if test "${CARDANO_NETWORK}" == "mainnet"; then
 		KOIOS_URL=https://koios.rest/api/v0
 		VM_URL=https://vm.adaseal.eu
@@ -33,10 +36,11 @@ else
 	if test -n "${CLOUDFLARE_PSK}"; then
 		echo "CLOUDFLARE_PSK=${CLOUDFLARE_PSK}" >> ${__repo}/.env
 	fi
+	if test -n "${DD_API_KEY}"; then
+		echo "DD_API_KEY=${DD_API_KEY}" >> ${__repo}/.env
+	fi
 	. ${__repo}/.env # source our config
 fi
-
-VM_BRANCH=${VM_BRANCH:-master}
 
 ###
 # Check for updates
@@ -67,10 +71,12 @@ pip install ansible==5.1.0 docker requests
 ansible-galaxy install -r ${__repo}/ansible/requirements.yml
 ansible-playbook ${__repo}/ansible/local.yml \
 	-e REPO=${__repo} \
+	-e DD_API_KEY=${DD_API_KEY:-changeme} \
 	-e DOCKER_USERS=${DOCKER_USERS:-ubuntu} \
+	-e MANAGE_DATADOG=${MANAGE_DATADOG:-false} \
 	-e MANAGE_DOCKER=${MANAGE_DOCKER:-true} \
-	-e vm_frontend_version=${VM_BRANCH} \
-	-e vm_frontend_port=${PORT:-3000} \
+	-e vm_frontend_version=${VM_IMAGE_TAG:-${VM_BRANCH}} \
+	-e vm_frontend_port=${VM_PORT:-3000} \
 	-e ansible_python_interpreter=${__repo}/.venv/bin/python3 \
 	--diff \
 	-c local \
@@ -80,6 +86,6 @@ ansible-playbook ${__repo}/ansible/local.yml \
 set +e
 # Find images from our repo tagged as <none> (orphaned layers)
 echo "Cleaning up leftover Docker images"
-docker images | grep '<none>' | grep 'ghcr.io/tosidrop/vm-frontend' | awk '{print $3}' | xargs docker rmi
+docker images | grep '<none>' | grep 'ghcr.io/tosidrop/vm-frontend' | awk '{print $3}' | xargs docker rmi &>/dev/null
 # Don't exit w/ 1 if above fails
 exit 0

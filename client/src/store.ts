@@ -1,16 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 import walletReducer from "src/reducers/walletSlice";
-import modalReducer from "src/reducers/modalSlice";
+import globalReducer from "src/reducers/globalSlice";
 
 const store = configureStore({
-    reducer: {
-        wallet: walletReducer,
-        modal: modalReducer,
-    },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
-            serializableCheck: false,
-        }),
+  reducer: {
+    wallet: walletReducer,
+    global: globalReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;

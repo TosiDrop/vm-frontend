@@ -7,7 +7,7 @@
     "npm": ">=8"
   },
   "dependencies": {
-    "@emurgo/cardano-serialization-lib-asmjs": "^10.0.4",
+    "@emurgo/cardano-serialization-lib-asmjs": "^11.0.5",
     "@emurgo/cip14-js": "^3.0.1",
     "@fortawesome/fontawesome-common-types": "^6.1.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -21,6 +21,7 @@
     "axios": "^0.27.2",
     "buffer": "^6.0.3",
     "bulma": "^0.9.3",
+    "copy-to-clipboard": "^3.3.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-native": "^0.67.4",
@@ -36,12 +37,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts --max-old-space-size=4096 start",
+    "start": "PORT=3001 react-scripts --max-old-space-size=8192 start",
     "clean": "rm -rf build/* node_modules",
-    "build": "npm install && react-scripts --max_old_space_size=4096 build",
+    "build": "npm install && react-scripts --max_old_space_size=8192 build",
     "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
-    "fmt": "npx prettier --tab-width 4 --write "
+    "format": "npx prettier --write src"
   },
   "proxy": "http://localhost:3000",
   "eslintConfig": {
@@ -61,5 +62,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.8.8",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.1.6"
   }
 }

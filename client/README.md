@@ -1,46 +1,76 @@
-# Getting Started with Create React App
+# Frontend Development Guide
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Framework
 
-## Available Scripts
+We use basic `create-react-app` for the `client`.
 
-In the project directory, you can run:
+## Folder Structure
 
-### `npm start`
+`src/assets`
+- static files
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`src/components`
+- React components
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+`src/entities`
+- TypeScrip interfaces
 
-### `npm test`
+`src/hooks`
+- Reusable React Hooks
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+`src/layouts`
+- React component that can wrap the children components
 
-### `npm run build`
+`src/pages`
+- React components for routing
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+`src/reducers`
+- Redux reducers
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+`src/services`
+- axios services
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+`src/utils`
+- utilities function
 
-### `npm run eject`
+> p.s. you might see some inconsistencies, but that is the direction we are heading in. The code will be refactored to slowly merge to the idea. 
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Formatting
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Please run `npm run format` before committing. There is no linting yet.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Testing
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+No testing as of now, might be introduced in the future.
 
-## Learn More
+## CSS
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+We use tailwind for CSS. Please no CSS files unless necessary. Please refer to [the official documentation](https://tailwindcss.com/). If you are developing TosiDrop client, PLEASE follow the guidelines here. 
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Big component, e.g., modal, wallet, and main content
+- `rounded-2xl`
+- `p-5`
+- `m-5`
+
+### Small component, e.g., wallet selector
+- `rounded-lg`
+- `p-2.5`
+- `m-2.5`
+
+### Button
+- `rounded-lg`
+- `m-2.5`
+- `py-2.5`
+- `px-5`
+- `tosi-button`
+
+### Title
+- `text-3xl`
+
+### Border width
+- `border`
+
+### Color for text
+- `text-green-600`: success
+- `text-red-600`: failure
+- `text-yellow-400`: warning

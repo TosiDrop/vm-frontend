@@ -1,38 +1,125 @@
 $avenir-font-light: "Avenir Next Cyr Light", sans-serif;
-$avenir-font-medium: 'Avenir Next Cyr Medium', sans-serif;
+$avenir-font-medium: "Avenir Next Cyr Medium", sans-serif;
 
 :root {
-    --body-background: linear-gradient(180deg, rgba(0, 68, 105, 0) 55.42%, rgba(0, 0, 0, 0.45) 102.55%), linear-gradient(237.69deg, rgba(45, 45, 45, 0) 30.63%, rgba(188, 212, 242, 0.2) 125.87%), linear-gradient(120.81deg, rgba(133, 133, 133, 0) 31.32%, rgba(255, 215, 138, 0.2) 123.21%), linear-gradient(122.33deg, rgba(0, 44, 105, 0.5) 0%, rgba(134, 134, 134, 0) 69.38%), linear-gradient(238.28deg, rgba(39, 54, 133, 0.65) 0%, rgba(130, 130, 130, 0) 68.22%), #002C69;
-    --primary: #181c1e;
-    --primary-hover: #272c2ea9;
-    --tooltip-background: #9b9b9c;
-    --tooltip-font-color: #181c1e;
-    --font-color: #515355;
-    --font-inactive-color: #9b9b9c;
-    --font-highlight: #e6e7f4;
-    --font-warn: #c35724;
-    --hover-color: #2a4c74;
-    --gradient-button: linear-gradient(90deg, rgba(66, 63, 168, 1) 0%, rgba(51, 78, 167, 1) 50%, rgba(32, 98, 167, 1) 100%);
-    --gradient-button-default: #2360a7;
-    --gradient-button-hover: linear-gradient(90deg, rgba(66, 63, 168, 0.6) 0%, rgba(51, 78, 167, 0.6) 50%, rgba(32, 98, 167, 0.6) 100%);
-    --gradient-button-hover-default: #2360a770;
-    --gradient-button-disabled: linear-gradient(90deg, #12234d 0%, #0c2548 50%, #052744 100%);
+  --cardano-bg: linear-gradient(
+    264.34deg,
+    #4467bf 2.83%,
+    #244bb0 98.67%
+  ) !important;
+  --ergo-bg: linear-gradient(
+    264.34deg,
+    #ff5135 2.83%,
+    #ff8c00 98.67%
+  ) !important;
+  --body-background: linear-gradient(
+      180deg,
+      rgba(0, 68, 105, 0) 55.42%,
+      rgba(0, 0, 0, 0.45) 102.55%
+    ),
+    linear-gradient(
+      237.69deg,
+      rgba(45, 45, 45, 0) 30.63%,
+      rgba(188, 212, 242, 0.2) 125.87%
+    ),
+    linear-gradient(
+      120.81deg,
+      rgba(133, 133, 133, 0) 31.32%,
+      rgba(255, 215, 138, 0.2) 123.21%
+    ),
+    linear-gradient(
+      122.33deg,
+      rgba(0, 44, 105, 0.5) 0%,
+      rgba(134, 134, 134, 0) 69.38%
+    ),
+    linear-gradient(
+      238.28deg,
+      rgba(39, 54, 133, 0.65) 0%,
+      rgba(130, 130, 130, 0) 68.22%
+    ),
+    #002c69;
+  --primary: #181c1e;
+  --primary-hover: #272c2ea9;
+  --tooltip-background: #9b9b9c;
+  --tooltip-font-color: #181c1e;
+  --font-color: #515355;
+  --font-inactive-color: #9b9b9c;
+  --font-highlight: #e6e7f4;
+  --font-warn: #c35724;
+  --hover-color: #2a4c74;
+  --gradient-button: linear-gradient(
+    90deg,
+    rgba(66, 63, 168, 1) 0%,
+    rgba(51, 78, 167, 1) 50%,
+    rgba(32, 98, 167, 1) 100%
+  );
+  --gradient-button-default: #2360a7;
+  --gradient-button-hover: linear-gradient(
+    90deg,
+    rgba(66, 63, 168, 0.6) 0%,
+    rgba(51, 78, 167, 0.6) 50%,
+    rgba(32, 98, 167, 0.6) 100%
+  );
+  --gradient-button-hover-default: #2360a770;
+  --gradient-button-disabled: linear-gradient(
+    90deg,
+    #12234d 0%,
+    #0c2548 50%,
+    #052744 100%
+  );
+  --input-disabled: rgba(51, 65, 85, 1);
+  --border-color-selected: #ffd700;
 }
 
 .theme-light {
-    --body-background: linear-gradient(180deg, rgba(155, 217, 242, 0) 41.16%, rgba(255, 255, 255, 0.7) 100%), linear-gradient(237.67deg, rgba(155, 217, 242, 0) 30.62%, rgba(255, 215, 138, 0.33) 100%), linear-gradient(121.92deg, rgba(155, 217, 242, 0) 31.4%, rgba(255, 215, 138, 0.33) 100%), linear-gradient(115.18deg, rgba(186, 168, 230, 0.5) -35.29%, rgba(186, 168, 230, 0) 57.9%), linear-gradient(245.41deg, rgba(186, 168, 230, 0.55) -12.18%, rgba(155, 217, 242, 0) 56.8%), linear-gradient(0deg, rgba(226, 216, 250, 0.12), rgba(226, 216, 250, 0.12)), #BCD4F2;;
-    --primary: #ffffff;
-    --primary-hover: #dbdbdb;
-    --tooltip-background: #9b9b9c;
-    --tooltip-font-color: #ffffff;
-    --font-color: #5a5a5a;
-    --font-inactive-color: #8b9095;
-    --font-highlight: #000000;
-    --font-warn: #c35724;
-    --hover-color: #a6c7ed;
-    --gradient-button: linear-gradient(269.27deg, #BCD4F2 -12.51%, #E2D8FA 105.88%);
-    --gradient-button-default: #2360a7;
-    --gradient-button-hover: linear-gradient(269.27deg, #BCD4F270 -12.51%, #E2D8FA70 105.88%);
-    --gradient-button-hover-default: #2360a770;
-    --gradient-button-disabled: rgba(0, 0, 0, 0.39);
+  --body-background: linear-gradient(
+      180deg,
+      rgba(155, 217, 242, 0) 41.16%,
+      rgba(255, 255, 255, 0.7) 100%
+    ),
+    linear-gradient(
+      237.67deg,
+      rgba(155, 217, 242, 0) 30.62%,
+      rgba(255, 215, 138, 0.33) 100%
+    ),
+    linear-gradient(
+      121.92deg,
+      rgba(155, 217, 242, 0) 31.4%,
+      rgba(255, 215, 138, 0.33) 100%
+    ),
+    linear-gradient(
+      115.18deg,
+      rgba(186, 168, 230, 0.5) -35.29%,
+      rgba(186, 168, 230, 0) 57.9%
+    ),
+    linear-gradient(
+      245.41deg,
+      rgba(186, 168, 230, 0.55) -12.18%,
+      rgba(155, 217, 242, 0) 56.8%
+    ),
+    linear-gradient(0deg, rgba(226, 216, 250, 0.12), rgba(226, 216, 250, 0.12)),
+    #bcd4f2;
+  --primary: #ffffff;
+  --primary-hover: #dbdbdb;
+  --tooltip-background: #9b9b9c;
+  --tooltip-font-color: #ffffff;
+  --font-color: #5a5a5a;
+  --font-inactive-color: #8b9095;
+  --font-highlight: #000000;
+  --font-warn: #c35724;
+  --hover-color: #a6c7ed;
+  --gradient-button: linear-gradient(
+    269.27deg,
+    #bcd4f2 -12.51%,
+    #e2d8fa 105.88%
+  );
+  --gradient-button-default: #2360a7;
+  --gradient-button-hover: linear-gradient(
+    269.27deg,
+    #bcd4f270 -12.51%,
+    #e2d8fa70 105.88%
+  );
+  --gradient-button-hover-default: #2360a770;
+  --gradient-button-disabled: rgba(0, 0, 0, 0.39);
+  --input-disabled: rgba(0, 0, 0, 0.39);
 }

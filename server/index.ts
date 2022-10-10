@@ -1,47 +1,56 @@
 import express from "express";
 import url from "url";
-import axios from "axios";
 import cors from "cors";
 import {
-    AccountAddress,
-    AccountInfo,
-    AddressTransactions,
-    EpochParams,
-    PoolInfo,
-    Tip,
-    TransactionInfo,
-    TransactionStatus,
-} from "../client/src/entities/koios.entities";
+  Address,
+  BaseAddress,
+  RewardAddress,
+} from "@emurgo/cardano-serialization-lib-nodejs";
+import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
 import {
-    ClaimableToken,
-    GetRewards,
-    GetTokens,
-    SanitizeAddress,
-} from "../client/src/entities/vm.entities";
-import {
-    ExtendedMetadata,
-    Metadata,
-    PaymentTransactionHashRequest,
-    TokenTransactionHashRequest,
-} from "../client/src/entities/common.entities";
-import { formatTokens } from "../client/src/services/utils.services";
+  CardanoNetwork,
+  translateAdaHandle,
+  getFromVM,
+  getPoolMetadata,
+  getPools,
+  getTokens,
+  getFromKoios,
+  getAccountsInfo,
+  postFromKoios,
+  getEpochParams,
+  getRewards,
+  IVMSettings,
+  ITosiFeatures,
+} from "./utils";
+import { ICustomRewards } from "./utils/entities";
 require("dotenv").config();
+const openapi = require("@wesleytodd/openapi");
 
 const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
-const CARDANO_NETWORK = process.env.CARDANO_NETWORK || "testnet";
+const CARDANO_NETWORK = process.env.CARDANO_NETWORK || CardanoNetwork.preview;
 const CLAIM_ENABLED = process.env.CLAIM_ENABLED || true;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
+const LOG_TYPE = process.env.LOG_TYPE || "dev";
 const PORT = process.env.PORT || 3000;
-const REDIS_HOST = process.env.REDIS_HOST || "localhost";
-const REDIS_PORT = process.env.REDIS_PORT || 6379;
-const VM_API_TOKEN =
-    process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
-const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
+const TOSIFEE = process.env.TOSIFEE || 500000;
+const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
+
+const oapi = openapi({
+  openapi: "3.0.0",
+  info: {
+    title: "TosiDrop",
+    description: "Generated API docs for TosiDrop",
+    version: "1",
+  },
+});
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(require("morgan")(LOG_TYPE));
+app.use(oapi);
+app.use("/swaggerui", oapi.swaggerui);
 
 /**
  * Serve static files for our React app
@@ -49,461 +58,746 @@ app.use(express.json());
 app.use(express.static("../client/build"));
 
 const server = app.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`);
+  console.log(`Server listening on ${PORT}`);
 });
 
 process.on("SIGTERM", () => {
-    server.close(() => {
-        console.log("Server shutting down");
-    });
+  server.close(() => {
+    console.log("Server shutting down");
+  });
 });
 
-async function getFromVM<T>(params: any) {
-    return (
-        await axios.get<T>(`${VM_URL}/api.php?action=${params}`, {
-            headers: { "X-API-Token": `${VM_API_TOKEN}` },
-        })
-    ).data;
-}
+const resp200Ok = {
+  responses: {
+    200: {
+      description: "Success",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+          },
+        },
+      },
+    },
+  },
+};
 
-async function getExtendedMetadata(
-    metadataUrl: string
-): Promise<ExtendedMetadata | undefined> {
-    const metadata = (await axios.get<Metadata>(metadataUrl)).data;
-    if (metadata?.extended) {
-        const extendedMetadata = (
-            await axios.get<ExtendedMetadata>(metadata.extended)
-        ).data;
-        return extendedMetadata;
-    }
-    return undefined;
-}
+const resp200Ok500Bad = {
+  responses: {
+    200: {
+      description: "Success",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+          },
+        },
+      },
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              error: { type: "string" },
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
-async function getFromKoios<T>(action: string, params?: any) {
-    if (params) {
-        return (await axios.get<T>(`${VM_KOIOS_URL}/${action}?${params}`)).data;
-    } else {
-        return (await axios.get<T>(`${VM_KOIOS_URL}/${action}`)).data;
-    }
-}
+app.get("/api/getpools", oapi.path(resp200Ok), async (req, res) => {
+  const pools = await getPools();
+  return res.status(200).send(pools);
+});
 
-async function postFromKoios<T>(action: string, params?: any) {
-    if (params) {
-        return (await axios.post<T>(`${VM_KOIOS_URL}/${action}`, params)).data;
-    } else {
-        return (await axios.post<T>(`${VM_KOIOS_URL}/${action}`)).data;
-    }
-}
+app.get("/api/gettokens", oapi.path(resp200Ok), async (req, res) => {
+  const tokens = await getTokens();
+  return res.status(200).send(tokens);
+});
 
-async function getAccountsInfo(stakeAddress: string) {
-    return getFromKoios<AccountInfo[]>(
-        "account_info",
-        `_address=${stakeAddress}`
-    );
-}
-
-async function getAccountsAddresses(stakeAddress: string) {
-    return getFromKoios<AccountAddress[]>(
-        "account_addresses",
-        `_address=${stakeAddress}`
-    );
-}
-
-async function getEpochParams(epochNo: number) {
-    return getFromKoios<EpochParams>(
-	"epoch_params",
-	`_epoch_no=${epochNo}`
-    );
-}
-
-async function postPoolInfo(pools: string[]) {
-    return postFromKoios<PoolInfo[]>("pool_info", { _pool_bech32_ids: pools });
-}
-
-async function getTokens() {
-    return getFromVM<GetTokens>("get_tokens");
-}
-
-app.get("/getsettings", async (req, res) => {
-    const settings = await getFromVM("get_settings");
-    return res.status(200).send(settings);
+app.get("/api/getsettings", oapi.path(resp200Ok), async (req, res) => {
+  const settings: IVMSettings = await getFromVM("get_settings");
+  return res.status(200).send(settings);
 });
 
 app.get("/health", (req: any, res: any) => {
-    res.status(200).json({
-        status: "UP",
-    });
+  res.status(200).json({
+    status: "UP",
+  });
 });
 
 app.get("/healthz", async (req: any, res: any) => {
-    if (CLOUDFLARE_PSK) {
-        if (req.headers["x-cloudflare-psk"]) {
-            const myPsk = req.headers["x-cloudflare-psk"];
-            if (myPsk == CLOUDFLARE_PSK) {
-                const authResponse = await getFromVM("is_authenticated");
-                res.send(authResponse);
-            } else {
-                res.send({ error: "PSK invalid" });
-            }
-        } else {
-            res.send({ error: "PSK missing" });
-        }
-    } else {
-        res.status(200).json({
-            status: "UP",
+  try {
+    const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+  } catch (error: any) {
+    return res.status(502).send({ error: "Failed to get tip from Koios" });
+  }
+  if (CLOUDFLARE_PSK) {
+    if (req.headers["x-cloudflare-psk"]) {
+      const myPsk = req.headers["x-cloudflare-psk"];
+      if (myPsk == CLOUDFLARE_PSK) {
+        const authResponse = await getFromVM("is_authenticated");
+        res.send(authResponse);
+      } else {
+        res.status(403).json({
+          error: "PSK invalid",
         });
+      }
+    } else {
+      res.status(401).json({
+        error: "PSK missing",
+      });
     }
+  } else {
+    res.status(200).json({
+      status: "UP",
+    });
+  }
 });
 
 app.get("/features", (req: any, res: any) => {
-    res.status(200).json({
-        airdrop_enabled:
-            typeof AIRDROP_ENABLED == "string"
-                ? JSON.parse(AIRDROP_ENABLED.toLowerCase())
-                : AIRDROP_ENABLED,
-        claim_enabled:
-            typeof CLAIM_ENABLED == "string"
-                ? JSON.parse(CLAIM_ENABLED.toLowerCase())
-                : CLAIM_ENABLED,
-        network: CARDANO_NETWORK,
-    });
+  const features: ITosiFeatures = {
+    tosi_fee: Number(TOSIFEE),
+    tosi_fee_whitelist: TOSIFEE_WHITELIST,
+    airdrop_enabled:
+      typeof AIRDROP_ENABLED == "string"
+        ? JSON.parse(AIRDROP_ENABLED.toLowerCase())
+        : AIRDROP_ENABLED,
+    claim_enabled:
+      typeof CLAIM_ENABLED == "string"
+        ? JSON.parse(CLAIM_ENABLED.toLowerCase())
+        : CLAIM_ENABLED,
+    network: CARDANO_NETWORK,
+  };
+
+  return res.status(200).send(features);
 });
 
-app.get("/sanitizeaddr", async (req: any, res: any) => {
-    const queryObject = url.parse(req.url, true).query;
-    if (queryObject.address) {
-        const stakingAddressResponse = await getFromVM<SanitizeAddress>(
-            `sanitize_address&address=${queryObject.address}`
-        );
-        return res.send(stakingAddressResponse);
-    } else {
-        return res.send({ error: "Address seems invalid" });
-    }
-});
-
-app.get("/getrewards", async (req: any, res: any) => {
+app.get(
+  "/api/getstakekey",
+  oapi.path({
+    description:
+      "Return a stake address from a given address string. Resolves adahandles.",
+    parameters: [
+      {
+        name: "address",
+        in: "query",
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                staking_address: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+  }),
+  async (req: any, res: any) => {
     try {
-        const queryObject = url.parse(req.url, true).query;
-        const address = queryObject.address;
+      const queryObject = url.parse(req.url, true).query;
+      let address = queryObject.address as string;
+      let translatedAddress;
 
-        if (!queryObject.address) throw new Error();
+      if (!address)
+        return res.status(400).send({ error: "Address seems invalid" });
+      if (!VM_KOIOS_URL)
+        return res.status(500).send({ error: "KOIOS URL is not defined" });
 
-        const stakingAddressResponse = await getFromVM<SanitizeAddress>(
-            `sanitize_address&address=${address}`
-        );
+      const prefix = address.slice(0, 5);
 
-        if (!stakingAddressResponse) return res.sendStatus(404);
-        if (!stakingAddressResponse.staking_address) return res.sendStatus(404);
-
-        const stakeAddress = stakingAddressResponse.staking_address;
-        let getRewardsResponse = await getRewards(stakeAddress);
-        const accountsInfo = await getAccountsInfo(stakeAddress);
-
+      switch (true) {
         /**
-         * try to get pool metadata
-         * if fails, then leave without the metadata
+         * for ADA Handle, translate the handle
+         * to a functional address
          */
-        let poolInfoObj: any = null;
-        let logo = "";
-        try {
-            const accountInfo = accountsInfo[0];
-            const poolsInfo = await postPoolInfo([accountInfo.delegated_pool]);
-            if (!poolsInfo) throw new Error();
-            const poolInfo = poolsInfo[0];
-            const extendedMetadata = await getExtendedMetadata(
-                poolInfo.meta_url
-            );
-            if (!extendedMetadata) throw new Error();
-            poolInfoObj = {
-                delegated_pool_name: poolInfo.meta_json.name,
-                delegated_pool_description: poolInfo.meta_json.description,
-                total_balance: formatTokens(accountInfo.total_balance, 6, 2),
-                delegated_pool_ticker: poolInfo.meta_json.ticker,
-            };
-            logo = extendedMetadata.info.url_png_icon_64x64;
-            poolInfoObj = {
-                ...poolInfoObj,
-                delegated_pool_logo: logo,
-            };
-        } catch (e) {}
+        case prefix[0] === "$":
+          translatedAddress = await translateAdaHandle(
+            address,
+            CARDANO_NETWORK,
+            VM_KOIOS_URL
+          );
+          address = translatedAddress;
+          break;
+        case prefix === "addr_":
+          if (CARDANO_NETWORK === CardanoNetwork.mainnet)
+            return res
+              .status(400)
+              .send({ error: "Inserted address is for a testnet" });
+          break;
+        case prefix === "addr1":
+          if (CARDANO_NETWORK === CardanoNetwork.preview)
+            return res
+              .status(400)
+              .send({ error: "Inserted address is for mainnet" });
+          break;
+        case prefix === "stake":
+          // We were given a stake address, pass it through
+          return res.send({ staking_address: address });
+          break;
+        default:
+          return res.status(400).send({ error: "Address seems invalid" });
+      }
 
-        getRewardsResponse = {
-            ...getRewardsResponse,
-            pool_info: poolInfoObj,
-        };
+      let rewardAddressBytes = new Uint8Array(29);
+      switch (CARDANO_NETWORK) {
+        case CardanoNetwork.mainnet:
+          rewardAddressBytes.set([0xe1], 0);
+          break;
+        case CardanoNetwork.preview:
+        default:
+          rewardAddressBytes.set([0xe0], 0);
+          break;
+      }
 
-        return res.send(getRewardsResponse);
+      const addressObject = Address.from_bech32(address);
+      const baseAddress = BaseAddress.from_address(addressObject);
+      if (baseAddress == null) return null;
+      rewardAddressBytes.set(
+        baseAddress.stake_cred().to_bytes().slice(4, 32),
+        1
+      );
+
+      let rewardAddress = RewardAddress.from_address(
+        Address.from_bytes(rewardAddressBytes)
+      );
+
+      if (rewardAddress == null) return null;
+
+      return res.send({
+        staking_address: rewardAddress.to_address().to_bech32(),
+      });
     } catch (error: any) {
-        return res.status(500).send({ error: "An error occurred." });
+      return res.status(500).send({
+        error:
+          "Fails to get the stake key. Are you sure the inserted address is correct?",
+      });
     }
-});
+  }
+);
 
-app.get("/getcustomrewards", async (req: any, res: any) => {
+/**
+ * @description get rewards available for user
+ * @query
+ * - address: user stake address
+ */
+app.get(
+  "/api/getrewards",
+  oapi.path({
+    description: "Return available rewards from a given stake address.",
+    parameters: [
+      {
+        name: "address",
+        in: "query",
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                pool_info: { type: "object" },
+                claimable_tokens: { type: "object" },
+              },
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+  }),
+  async (req: any, res: any) => {
     try {
-        const queryObject = url.parse(req.url, true).query;
-        const { staking_address, session_id, selected } = queryObject;
+      const queryObject = url.parse(req.url, true).query;
+      const stakeAddress = queryObject.address as string;
+      if (!stakeAddress)
+        return res
+          .status(400)
+          .send({ error: "No address provided to /api/getrewards" });
 
-        if (!staking_address) return res.sendStatus(400);
+      let claimableTokens = await getRewards(stakeAddress);
+      const accountsInfo = await getAccountsInfo(stakeAddress);
+      const poolInfo = await getPoolMetadata(accountsInfo[0]);
 
-        const submitCustomReward = await getFromVM(
-            `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`
-        );
-        return res.send(submitCustomReward);
+      const consolidatedGetRewards = {
+        pool_info: poolInfo,
+        claimable_tokens: claimableTokens,
+      };
+
+      return res.send(consolidatedGetRewards);
+    } catch (error: any) {
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/getrewards" });
+    }
+  }
+);
+
+app.get(
+  "/api/getcustomrewards",
+  oapi.path({
+    description: "Return available rewards from a given stake address.",
+    parameters: [
+      {
+        name: "staking_address",
+        in: "query",
+        required: true,
+      },
+      {
+        name: "session_id",
+        in: "query",
+        required: true,
+      },
+      {
+        name: "selected",
+        in: "query",
+        required: true,
+      },
+      {
+        name: "unlock",
+        in: "query",
+        required: false,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                request_id: { type: "string" },
+                deposit: { type: "number" },
+                overhead_fee: { type: "number" },
+                withdrawal_address: { type: "string" },
+                is_whitelisted: { type: "boolean" },
+              },
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+  }),
+  async (req: any, res: any) => {
+    try {
+      const queryObject = url.parse(req.url, true).query;
+      const { staking_address, session_id, selected, unlock } = queryObject;
+      let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`;
+      let isWhitelisted = false;
+
+      if (!staking_address)
+        return res.status(400).send({ error: "staking_address required" });
+      if (unlock === "true") {
+        if (TOSIFEE_WHITELIST) {
+          const whitelist = TOSIFEE_WHITELIST.split(",");
+          const accountsInfo = await getAccountsInfo(`${staking_address}`);
+          const accountInfo = accountsInfo[0];
+          if (whitelist.includes(accountInfo.delegated_pool)) {
+            vmArgs += "&unlocks_special=true";
+            isWhitelisted = true;
+          } else {
+            vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
+          }
+        } else {
+          vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
+        }
+      } else {
+        vmArgs += "&unlocks_special=false";
+      }
+
+      const submitCustomReward: any = await getFromVM(vmArgs);
+
+      if (submitCustomReward == null) {
+        throw new Error();
+      }
+
+      const customReward: ICustomRewards = {
+        request_id: submitCustomReward.request_id,
+        deposit: submitCustomReward.deposit,
+        overhead_fee: submitCustomReward.overhead_fee,
+        withdrawal_address: submitCustomReward.withdrawal_address,
+        is_whitelisted: isWhitelisted,
+      };
+
+      return res.send(customReward);
     } catch (e: any) {
-        return res.status(500).send({ error: "An error occurred." });
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/getcustomrewards" });
     }
-});
+  }
+);
 
-app.get("/txstatus", async (req, res) => {
+app.get(
+  "/api/getdeliveredrewards",
+  oapi.path({
+    description: "Return delivered rewards from a given stake address.",
+    parameters: [
+      {
+        name: "staking_address",
+        in: "query",
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+  }),
+  async (req: any, res: any) => {
     try {
-        const queryObject = url.parse(req.url, true).query;
-        const { request_id, session_id } = queryObject;
+      const queryObject = url.parse(req.url, true).query;
+      const stakeAddress = queryObject.address as string;
+      let vmArgs = `delivered_rewards&staking_address=${stakeAddress}`;
+      if (!stakeAddress)
+        return res
+          .status(400)
+          .send({ error: "No address provided to /api/getdeliveredrewards" });
 
-        if (!request_id || !session_id) return res.sendStatus(400);
-
-        const txStatus = await getFromVM(
-            `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`
-        );
-        return res.send(txStatus);
+      const deliveredRewards: any = await getFromVM(vmArgs);
+      if (deliveredRewards == null) {
+        throw new Error();
+      }
+      return res.send(deliveredRewards);
     } catch (e: any) {
-        return res.status(500).send({ error: "An error occurred." });
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/getcustomrewards" });
     }
-});
+  }
+);
 
-app.get("/gettransactionstatus", async (req: any, res: any) => {
+app.get(
+  "/api/txstatus",
+  oapi.path({
+    description:
+      "Return status of a transaction from request_id and session_id",
+    parameters: [
+      {
+        name: "request_id",
+        in: "query",
+        required: true,
+      },
+      {
+        name: "session_id",
+        in: "query",
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+  }),
+  async (req, res) => {
     try {
-        const queryObject = url.parse(req.url, true).query;
-        if (queryObject.txHash) {
-            const getTransactionStatusResponse = await postFromKoios<
-                TransactionStatus[]
-            >(`tx_status`, { _tx_hashes: [queryObject.txHash] });
-            res.send(getTransactionStatusResponse);
-        } else {
-            res.send({ error: "Tx hash seems invalid" });
-        }
-    } catch (error: any) {
-        return res.status(500).send({ error: "An error occurred." });
-    }
-});
+      const queryObject = url.parse(req.url, true).query;
+      const { request_id, session_id } = queryObject;
 
-app.get("/getblock", async (req: any, res: any) => {
+      if (!request_id || !session_id)
+        return res
+          .status(400)
+          .send({ error: "Missing request or session ID in /api/txstatus" });
+
+      const txStatus = await getFromVM(
+        `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`
+      );
+      return res.send(txStatus);
+    } catch (e: any) {
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/txstatus" });
+    }
+  }
+);
+
+app.get(
+  "/api/gettransactionstatus",
+  oapi.path({
+    description: "Return status of a transaction from txHash",
+    parameters: [
+      {
+        name: "txHash",
+        in: "query",
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+  }),
+  async (req: any, res: any) => {
     try {
-        const getTipResponse = await getFromKoios<Tip[]>(`tip`);
-        res.send({
-            block_no:
-                getTipResponse && getTipResponse.length
-                    ? getTipResponse[0].block_no
-                    : 0,
-        });
+      const queryObject = url.parse(req.url, true).query;
+      if (queryObject.txHash) {
+        const getTransactionStatusResponse = await postFromKoios<
+          TransactionStatus[]
+        >(`tx_status`, { _tx_hashes: [queryObject.txHash] });
+        res.send(getTransactionStatusResponse);
+      } else {
+        res.status(400).send({ error: "Tx hash seems invalid" });
+      }
     } catch (error: any) {
-        return res.status(500).send({ error: "An error occurred." });
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/gettransactionstatus" });
     }
-});
+  }
+);
 
-app.get("/getepochparams", async (req: any, res: any) => {
+app.get(
+  "/api/getabsslot",
+  oapi.path(resp200Ok500Bad),
+  async (req: any, res: any) => {
     try {
-        const getTipResponse = await getFromKoios<Tip[]>(`tip`);
-        const getEpochParamsResponse = await getEpochParams(
-            getTipResponse && getTipResponse.length
-	        ? getTipResponse[0].epoch_no
-		: 0
-	);
-	res.send(getEpochParamsResponse);
+      const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+      res.send({
+        abs_slot:
+          getTipResponse && getTipResponse.length
+            ? getTipResponse[0].abs_slot
+            : 0,
+      });
     } catch (error: any) {
-        return res.status(500).send({ error: "An error occurred." });
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/getabsslot" });
     }
-});
+  }
+);
 
-app.post("/getpaymenttransactionhash", async (req: any, res: any) => {
+app.get(
+  "/api/getblock",
+  oapi.path(resp200Ok500Bad),
+  async (req: any, res: any) => {
     try {
-        const requestBody = req.body as PaymentTransactionHashRequest;
-        if (requestBody && requestBody.address && requestBody.address.length) {
-            const bodyStakingAddressResponse = await getFromVM<SanitizeAddress>(
-                `sanitize_address&address=${requestBody.address}`
-            );
-            if (
-                bodyStakingAddressResponse &&
-                bodyStakingAddressResponse.staking_address
-            ) {
-                const accountAddresses = await getAccountsAddresses(
-                    bodyStakingAddressResponse.staking_address
-                );
-                const getTokenTxHashResponse = await postFromKoios<
-                    AddressTransactions[]
-                >(`address_txs`, {
-                    _addresses: accountAddresses.map(
-                        (accountAddress) => accountAddress.address
-                    ),
-                    _after_block_height: requestBody.afterBlock || 0,
-                });
-                if (getTokenTxHashResponse && getTokenTxHashResponse.length) {
-                    const addressHashes = getTokenTxHashResponse.map(
-                        (addressTx) => addressTx.tx_hash
-                    );
-                    const getTransactionsInfo = await postFromKoios<
-                        TransactionInfo[]
-                    >(`tx_info`, { _tx_hashes: addressHashes });
-                    const fromStakingAddressResponse =
-                        await getFromVM<SanitizeAddress>(
-                            `sanitize_address&address=${requestBody.address}`
-                        );
-                    const toStakingAddressResponse =
-                        await getFromVM<SanitizeAddress>(
-                            `sanitize_address&address=${requestBody.toAddress}`
-                        );
-                    if (getTransactionsInfo && getTransactionsInfo.length) {
-                        const filteredTxs = getTransactionsInfo.filter(
-                            (txInfo) => {
-                                const inputCorrect = txInfo.inputs.some(
-                                    (input) => {
-                                        const stakingAddressCorrect =
-                                            input.stake_addr ===
-                                            fromStakingAddressResponse.staking_address;
-                                        return stakingAddressCorrect;
-                                    }
-                                );
-
-                                const outputCorrect = txInfo.outputs.some(
-                                    (output) => {
-                                        const stakingAddressCorrect =
-                                            output.stake_addr ===
-                                            toStakingAddressResponse.staking_address;
-                                        const amountCorrect =
-                                            output.value ===
-                                            requestBody.adaToSend.toString();
-                                        return (
-                                            amountCorrect &&
-                                            stakingAddressCorrect
-                                        );
-                                    }
-                                );
-
-                                return inputCorrect && outputCorrect;
-                            }
-                        );
-                        if (filteredTxs && filteredTxs.length) {
-                            res.send({ txHash: filteredTxs[0].tx_hash });
-                        } else {
-                            res.send({ txHash: undefined });
-                        }
-                    }
-                } else {
-                    res.send({ txHash: undefined });
-                }
-            }
-        } else {
-            res.send({ error: "Address seems invalid" });
-        }
+      const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+      res.send({
+        block_no:
+          getTipResponse && getTipResponse.length
+            ? getTipResponse[0].block_no
+            : 0,
+      });
     } catch (error: any) {
-        return res.status(500).send({ error: "An error occurred." });
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/getblock" });
     }
-});
+  }
+);
 
-app.post("/gettokentransactionhash", async (req: any, res: any) => {
+app.get(
+  "/api/gettip",
+  oapi.path(resp200Ok500Bad),
+  async (req: any, res: any) => {
     try {
-        const requestBody = req.body as TokenTransactionHashRequest;
-        if (requestBody && requestBody.address) {
-            const getTokenTxHashResponse = await postFromKoios<
-                AddressTransactions[]
-            >(`address_txs`, {
-                _addresses: [requestBody.address],
-                _after_block_height: requestBody.afterBlock || 0,
-            });
-            if (getTokenTxHashResponse && getTokenTxHashResponse.length) {
-                const addressHashes = getTokenTxHashResponse.map(
-                    (addressTx) => addressTx.tx_hash
-                );
-                const getTransactionsInfo = await postFromKoios<
-                    TransactionInfo[]
-                >(`tx_info`, { _tx_hashes: addressHashes });
-                const stakingAddressResponse = await getFromVM<SanitizeAddress>(
-                    `sanitize_address&address=${requestBody.address}`
-                );
-                if (getTransactionsInfo && getTransactionsInfo.length) {
-                    const filteredTxs = getTransactionsInfo.filter((txInfo) => {
-                        return txInfo.outputs.some((output) => {
-                            const stakingAddressCorrect =
-                                output.stake_addr ===
-                                stakingAddressResponse.staking_address;
-                            let hasTokensCorrect: any[] = [];
-                            output.asset_list.forEach((asset) => {
-                                const token = requestBody.tokens.find(
-                                    (token) =>
-                                        token.policyId === asset.policy_id &&
-                                        token.quantity === asset.quantity
-                                );
-                                if (token) {
-                                    hasTokensCorrect.push(token);
-                                }
-                            });
-                            return (
-                                hasTokensCorrect.length &&
-                                hasTokensCorrect.length ===
-                                    output.asset_list.length &&
-                                stakingAddressCorrect
-                            );
-                        });
-                    });
-                    if (filteredTxs && filteredTxs.length) {
-                        res.send({ txHash: filteredTxs[0].tx_hash });
-                    } else {
-                        res.send({ txHash: undefined });
-                    }
-                }
-            } else {
-                res.send({ txHash: undefined });
-            }
-        } else {
-            res.send({ error: "Address seems invalid" });
-        }
+      const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+      res.send(getTipResponse[0]);
     } catch (error: any) {
-        return res.status(500).send({ error: "An error occurred." });
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/gettip" });
     }
-});
+  }
+);
 
-async function getRewards(stakeAddress: string) {
-    const getRewardsResponse = await getFromVM<GetRewards>(
-        `get_rewards&staking_address=${stakeAddress}`
-    );
-    if (getRewardsResponse) {
-        const tokens = await getTokens();
-        if (tokens) {
-            let claimableTokens: ClaimableToken[] = [];
-            for (const key of Object.keys(
-                getRewardsResponse.consolidated_promises
-            )) {
-                const token = tokens[key];
-                if (token) {
-                    claimableTokens.push({
-                        assetId: key,
-                        ticker: token.ticker,
-                        logo: token.logo,
-                        decimals: token.decimals,
-                        amount: getRewardsResponse.consolidated_promises[key],
-                    });
-                }
-            }
-            for (const key of Object.keys(
-                getRewardsResponse.consolidated_rewards
-            )) {
-                const token = tokens[key];
-                if (token) {
-                    claimableTokens.push({
-                        assetId: key,
-                        ticker: token.ticker,
-                        logo: token.logo,
-                        decimals: token.decimals,
-                        amount: getRewardsResponse.consolidated_rewards[key],
-                    });
-                }
-            }
-            getRewardsResponse.claimable_tokens = claimableTokens;
-        }
+app.get(
+  "/api/getepochparams",
+  oapi.path(resp200Ok500Bad),
+  async (req: any, res: any) => {
+    try {
+      const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+      const getEpochParamsResponse = await getEpochParams(
+        getTipResponse && getTipResponse.length ? getTipResponse[0].epoch_no : 0
+      );
+      res.send(getEpochParamsResponse);
+    } catch (error: any) {
+      return res
+        .status(500)
+        .send({ error: "An error occurred in /api/getepochparams" });
     }
-    return getRewardsResponse;
-}
+  }
+);
 
 // Fallback to React app
 app.get("*", (req, res) => {
-    res.sendFile("client/build/index.html", { root: "../" });
+  res.sendFile("client/build/index.html", { root: "../" });
 });

@@ -1,152 +1,150 @@
-import useFile from "./hooks/useFile";
-import { TokenAddress, shortenAddress } from "./utils";
-import useToken from "./hooks/useToken";
-import Select from "./components/Select";
-import TransactionBar from "./components/TransactionBar";
-import { useLayoutEffect, useState } from "react";
-import axios from "axios";
+import useFile from "src/components/Airdrop/hooks/useFile";
+import { TokenAddress, shortenAddress } from "src/components/Airdrop/utils";
+import useToken from "src/components/Airdrop/hooks/useToken";
+import Select from "../../components/Airdrop/components/Select";
+import TransactionBar from "../../components/Airdrop/components/TransactionBar";
+import { useEffect, useState } from "react";
 import ComingSoon from "../ComingSoon";
 import Spinner from "../../components/Spinner";
-import Breakdown from "./components/Breakdown";
+import Breakdown from "../../components/Airdrop/components/Breakdown";
 import { RootState } from "src/store";
 import { useSelector } from "react-redux";
 import { WalletKeys } from "src/services/connectors/wallet.connector";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWarning } from "@fortawesome/free-solid-svg-icons";
-import "./index.scss";
-
-const CLASS = "airdrop-page";
+import Loading from "../Loading";
+import Page from "src/layouts/page";
+import WarningBanner from "../../components/Airdrop/components/WarningBanner";
+import { getFeatures } from "src/services/common";
 
 const AirdropPage = () => {
-    const {
-        tokens,
-        selectedToken,
-        setSelectedToken,
-        validated,
-        exec,
-        addressList,
-        handleAddressList,
-        airdropDetail,
-        totalToken,
-        loading,
-        multiTxTransactions,
-    } = useToken();
+  const {
+    tokens,
+    selectedToken,
+    setSelectedToken,
+    validated,
+    exec,
+    addressList,
+    handleAddressList,
+    airdropDetail,
+    totalToken,
+    loading,
+    multiTxTransactions,
+  } = useToken();
 
-    const { fileRef, parseFile } = useFile({ handleAddressList });
-    const walletName = useSelector((state: RootState) => state.wallet.name);
-    const [enabled, setEnabled] = useState(false);
+  const { fileRef, parseFile } = useFile({ handleAddressList });
+  const walletName = useSelector((state: RootState) => state.wallet.name);
+  const [enabled, setEnabled] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
-    useLayoutEffect(() => {
-        axios.get("/features").then((res) => {
-            setEnabled(res.data.airdrop_enabled);
-        });
-    }, []);
+  const init = async () => {
+    const features = await getFeatures();
+    setEnabled(features.airdrop_enabled ?? false);
+    setInitialLoading(false);
+  };
 
-    const getBtnText = () => {
-        if (!validated) {
-            if (loading) {
-                return "Validating Airdrop";
-            } else {
-                return "Validate Airdrop";
-            }
-        } else {
-            if (loading) {
-                return "Sending Airdrop";
-            } else {
-                return "Send Airdrop";
-            }
-        }
-    };
+  useEffect(() => {
+    init();
+  }, []);
 
-    return enabled ? (
-        <div className={CLASS}>
-            <h1 className={`${CLASS}__title`}>Airdrop Tokens</h1>
-            {walletName.toLowerCase() !== WalletKeys.nami.toLowerCase() ? (
-                <div className={`${CLASS}__content ${CLASS}__warning`}>
-                    <FontAwesomeIcon icon={faWarning} />
-                    <span>
-                        This feature is working properly ONLY for Nami wallet.
-                        The use of other wallets is not recommended.
-                    </span>
-                </div>
-            ) : null}
-            <div className={`${CLASS}__content ${CLASS}__select`}>
-                <Select
-                    tokens={tokens}
-                    setSelectedToken={setSelectedToken}
-                ></Select>
-                <input
-                    ref={fileRef}
-                    id="file-upload"
-                    type="file"
-                    accept=".csv"
-                    onChange={() => parseFile()}
-                    hidden
-                />
-                <label className={`${CLASS}__button`} htmlFor="file-upload">
-                    Upload Addresses
-                </label>
+  const getBtnText = () => {
+    switch (true) {
+      case validated && loading:
+        return "Sending Airdrop";
+      case validated && !loading:
+        return "Send Airdrop";
+      case !validated && loading:
+        return "Validating Airdrop";
+      case !validated && !loading:
+      default:
+        return "Validate Airdrop";
+    }
+  };
+
+  return initialLoading ? (
+    <Loading></Loading>
+  ) : enabled ? (
+    <Page>
+      <>
+        <p className="text-3xl">Airdrop Tokens</p>
+        <div className="flex flex-col gap-4">
+          <WarningBanner
+            isShown={walletName.toLowerCase() !== WalletKeys.nami.toLowerCase()}
+          />
+          <div className="background rounded-2xl p-5 flex flex-row items-center gap-2">
+            <Select
+              tokens={tokens}
+              setSelectedToken={setSelectedToken}
+            ></Select>
+            <input
+              ref={fileRef}
+              id="file-upload"
+              type="file"
+              accept=".csv"
+              onChange={() => parseFile()}
+              hidden
+            />
+            <label
+              className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center w-full justify-center"
+              htmlFor="file-upload"
+            >
+              Upload Addresses
+            </label>
+          </div>
+          {addressList.length ? (
+            <div className="">
+              <div className="">
+                <h1>Address List</h1>
+                <span>{addressList.length} address added</span>
+              </div>
+              {addressList.map((addr: TokenAddress, i: number) => {
+                return (
+                  <div key={i} className="">
+                    {shortenAddress(addr.address)}: {addr.tokenAmount}
+                  </div>
+                );
+              })}
             </div>
-            {addressList.length ? (
-                <div className={`${CLASS}__content ${CLASS}__address-list`}>
-                    <div className={`${CLASS}__address-list-header`}>
-                        <h1>Address List</h1>
-                        <span>{addressList.length} address added</span>
-                    </div>
-                    {addressList.map((addr: TokenAddress, i: number) => {
-                        return (
-                            <div
-                                key={i}
-                                className={`${CLASS}__address-list-address`}
-                            >
-                                {shortenAddress(addr.address)}:{" "}
-                                {addr.tokenAmount}
-                            </div>
-                        );
-                    })}
-                </div>
-            ) : null}
-            <div className={`${CLASS}__content ${CLASS}__info`}>
-                <h1>Airdrop Breakdown</h1>
-                <Breakdown
-                    selectedToken={selectedToken}
-                    addressList={addressList}
-                    totalToken={totalToken}
-                    validated={validated}
-                    airdropDetail={airdropDetail}
-                ></Breakdown>
+          ) : null}
+          <div className="background p-5 rounded-2xl gap-2">
+            <div>Airdrop Breakdown</div>
+            <Breakdown
+              selectedToken={selectedToken}
+              addressList={addressList}
+              totalToken={totalToken}
+              validated={validated}
+              airdropDetail={airdropDetail}
+            ></Breakdown>
+          </div>
+          {multiTxTransactions.length ? (
+            <div className="">
+              <h1>Airdrop Transactions</h1>
+              {multiTxTransactions.map((tx: any, i: number) => {
+                return (
+                  <TransactionBar
+                    key={tx.cborHex}
+                    cborHex={tx.cborHex}
+                    description={tx.description}
+                    i={i}
+                  ></TransactionBar>
+                );
+              })}
             </div>
-            {multiTxTransactions.length ? (
-                <div className={`${CLASS}__content ${CLASS}__info`}>
-                    <h1>Airdrop Transactions</h1>
-                    {multiTxTransactions.map((tx: any, i: number) => {
-                        return (
-                            <TransactionBar
-                                key={tx.cborHex}
-                                cborHex={tx.cborHex}
-                                description={tx.description}
-                                i={i}
-                            ></TransactionBar>
-                        );
-                    })}
-                </div>
-            ) : null}
-            {!multiTxTransactions.length ? (
-                <button
-                    className={`${CLASS}__button ${CLASS}__button-airdrop`}
-                    onClick={() => exec()}
-                    disabled={
-                        !Boolean(addressList.length) || selectedToken == null
-                    }
-                >
-                    {getBtnText()}
-                    {loading ? <Spinner></Spinner> : null}
-                </button>
-            ) : null}
+          ) : null}
+          {!multiTxTransactions.length ? (
+            <button
+              className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
+              onClick={() => exec()}
+              disabled={!Boolean(addressList.length) || selectedToken == null}
+            >
+              {getBtnText()}
+              {loading ? <Spinner></Spinner> : null}
+            </button>
+          ) : null}
         </div>
-    ) : (
-        <ComingSoon />
-    );
+      </>
+    </Page>
+  ) : (
+    <ComingSoon />
+  );
 };
 
 export default AirdropPage;
