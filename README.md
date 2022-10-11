@@ -20,9 +20,12 @@ machine and run the containers. You can disable installing Docker by setting
 
 ## Dev usage
 
-You can run `npm install` and `npm run` from the client and server folders as needed. They also each have a readme you should check out.
+You can run `npm install` and `npm run` from the client, server, and root
+folders as needed. The preferred way for testing us `npm run dev` from the
+root folder. There's a readme on the client folder you should check out.
 
-Make sure your npm version is decently modern.
+Project uses NPM version 16. Most accurate results are obtained runnning
+the docker image.
 
 ### Logging
 Access logging is enabled in the server. It uses Morgan and the type of logs
