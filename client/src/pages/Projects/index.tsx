@@ -12,7 +12,7 @@ import {
   ProjectData,
   ProjectLogos,
   ProjectURLs,
-} from "./projectData";
+} from "src/entities/project.entities";
 
 import { RootState } from "src/store";
 import { useSelector } from "react-redux";
