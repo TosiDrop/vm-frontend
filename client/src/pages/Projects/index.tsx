@@ -34,13 +34,14 @@ const Projects = () => {
 
         <div className="basis-5/12 flex flex-row grow items-center">
           <div className="m-2.5 p-2.5 basis-1/4 ">
-            <div>Token:</div>
+            <span>Token:</span>
             <div className="font-bold">{projectData.token.token}</div>
           </div>
           <div className="m-2.5 p-2.5 basis-1/4 ">
-            <div>Total Supply:</div>
+            {/*<span style={{ whiteSpace: "nowrap"}}>Total Supply:</span>*/}
+            <span className="truncate">Total Supply:</span>
             <div className="font-bold text-sm">
-              {projectData.token.totalSupply.toLocaleString("en-US")}
+              {projectData.token.totalSupply?.toLocaleString("en-US") ?? "?"}
             </div>
           </div>
           <div className="m-2.5 p-2.5 basis-2/4 text-2xl">
