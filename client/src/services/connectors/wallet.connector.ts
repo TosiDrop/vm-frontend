@@ -28,6 +28,8 @@ export enum WalletKeys {
   nami = "nami",
   nufi = "nufi",
   typhoncip30 = "typhoncip30",
+  yoroi = "yoroi",
+  lodewallet = "lodewallet",
 }
 
 const ERROR = {
