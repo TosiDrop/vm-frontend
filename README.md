@@ -18,6 +18,15 @@ machine and run the containers. You can disable installing Docker by setting
 ./runme.sh
 ```
 
+## Dev usage
+
+You can run `npm install` and `npm run` from the client, server, and root
+folders as needed. The preferred way for testing us `npm run dev` from the
+root folder. There's a readme on the client folder you should check out.
+
+Project uses NPM version 16. Most accurate results are obtained runnning
+the docker image.
+
 ### Logging
 Access logging is enabled in the server. It uses Morgan and the type of logs
 which are output can be controlled by setting `LOG_TYPE` to a valid Morgan

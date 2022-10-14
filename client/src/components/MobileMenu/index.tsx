@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
   faArrowUpRightFromSquare,
+  faTableColumns,
+  faProjectDiagram,
   faSun,
   faMoon,
 } from "@fortawesome/free-solid-svg-icons";

@@ -6,6 +6,8 @@ import {
   faPaperPlane,
   faMessage,
   // faClockRotateLeft,
+  // faTableColumns,
+  faProjectDiagram,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTwitter,
@@ -68,6 +70,18 @@ export const menuItems: Record<string, MenuItem> = {
     activeRoute: [PageRoute.airdropCardano],
     icon: faPaperPlane,
   },
+  projects: {
+    text: "Projects",
+    to: PageRoute.projectsCardano,
+    activeRoute: [PageRoute.projectsCardano],
+    icon: faProjectDiagram,
+  },
+  /*dashboard: {
+    text: "Dashboard",
+    to: PageRoute.dashboardCardano,
+    activeRoute: [PageRoute.dashboardCardano],
+    icon: faTableColumns,
+  },*/
   feedback: {
     text: "Feedback",
     to: PageRoute.feedbackCardano,

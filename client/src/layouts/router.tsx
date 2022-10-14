@@ -7,6 +7,7 @@ const Claim = lazy(() => import("..//pages/Claim"));
 const ClaimHistory = lazy(() => import("../pages/ClaimHistory"));
 const DepositInfoPage = lazy(() => import("src/pages/Deposit"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
+const Projects = lazy(() => import("../pages/Projects"));
 const Feedback = lazy(() => import("../pages/Feedback"));
 
 const Router = () => {
@@ -16,6 +17,7 @@ const Router = () => {
         <Route path={PageRoute.claimCardano} element={<Claim />} />
         <Route path={PageRoute.depositCardano} element={<DepositInfoPage />} />
         <Route path={PageRoute.historyCardano} element={<ClaimHistory />} />
+        <Route path={PageRoute.projectsCardano} element={<Projects />} />
         <Route path={PageRoute.dashboardCardano} element={<Dashboard />} />
         <Route path={PageRoute.feedbackCardano} element={<Feedback />} />
         <Route path={PageRoute.airdropCardano} element={<Airdrop />} />
