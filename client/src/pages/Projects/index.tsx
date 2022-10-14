@@ -11,15 +11,13 @@ const Projects = () => {
     <Page>
       <div className="text-3xl">
         Explore TosiDrop Projects
-        <ul>
+        <div className="flex flex-col gap-4">
           {sampleData.map((entry) => {
             return (
-              <li>
                 <Project projectData={entry}></Project>
-              </li>
             );
           })}
-        </ul>
+        </div>
       </div>
     </Page>
   );

@@ -11,7 +11,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 const URLs = ({ projectURLs }: { projectURLs: ProjectURLs }) => {
   const render = (icon: IconProp, style: string, url?: string) => {
     return url ? (
-      <a href={url} className={`${style} m-1`}>
+      <a href={url} className={`${style}`}>
         <FontAwesomeIcon icon={icon} />
       </a>
     ) : null;
@@ -25,7 +25,7 @@ const URLs = ({ projectURLs }: { projectURLs: ProjectURLs }) => {
   const poolpm = null;
 
   return (
-    <div>
+    <div className="flex flex-row gap-4">
       {medium}
       {twitter}
       {discord}
