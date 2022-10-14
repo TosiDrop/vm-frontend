@@ -1,12 +1,12 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTwitter,
-  faDiscord,
-  faTelegram,
-  faMedium,
-} from "@fortawesome/free-brands-svg-icons";
-import { ProjectURLs } from "src/entities/project.entities";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import {
+  faDiscord,
+  faMedium,
+  faTelegram,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ProjectURLs } from "src/entities/project.entities";
 
 const URLs = ({ projectURLs }: { projectURLs: ProjectURLs }) => {
   const render = (icon: IconProp, style: string, url?: string) => {
@@ -25,7 +25,7 @@ const URLs = ({ projectURLs }: { projectURLs: ProjectURLs }) => {
   const poolpm = null;
 
   return (
-    <div className="flex flex-row gap-4">
+    <div className="flex flex-row gap-2">
       {medium}
       {twitter}
       {discord}
