@@ -29,7 +29,8 @@ export enum WalletKeys {
   nufi = "nufi",
   typhoncip30 = "typhoncip30",
   yoroi = "yoroi",
-  lodewallet = "lodewallet",
+  LodeWallet = "LodeWallet",
+  
 }
 
 const ERROR = {
