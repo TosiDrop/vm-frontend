@@ -24,12 +24,13 @@ const NETWORK_INFO = {
 export default function BlockchainSelector() {
   const location = useLocation().pathname;
   const isOnCardano = location.includes("cardano");
+  const isOnErgo = location.includes("ergo");
 
   const network = NETWORK_INFO[isOnCardano ? "cardano" : "ergo"];
 
   const { ref, visible, setVisible } = useComponentVisible(false);
 
-  return (
+  return !isOnCardano && !isOnErgo ? null : (
     <div className="w-32 relative" ref={ref}>
       <button
         className="background w-full rounded-lg px-5 py-2.5 flex items-center justify-center gap-2"
