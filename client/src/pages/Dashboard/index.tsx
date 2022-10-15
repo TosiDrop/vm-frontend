@@ -1,4 +1,4 @@
-import Page from "src/layouts/page";
+import Page from "src/layouts/MenuWrapper";
 
 function Dashboard() {
   return (

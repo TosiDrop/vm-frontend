@@ -1,24 +1,30 @@
 import { useSelector } from "react-redux";
-
-import { RootState } from "src/store";
-import Modal from "src/components/Modal";
-import Footer from "src/components/Footer";
 import AppPopUp from "src/components/AppPopUp";
-import Router from "src/layouts/router";
+import Footer from "src/components/Footer";
+import Modal from "src/components/Modal";
+import RouterWrapper from "src/layouts/RouterWrapper";
+import { RootState } from "src/store";
 import "src/styles.scss";
+import BlockchainWrapper from "./layouts/BlockchainWrapper";
+import MenuWrapper from "./layouts/MenuWrapper";
+import ThemeWrapper from "./layouts/ThemeWrapper";
 
 function App() {
   const theme = useSelector((state: RootState) => state.global.theme);
 
   return (
-    <div className={`app ${theme}`}>
-      <div className="w-full text flex flex-col items-center">
+    <ThemeWrapper>
+      <>
         <AppPopUp></AppPopUp>
         <Modal />
-        <Router />
+        <BlockchainWrapper>
+          <MenuWrapper>
+            <RouterWrapper />
+          </MenuWrapper>
+        </BlockchainWrapper>
         <Footer></Footer>
-      </div>
-    </div>
+      </>
+    </ThemeWrapper>
   );
 }
 

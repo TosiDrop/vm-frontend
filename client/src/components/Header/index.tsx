@@ -27,7 +27,7 @@ function Header({ walletConnector }: Props) {
       case WalletConnector.cardano:
         return <WalletSelector connectWallet={connectWallet} />;
       case WalletConnector.ergo:
-        return <>ergo</>;
+        return null;
       case WalletConnector.none:
       default:
         return null;
