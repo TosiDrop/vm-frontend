@@ -213,7 +213,7 @@ export const sampleData: ProjectData[] = [
     },
     token: {
       token: "SCAT",
-      //totalSupply: ?,
+      totalSupply: 1000000000,
       policyID: "f2fe9aafd2e5b3b00e2949a96d44a84d9f4d818d63945010a466a4ae",
     },
     urls: {
