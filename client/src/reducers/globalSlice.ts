@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  Blockchain,
   InfoModalTypes,
   ModalTypes,
   Themes,
@@ -10,6 +11,7 @@ interface State {
   showMenu: boolean;
   showModal: ModalTypes | null;
   infoModalDetails: InfoModalDetails;
+  chain: Blockchain;
 }
 
 interface InfoModalDetails {
@@ -27,6 +29,7 @@ const initialState: State = {
     text: "",
     type: InfoModalTypes.info,
   },
+  chain: Blockchain.cardano,
 };
 
 export const globalSlice = createSlice({
@@ -68,6 +71,9 @@ export const globalSlice = createSlice({
     hideModal: (state) => {
       state.showModal = null;
     },
+    setChain: (state, action: PayloadAction<Blockchain>) => {
+      state.chain = action.payload;
+    },
   },
 });
 
@@ -78,5 +84,6 @@ export const {
   setShowMenu,
   showModal,
   hideModal,
+  setChain,
 } = globalSlice.actions;
 export default globalSlice.reducer;
