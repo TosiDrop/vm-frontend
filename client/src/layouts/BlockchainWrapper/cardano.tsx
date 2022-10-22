@@ -1,7 +1,5 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import Header from "src/components/Header";
-import { WalletConnector } from "src/entities/common.entities";
 
 import useWallet from "src/hooks/useWallet";
 import {
@@ -45,10 +43,5 @@ export default function Cardano({ children }: Props) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return (
-    <>
-      <Header walletConnector={WalletConnector.cardano}></Header>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
