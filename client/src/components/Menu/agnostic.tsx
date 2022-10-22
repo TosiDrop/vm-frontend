@@ -10,10 +10,7 @@ import {
   faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
-import CardanoLogo from "src/assets/cardanologo.svg";
-import ErgoLogo from "src/assets/ergologo.svg";
-import { PageRoute, SocialMediaItem } from "src/entities/common.entities";
+import { SocialMediaItem } from "src/entities/common.entities";
 
 export const socialMediaItems: Record<string, SocialMediaItem> = {
   twitter: {
@@ -68,24 +65,6 @@ export default function MenuAgnostic() {
         <div className="menu">
           <div className="menu-content">
             <div className="flex flex-col gap-2">
-              <Link
-                to={PageRoute.claimCardano}
-                className="text-inactive flex flex-row items-center gap-2"
-              >
-                <div className="h-5">
-                  <img className="h-full" src={CardanoLogo}></img>
-                </div>
-                Cardano
-              </Link>
-              <Link
-                to={PageRoute.claimErgo}
-                className="text-inactive flex flex-row items-center gap-2"
-              >
-                <div className="h-5">
-                  <img className="h-full" src={ErgoLogo}></img>
-                </div>
-                Ergo
-              </Link>
               <a
                 target="_blank"
                 rel="noreferrer"

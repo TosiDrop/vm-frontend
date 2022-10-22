@@ -7,29 +7,22 @@ import logoDark from "src/assets/tosidrop-dark.png";
 import logoLight from "src/assets/tosidrop-light.png";
 import logo from "src/assets/tosidrop_logo.png";
 import WalletSelector from "src/components/WalletSelector";
-import { Themes, WalletConnector } from "src/entities/common.entities";
+import { Blockchain, Themes } from "src/entities/common.entities";
 import useWallet from "src/hooks/useWallet";
 import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
 import { RootState } from "src/store";
 import BlockchainSelector from "../BlockchainSelector";
 
-interface Props {
-  walletConnector: WalletConnector;
-}
-
-function Header({ walletConnector }: Props) {
+function Header() {
   const dispatch = useDispatch();
-  const { theme } = useSelector((state: RootState) => state.global);
   const { connectWallet } = useWallet();
+  const { theme, chain } = useSelector((state: RootState) => state.global);
 
   const RenderWalletConnector = () => {
-    switch (walletConnector) {
-      case WalletConnector.cardano:
+    switch (chain) {
+      case Blockchain.cardano:
         return <WalletSelector connectWallet={connectWallet} />;
-      case WalletConnector.ergo:
-        return null;
-      case WalletConnector.none:
-      default:
+      case Blockchain.ergo:
         return null;
     }
   };

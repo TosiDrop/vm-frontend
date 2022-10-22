@@ -1,8 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import CardanoLogo from "src/assets/cardanologo.svg";
 import ErgoLogo from "src/assets/ergologo.svg";
 import { PageRoute } from "src/entities/common.entities";
 import useComponentVisible from "src/hooks/useComponentVisible";
+import { RootState } from "src/store";
 
 const NETWORK_INFO = {
   cardano: {
@@ -22,15 +24,11 @@ const NETWORK_INFO = {
 };
 
 export default function BlockchainSelector() {
-  const location = useLocation().pathname;
-  const isOnCardano = location.includes("cardano");
-  const isOnErgo = location.includes("ergo");
-
-  const network = NETWORK_INFO[isOnCardano ? "cardano" : "ergo"];
-
+  const { chain } = useSelector((state: RootState) => state.global);
+  const network = NETWORK_INFO[chain];
   const { ref, visible, setVisible } = useComponentVisible(false);
 
-  return !isOnCardano && !isOnErgo ? null : (
+  return (
     <div className="w-32 relative" ref={ref}>
       <button
         className="background w-full rounded-lg px-5 py-2.5 flex items-center justify-center gap-2"

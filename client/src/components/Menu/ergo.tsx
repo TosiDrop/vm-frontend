@@ -8,6 +8,7 @@ import {
 import {
   faArrowUpRightFromSquare,
   faBook,
+  faMessage,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useLocation } from "react-router-dom";
@@ -76,12 +77,12 @@ export const menuItems: Record<string, MenuItem> = {
   //   activeRoute: [PageRoute.dashboardCardano],
   //   icon: faTableColumns,
   // },*/
-  // feedback: {
-  //   text: "Feedback",
-  //   to: PageRoute.feedback,
-  //   activeRoute: [PageRoute.feedback],
-  //   icon: faMessage,
-  // },
+  feedback: {
+    text: "Feedback",
+    to: PageRoute.feedback,
+    activeRoute: [PageRoute.feedback],
+    icon: faMessage,
+  },
 };
 
 export default function MenuErgo() {

@@ -126,12 +126,6 @@ export interface SocialMediaItem {
   colorClassname: string; // for text color
 }
 
-export enum WalletConnector {
-  cardano,
-  ergo,
-  none,
-}
-
 export enum TransactionStatusDetail {
   waiting = 0,
   processing = 1,

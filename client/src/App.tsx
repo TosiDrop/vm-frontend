@@ -1,22 +1,38 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import AppPopUp from "src/components/AppPopUp";
 import Footer from "src/components/Footer";
 import Modal from "src/components/Modal";
 import RouterWrapper from "src/layouts/RouterWrapper";
-import { RootState } from "src/store";
 import "src/styles.scss";
+import Header from "./components/Header";
+import { Blockchain } from "./entities/common.entities";
 import BlockchainWrapper from "./layouts/BlockchainWrapper";
 import MenuWrapper from "./layouts/MenuWrapper";
 import ThemeWrapper from "./layouts/ThemeWrapper";
+import { setChain } from "./reducers/globalSlice";
 
 function App() {
-  const theme = useSelector((state: RootState) => state.global.theme);
+  const location = useLocation().pathname;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const isOnCardano = location.includes("cardano");
+    const isOnErgo = location.includes("ergo");
+    if (isOnCardano) {
+      dispatch(setChain(Blockchain.cardano));
+    } else if (isOnErgo) {
+      dispatch(setChain(Blockchain.ergo));
+    }
+  }, [location]);
 
   return (
     <ThemeWrapper>
       <>
         <AppPopUp></AppPopUp>
         <Modal />
+        <Header></Header>
         <BlockchainWrapper>
           <MenuWrapper>
             <RouterWrapper />

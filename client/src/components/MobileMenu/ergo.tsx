@@ -16,7 +16,7 @@ import {
 } from "src/entities/common.entities";
 import { setShowMenu, toggleTheme } from "src/reducers/globalSlice";
 import { RootState } from "src/store";
-import { menuItems, socialMediaItems } from "../Menu";
+import { menuItems, socialMediaItems } from "../Menu/ergo";
 import "./index.scss";
 
 export default function MobileMenuErgo() {
