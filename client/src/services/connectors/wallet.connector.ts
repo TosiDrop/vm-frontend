@@ -30,7 +30,6 @@ export enum WalletKeys {
   typhoncip30 = "typhoncip30",
   yoroi = "yoroi",
   LodeWallet = "LodeWallet",
-  
 }
 
 const ERROR = {

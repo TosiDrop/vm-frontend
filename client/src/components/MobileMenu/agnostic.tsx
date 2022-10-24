@@ -1,27 +1,26 @@
-import { RootState } from "src/store";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef } from "react";
-import { setShowMenu, toggleTheme } from "src/reducers/globalSlice";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBook,
   faArrowUpRightFromSquare,
-  faTableColumns,
-  faProjectDiagram,
-  faSun,
+  faBook,
   faMoon,
+  faSun,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
+import CardanoLogo from "src/assets/cardanologo.svg";
+import ErgoLogo from "src/assets/ergologo.svg";
 import {
-  MenuItem,
   PageRoute,
   SocialMediaItem,
   Themes,
 } from "src/entities/common.entities";
-import { menuItems, socialMediaItems } from "../Menu";
+import { setShowMenu, toggleTheme } from "src/reducers/globalSlice";
+import { RootState } from "src/store";
+import { socialMediaItems } from "../Menu/agnostic";
 import "./index.scss";
 
-const MobileMenu = () => {
+export default function MobileMenuAgnostic() {
   const showMenu = useSelector((state: RootState) => state.global.showMenu);
   const theme = useSelector((state: RootState) => state.global.theme);
   const location = useLocation().pathname;
@@ -40,23 +39,6 @@ const MobileMenu = () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
   }, [dispatch]);
-
-  const LinkButton = ({ menuItem }: { menuItem: MenuItem }) => (
-    <div onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
-      <Link
-        key={menuItem.text}
-        to={menuItem.to}
-        className={`${
-          menuItem.activeRoute.includes(location as PageRoute)
-            ? "text"
-            : "text-inactive"
-        }`}
-      >
-        <FontAwesomeIcon className="mr-2.5" icon={menuItem.icon} />
-        {menuItem.text}
-      </Link>
-    </div>
-  );
 
   const SocialMediaButton = ({
     socialMediaItem,
@@ -88,10 +70,27 @@ const MobileMenu = () => {
         }`}
         ref={ref}
       >
-        <div>
-          {Object.values(menuItems).map((menuItem: MenuItem) => (
-            <LinkButton menuItem={menuItem} key={menuItem.text}></LinkButton>
-          ))}
+        <div className="flex flex-col gap-2">
+          <Link
+            to={PageRoute.claimCardano}
+            className="text-inactive flex flex-row items-center gap-2"
+            onClick={() => dispatch(setShowMenu(false))}
+          >
+            <div className="h-4">
+              <img className="h-full" src={CardanoLogo}></img>
+            </div>
+            Cardano
+          </Link>
+          <Link
+            to={PageRoute.claimErgo}
+            className="text-inactive flex flex-row items-center gap-2"
+            onClick={() => dispatch(setShowMenu(false))}
+          >
+            <div className="h-4">
+              <img className="h-full" src={ErgoLogo}></img>
+            </div>
+            Ergo
+          </Link>
           <div onClick={() => dispatch(setShowMenu(false))} className="mb-2.5">
             <a
               target="_blank"
@@ -132,6 +131,4 @@ const MobileMenu = () => {
       </div>
     </div>
   );
-};
-
-export default MobileMenu;
+}

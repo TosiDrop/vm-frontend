@@ -2,13 +2,12 @@
  * URL example: http://localhost:3001/claim/?stakeAddress=stake_test1uzp4rhnuegqrqrnvg24e22fgjdnrln9533p2s4x20y7kjxc8kur62&withdrawAddress=addr_test1qp74nfv3syq939xu6cy4q3qh0r0aftj0lgep45vx4jdnuvy8qjkhrfpyngv405v225v2n2hntlgl95rx8yjwd4vaatxqxgy762&requestId=125&selectedTokens=1
  */
 
-import { useSearchParams } from "react-router-dom";
-import { getTxStatus } from "src/services/claim";
-import { GetCustomRewards } from "src/entities/vm.entities";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import DepositInfo from "src/components/Claim/DepositInfo";
+import { GetCustomRewards } from "src/entities/vm.entities";
 import Loading from "src/pages/Loading";
-import Page from "src/layouts/page";
+import { getTxStatus } from "src/services/claim";
 
 interface TransactionStatus {
   expected_deposit: number;
@@ -117,20 +116,18 @@ const DepositInfoPage = () => {
   return loading ? (
     <Loading />
   ) : selectedTokens && stakeAddress && withdrawAddress && requestId ? (
-    <Page>
-      <>
-        <p className="text-3xl">Claim your rewards</p>
-        <DepositInfo
-          txDetail={txDetail}
-          checkedCount={checkedCount}
-          transactionId={transactionId}
-          transactionStatus={transactionStatus}
-          setTransactionId={setTransactionId}
-          setTransactionStatus={setTransactionStatus}
-          unlock={unlock}
-        ></DepositInfo>
-      </>
-    </Page>
+    <>
+      <p className="text-3xl">Claim your rewards</p>
+      <DepositInfo
+        txDetail={txDetail}
+        checkedCount={checkedCount}
+        transactionId={transactionId}
+        transactionStatus={transactionStatus}
+        setTransactionId={setTransactionId}
+        setTransactionStatus={setTransactionStatus}
+        unlock={unlock}
+      ></DepositInfo>
+    </>
   ) : null;
 };
 

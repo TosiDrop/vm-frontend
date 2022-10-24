@@ -1,24 +1,23 @@
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState, KeyboardEvent, useCallback } from "react";
+import { KeyboardEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { ClaimableToken } from "src/entities/vm.entities";
-import { getCustomRewards, getRewards } from "src/services/claim";
+import Spinner from "src/components/Spinner";
 import {
-  ModalTypes,
   InfoModalTypes,
+  ModalTypes,
   PageRoute,
 } from "src/entities/common.entities";
-import { RootState } from "src/store";
+import { ClaimableToken } from "src/entities/vm.entities";
 import { showModal } from "src/reducers/globalSlice";
-import Spinner from "src/components/Spinner";
-import Page from "src/layouts/page";
+import { getCustomRewards, getRewards } from "src/services/claim";
+import { RootState } from "src/store";
 
 import ClaimableTokenBox from "src/components/Claim/ClaimableTokenBox";
-import { getStakeKey } from "src/services/common";
 import useErrorHandler from "src/hooks/useErrorHandler";
+import { getStakeKey } from "src/services/common";
 
 function Claim() {
   const dispatch = useDispatch();
@@ -179,7 +178,7 @@ function Claim() {
       );
       if (res == null) throw new Error();
 
-      let depositInfoUrl = `${PageRoute.depositCardano}/?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}&isWhitelisted=${res.is_whitelisted}`;
+      let depositInfoUrl = `${PageRoute.depositCardano}?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}&isWhitelisted=${res.is_whitelisted}`;
       navigate(depositInfoUrl, { replace: true });
     } catch (e) {
       handleError(e);
@@ -349,15 +348,13 @@ function Claim() {
   }
 
   return (
-    <Page>
-      <>
-        <p className="text-3xl">Claim your rewards</p>
-        <div className="flex flex-col gap-4">
-          {renderCheckRewardsStep()}
-          {renderStakingInfoStep()}
-        </div>
-      </>
-    </Page>
+    <>
+      <p className="text-3xl">Claim your rewards</p>
+      <div className="flex flex-col gap-4">
+        {renderCheckRewardsStep()}
+        {renderStakingInfoStep()}
+      </div>
+    </>
   );
 }
 

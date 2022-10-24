@@ -1,17 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  Themes,
   Blockchain,
   InfoModalTypes,
   ModalTypes,
+  Themes,
 } from "src/entities/common.entities";
 
 interface State {
   theme: Themes;
   showMenu: boolean;
-  blockchain: Blockchain;
   showModal: ModalTypes | null;
   infoModalDetails: InfoModalDetails;
+  chain: Blockchain;
 }
 
 interface InfoModalDetails {
@@ -24,12 +24,12 @@ const initialState: State = {
     ? (localStorage.getItem("theme") as Themes)
     : Themes.dark,
   showMenu: false,
-  blockchain: Blockchain.cardano,
   showModal: null,
   infoModalDetails: {
     text: "",
     type: InfoModalTypes.info,
   },
+  chain: Blockchain.cardano,
 };
 
 export const globalSlice = createSlice({
@@ -51,9 +51,6 @@ export const globalSlice = createSlice({
     setShowMenu: (state, action: PayloadAction<boolean>) => {
       state.showMenu = action.payload;
     },
-    setBlockchain: (state, action: PayloadAction<Blockchain>) => {
-      state.blockchain = action.payload;
-    },
     showModal: (
       state,
       action: PayloadAction<{
@@ -74,6 +71,9 @@ export const globalSlice = createSlice({
     hideModal: (state) => {
       state.showModal = null;
     },
+    setChain: (state, action: PayloadAction<Blockchain>) => {
+      state.chain = action.payload;
+    },
   },
 });
 
@@ -82,8 +82,8 @@ export const {
   setTheme,
   toggleMenu,
   setShowMenu,
-  setBlockchain,
   showModal,
   hideModal,
+  setChain,
 } = globalSlice.actions;
 export default globalSlice.reducer;

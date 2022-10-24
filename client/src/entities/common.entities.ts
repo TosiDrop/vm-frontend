@@ -110,6 +110,7 @@ export enum PageRoute {
   projectsErgo = "/ergo/projects",
   feedbackErgo = "/ergo/feedback",
   airdropErgo = "/ergo/airdrop",
+  feedback = "/feedback",
 }
 
 export interface MenuItem {
