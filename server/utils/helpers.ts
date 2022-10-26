@@ -15,11 +15,13 @@ import {
   ExtendedMetadata,
   Metadata,
 } from "../../client/src/entities/common.entities";
+import { GetPricePairs } from "../../client/src/entities/min.entities";
 import { CardanoNetwork } from ".";
 
 require("dotenv").config();
 
 let Buffer = require("buffer").Buffer;
+const MIN_PAIRS_API = process.env.MIN_PAIRS_API || "https://api-mainnet-prod.minswap.org/coinmarketcap/v2/pairs"
 const VM_API_TOKEN =
   process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
 const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
@@ -117,6 +119,10 @@ export async function getPools() {
 
 export async function getTokens() {
   return getFromVM<GetTokens>("get_tokens");
+}
+
+export async function getPrices() {
+  return (await axios.get<GetPricePairs>(MIN_PAIRS_API)).data;
 }
 
 export async function getPoolMetadata(accountInfo: any) {
