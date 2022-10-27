@@ -18,6 +18,7 @@ import {
   getAccountsInfo,
   postFromKoios,
   getEpochParams,
+  getPrices,
   getRewards,
   IVMSettings,
   ITosiFeatures,
@@ -108,6 +109,11 @@ const resp200Ok500Bad = {
     },
   },
 };
+
+app.get("/api/getprices", oapi.path(resp200Ok), async (req, res) => {
+  const prices = await getPrices();
+  return res.status(200).send(prices);
+});
 
 app.get("/api/getpools", oapi.path(resp200Ok), async (req, res) => {
   const pools = await getPools();

@@ -47,6 +47,7 @@ export interface ClaimableToken {
   amount: number;
   premium: boolean;
   selected?: boolean;
+  price?: number;
 }
 
 export interface GetTokens {
