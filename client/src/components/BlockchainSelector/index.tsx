@@ -39,7 +39,10 @@ export default function BlockchainSelector() {
       </button>
       {visible ? (
         <Link to={network.to} onClick={() => setVisible(false)}>
-          <button className="absolute mt-2.5 w-full background rounded-lg px-5 py-2.5 flex items-center justify-center gap-2">
+          <button
+            className="absolute mt-2.5 w-full background rounded-lg px-5 py-2.5 flex items-center justify-center gap-2"
+            disabled // disabled until ergo is ready
+          >
             <img className="h-5" src={network.toImg}></img>
             {network.toText}
           </button>

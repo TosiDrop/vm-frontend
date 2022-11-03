@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import useComponentVisible from "src/hooks/useComponentVisible";
 
 const AppPopUp = () => {
-  const MINSWAP_ADA_CTOSI_LINK = "https://app.minswap.org/swap?currencySymbolA=&tokenNameA=&currencySymbolB=a8a1dccea2e378081f2d500d98d022dd3c0bd77afd9dbc7b55a9d21b&tokenNameB=63544f5349";
+  const MINSWAP_ADA_CTOSI_LINK =
+    "https://app.minswap.org/swap?currencySymbolA=&tokenNameA=&currencySymbolB=a8a1dccea2e378081f2d500d98d022dd3c0bd77afd9dbc7b55a9d21b&tokenNameB=63544f5349";
   const { visible, setVisible, ref } = useComponentVisible(false);
 
   useEffect(() => {
@@ -22,7 +23,9 @@ const AppPopUp = () => {
     >
       <div className={`body-background p-5 rounded-2xl shadow-xl`}>
         <div className="flex flex-row items-center">
-          <p className="text-2xl font-medium">Support and Decide Tosi's Future!</p>
+          <p className="text-2xl font-medium">
+            Support and Decide Tosi's Future!
+          </p>
           <FontAwesomeIcon
             className="ml-auto cursor-pointer"
             icon={faXmark}
@@ -30,10 +33,9 @@ const AppPopUp = () => {
           ></FontAwesomeIcon>
         </div>
         <p className="mt-5">
-          You can govern the future of the TosiDrop platform and
-          benefit from generated revenue use when you hold cTOSI,
-          the TosiDrop platform token. cTOSI is available now on
-          Minswap!
+          You can govern the future of the TosiDrop platform and benefit from
+          generated revenue use when you hold cTOSI, the TosiDrop platform
+          token. cTOSI is available now on Minswap!
         </p>
         <div className="flex w-full mt-5">
           <a
