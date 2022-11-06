@@ -1,32 +1,32 @@
-import express from "express";
-import url from "url";
-import cors from "cors";
 import {
   Address,
   BaseAddress,
   RewardAddress,
 } from "@emurgo/cardano-serialization-lib-nodejs";
+import express from "express";
+import url from "url";
 import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
 import {
   CardanoNetwork,
-  translateAdaHandle,
+  getAccountsInfo,
+  getEpochParams,
+  getFromKoios,
   getFromVM,
   getPoolMetadata,
   getPools,
-  getTokens,
-  getFromKoios,
-  getAccountsInfo,
-  postFromKoios,
-  getEpochParams,
   getPrices,
   getRewards,
-  IVMSettings,
+  getTokens,
   ITosiFeatures,
+  IVMSettings,
+  postFromKoios,
+  translateAdaHandle,
 } from "./utils";
 import { ICustomRewards } from "./utils/entities";
+
 require("dotenv").config();
 const openapi = require("@wesleytodd/openapi");
-
+const fs = require("fs");
 const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
 const CARDANO_NETWORK = process.env.CARDANO_NETWORK || CardanoNetwork.preview;
 const CLAIM_ENABLED = process.env.CLAIM_ENABLED || true;
@@ -47,7 +47,6 @@ const oapi = openapi({
 });
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 app.use(require("morgan")(LOG_TYPE));
 app.use(oapi);
@@ -802,6 +801,20 @@ app.get(
     }
   }
 );
+
+app.get(
+  "/api/getprojects",
+  oapi.path(resp200Ok),
+  async (req: any, res: any) => {
+    const projects = JSON.parse(
+      fs.readFileSync(__dirname + "/public/json/projects.json", "utf8")
+    );
+    return res.status(200).send(projects);
+  }
+);
+
+// host static files such as images
+app.use("/api/img", express.static(__dirname + "/public/img"));
 
 // Fallback to React app
 app.get("*", (req, res) => {
