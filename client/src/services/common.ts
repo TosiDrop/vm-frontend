@@ -1,6 +1,7 @@
-import { NetworkId } from "src/entities/common.entities";
-import { EpochParams } from "src/entities/koios.entities";
 import axios from "axios";
+import { NetworkId, PopUpInfo } from "src/entities/common.entities";
+import { EpochParams } from "src/entities/koios.entities";
+import { ProjectData } from "src/entities/project.entities";
 
 export async function getFeatures() {
   const response = await axios.get(`/features`);
@@ -42,4 +43,14 @@ export async function getNetworkId(): Promise<{ network: NetworkId }> {
     return { network: NetworkId.mainnet };
   }
   return { network: NetworkId.undefined };
+}
+
+export async function getProjects(): Promise<ProjectData[]> {
+  const response = await axios.get(`/api/getprojects`);
+  return response.data;
+}
+
+export async function getPopUpInfo(): Promise<PopUpInfo> {
+  const response = await axios.get(`/api/getpopupinfo`);
+  return response.data;
 }
