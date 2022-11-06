@@ -132,3 +132,10 @@ export enum TransactionStatusDetail {
   failure = 2,
   success = 3,
 }
+
+export interface PopUpInfo {
+  title: string;
+  text: string;
+  buttonLink: string;
+  buttonText: string;
+}

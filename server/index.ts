@@ -813,6 +813,17 @@ app.get(
   }
 );
 
+app.get(
+  "/api/getpopupinfo",
+  oapi.path(resp200Ok),
+  async (req: any, res: any) => {
+    const popupInfo = JSON.parse(
+      fs.readFileSync(__dirname + "/public/json/popup.json", "utf8")
+    );
+    return res.status(200).send(popupInfo);
+  }
+);
+
 // host static files such as images
 app.use("/api/img", express.static(__dirname + "/public/img"));
 

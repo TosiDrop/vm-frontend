@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import BuyPopUp from "src/components/BuyPopUp";
 import Footer from "src/components/Footer";
 import Modal from "src/components/Modal";
+import PopUp from "src/components/PopUp";
 import RouterWrapper from "src/layouts/RouterWrapper";
 import "src/styles.scss";
 import Header from "./components/Header";
@@ -30,7 +30,7 @@ function App() {
   return (
     <ThemeWrapper>
       <>
-        <BuyPopUp></BuyPopUp>
+        <PopUp></PopUp>
         <Modal />
         <Header></Header>
         <BlockchainWrapper>

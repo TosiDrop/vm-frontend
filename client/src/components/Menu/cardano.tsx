@@ -3,7 +3,7 @@ import {
   faGithub,
   faMedium,
   faTelegram,
-  faTwitter
+  faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import {
   faArrowUpRightFromSquare,
@@ -12,14 +12,14 @@ import {
   // faClockRotateLeft,
   // faTableColumns,
   faProjectDiagram,
-  faWallet
+  faWallet,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useLocation } from "react-router-dom";
 import {
   MenuItem,
   PageRoute,
-  SocialMediaItem
+  SocialMediaItem,
 } from "src/entities/common.entities";
 
 export const socialMediaItems: Record<string, SocialMediaItem> = {
@@ -96,10 +96,11 @@ export default function MenuCardano() {
     return (
       <Link
         to={menuItem.to}
-        className={`${menuItem.activeRoute.includes(location as PageRoute)
+        className={`${
+          menuItem.activeRoute.includes(location as PageRoute)
             ? "text"
             : "text-inactive"
-          } flex flex-row items-center gap-2`}
+        } flex flex-row items-center gap-2`}
       >
         <FontAwesomeIcon className="w-4" icon={menuItem.icon} />
         {menuItem.text}
