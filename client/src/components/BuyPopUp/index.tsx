@@ -16,13 +16,12 @@ const AppPopUp = () => {
 
   return (
     <div
-      className={`z-50 w-full max-w-md px-5 pb-5 absolute text bottom-0 left-0 duration-200 ${
-        visible ? "translate-x-0" : "-translate-x-full"
-      }`}
+      className={`z-50 w-full max-w-md px-5 pb-5 absolute text bottom-0 left-0 duration-200 ${visible ? "translate-x-0" : "-translate-x-full"
+        }`}
       ref={ref}
     >
       <div className={`body-background p-5 rounded-2xl shadow-xl`}>
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row">
           <p className="text-2xl font-medium">
             Support and Decide Tosi's Future!
           </p>
