@@ -12,6 +12,7 @@ FROM base AS final
 WORKDIR /app
 COPY --from=builder /code/server/index.ts /code/server/package.json /code/server/tsconfig.json ./server/
 COPY --from=builder /code/server/utils ./server/utils/
+COPY --from=builder /code/server/public ./server/public/
 COPY --from=builder /code/server/node_modules ./server/node_modules/
 COPY --from=builder /code/client/src/entities/ ./client/src/entities/
 COPY --from=builder /code/client/src/services/ ./client/src/services/
