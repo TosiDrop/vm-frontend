@@ -23,8 +23,7 @@
       "telegram": "https://t.me/anetaBTC",
       "paper": "https://medium.com/@anetaBTC/anetabtc-litepaper-v1-0-171f29b3276a",
       "docs": "https://docs.anetabtc.io/",
-      "cardanoScan": "https://cardanoscan.io/token/b34b3ea80060ace9427bda98690a73d33840e27aaa8d6edb7f0c757a634e455441",
-      "poolpm": "https://pool.pm/asset1wnxwy544zu8fgyed5vkp2sf3t4t9aptfkc2z5x"
+      "cardanoScan": "https://cardanoscan.io/token/b34b3ea80060ace9427bda98690a73d33840e27aaa8d6edb7f0c757a634e455441"
     }
   },
   {
@@ -39,7 +38,7 @@
       "descLong": "Minswap is a Decentralized Exchange (DEX). The purpose of a DEX is to enable permissionless trading of token pairs. For each swap, a fee is taken, which goes to the Liquidity Providers (LPs). Anyone can provide Liquidity as well, hence profits are decentralized. Minswap is a community-centric DEX, in that our tokens are fairly distributed, without any private or VC investment.\n\nMinswap has pioneered several ideas in the Cardano ecosystem such as the FISO model, touted as the fairest ISO model in the Cardano community, and they plan to continue developing several value adding features.This will benefit both the Minswap community, and the Cardano community as a whole."
     },
     "token": {
-      "token": "MIN",
+      "token": "MINt",
       "totalSupply": 5000000000,
       "policyID": "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6"
     },
@@ -51,8 +50,7 @@
       "telegram": "https://t.me/MinswapMafia",
       "paper": "https://docs.minswap.org/whitepaper",
       "docs": "https://docs.minswap.org/",
-      "cardanoScan": "https://cardanoscan.io/token/29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c64d494e",
-      "poolpm": "https://pool.pm/asset1d9v7aptfvpx7we2la8f25kwprkj2ma5rp6uwzv"
+      "cardanoScan": "https://cardanoscan.io/token/29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c64d494e74"
     }
   },
   {
@@ -77,8 +75,7 @@
       "discord": "https://discord.gg/c9skrZvsqH",
       "telegram": "https://t.me/ardanaofficial",
       "docs": "https://docs.ardana.org/",
-      "cardanoScan": "https://cardanoscan.io/token/c88bbd1848db5ea665b1fffbefba86e8dcd723b5085348e8a8d2260f44414e41",
-      "poolpm": "https://pool.pm/asset1cwf8cjzvmsjydlsawx3lgujmrwdl2uz8exclkl"
+      "cardanoScan": "https://cardanoscan.io/token/c88bbd1848db5ea665b1fffbefba86e8dcd723b5085348e8a8d2260f44414e41"
     }
   },
   {
@@ -105,8 +102,7 @@
       "twitter": "https://twitter.com/AadaFinance",
       "discord": "https://discord.gg/zZPHeH78BE",
       "telegram": "https://t.me/aadacommunity",
-      "cardanoScan": "https://cardanoscan.io/token/8fef2d34078659493ce161a6c7fba4b56afefa8535296a5743f6958741414441",
-      "poolpm": "https://pool.pm/asset1khk46tdfsknze9k84ae0ee0k2x8mcwhz93k70d"
+      "cardanoScan": "https://cardanoscan.io/token/8fef2d34078659493ce161a6c7fba4b56afefa8535296a5743f6958741414441"
     }
   },
   {
@@ -121,7 +117,7 @@
       "descLong": "Smart Contract Audit Token Decentralized Autonomous Organization (SCATDAO) is a new audit paradigm that reinvents the way audits are selected, performed, and financed. With SCATDAO we solve audits inherent problem, the conflict of interest that comes from paying for an audit service. As we have seen with Enron, Tyco, and countless others, the possibility always exists for an auditor to commit fraud to keep their client happy. With SCATDAO, the token holders choose the projects they care for and want to be audited."
     },
     "token": {
-      "token": "SCAT",
+      "token": "AUDIT",
       "totalSupply": 1000000000,
       "policyID": "f2fe9aafd2e5b3b00e2949a96d44a84d9f4d818d63945010a466a4ae"
     },
@@ -132,8 +128,7 @@
       "twitter": "https://twitter.com/SCATDAO",
       "discord": "http://discord.gg/rfFkJxu9kP",
       "telegram": "http://t.me/SCAT_DAO",
-      "cardanoScan": "https://cardanoscan.io/token/8fef2d34078659493ce161a6c7fba4b56afefa8535296a5743f6958741414441",
-      "poolpm": "https://pool.pm/asset1khk46tdfsknze9k84ae0ee0k2x8mcwhz93k70d"
+      "cardanoScan": "https://cardanoscan.io/tokenPolicy/f2fe9aafd2e5b3b00e2949a96d44a84d9f4d818d63945010a466a4ae"
     }
   },
   {
@@ -159,8 +154,7 @@
       "discord": "https://discord.gg/a7HzSenWX5",
       "paper": "https://merkaba-token.io/",
       "docs": "https://merkaba-token.io/",
-      "cardanoScan": "",
-      "poolpm": ""
+      "cardanoScan": ""
     }
   }
 ]
