@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import logoDark from "src/assets/tosidrop-dark.png";
 import logoLight from "src/assets/tosidrop-light.png";
-import logo from "src/assets/tosidrop_logo.png";
 import WalletSelector from "src/components/WalletSelector";
 import { Blockchain, Themes } from "src/entities/common.entities";
 import useWallet from "src/hooks/useWallet";
@@ -41,7 +40,7 @@ function Header() {
           </div>
         </Link>
         <div className="flex flex-row gap-4 items-center ml-auto">
-          <BlockchainSelector></BlockchainSelector>
+          <BlockchainSelector isMobile={false}></BlockchainSelector>
           <RenderWalletConnector></RenderWalletConnector>
           <button
             className="background rounded-lg px-5 py-2.5"
@@ -54,16 +53,24 @@ function Header() {
 
       {/* Mobile header */}
       <div className="w-full flex flex-row items-center justify-center p-5 pb-0 h-fit sm:hidden">
-        <div className="flex flex-row items-center mr-auto">
+        <div className="flex flex-row items-center mr-auto w-14">
           <button
-            className="background rounded-lg px-5 py-2.5"
+            className="background rounded-lg py-2.5 w-full"
             onClick={() => dispatch(toggleMenu())}
           >
             <FontAwesomeIcon icon={faBars} />
           </button>
         </div>
-        <p className="font-semibold text-2xl">TosiDrop</p>
-        <img src={logo} className="h-10 logo ml-auto" alt="tosidrop logo"></img>
+        <div>
+          <img
+            src={theme === Themes.dark ? logoDark : logoLight}
+            className="h-10 logo"
+            alt="tosidrop logo"
+          ></img>
+        </div>
+        <div className="w-14 h-full ml-auto">
+          <BlockchainSelector isMobile={true}></BlockchainSelector>
+        </div>
       </div>
     </>
   );
