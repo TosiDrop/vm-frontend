@@ -9,6 +9,7 @@ import { showModal } from "src/reducers/globalSlice";
 import { getDeliveredRewards } from "src/services/claim";
 import { getStakeKey } from "src/services/common";
 import { RootState } from "src/store";
+import { parseTokenName } from "src/utils"
 
 import useErrorHandler from "src/hooks/useErrorHandler";
 
@@ -165,11 +166,13 @@ function ClaimHistory() {
             {date.toLocaleDateString() + " " + date.toLocaleTimeString()}
           </div>
         </td>
-        <td className="break-all">{tx.token}</td>
+        <td className="break-all">{parseTokenName(tx.token)}</td>
         <td className="break-all">{tx.amount}</td>
       </tr>
     );
   }
+
+
 
   return (
     <>
