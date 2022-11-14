@@ -14,18 +14,18 @@ const Project = ({ projectData }: { projectData: ProjectData }) => {
 
       <hr className="hidden lg:block lg:h-16 lg:border-r" />
 
-      <div className="m-2.5 p-2.5 flex flex-row container items-center gap-6 place-content-between basis-5/12">
-        <div>
+      <div className="m-2.5 p-2.5 flex flex-row container items-center gap-6 basis-5/12">
+        <div className="basis-1/4">
           <span>Token:</span>
           <div className="font-bold">{projectData.token.token}</div>
         </div>
-        <div>
+        <div className="basis-1/4">
           <span className="truncate">Total Supply:</span>
           <div className="font-bold">
             {projectData.token.totalSupply?.toLocaleString("en-US") ?? "?"}
           </div>
         </div>
-        <div className="text-lg">
+        <div className="text-lg basis-2/4">
           <URLs projectURLs={projectData.urls}></URLs>
         </div>
       </div>

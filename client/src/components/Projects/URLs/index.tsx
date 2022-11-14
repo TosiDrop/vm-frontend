@@ -25,7 +25,7 @@ const URLs = ({ projectURLs }: { projectURLs: ProjectURLs }) => {
   const poolpm = null;
 
   return (
-    <div className="flex flex-row gap-2">
+    <div className="flex flex-row gap-2 place-content-end">
       {medium}
       {twitter}
       {discord}
