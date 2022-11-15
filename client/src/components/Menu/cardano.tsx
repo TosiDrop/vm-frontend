@@ -8,6 +8,7 @@ import {
 import {
   faArrowUpRightFromSquare,
   faBook,
+  faCubesStacked,
   faMessage,
   // faClockRotateLeft,
   // faTableColumns,
@@ -74,6 +75,12 @@ export const menuItems: Record<string, MenuItem> = {
     to: PageRoute.projectsCardano,
     activeRoute: [PageRoute.projectsCardano],
     icon: faProjectDiagram,
+  },
+  pools: {
+    text: "Stake Pools",
+    to: PageRoute.poolsCardano,
+    activeRoute: [PageRoute.poolsCardano],
+    icon: faCubesStacked,
   },
   // dashboard: {
   //   text: "Dashboard",

@@ -34,8 +34,9 @@ const PopUp = () => {
 
   return (
     <div
-      className={`z-50 w-full max-w-md px-5 pb-5 absolute text bottom-0 left-0 duration-200 ${visible && popupInfo.title ? "translate-x-0" : "-translate-x-full"
-        }`}
+      className={`z-50 w-full max-w-md px-5 pb-5 absolute text bottom-0 left-0 duration-200 ${
+        visible && popupInfo.title ? "translate-x-0" : "-translate-x-full"
+      }`}
       ref={ref}
     >
       <div className={`body-background p-5 rounded-2xl shadow-xl`}>
