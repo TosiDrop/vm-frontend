@@ -10,7 +10,7 @@ import {
   faBook,
   faMessage,
   // faClockRotateLeft,
-  // faTableColumns,
+  faTableColumns,
   faProjectDiagram,
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
@@ -75,12 +75,12 @@ export const menuItems: Record<string, MenuItem> = {
     activeRoute: [PageRoute.projectsCardano],
     icon: faProjectDiagram,
   },
-  // dashboard: {
-  //   text: "Dashboard",
-  //   to: PageRoute.dashboardCardano,
-  //   activeRoute: [PageRoute.dashboardCardano],
-  //   icon: faTableColumns,
-  // },
+  dashboard: {
+    text: "Dashboard",
+    to: PageRoute.dashboardCardano,
+    activeRoute: [PageRoute.dashboardCardano],
+    icon: faTableColumns,
+  },
   feedback: {
     text: "Feedback",
     to: PageRoute.feedback,

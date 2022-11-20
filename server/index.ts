@@ -814,6 +814,22 @@ app.get(
 );
 
 app.get(
+  "/api/getdashboard",
+  oapi.path(resp200Ok),
+  // TODO: We need to get this information from somewhere, for now we are returning fake static
+  async (req: any, res: any) => {
+    return res.status(200).send({
+      cTOSIHolders: 10000,
+      eTOSIHolders: 2000,
+      totalRevenue: 123456789,
+      totalClaims: 117600,
+      marketCap: 123456,
+      tradingVolume: 1234,
+    });
+  }
+);
+
+app.get(
   "/api/getpopupinfo",
   oapi.path(resp200Ok),
   async (req: any, res: any) => {
