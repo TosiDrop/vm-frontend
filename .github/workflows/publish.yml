@@ -7,8 +7,6 @@ on:
 
 concurrency: ${{ github.ref }}
 
-concurrency: ${{ github.ref }}
-
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
