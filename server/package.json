@@ -21,7 +21,7 @@
   "proxy": "http://localhost:3000",
   "keywords": [],
   "dependencies": {
-    "@emurgo/cardano-serialization-lib-nodejs": "^11.0.5",
+    "@emurgo/cardano-serialization-lib-nodejs": "^11.1.0",
     "@wesleytodd/openapi": "^0.1.0",
     "axios": "^0.26.0",
     "cors": "^2.8.5",

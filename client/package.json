@@ -7,7 +7,7 @@
     "npm": ">=8"
   },
   "dependencies": {
-    "@emurgo/cardano-serialization-lib-asmjs": "^11.0.5",
+    "@emurgo/cardano-serialization-lib-asmjs": "^11.1.0",
     "@emurgo/cip14-js": "^3.0.1",
     "@fortawesome/fontawesome-common-types": "^6.1.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
