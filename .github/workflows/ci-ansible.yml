@@ -2,7 +2,7 @@ name: Ansible CI
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ "master", "release/**" ]
     paths: [ 'ansible/**','runme.sh','.github/workflows/ci-ansible.yml' ]
 
 jobs:
