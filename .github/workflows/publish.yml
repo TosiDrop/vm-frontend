@@ -144,12 +144,12 @@ jobs:
         run: docker manifest create ${{ steps.meta.outputs.tags }} --amend ${{ steps.meta.outputs.tags }}-amd64 --amend ${{ steps.meta.outputs.tags }}-arm64v8
       - name: manifest-master
         run: docker manifest create ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:master --amend ${{ steps.meta-ghcr.outputs.tags }}-amd64 --amend ${{ steps.meta-ghcr.outputs.tags }}-arm64v8
-        if: is_default_branch
+        if: startsWith(github.ref, 'master')
       - name: push
         run: docker manifest push ${{ steps.meta.outputs.tags }}
       - name: push-master
         run: docker manifest push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:master
-        if: is_default_branch
+        if: startsWith(github.ref, 'master')
 
   github-release:
     runs-on: ubuntu-latest
