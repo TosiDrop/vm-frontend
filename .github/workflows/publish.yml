@@ -9,7 +9,7 @@ concurrency: ${{ github.ref }}
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: tosidrop/vm-frontend
 
 jobs:
   build-amd64:
