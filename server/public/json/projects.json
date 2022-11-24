@@ -55,31 +55,6 @@
   },
   {
     "logos": {
-      "logoDefault": "/api/img/project-logo/ardana/ardana-full-light.png",
-      "logoDark": "/api/img/project-logo/ardana/ardana-full-dark.png",
-      "logoCompact": "/api/img/project-logo/ardana/ardana-compact-dark.png"
-    },
-    "descs": {
-      "descShort": "Ardana is a DeFi hub offering DeFi primitives such as a stablecoin platform and a decentralized exchange called Danaswap.",
-      "descLong": "Ardana is a DeFi hub built on the Cardano blockchain. Ardana provides Cardano's users with tried and tested DeFi primitives that will catalyze and sustain its financial ecosystem. The first is a decentralized stablecoin platform which enables users to leverage supported Cardano native assets by generating stablecoins against them; the second is Danaswap, which enables high-efficiency swaps between stable asset-sets, and provides a venue for liquidity providers to earn trading fees & DANA rewards for their liquidity provisioning."
-    },
-    "token": {
-      "token": "DANA",
-      "totalSupply": 125000000,
-      "policyID": "c88bbd1848db5ea665b1fffbefba86e8dcd723b5085348e8a8d2260f"
-    },
-    "urls": {
-      "website": "https://ardana.org/",
-      "medium": "https://medium.com/@ardanaproject",
-      "twitter": "https://twitter.com/ardanaproject",
-      "discord": "https://discord.gg/c9skrZvsqH",
-      "telegram": "https://t.me/ardanaofficial",
-      "docs": "https://docs.ardana.org/",
-      "cardanoScan": "https://cardanoscan.io/token/c88bbd1848db5ea665b1fffbefba86e8dcd723b5085348e8a8d2260f44414e41"
-    }
-  },
-  {
-    "logos": {
       "logoDefault": "/api/img/project-logo/aada/aada-full-light.png",
       "logoDark": "/api/img/project-logo/aada/aada-full-dark.png",
       "logoCompact": "/api/img/project-logo/aada/aada-compact-light.png",
