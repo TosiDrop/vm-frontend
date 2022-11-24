@@ -1,8 +1,8 @@
-import Loader from "./loader";
-import { Buffer } from "buffer";
 import { Address } from "@emurgo/cardano-serialization-lib-asmjs";
+import { Buffer } from "buffer";
 import { NetworkId } from "src/entities/common.entities";
-import { getEpochParams } from "src/services/common";
+import * as CommonService from "src/services/common";
+import Loader from "./loader";
 
 declare global {
   interface Window {
@@ -122,7 +122,7 @@ class WalletApi {
     if (!this.isEnabled() || !this.wallet) throw ERROR.NOT_CONNECTED;
 
     let networkId = await this.getNetworkId();
-    let protocolParameter = await this._getProtocolParameter(networkId.network);
+    let protocolParameter = await CommonService.getEpochParams();
 
     // const valueCBOR = await this.wallet.api.getBalance()
     // const value = this.serialLib.Value.from_bytes(Buffer.from(valueCBOR, "hex"))
@@ -153,7 +153,7 @@ class WalletApi {
       const minAda = this.serialLib.min_ada_required(
         countedValue,
         false,
-        this.serialLib.BigNum.from_str(protocolParameter.minUtxo)
+        this.serialLib.BigNum.from_str(protocolParameter.min_utxo_value)
       );
 
       const availableAda = countedValue.coin().checked_sub(minAda);
@@ -170,10 +170,10 @@ class WalletApi {
   async transferAda(paymentAddress: string, adaAmount: string) {
     if (!this.wallet) return;
 
-    let networkId = await this.getNetworkId();
-    const protocolParameters = await this._getProtocolParameter(
-      networkId.network
-    );
+    const [protocolParameters, tip] = await Promise.all([
+      CommonService.getEpochParams(),
+      CommonService.getTip(),
+    ]);
 
     const changeAddress =
       await (this.wallet?.api.getChangeAddress() as Promise<string>);
@@ -190,32 +190,37 @@ class WalletApi {
       const txConfig = this.serialLib.TransactionBuilderConfigBuilder.new()
         .coins_per_utxo_word(
           this.serialLib.BigNum.from_str(
-            String(protocolParameters.coinsPerUtxoWord)
+            String(protocolParameters.coins_per_utxo_size)
           )
         )
         .fee_algo(
           this.serialLib.LinearFee.new(
             this.serialLib.BigNum.from_str(
-              String(protocolParameters.linearFee.minFeeA)
+              String(protocolParameters.min_fee_a)
             ),
-            this.serialLib.BigNum.from_str(
-              String(protocolParameters.linearFee.minFeeB)
-            )
+            this.serialLib.BigNum.from_str(String(protocolParameters.min_fee_b))
           )
         )
         .key_deposit(
-          this.serialLib.BigNum.from_str(String(protocolParameters.keyDeposit))
+          this.serialLib.BigNum.from_str(String(protocolParameters.key_deposit))
         )
         .pool_deposit(
-          this.serialLib.BigNum.from_str(String(protocolParameters.poolDeposit))
+          this.serialLib.BigNum.from_str(
+            String(protocolParameters.pool_deposit)
+          )
         )
-        .max_tx_size(protocolParameters.maxTxSize)
-        .max_value_size(protocolParameters.maxValSize)
+        .max_tx_size(protocolParameters.max_tx_size)
+        .max_value_size(protocolParameters.max_tx_size)
         .prefer_pure_change(true)
         .build();
 
       // builder
       const txBuilder = this.serialLib.TransactionBuilder.new(txConfig);
+
+      /** valid for one hour (3600) */
+      txBuilder.set_ttl_bignum(
+        this.serialLib.BigNum.from_str((tip.abs_slot + 3600).toString())
+      );
 
       // outputs
       txBuilder.add_output(
@@ -343,29 +348,6 @@ class WalletApi {
     }
     return assets;
   }
-
-  async _getProtocolParameter(networkId: number) {
-    let epochParams: any = await getEpochParams();
-
-    return {
-      linearFee: {
-        minFeeA: epochParams.min_fee_a.toString(),
-        minFeeB: epochParams.min_fee_b.toString(),
-      },
-      poolDeposit: epochParams.pool_deposit,
-      keyDeposit: epochParams.key_deposit,
-      coinsPerUtxoWord: epochParams.coins_per_utxo_size
-        ? epochParams.coins_per_utxo_size
-        : epochParams.coins_per_utxo_word,
-      maxValSize: epochParams.max_val_size,
-      priceMem: epochParams.price_mem,
-      priceStep: epochParams.price_step,
-      maxTxSize: parseInt(epochParams.max_tx_size),
-      minUtxo: "1000000", //p.min_utxo, minUTxOValue protocol paramter has been removed since Alonzo HF. Calulation of minADA works differently now, but 1 minADA still sufficient for now
-    };
-  }
-
-  async _koiosRequest() {}
 }
 
 export default WalletApi;
