@@ -472,7 +472,7 @@ app.get(
     try {
       const queryObject = url.parse(req.url, true).query;
       const { staking_address, session_id, selected, unlock } = queryObject;
-      let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`;
+      let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}&xwallet=true`;
       let isWhitelisted = false;
 
       if (!staking_address)
