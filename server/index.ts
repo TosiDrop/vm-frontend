@@ -129,6 +129,11 @@ app.get("/api/getsettings", oapi.path(resp200Ok), async (req, res) => {
   return res.status(200).send(settings);
 });
 
+app.get("/api/systeminfo", oapi.path(resp200Ok), async (req, res) => {
+  const systeminfo = await getFromVM("system_info");
+  return res.status(200).send(systeminfo);
+});
+
 app.get("/health", (req: any, res: any) => {
   res.status(200).json({
     status: "UP",
