@@ -568,7 +568,7 @@ app.get(
   async (req: any, res: any) => {
     try {
       const queryObject = url.parse(req.url, true).query;
-      const stakeAddress = queryObject.address as string;
+      const stakeAddress = queryObject.staking_address as string;
       let vmArgs = `delivered_rewards&staking_address=${stakeAddress}`;
       if (!stakeAddress)
         return res
