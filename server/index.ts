@@ -568,9 +568,9 @@ app.get(
   async (req: any, res: any) => {
     try {
       const queryObject = url.parse(req.url, true).query;
-      const stakeAddress = queryObject.address as string;
-      let vmArgs = `delivered_rewards&staking_address=${stakeAddress}`;
-      if (!stakeAddress)
+      const { staking_address } = queryObject;
+      let vmArgs = `delivered_rewards&staking_address=${staking_address}`;
+      if (!staking_address)
         return res
           .status(400)
           .send({ error: "No address provided to /api/getdeliveredrewards" });
