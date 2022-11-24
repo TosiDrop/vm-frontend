@@ -80,7 +80,7 @@ export interface EpochParams {
   max_val_size: number;
   collateral_percent: number;
   max_collateral_inputs: number;
-  coins_per_utxo_word: number;
+  coins_per_utxo_size: number;
 }
 
 export interface PoolInfo {
