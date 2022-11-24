@@ -1,5 +1,9 @@
 import axios from "axios";
-import { NetworkId, PopUpInfo } from "src/entities/common.entities";
+import {
+  NetworkId,
+  PopUpInfo,
+  StakePoolInfo,
+} from "src/entities/common.entities";
 import { EpochParams } from "src/entities/koios.entities";
 import { ProjectData } from "src/entities/project.entities";
 
@@ -53,4 +57,10 @@ export async function getProjects(): Promise<ProjectData[]> {
 export async function getPopUpInfo(): Promise<PopUpInfo> {
   const response = await axios.get(`/api/getpopupinfo`);
   return response.data;
+}
+
+export async function getPools(): Promise<StakePoolInfo[]> {
+  const response = await axios.get(`/api/getpools`);
+  const pools = response.data;
+  return Object.values(pools);
 }
