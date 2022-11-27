@@ -59,12 +59,6 @@ export const menuItems: Record<string, MenuItem> = {
   // //   activeRoute: [PageRoute.history],
   // //   icon: faClockRotateLeft,
   // // },
-  // airdrop: {
-  //   text: "Airdrop",
-  //   to: PageRoute.airdropCardano,
-  //   activeRoute: [PageRoute.airdropCardano],
-  //   icon: faPaperPlane,
-  // },
   // projects: {
   //   text: "Projects",
   //   to: PageRoute.projectsCardano,
