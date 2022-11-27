@@ -1,21 +1,17 @@
 import { KeyboardEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-
 import Spinner from "src/components/Spinner";
 import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
 import { GetRewardsHistory } from "src/entities/vm.entities";
+import useErrorHandler from "src/hooks/useErrorHandler";
 import { showModal } from "src/reducers/globalSlice";
 import { getDeliveredRewards } from "src/services/claim";
 import { getStakeKey } from "src/services/common";
 import { RootState } from "src/store";
-import { parseTokenName } from "src/utils"
-
-import useErrorHandler from "src/hooks/useErrorHandler";
+import { parseTokenName } from "src/utils";
 
 function ClaimHistory() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const connectedWallet = useSelector(
     (state: RootState) => state.wallet.walletApi
   );
@@ -171,8 +167,6 @@ function ClaimHistory() {
       </tr>
     );
   }
-
-
 
   return (
     <>

@@ -25,6 +25,7 @@ function App() {
     } else if (isOnErgo) {
       dispatch(setChain(Blockchain.ergo));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   return (

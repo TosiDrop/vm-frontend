@@ -102,7 +102,6 @@ export enum PageRoute {
   dashboardCardano = "/cardano/dashboard",
   projectsCardano = "/cardano/projects",
   feedbackCardano = "/cardano/feedback",
-  airdropCardano = "/cardano/airdrop",
   poolsCardano = "/cardano/pools",
   claimErgo = "/ergo/claim",
   depositErgo = "/ergo/deposit",
@@ -110,7 +109,6 @@ export enum PageRoute {
   dashboardErgo = "/ergo/dashboard",
   projectsErgo = "/ergo/projects",
   feedbackErgo = "/ergo/feedback",
-  airdropErgo = "/ergo/airdrop",
   feedback = "/feedback",
 }
 

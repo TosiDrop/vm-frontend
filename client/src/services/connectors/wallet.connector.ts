@@ -114,11 +114,7 @@ class WalletApi {
   async getBalance() {
     if (!this.isEnabled() || !this.wallet) throw ERROR.NOT_CONNECTED;
 
-    let networkId = await this.getNetworkId();
     let protocolParameter = await CommonService.getEpochParams();
-
-    // const valueCBOR = await this.wallet.api.getBalance()
-    // const value = wasm.Value.from_bytes(Buffer.from(valueCBOR, "hex"))
 
     const utxos = await this.wallet.api.getUtxos();
     if (utxos) {
@@ -156,100 +152,86 @@ class WalletApi {
       CommonService.getTip(),
     ]);
 
-    const changeAddress =
-      await (this.wallet?.api.getChangeAddress() as Promise<string>);
-    // Cast according to wallet
-    if (changeAddress) {
-      const account = this.wallet.api;
-      // change address
-      const address = await account.getChangeAddress();
-      const changeAddress = wasm.Address.from_bytes(
-        Buffer.from(address, "hex")
-      ).to_bech32();
+    const account = this.wallet.api;
+    const address = await account.getChangeAddress();
+    const changeAddress = wasm.Address.from_bytes(
+      Buffer.from(address, "hex")
+    ).to_bech32();
 
-      // config
-      const txConfig = wasm.TransactionBuilderConfigBuilder.new()
-        .coins_per_utxo_word(
-          wasm.BigNum.from_str(String(protocolParameters.coins_per_utxo_size))
+    const txConfig = wasm.TransactionBuilderConfigBuilder.new()
+      .coins_per_utxo_byte(
+        wasm.BigNum.from_str(String(protocolParameters.coins_per_utxo_size))
+      )
+      .fee_algo(
+        wasm.LinearFee.new(
+          wasm.BigNum.from_str(String(protocolParameters.min_fee_a)),
+          wasm.BigNum.from_str(String(protocolParameters.min_fee_b))
         )
-        .fee_algo(
-          wasm.LinearFee.new(
-            wasm.BigNum.from_str(String(protocolParameters.min_fee_a)),
-            wasm.BigNum.from_str(String(protocolParameters.min_fee_b))
-          )
-        )
-        .key_deposit(
-          wasm.BigNum.from_str(String(protocolParameters.key_deposit))
-        )
-        .pool_deposit(
-          wasm.BigNum.from_str(String(protocolParameters.pool_deposit))
-        )
-        .max_tx_size(protocolParameters.max_tx_size)
-        .max_value_size(protocolParameters.max_tx_size)
-        .prefer_pure_change(true)
-        .build();
+      )
+      .key_deposit(wasm.BigNum.from_str(String(protocolParameters.key_deposit)))
+      .pool_deposit(
+        wasm.BigNum.from_str(String(protocolParameters.pool_deposit))
+      )
+      .max_tx_size(protocolParameters.max_tx_size)
+      .max_value_size(protocolParameters.max_tx_size)
+      .prefer_pure_change(true)
+      .build();
 
-      // builder
-      const txBuilder = wasm.TransactionBuilder.new(txConfig);
+    const txBuilder = wasm.TransactionBuilder.new(txConfig);
 
-      /** valid for one hour (3600) */
-      txBuilder.set_ttl_bignum(
-        wasm.BigNum.from_str((tip.abs_slot + 3600).toString())
+    /** valid for one hour (3600) from current abs slot */
+    txBuilder.set_ttl_bignum(
+      wasm.BigNum.from_str((tip.abs_slot + 3600).toString())
+    );
+
+    txBuilder.add_output(
+      wasm.TransactionOutputBuilder.new()
+        .with_address(wasm.Address.from_bech32(paymentAddress))
+        .next()
+        .with_value(wasm.Value.new(wasm.BigNum.from_str(adaAmount)))
+        .build()
+    );
+
+    /** convert utxos from wallet connector */
+    const utxosFromWalletConnector = (await account.getUtxos()).map((utxo) =>
+      wasm.TransactionUnspentOutput.from_bytes(Buffer.from(utxo, "hex"))
+    );
+
+    const utxoOutputs = wasm.TransactionUnspentOutputs.new();
+    utxosFromWalletConnector.map((currentUtxo) => utxoOutputs.add(currentUtxo));
+
+    txBuilder.add_inputs_from(
+      utxoOutputs,
+      wasm.CoinSelectionStrategyCIP2.RandomImproveMultiAsset
+    );
+    txBuilder.add_change_if_needed(wasm.Address.from_bech32(changeAddress));
+
+    const txBody = txBuilder.build();
+    const transaction = wasm.Transaction.new(
+      txBuilder.build(),
+      wasm.TransactionWitnessSet.new()
+    );
+
+    let witness;
+    try {
+      witness = await account.signTx(
+        Buffer.from(transaction.to_bytes(), "hex").toString("hex")
       );
-
-      // outputs
-      txBuilder.add_output(
-        wasm.TransactionOutputBuilder.new()
-          .with_address(wasm.Address.from_bech32(paymentAddress))
-          .next()
-          .with_value(wasm.Value.new(wasm.BigNum.from_str(adaAmount)))
-          .build()
-      );
-
-      // convert utxos from wallet connector
-      const utxosFromWalletConnector = (await account.getUtxos()).map((utxo) =>
-        wasm.TransactionUnspentOutput.from_bytes(Buffer.from(utxo, "hex"))
-      );
-
-      // create TransactionUnspentOutputs for 'add_inputs_from' function
-      const utxoOutputs = wasm.TransactionUnspentOutputs.new();
-      utxosFromWalletConnector.map((currentUtxo) =>
-        utxoOutputs.add(currentUtxo)
-      );
-
-      // inputs with coin selection
-      // 0 for LargestFirst, 1 RandomImprove 2,3 Mutli asset
-      txBuilder.add_inputs_from(utxoOutputs, 0);
-      txBuilder.add_change_if_needed(wasm.Address.from_bech32(changeAddress));
-
-      const txBody = txBuilder.build();
-      const transaction = wasm.Transaction.new(
-        txBuilder.build(),
-        wasm.TransactionWitnessSet.new()
-      );
-
-      let witness;
-      try {
-        witness = await account.signTx(
-          Buffer.from(transaction.to_bytes(), "hex").toString("hex")
-        );
-      } catch (error: any) {
-        throw new Error(error.message || error.info);
-      }
-
-      const signedTx = wasm.Transaction.new(
-        txBody,
-        wasm.TransactionWitnessSet.from_bytes(Buffer.from(witness, "hex")),
-        undefined // transaction metadata
-      );
-
-      const txHash = await account.submitTx(
-        Buffer.from(signedTx.to_bytes()).toString("hex")
-      );
-
-      return txHash;
+    } catch (error: any) {
+      throw new Error(error.message || error.info);
     }
-    return undefined;
+
+    const signedTx = wasm.Transaction.new(
+      txBody,
+      wasm.TransactionWitnessSet.from_bytes(Buffer.from(witness, "hex")),
+      undefined /** transaction metadata */
+    );
+
+    const txHash = await account.submitTx(
+      Buffer.from(signedTx.to_bytes()).toString("hex")
+    );
+
+    return txHash;
   }
 
   async getUtxos(utxos: any[]) {
@@ -262,7 +244,7 @@ class WalletApi {
     );
     let UTXOS = [];
     for (let utxo of Utxos) {
-      let assets = this._utxoToAssets(utxo);
+      let assets = this.utxoToAssets(utxo);
 
       UTXOS.push({
         txHash: Buffer.from(
@@ -276,7 +258,7 @@ class WalletApi {
     return UTXOS;
   }
 
-  _utxoToAssets(utxo: wasm.TransactionUnspentOutput) {
+  private utxoToAssets(utxo: wasm.TransactionUnspentOutput) {
     let value = utxo.output().amount();
     const assets = [];
     assets.push({
