@@ -114,11 +114,7 @@ class WalletApi {
   async getBalance() {
     if (!this.isEnabled() || !this.wallet) throw ERROR.NOT_CONNECTED;
 
-    let networkId = await this.getNetworkId();
     let protocolParameter = await CommonService.getEpochParams();
-
-    // const valueCBOR = await this.wallet.api.getBalance()
-    // const value = wasm.Value.from_bytes(Buffer.from(valueCBOR, "hex"))
 
     const utxos = await this.wallet.api.getUtxos();
     if (utxos) {
@@ -158,16 +154,13 @@ class WalletApi {
 
     const changeAddress =
       await (this.wallet?.api.getChangeAddress() as Promise<string>);
-    // Cast according to wallet
     if (changeAddress) {
       const account = this.wallet.api;
-      // change address
       const address = await account.getChangeAddress();
       const changeAddress = wasm.Address.from_bytes(
         Buffer.from(address, "hex")
       ).to_bech32();
 
-      // config
       const txConfig = wasm.TransactionBuilderConfigBuilder.new()
         .coins_per_utxo_word(
           wasm.BigNum.from_str(String(protocolParameters.coins_per_utxo_size))
@@ -189,15 +182,13 @@ class WalletApi {
         .prefer_pure_change(true)
         .build();
 
-      // builder
       const txBuilder = wasm.TransactionBuilder.new(txConfig);
 
-      /** valid for one hour (3600) */
+      /** valid for one hour (3600) from current abs slot */
       txBuilder.set_ttl_bignum(
         wasm.BigNum.from_str((tip.abs_slot + 3600).toString())
       );
 
-      // outputs
       txBuilder.add_output(
         wasm.TransactionOutputBuilder.new()
           .with_address(wasm.Address.from_bech32(paymentAddress))
@@ -206,7 +197,7 @@ class WalletApi {
           .build()
       );
 
-      // convert utxos from wallet connector
+      /** convert utxos from wallet connector */
       const utxosFromWalletConnector = (await account.getUtxos()).map((utxo) =>
         wasm.TransactionUnspentOutput.from_bytes(Buffer.from(utxo, "hex"))
       );
@@ -240,7 +231,7 @@ class WalletApi {
       const signedTx = wasm.Transaction.new(
         txBody,
         wasm.TransactionWitnessSet.from_bytes(Buffer.from(witness, "hex")),
-        undefined // transaction metadata
+        undefined /** transaction metadata */
       );
 
       const txHash = await account.submitTx(

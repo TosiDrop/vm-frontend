@@ -43,7 +43,7 @@ export default function BlockchainSelector({
         } h-full background rounded-lg py-2.5 flex items-center justify-center gap-2`}
         onClick={() => setVisible(!visible)}
       >
-        <img className="h-5" src={network.img}></img>
+        <img alt="blockchain logo" className="h-5" src={network.img}></img>
         {isMobile ? null : network.text}
       </button>
       {visible ? (
@@ -52,7 +52,11 @@ export default function BlockchainSelector({
             className="h-full absolute mt-2.5 w-full background rounded-lg px-5 py-2.5 flex items-center justify-center gap-2"
             disabled={true} // disabled until ergo is ready
           >
-            <img className="h-5" src={network.toImg}></img>
+            <img
+              alt="blockchain logo"
+              className="h-5"
+              src={network.toImg}
+            ></img>
             {isMobile ? null : network.toText}
           </button>
         </Link>

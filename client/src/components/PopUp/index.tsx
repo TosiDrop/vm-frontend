@@ -30,6 +30,7 @@ const PopUp = () => {
 
   useEffect(() => {
     getPopUpInfoFromAPI();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setVisible]);
 
   return (

@@ -19,6 +19,7 @@ const Projects = () => {
 
   useEffect(() => {
     getProjectsFromAPI();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
