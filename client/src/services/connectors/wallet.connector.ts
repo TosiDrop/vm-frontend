@@ -211,15 +211,15 @@ class WalletApi {
         wasm.TransactionUnspentOutput.from_bytes(Buffer.from(utxo, "hex"))
       );
 
-      // create TransactionUnspentOutputs for 'add_inputs_from' function
       const utxoOutputs = wasm.TransactionUnspentOutputs.new();
       utxosFromWalletConnector.map((currentUtxo) =>
         utxoOutputs.add(currentUtxo)
       );
 
-      // inputs with coin selection
-      // 0 for LargestFirst, 1 RandomImprove 2,3 Mutli asset
-      txBuilder.add_inputs_from(utxoOutputs, 0);
+      txBuilder.add_inputs_from(
+        utxoOutputs,
+        wasm.CoinSelectionStrategyCIP2.RandomImprove
+      );
       txBuilder.add_change_if_needed(wasm.Address.from_bech32(changeAddress));
 
       const txBody = txBuilder.build();
@@ -262,7 +262,7 @@ class WalletApi {
     );
     let UTXOS = [];
     for (let utxo of Utxos) {
-      let assets = this._utxoToAssets(utxo);
+      let assets = this.utxoToAssets(utxo);
 
       UTXOS.push({
         txHash: Buffer.from(
@@ -276,7 +276,7 @@ class WalletApi {
     return UTXOS;
   }
 
-  _utxoToAssets(utxo: wasm.TransactionUnspentOutput) {
+  private utxoToAssets(utxo: wasm.TransactionUnspentOutput) {
     let value = utxo.output().amount();
     const assets = [];
     assets.push({
