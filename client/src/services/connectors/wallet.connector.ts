@@ -147,9 +147,10 @@ class WalletApi {
   async transferAda(paymentAddress: string, adaAmount: string) {
     if (!this.wallet) return;
 
-    const [protocolParameters, tip] = await Promise.all([
+    const [protocolParameters, tip, features] = await Promise.all([
       CommonService.getEpochParams(),
       CommonService.getTip(),
+      CommonService.getFeatures(),
     ]);
 
     const account = this.wallet.api;
@@ -200,10 +201,7 @@ class WalletApi {
     const utxoOutputs = wasm.TransactionUnspentOutputs.new();
     utxosFromWalletConnector.map((currentUtxo) => utxoOutputs.add(currentUtxo));
 
-    txBuilder.add_inputs_from(
-      utxoOutputs,
-      wasm.CoinSelectionStrategyCIP2.RandomImproveMultiAsset
-    );
+    txBuilder.add_inputs_from(utxoOutputs, features.coin_selection_strategy);
     txBuilder.add_change_if_needed(wasm.Address.from_bech32(changeAddress));
 
     const txBody = txBuilder.build();
