@@ -1,3 +1,5 @@
+import { EpochData } from "src/entities/common.entities";
+
 export const abbreviateAddress = (
   address: string,
   start = 7,
@@ -18,29 +20,19 @@ export const isTxHash = (txHash: string) => {
   return txHash.length === 64 && txHash.indexOf(" ") === -1;
 };
 
-
-export interface EpochData {
-  currentEpoch: number,
-  percentDone: number,
-  endDate: Date,
-  countdownDays: number,
-  countdownHours: number,
-  countdownMinutes: number,
-  countdownSeconds: number,
-}
-
 const firstEpochSeconds = 1506203091;
 const epochDurationSeconds = 432000;
 
 export const calcEpoch = (): EpochData => {
-  var currentTimeUTCInSeconds = new Date().getTime() / 1000;
-  var secondsInTotalEpochs = currentTimeUTCInSeconds - firstEpochSeconds;
-  var secondsInCurrentEpoch = secondsInTotalEpochs % epochDurationSeconds;
-  var currentEpoch = secondsInTotalEpochs / epochDurationSeconds;
-  var percentDone = currentEpoch % 1;
+  let currentTimeUTCInSeconds = new Date().getTime() / 1000;
+  let secondsInTotalEpochs = currentTimeUTCInSeconds - firstEpochSeconds;
+  let secondsInCurrentEpoch = secondsInTotalEpochs % epochDurationSeconds;
+  let currentEpoch = secondsInTotalEpochs / epochDurationSeconds;
+  let percentDone = currentEpoch % 1;
   currentEpoch = Math.floor(currentEpoch);
-  var secondsEpochEnds = currentTimeUTCInSeconds - secondsInCurrentEpoch + epochDurationSeconds;
-  var endDateCountDownSeconds = (secondsEpochEnds - currentTimeUTCInSeconds);
+  let secondsEpochEnds =
+    currentTimeUTCInSeconds - secondsInCurrentEpoch + epochDurationSeconds;
+  let endDateCountDownSeconds = secondsEpochEnds - currentTimeUTCInSeconds;
 
   return {
     currentEpoch: currentEpoch,
@@ -49,6 +41,6 @@ export const calcEpoch = (): EpochData => {
     countdownDays: Math.floor(endDateCountDownSeconds / (60 * 60 * 24)),
     countdownHours: Math.floor((endDateCountDownSeconds / (60 * 60)) % 24),
     countdownMinutes: Math.floor((endDateCountDownSeconds / 60) % 60),
-    countdownSeconds: Math.floor((endDateCountDownSeconds % 60)),
+    countdownSeconds: Math.floor(endDateCountDownSeconds % 60),
   };
-}
+};

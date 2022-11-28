@@ -139,3 +139,19 @@ export interface PopUpInfo {
   buttonLink: string;
   buttonText: string;
 }
+
+export interface DashboardItemData {
+  title: string;
+  content?: number;
+  contentSuffix?: string;
+}
+
+export interface EpochData {
+  currentEpoch: number;
+  percentDone: number;
+  endDate: Date;
+  countdownDays: number;
+  countdownHours: number;
+  countdownMinutes: number;
+  countdownSeconds: number;
+}
