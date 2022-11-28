@@ -54,9 +54,10 @@ function ClaimHistory() {
       setLoader(true);
       try {
         let address = await getStakeKey(searchAddress);
+        address = address.staking_address;
         setStakeAddress(address);
 
-        const getRewardsHistory = await getDeliveredRewards(stakeAddress);
+        const getRewardsHistory = await getDeliveredRewards(address);
         if (getRewardsHistory == null) throw new Error();
         if (getRewardsHistory.length !== 0) {
           setClaimHisory(getRewardsHistory);
