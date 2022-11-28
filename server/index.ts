@@ -129,6 +129,11 @@ app.get("/api/getsettings", oapi.path(resp200Ok), async (req, res) => {
   return res.status(200).send(settings);
 });
 
+app.get("/api/systeminfo", oapi.path(resp200Ok), async (req, res) => {
+  const systeminfo = await getFromVM("system_info");
+  return res.status(200).send(systeminfo);
+});
+
 app.get("/health", (req: any, res: any) => {
   res.status(200).json({
     status: "UP",
@@ -472,7 +477,7 @@ app.get(
     try {
       const queryObject = url.parse(req.url, true).query;
       const { staking_address, session_id, selected, unlock } = queryObject;
-      let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}`;
+      let vmArgs = `custom_request&staking_address=${staking_address}&session_id=${session_id}&selected=${selected}&xwallet=true`;
       let isWhitelisted = false;
 
       if (!staking_address)
@@ -568,9 +573,9 @@ app.get(
   async (req: any, res: any) => {
     try {
       const queryObject = url.parse(req.url, true).query;
-      const stakeAddress = queryObject.address as string;
-      let vmArgs = `delivered_rewards&staking_address=${stakeAddress}`;
-      if (!stakeAddress)
+      const { staking_address } = queryObject;
+      let vmArgs = `delivered_rewards&staking_address=${staking_address}`;
+      if (!staking_address)
         return res
           .status(400)
           .send({ error: "No address provided to /api/getdeliveredrewards" });

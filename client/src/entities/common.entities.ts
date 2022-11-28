@@ -102,14 +102,13 @@ export enum PageRoute {
   dashboardCardano = "/cardano/dashboard",
   projectsCardano = "/cardano/projects",
   feedbackCardano = "/cardano/feedback",
-  airdropCardano = "/cardano/airdrop",
+  poolsCardano = "/cardano/pools",
   claimErgo = "/ergo/claim",
-  depositErgo = "/cardano/deposit",
+  depositErgo = "/ergo/deposit",
   historyErgo = "/ergo/history",
   dashboardErgo = "/ergo/dashboard",
   projectsErgo = "/ergo/projects",
   feedbackErgo = "/ergo/feedback",
-  airdropErgo = "/ergo/airdrop",
   feedback = "/feedback",
 }
 
@@ -154,4 +153,11 @@ export interface EpochData {
   countdownHours: number;
   countdownMinutes: number;
   countdownSeconds: number;
+}
+
+export interface StakePoolInfo {
+  ticker: string;
+  name: string;
+  logo: string;
+  description: string;
 }

@@ -31,6 +31,19 @@ export interface GetCustomRewards {
   is_whitelisted: boolean;
 }
 
+export interface GetRewardsHistory {
+  id: number;
+  staking_address: string;
+  epoch: number;
+  token: string;
+  amount: number;
+  withdrawal_request: number;
+  expiry_return_pool_id: string | null;
+  expiry: number;
+  return_policy: number;
+  delivered_on: string;
+}
+
 export interface SanitizeAddress {
   staking_address: string;
 }

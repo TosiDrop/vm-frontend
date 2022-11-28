@@ -19,14 +19,15 @@ const Projects = () => {
 
   useEffect(() => {
     getProjectsFromAPI();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
       <p className="text-3xl">Explore TosiDrop Projects</p>
       <div className="flex flex-col gap-4">
-        {projects.map((project) => {
-          return <Project projectData={project}></Project>;
+        {projects.map((project, i) => {
+          return <Project key={i} projectData={project}></Project>;
         })}
       </div>
     </>

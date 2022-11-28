@@ -1,6 +1,10 @@
 import axios from "axios";
-import { NetworkId, PopUpInfo } from "src/entities/common.entities";
-import { EpochParams } from "src/entities/koios.entities";
+import {
+  NetworkId,
+  PopUpInfo,
+  StakePoolInfo,
+} from "src/entities/common.entities";
+import { EpochParams, Tip } from "src/entities/koios.entities";
 import { ProjectData } from "src/entities/project.entities";
 import { DashboardData } from "src/entities/vm.entities";
 
@@ -30,7 +34,7 @@ export async function getBlock(): Promise<{ block_no: number }> {
   return { block_no: 0 };
 }
 
-export async function getEpochParams(): Promise<EpochParams[]> {
+export async function getEpochParams(): Promise<EpochParams> {
   const response = await axios.get(`/api/getepochparams`);
   return response.data[0];
 }
@@ -58,5 +62,16 @@ export async function getDashboardData(): Promise<DashboardData> {
 
 export async function getPopUpInfo(): Promise<PopUpInfo> {
   const response = await axios.get(`/api/getpopupinfo`);
+  return response.data;
+}
+
+export async function getPools(): Promise<StakePoolInfo[]> {
+  const response = await axios.get(`/api/getpools`);
+  const pools = response.data;
+  return Object.values(pools);
+}
+
+export async function getTip(): Promise<Tip> {
+  const response = await axios.get(`/api/gettip`);
   return response.data;
 }

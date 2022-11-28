@@ -1,5 +1,9 @@
 import { TransactionStatus } from "src/entities/koios.entities";
-import { GetRewardsDto, GetCustomRewards } from "../entities/vm.entities";
+import {
+  GetRewardsDto,
+  GetCustomRewards,
+  GetRewardsHistory,
+} from "../entities/vm.entities";
 import axios from "axios";
 
 export async function getRewards(
@@ -22,6 +26,18 @@ export async function getCustomRewards(
     `/api/getcustomrewards?staking_address=${staking_address}&session_id=${session_id}&selected=${selected}&unlock=${
       unlock ? "true" : "false"
     }`
+  );
+  if (response && response.data) {
+    return response.data;
+  }
+  return undefined;
+}
+
+export async function getDeliveredRewards(
+  staking_address: string
+): Promise<GetRewardsHistory[] | undefined> {
+  const response = await axios.get(
+    `/api/getdeliveredrewards?staking_address=${staking_address}`
   );
   if (response && response.data) {
     return response.data;

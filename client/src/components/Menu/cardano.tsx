@@ -8,8 +8,9 @@ import {
 import {
   faArrowUpRightFromSquare,
   faBook,
+  faClockRotateLeft,
+  faCubesStacked,
   faMessage,
-  // faClockRotateLeft,
   faTableColumns,
   faProjectDiagram,
   faWallet,
@@ -57,23 +58,23 @@ export const menuItems: Record<string, MenuItem> = {
     activeRoute: [PageRoute.claimCardano, PageRoute.depositCardano],
     icon: faWallet,
   },
-  // history: {
-  //   text: "History",
-  //   to: PageRoute.history,
-  //   activeRoute: [PageRoute.history],
-  //   icon: faClockRotateLeft,
-  // },
-  // airdrop: {
-  //   text: "Airdrop",
-  //   to: PageRoute.airdropCardano,
-  //   activeRoute: [PageRoute.airdropCardano],
-  //   icon: faPaperPlane,
-  // },
+  history: {
+    text: "History",
+    to: PageRoute.historyCardano,
+    activeRoute: [PageRoute.historyCardano],
+    icon: faClockRotateLeft,
+  },
   projects: {
     text: "Projects",
     to: PageRoute.projectsCardano,
     activeRoute: [PageRoute.projectsCardano],
     icon: faProjectDiagram,
+  },
+  pools: {
+    text: "Stake Pools",
+    to: PageRoute.poolsCardano,
+    activeRoute: [PageRoute.poolsCardano],
+    icon: faCubesStacked,
   },
   dashboard: {
     text: "Dashboard",

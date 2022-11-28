@@ -1,7 +1,7 @@
+import { useSelector } from "react-redux";
 import { Themes } from "src/entities/common.entities";
 import { ProjectLogos } from "src/entities/project.entities";
 import { RootState } from "src/store";
-import { useSelector } from "react-redux";
 
 const Logo = ({ projectLogos }: { projectLogos: ProjectLogos }) => {
   const { theme } = useSelector((state: RootState) => state.global);
@@ -16,8 +16,8 @@ const Logo = ({ projectLogos }: { projectLogos: ProjectLogos }) => {
 
   return (
     <div>
-      <img src={logo} className="logo hidden sm:block"></img>
-      <img src={compactLogo} className="logo sm:hidden"></img>
+      <img alt="logo" src={logo} className="logo hidden sm:block"></img>
+      <img alt="logo" src={compactLogo} className="logo sm:hidden"></img>
     </div>
   );
 };

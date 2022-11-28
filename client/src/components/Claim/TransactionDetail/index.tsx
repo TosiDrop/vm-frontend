@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
 
 import { getFeatures, getSettings } from "src/services/common";
 import { lovelaceToAda } from "src/utils";
@@ -41,6 +41,7 @@ const TransactionDetail = ({
       });
     };
     getSettingsFromApi();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const calcTxFee = () => {

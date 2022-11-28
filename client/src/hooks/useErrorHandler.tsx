@@ -6,27 +6,33 @@ const useErrorHandler = () => {
   const dispatch = useDispatch();
 
   const handleError = (e: any) => {
-    let text = "Something is wrong :(";
+    let text: string;
     if (e.response) {
-      // handle error thrown by backend
+      /** handle error thrown by backend */
       if (e.response?.data?.error) {
         text = e.response?.data?.error;
       } else {
         text = "backend fails to return error";
       }
-    } else if (e.response) {
-      // handle error thrown by frontend
+    } else if (e.message) {
+      /** handle error thrown by frontend */
       text = e.message;
     } else {
-      // might be error from wallet
-      text = e;
+      /** might be error from wallet */
+      if (typeof e === "string") {
+        text = e;
+      } else if (typeof e === "object") {
+        text = JSON.stringify(e);
+      } else {
+        text = "Something is wrong :(";
+      }
     }
 
     dispatch(
       showModal({
         modalType: ModalTypes.info,
         details: {
-          text: text,
+          text,
           type: InfoModalTypes.failure,
         },
       })

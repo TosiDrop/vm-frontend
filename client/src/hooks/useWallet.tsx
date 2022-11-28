@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { ModalTypes, InfoModalTypes } from "src/entities/common.entities";
+import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
 import { showModal } from "src/reducers/globalSlice";
 import {
   connectWallet as connectWalletRedux,
@@ -7,9 +7,8 @@ import {
 } from "src/reducers/walletSlice";
 import { getNetworkId } from "src/services/common";
 import WalletApi, {
-  Cardano,
-  WalletKeys,
   CIP0030Wallet,
+  WalletKeys,
 } from "src/services/connectors/wallet.connector";
 import { RootState } from "src/store";
 
@@ -20,8 +19,7 @@ const useWallet = () => {
   const getWalletApi = async (
     walletApi?: CIP0030Wallet
   ): Promise<WalletApi> => {
-    const S = await Cardano();
-    const api = new WalletApi(S, walletApi);
+    const api = new WalletApi(walletApi);
     return api;
   };
 
