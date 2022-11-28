@@ -4,6 +4,7 @@ import { getDashboardData } from "src/services/common";
 import { useEffect, useState } from "react";
 import useErrorHandler from "src/hooks/useErrorHandler";
 import { title } from "process";
+import { EpochData, calcEpoch } from "src/utils";
 
 function Dashboard() {
   /*const countDownDate = new Date(targetDate).getTime();
@@ -12,6 +13,7 @@ function Dashboard() {
   );*/
 
   const [dashboardData, setDashboardData] = useState<DashboardData>();
+  const [epochData, setEpochData] = useState<EpochData>(calcEpoch());
   const { handleError } = useErrorHandler();
 
   const getDataFromAPI = async () => {
@@ -26,6 +28,19 @@ function Dashboard() {
   useEffect(() => {
     getDataFromAPI();
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setEpochData(calcEpoch());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const barStyleWidth = () => {
+    // Minimum 2% so it doesn't look weird when at < 2%
+    return { width: Math.max(2, epochData.percentDone * 100) + "%" };
+  }
 
   const renderButton = (
     title: string,
@@ -45,20 +60,14 @@ function Dashboard() {
       </div>
     );
   };
-  const barWidth = {
-    width: 15 + "%",
-  };
 
   return (
     <div>
       <p className="text-3xl">Dashboard</p>
       <div className="py-5 my-5">
-        <div>Time to next epoch(360): 1d 1h 15m</div>
+        <div>Time to epoch {epochData.currentEpoch + 1}: {epochData.countdownDays}d {epochData.countdownHours}h {epochData.countdownMinutes}m {epochData.countdownSeconds}s</div>
         <div className="w-full bg-gray-700 rounded-full h-5">
-          <div
-            className="bg-green-500 h-5 rounded-full w-4"
-            style={barWidth}
-          ></div>
+          <div className="bg-green-500 h-5 rounded-full w-4" style={barStyleWidth()}></div>
         </div>
       </div>
 
