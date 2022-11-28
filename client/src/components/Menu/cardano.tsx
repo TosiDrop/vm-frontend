@@ -76,12 +76,12 @@ export const menuItems: Record<string, MenuItem> = {
     activeRoute: [PageRoute.poolsCardano],
     icon: faCubesStacked,
   },
-  dashboard: {
+  /*dashboard: {
     text: "Dashboard",
     to: PageRoute.dashboardCardano,
     activeRoute: [PageRoute.dashboardCardano],
     icon: faTableColumns,
-  },
+  },*/
   feedback: {
     text: "Feedback",
     to: PageRoute.feedback,
