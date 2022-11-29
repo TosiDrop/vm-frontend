@@ -26,7 +26,7 @@ const TransactionDetail = ({
 }: Props) => {
   const [settings, setSettings] = useState<ISettings>({
     vmFee: 0,
-    txFee: 180000,
+    txFee: 440000,
     tosiFee: 500000,
   });
 
@@ -45,7 +45,7 @@ const TransactionDetail = ({
   }, []);
 
   const calcTxFee = () => {
-    let txCalc = ((numberOfTokens / 5) * settings.txFee).toFixed(6);
+    let txCalc = ((numberOfTokens * 0.004) + settings.txFee).toFixed(6);
     if (Number(txCalc) >= Number(settings.txFee)) return Number(txCalc);
     return Number(settings.txFee);
   };
