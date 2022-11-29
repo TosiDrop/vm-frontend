@@ -103,10 +103,10 @@ const DepositInfoPage = () => {
     };
 
     /**
-     * load status every 30s
+     * load status every 60s
      */
     loadTxDetail();
-    const checkTxStatusInterval = setInterval(loadTxDetail, 30000);
+    const checkTxStatusInterval = setInterval(loadTxDetail, 60000);
 
     return () => {
       clearInterval(checkTxStatusInterval);
