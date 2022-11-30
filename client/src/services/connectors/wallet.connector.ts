@@ -30,6 +30,8 @@ export enum WalletKeys {
 const ERROR = {
   NOT_CONNECTED: "Wallet not connected",
   TX_TOO_BIG: "Transaction too big",
+  TX_BUILD_FAIL:
+    "Fail to build a transaction using the UTxO in your wallet. Please defragment your wallet",
   FAILED_PROTOCOL_PARAMETER: "FAILED_PROTOCOL_PARAMETER",
 };
 
@@ -147,10 +149,9 @@ class WalletApi {
   async transferAda(paymentAddress: string, adaAmount: string) {
     if (!this.wallet) return;
 
-    const [protocolParameters, tip, features] = await Promise.all([
+    const [protocolParameters, tip] = await Promise.all([
       CommonService.getEpochParams(),
       CommonService.getTip(),
-      CommonService.getFeatures(),
     ]);
 
     const account = this.wallet.api;
@@ -201,14 +202,41 @@ class WalletApi {
     const utxoOutputs = wasm.TransactionUnspentOutputs.new();
     utxosFromWalletConnector.map((currentUtxo) => utxoOutputs.add(currentUtxo));
 
-    txBuilder.add_inputs_from(utxoOutputs, features.coin_selection_strategy);
-    txBuilder.add_change_if_needed(wasm.Address.from_bech32(changeAddress));
+    const coinSelectionStrategies = [
+      wasm.CoinSelectionStrategyCIP2.LargestFirst,
+      wasm.CoinSelectionStrategyCIP2.RandomImprove,
+      wasm.CoinSelectionStrategyCIP2.LargestFirstMultiAsset,
+      wasm.CoinSelectionStrategyCIP2.RandomImproveMultiAsset,
+    ];
 
-    const txBody = txBuilder.build();
-    const transaction = wasm.Transaction.new(
-      txBuilder.build(),
-      wasm.TransactionWitnessSet.new()
-    );
+    let transaction: wasm.Transaction | null = null;
+    let txBody: wasm.TransactionBody | null = null;
+
+    for (const strategy of coinSelectionStrategies) {
+      try {
+        if (transaction != null && txBody != null) break;
+
+        txBuilder.add_inputs_from(utxoOutputs, strategy);
+        txBuilder.add_change_if_needed(wasm.Address.from_bech32(changeAddress));
+
+        const createdTxBody = txBuilder.build();
+        const createdTx = wasm.Transaction.new(
+          txBuilder.build(),
+          wasm.TransactionWitnessSet.new()
+        );
+
+        /** if no error until this point, transaction has been successfully generated */
+        transaction = createdTx;
+        txBody = createdTxBody;
+      } catch (error) {
+        /** do nothing, throw error after we exhaust all strategy */
+      }
+    }
+
+    /** throw error when tx fails to build */
+    if (transaction == null || txBody == null) {
+      throw new Error(ERROR.TX_BUILD_FAIL);
+    }
 
     let witness;
     try {

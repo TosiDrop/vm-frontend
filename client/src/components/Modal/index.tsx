@@ -7,7 +7,7 @@ import { InfoModal } from "./InfoModal";
 import { WalletModal } from "./WalletModal";
 
 function Modal() {
-  const { showModal } = useSelector((state: RootState) => state.global);
+  const showModal = useSelector((state: RootState) => state.global.showModal);
   const ref = useClickOutside(() => dispatch(hideModal()));
   const dispatch = useDispatch();
 

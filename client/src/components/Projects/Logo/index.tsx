@@ -4,7 +4,7 @@ import { ProjectLogos } from "src/entities/project.entities";
 import { RootState } from "src/store";
 
 const Logo = ({ projectLogos }: { projectLogos: ProjectLogos }) => {
-  const { theme } = useSelector((state: RootState) => state.global);
+  const theme = useSelector((state: RootState) => state.global.theme);
 
   let logo = projectLogos.logoDefault;
   let compactLogo = projectLogos.logoCompact ?? projectLogos.logoDefault;

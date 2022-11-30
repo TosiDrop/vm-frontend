@@ -28,7 +28,7 @@ export default function BlockchainSelector({
 }: {
   isMobile: boolean;
 }) {
-  const { chain } = useSelector((state: RootState) => state.global);
+  const chain = useSelector((state: RootState) => state.global.chain);
   const network = NETWORK_INFO[chain];
   const { ref, visible, setVisible } = useComponentVisible(false);
 
