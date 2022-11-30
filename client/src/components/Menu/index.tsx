@@ -7,7 +7,7 @@ import { Blockchain } from "src/entities/common.entities";
 import { RootState } from "src/store";
 
 export default function Menu() {
-  const { chain } = useSelector((state: RootState) => state.global);
+  const chain = useSelector((state: RootState) => state.global.chain);
 
   switch (chain) {
     case Blockchain.cardano:

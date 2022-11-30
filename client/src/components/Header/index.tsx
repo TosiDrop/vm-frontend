@@ -15,7 +15,8 @@ import BlockchainSelector from "../BlockchainSelector";
 function Header() {
   const dispatch = useDispatch();
   const { connectWallet } = useWallet();
-  const { theme, chain } = useSelector((state: RootState) => state.global);
+  const theme = useSelector((state: RootState) => state.global.theme);
+  const chain = useSelector((state: RootState) => state.global.chain);
 
   const RenderWalletConnector = () => {
     switch (chain) {

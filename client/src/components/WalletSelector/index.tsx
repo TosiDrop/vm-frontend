@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "src/components/Spinner";
-import useComponentVisible from "src/hooks/useComponentVisible";
-import { RootState } from "src/store";
-import { WalletKeys } from "src/services/connectors/wallet.connector";
-import { abbreviateAddress } from "src/utils";
-import { showModal } from "src/reducers/globalSlice";
 import { ModalTypes } from "src/entities/common.entities";
+import useComponentVisible from "src/hooks/useComponentVisible";
+import { showModal } from "src/reducers/globalSlice";
+import { WalletKeys } from "src/services/connectors/wallet.connector";
+import { RootState } from "src/store";
+import { abbreviateAddress } from "src/utils";
 
 interface Props {
   connectWallet: (walletKey?: WalletKeys) => void;
@@ -39,19 +39,17 @@ function WalletSelector({ connectWallet }: Props) {
 
   useEffect(() => {
     async function init() {
-      if (connectedWallet) {
-        if (connectedWallet.wallet?.api) {
-          const addr = abbreviateAddress(await connectedWallet.getAddress());
-          setWalletAddress(addr);
-          setWalletIcon(connectedWallet.wallet.icon);
-        }
+      if (connectedWallet?.wallet?.api) {
+        const addr = abbreviateAddress(await connectedWallet.getAddress());
+        setWalletAddress(addr);
+        setWalletIcon(connectedWallet.wallet.icon);
       } else {
         setWalletAddress("");
       }
     }
 
     init();
-  }, [connectedWallet?.wallet?.api, connectedWallet]);
+  }, [connectedWallet]);
 
   const ConnectedButton = () => {
     return (
