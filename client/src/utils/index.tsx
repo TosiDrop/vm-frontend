@@ -11,7 +11,7 @@ export const abbreviateAddress = (
 };
 
 export const lovelaceToAda = (lovelace: number) => {
-  return lovelace / Math.pow(10, 6);
+  return (lovelace / Math.pow(10, 6)).toFixed(2);
 };
 
 export const isTxHash = (txHash: string) => {
