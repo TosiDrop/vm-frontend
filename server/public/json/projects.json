@@ -82,6 +82,30 @@
   },
   {
     "logos": {
+      "logoDefault": "/api/img/project-logo/discoin/discoin-full-light.png",
+      "logoDark": "/api/img/project-logo/discoin/discoin-full-dark.png",
+      "logoCompact": "/api/img/project-logo/discoin/discoin-compact-light.png",
+      "logoCompactDark": "/api/img/project-logo/discoin/discoin-compact-dark.png"
+    },
+    "descs": {
+      "descShort": "discoin ($DISCO) was created by members of the DISCO SOLARIS community to empower Disco Solaris NFT holders (Neo Miami Citizens).",
+      "descLong": "discoin is the community currency of Neo Miami. discoin ($DISCO) was created by members of the DISCO SOLARIS community to empower Disco Solaris NFT holders (Neo Miami Citizens). With discoin, Disco Solaris NFT holders will be able to earn discoin rewards, participate in governance, and spend their $DISCO in the Neo Miami community economy. discoin is intended to holistically ensure the well-being of each and every Neo Miami Citizen and to empower creators -- builders and artists of all kinds and types. This currency is designed to be the lifeblood or energy that connects us through community. The intention is to create the conditions necessary for true empowerment to emerge for each individual in Neo Miami and for the community as a collective."
+    },
+    "token": {
+      "token": "DISCO",
+      "totalSupply": 5777777777,
+      "policyID": "5612bee388219c1b76fd527ed0fa5aa1d28652838bcab4ee4ee63197"
+    },
+    "urls": {
+      "website": "https://docs.discoin.family",
+      "discord": "https://discord.gg/Cjnbkp2qbq",
+      "twitter": "https://twitter.com/JaelCartel",
+      "paper": "https://docs.discoin.family/tokenomics/readme",
+      "cardanoScan": "https://cardanoscan.io/token/5612bee388219c1b76fd527ed0fa5aa1d28652838bcab4ee4ee63197446973636f696e"
+    }
+  },
+  {
+    "logos": {
       "logoDefault": "/api/img/project-logo/scatdao/scatdao-full-light.png",
       "logoDark": "/api/img/project-logo/scatdao/scatdao-full-dark.png",
       "logoCompact": "/api/img/project-logo/scatdao/scatdao-compact-light.png",
@@ -129,7 +153,7 @@
       "discord": "https://discord.gg/a7HzSenWX5",
       "paper": "https://merkaba-token.io/",
       "docs": "https://merkaba-token.io/",
-      "cardanoScan": ""
+      "cardanoScan": "https://cardanoscan.io/token/f4d97191f857096b441a410c036f63d6697dde0c71d2755dd664e3024d4b41"
     }
   }
 ]
