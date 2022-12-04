@@ -25,7 +25,7 @@ function Feedback() {
           </div>
         </a>
         <a
-          href="https://t.me/+FdDUmLsW8jI0YmUx"
+          href="https://forms.gle/j4XXJ114kftvS5e7A"
           target="_blank"
           rel="noreferrer"
         >
