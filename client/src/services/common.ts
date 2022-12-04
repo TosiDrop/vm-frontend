@@ -4,6 +4,7 @@ import {
   PopUpInfo,
   StakePoolInfo,
 } from "src/entities/common.entities";
+import { GetQueueDto } from "src/entities/dto";
 import { EpochParams, Tip } from "src/entities/koios.entities";
 import { ProjectData } from "src/entities/project.entities";
 
@@ -67,5 +68,10 @@ export async function getPools(): Promise<StakePoolInfo[]> {
 
 export async function getTip(): Promise<Tip> {
   const response = await axios.get(`/api/gettip`);
+  return response.data;
+}
+
+export async function getQueue(): Promise<GetQueueDto> {
+  const response = await axios.get(`/api/getqueue`);
   return response.data;
 }
