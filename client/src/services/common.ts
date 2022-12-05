@@ -7,6 +7,7 @@ import {
 import { GetQueueDto } from "src/entities/dto";
 import { EpochParams, Tip } from "src/entities/koios.entities";
 import { ProjectData } from "src/entities/project.entities";
+import { GetTokens } from "src/entities/vm.entities";
 
 export async function getFeatures() {
   const response = await axios.get(`/features`);
@@ -73,5 +74,10 @@ export async function getTip(): Promise<Tip> {
 
 export async function getQueue(): Promise<GetQueueDto> {
   const response = await axios.get(`/api/getqueue`);
+  return response.data;
+}
+
+export async function getTokens(): Promise<GetTokens> {
+  const response = await axios.get(`/api/gettokens`);
   return response.data;
 }

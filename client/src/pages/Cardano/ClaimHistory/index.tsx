@@ -2,15 +2,23 @@ import { KeyboardEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "src/components/Spinner";
 import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
-import { GetRewardsHistory } from "src/entities/vm.entities";
+import { GetRewardsHistory, GetTokens } from "src/entities/vm.entities";
 import useErrorHandler from "src/hooks/useErrorHandler";
 import { showModal } from "src/reducers/globalSlice";
 import { getDeliveredRewards } from "src/services/claim";
-import { getStakeKey } from "src/services/common";
+import { getStakeKey, getTokens } from "src/services/common";
 import { RootState } from "src/store";
-import { parseTokenName } from "src/utils";
+import { parseTokenName, shiftDecimals } from "src/utils";
 
 function ClaimHistory() {
+  interface ParsedReward {
+    token: string; // Token as a policyId.hexUTF8Name combo
+    ticker: string; // User facing ticker name
+    amount: number;
+    decimals: number;
+    delivered_on: string;
+  }
+
   const dispatch = useDispatch();
   const connectedWallet = useSelector(
     (state: RootState) => state.wallet.walletApi
@@ -23,11 +31,12 @@ function ClaimHistory() {
   const [hideCheck, setHideCheck] = useState(false);
   const [hideHistory, setHideHistory] = useState(true);
 
-  const [claimHistory, setClaimHisory] = useState<GetRewardsHistory[]>([]);
+  const [claimHistory, setClaimHisory] = useState<ParsedReward[]>([]);
   const [loader, setLoader] = useState(false);
 
   const [searchAddress, setSearchAddress] = useState<string>("");
   const [stakeAddress, setStakeAddress] = useState<string>("");
+  const [tokensInfo, setTokensInfo] = useState<GetTokens>();
 
   useEffect(() => {
     if (claimHistory.length) {
@@ -44,6 +53,9 @@ function ClaimHistory() {
         setHideCheck(false);
         setHideHistory(true);
       }
+
+      let info = await getTokens();
+      setTokensInfo(info);
     }
 
     init();
@@ -57,10 +69,12 @@ function ClaimHistory() {
         address = address.staking_address;
         setStakeAddress(address);
 
-        const getRewardsHistory = await getDeliveredRewards(address);
+        let getRewardsHistory = await getDeliveredRewards(address);
         if (getRewardsHistory == null) throw new Error();
+
         if (getRewardsHistory.length !== 0) {
-          setClaimHisory(getRewardsHistory);
+          let parsedHistory = parseRewardHistory(getRewardsHistory);
+          setClaimHisory(parsedHistory);
           setLoader(false);
         } else {
           dispatch(
@@ -80,6 +94,28 @@ function ClaimHistory() {
       }
     }
   };
+
+  function parseRewardHistory(history: GetRewardsHistory[]): ParsedReward[] {
+    let dict: { [key: string]: ParsedReward } = {};
+    for (let entry of history) {
+      let key = entry.token + entry.delivered_on;
+      if (key in dict) {
+        dict[key].amount += entry.amount;
+      } else {
+        let ticker =
+          tokensInfo![entry.token]?.ticker ?? parseTokenName(entry.token);
+        let decimals = tokensInfo![entry.token]?.decimals ?? 0;
+        dict[key] = {
+          token: entry.token,
+          ticker: ticker,
+          amount: entry.amount,
+          decimals: decimals,
+          delivered_on: entry.delivered_on,
+        };
+      }
+    }
+    return Object.values(dict);
+  }
 
   function renderCheckRewardHistoryStep() {
     if (!hideCheck) {
@@ -134,7 +170,7 @@ function ClaimHistory() {
         <table className="background rounded-2xl p-5 table-fixed border-separate text-left">
           <thead className="border-b">{renderHistoryHeader()}</thead>
           <tbody className="align-top">
-            {claimHistory.map((tx) => renderHistoryElement(tx))}
+            {claimHistory.map((reward) => renderHistoryElement(reward))}
           </tbody>
         </table>
       );
@@ -153,9 +189,9 @@ function ClaimHistory() {
     );
   }
 
-  function renderHistoryElement(tx: GetRewardsHistory) {
+  function renderHistoryElement(reward: ParsedReward) {
     // Our server returns dates GMT+2. Ideally it would just return the UTC timestamp integer.
-    var date = new Date(tx.delivered_on + "+0200");
+    var date = new Date(reward.delivered_on + "+0200");
     return (
       <tr>
         <td>
@@ -163,8 +199,10 @@ function ClaimHistory() {
             {date.toLocaleDateString() + " " + date.toLocaleTimeString()}
           </div>
         </td>
-        <td className="break-all">{parseTokenName(tx.token)}</td>
-        <td className="break-all">{tx.amount}</td>
+        <td className="break-all">{reward.ticker}</td>
+        <td className="break-all">
+          {shiftDecimals(reward.amount, reward.decimals)}
+        </td>
       </tr>
     );
   }
