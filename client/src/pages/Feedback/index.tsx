@@ -34,7 +34,7 @@ function Feedback() {
           </div>
         </a>
         <a
-          href="https://5c3i0k2q3p5.typeform.com/to/sJreyiJv"
+          href="https://forms.gle/j4XXJ114kftvS5e7A"
           target="_blank"
           rel="noreferrer"
         >
