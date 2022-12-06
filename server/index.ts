@@ -3,8 +3,9 @@ import {
   BaseAddress,
   RewardAddress,
 } from "@emurgo/cardano-serialization-lib-nodejs";
-import express from "express";
+import express, { Request, Response } from "express";
 import url from "url";
+import { GetQueueDto } from "../client/src/entities/dto";
 import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
 import {
   CardanoNetwork,
@@ -832,6 +833,11 @@ app.get(
     return res.status(200).send(popupInfo);
   }
 );
+
+app.get("/api/getqueue", async (req: Request, res: Response<GetQueueDto>) => {
+  const queue: GetQueueDto = await getFromVM("get_pending_tx_count");
+  return res.status(200).send(queue);
+});
 
 // host static files such as images
 app.use("/api/img", express.static(__dirname + "/public/img"));
