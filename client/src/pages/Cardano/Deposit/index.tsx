@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import DepositInfo from "src/components/Claim/DepositInfo";
 import { GetCustomRewards } from "src/entities/vm.entities";
+import { useQueue } from "src/hooks/cardano/claim/useQueue";
 import Loading from "src/pages/Loading";
 import { getTxStatus } from "src/services/claim";
 
@@ -36,6 +37,7 @@ const DepositInfoPage = () => {
    * parse query parameters from URL
    */
   const [searchParams] = useSearchParams();
+  const queue = useQueue();
   const selectedTokens = searchParams.get(QueryKey.selectedTokens);
   const stakeAddress = searchParams.get(QueryKey.stakeAddress);
   const withdrawAddress = searchParams.get(QueryKey.withdrawAddress);
@@ -117,7 +119,12 @@ const DepositInfoPage = () => {
     <Loading />
   ) : selectedTokens && stakeAddress && withdrawAddress && requestId ? (
     <>
-      <p className="text-3xl">Claim your rewards</p>
+      <p className="text-3xl flex items-center gap-2">
+        Claim your rewards
+        <div className="background rounded-lg w-fit text-sm h-full flex items-center justify-center px-2.5">
+          Queue: {queue}
+        </div>
+      </p>
       <DepositInfo
         txDetail={txDetail}
         checkedCount={checkedCount}
