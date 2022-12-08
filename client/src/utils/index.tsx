@@ -14,6 +14,10 @@ export const lovelaceToAda = (lovelace: number) => {
   return (lovelace / Math.pow(10, 6)).toFixed(2);
 };
 
+export const normalizeAmount = (amount: number, decimals: number) => {
+  return (amount / Math.pow(10, decimals)).toFixed(2);
+};
+
 // Given an integer and decimals, returns a float. e.g. shiftDecimals(12345600, 4) = 1234.56
 export const shiftDecimals = (amount: number, decimals: number): number => {
   return parseFloat((amount / Math.pow(10, decimals)).toFixed(decimals));

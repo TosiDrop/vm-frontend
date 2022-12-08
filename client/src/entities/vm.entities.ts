@@ -32,15 +32,15 @@ export interface GetCustomRewards {
 }
 
 export interface GetRewardsHistory {
-  id: number;
+  id: string;
   staking_address: string;
-  epoch: number;
+  epoch: string;
   token: string;
-  amount: number;
-  withdrawal_request: number;
+  amount: string;
+  withdrawal_request: string;
   expiry_return_pool_id: string | null;
-  expiry: number;
-  return_policy: number;
+  expiry: string;
+  return_policy: string;
   delivered_on: string;
 }
 

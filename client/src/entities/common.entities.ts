@@ -145,3 +145,11 @@ export interface StakePoolInfo {
   logo: string;
   description: string;
 }
+
+export interface ParsedReward {
+  token: string;
+  ticker: string;
+  amount: number;
+  delivered_on: string;
+  decimals: number;
+}
