@@ -14,6 +14,15 @@ export const lovelaceToAda = (lovelace: number) => {
   return (lovelace / Math.pow(10, 6)).toFixed(2);
 };
 
+export const normalizeAmount = (amount: number, decimals: number) => {
+  return (amount / Math.pow(10, decimals)).toFixed(2);
+};
+
+// Given an integer and decimals, returns a float. e.g. shiftDecimals(12345600, 4) = 1234.56
+export const shiftDecimals = (amount: number, decimals: number): number => {
+  return parseFloat((amount / Math.pow(10, decimals)).toFixed(decimals));
+};
+
 export const isTxHash = (txHash: string) => {
   return txHash.length === 64 && txHash.indexOf(" ") === -1;
 };
@@ -21,6 +30,7 @@ export const isTxHash = (txHash: string) => {
 // Given a string of a token policy followed by a dot and the hex encoded name of the token, returns the token name as a string
 // In theory, the hex encoded string is UTF8
 // e.g. "148b7f9ce43bf557f74b8f23e90fff8ee479561093e8d7b375ba8468.e382b5e383b3e38397e383ab" -> "サンプル"
+// If the pattern doesn't match, simply returns back the original string
 export const parseTokenName = (token: string): string => {
   var re = /^[0-9a-fA-F]{56}\.([0-9a-fA-F]*$)/;
   var result = re.exec(token);

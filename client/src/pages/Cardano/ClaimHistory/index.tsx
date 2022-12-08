@@ -1,89 +1,33 @@
 import { KeyboardEvent, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import HistoryTable from "src/components/HistoryTable";
 import Spinner from "src/components/Spinner";
-import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
-import { GetRewardsHistory } from "src/entities/vm.entities";
-import useErrorHandler from "src/hooks/useErrorHandler";
-import { showModal } from "src/reducers/globalSlice";
-import { getDeliveredRewards } from "src/services/claim";
-import { getStakeKey } from "src/services/common";
+import useClaimHistory from "src/hooks/cardano/claimHistory/useClaimHistory";
 import { RootState } from "src/store";
-import { parseTokenName } from "src/utils";
 
 function ClaimHistory() {
-  const dispatch = useDispatch();
   const connectedWallet = useSelector(
     (state: RootState) => state.wallet.walletApi
   );
-  const { handleError } = useErrorHandler();
-
   const isWrongNetwork = useSelector(
     (state: RootState) => state.wallet.isWrongNetwork
   );
-  const [hideCheck, setHideCheck] = useState(false);
-  const [hideHistory, setHideHistory] = useState(true);
-
-  const [claimHistory, setClaimHisory] = useState<GetRewardsHistory[]>([]);
-  const [loader, setLoader] = useState(false);
-
+  const { claimHistory, loading, checkClaimHistory } = useClaimHistory();
   const [searchAddress, setSearchAddress] = useState<string>("");
-  const [stakeAddress, setStakeAddress] = useState<string>("");
-
-  useEffect(() => {
-    if (claimHistory.length) {
-      setHideHistory(false);
-    } else {
-      setHideHistory(true);
-    }
-  }, [claimHistory]);
 
   useEffect(() => {
     async function init() {
       if (connectedWallet?.wallet?.api && !isWrongNetwork) {
         setSearchAddress(await connectedWallet.getAddress());
-        setHideCheck(false);
-        setHideHistory(true);
       }
     }
-
     init();
   }, [connectedWallet?.wallet?.api, connectedWallet, isWrongNetwork]);
 
-  const checkRewardHistory = async () => {
-    if (searchAddress) {
-      setLoader(true);
-      try {
-        let address = await getStakeKey(searchAddress);
-        address = address.staking_address;
-        setStakeAddress(address);
-
-        const getRewardsHistory = await getDeliveredRewards(address);
-        if (getRewardsHistory == null) throw new Error();
-        if (getRewardsHistory.length !== 0) {
-          setClaimHisory(getRewardsHistory);
-          setLoader(false);
-        } else {
-          dispatch(
-            showModal({
-              modalType: ModalTypes.info,
-              details: {
-                text: "No claim history found for the account, yet.",
-                type: InfoModalTypes.info,
-              },
-            })
-          );
-        }
-      } catch (e: any) {
-        handleError(e);
-      } finally {
-        setLoader(false);
-      }
-    }
-  };
-
-  function renderCheckRewardHistoryStep() {
-    if (!hideCheck) {
-      return (
+  return (
+    <>
+      <p className="text-3xl">History</p>
+      <div className="flex flex-col gap-4">
         <div className="p-5 background text rounded-2xl flex flex-col gap-4">
           <p>
             Enter your wallet/stake address or $handle to view your reward
@@ -98,11 +42,11 @@ function ClaimHistory() {
             }
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                checkRewardHistory();
+                checkClaimHistory(searchAddress);
               }
             }}
             disabled={
-              loader ||
+              loading ||
               (typeof connectedWallet?.wallet?.api !== "undefined" &&
                 !isWrongNetwork)
             }
@@ -110,11 +54,11 @@ function ClaimHistory() {
           <div className="flex flex-row items-center">
             <button
               className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
-              disabled={loader}
-              onClick={checkRewardHistory}
+              disabled={loading}
+              onClick={() => checkClaimHistory(searchAddress)}
             >
               View my history
-              {loader ? (
+              {loading ? (
                 <div className="ml-2.5">
                   <Spinner></Spinner>
                 </div>
@@ -122,59 +66,7 @@ function ClaimHistory() {
             </button>
           </div>
         </div>
-      );
-    } else {
-      return null;
-    }
-  }
-
-  function renderHistory() {
-    if (!hideHistory) {
-      return (
-        <table className="background rounded-2xl p-5 table-fixed border-separate text-left">
-          <thead className="border-b">{renderHistoryHeader()}</thead>
-          <tbody className="align-top">
-            {claimHistory.map((tx) => renderHistoryElement(tx))}
-          </tbody>
-        </table>
-      );
-    } else {
-      return null;
-    }
-  }
-
-  function renderHistoryHeader() {
-    return (
-      <tr>
-        <th className="w-2/12">Date/Time</th>
-        <th className="w-8/12">Token</th>
-        <th className="w-1/12">Amount</th>
-      </tr>
-    );
-  }
-
-  function renderHistoryElement(tx: GetRewardsHistory) {
-    // Our server returns dates GMT+2. Ideally it would just return the UTC timestamp integer.
-    var date = new Date(tx.delivered_on + "+0200");
-    return (
-      <tr>
-        <td>
-          <div>
-            {date.toLocaleDateString() + " " + date.toLocaleTimeString()}
-          </div>
-        </td>
-        <td className="break-all">{parseTokenName(tx.token)}</td>
-        <td className="break-all">{tx.amount}</td>
-      </tr>
-    );
-  }
-
-  return (
-    <>
-      <p className="text-3xl">History</p>
-      <div className="flex flex-col gap-4">
-        {renderCheckRewardHistoryStep()}
-        {renderHistory()}
+        <HistoryTable claimHistory={claimHistory}></HistoryTable>
       </div>
     </>
   );
