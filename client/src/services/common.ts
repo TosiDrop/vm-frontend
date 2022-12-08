@@ -7,6 +7,7 @@ import {
 import { GetQueueDto } from "src/entities/dto";
 import { EpochParams, Tip } from "src/entities/koios.entities";
 import { ProjectData } from "src/entities/project.entities";
+import { DashboardData } from "src/entities/vm.entities";
 
 export async function getFeatures() {
   const response = await axios.get(`/features`);
@@ -52,6 +53,11 @@ export async function getNetworkId(): Promise<{ network: NetworkId }> {
 
 export async function getProjects(): Promise<ProjectData[]> {
   const response = await axios.get(`/api/getprojects`);
+  return response.data;
+}
+
+export async function getDashboardData(): Promise<DashboardData> {
+  const response = await axios.get(`/api/getdashboard`);
   return response.data;
 }
 

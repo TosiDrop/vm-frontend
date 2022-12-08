@@ -139,6 +139,22 @@ export interface PopUpInfo {
   buttonText: string;
 }
 
+export interface DashboardItemData {
+  title: string;
+  content?: number;
+  contentSuffix?: string;
+}
+
+export interface EpochData {
+  currentEpoch: number;
+  percentDone: number;
+  endDate: Date;
+  countdownDays: number;
+  countdownHours: number;
+  countdownMinutes: number;
+  countdownSeconds: number;
+}
+
 export interface StakePoolInfo {
   ticker: string;
   name: string;

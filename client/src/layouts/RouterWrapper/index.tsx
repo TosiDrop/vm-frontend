@@ -5,6 +5,7 @@ import ClaimHistory from "src/pages/Cardano/ClaimHistory";
 import DepositInfoPage from "src/pages/Cardano/Deposit";
 import Pools from "src/pages/Cardano/Pools";
 import Projects from "src/pages/Cardano/Projects";
+import Dashboard from "src/pages/Dashboard";
 import Feedback from "src/pages/Feedback";
 
 export default function RouterWrapper() {
@@ -14,6 +15,7 @@ export default function RouterWrapper() {
       <Route path={PageRoute.historyCardano} element={<ClaimHistory />} />
       <Route path={PageRoute.depositCardano} element={<DepositInfoPage />} />
       <Route path={PageRoute.projectsCardano} element={<Projects />} />
+      <Route path={PageRoute.dashboardCardano} element={<Dashboard />} />
       <Route path={PageRoute.poolsCardano} element={<Pools />} />
       <Route path={PageRoute.feedback} element={<Feedback />} />
       {/* <Route path={PageRoute.claimErgo} element={<ComingSoonPage />} /> */}

@@ -94,3 +94,12 @@ export interface PoolInfo {
   visible: string;
   delegator_count: string;
 }
+
+export interface DashboardData {
+  cTOSIHolders: number;
+  eTOSIHolders: number;
+  totalRevenue: number;
+  totalClaims: number;
+  marketCap: number;
+  tradingVolume: number;
+}
