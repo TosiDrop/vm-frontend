@@ -37,9 +37,6 @@ const PORT = process.env.PORT || 3000;
 const TOSIFEE = process.env.TOSIFEE || 500000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
-const COIN_SELECTION_STRATEGY = process.env.COIN_SELECTION_STRATEGY
-  ? Number(process.env.COIN_SELECTION_STRATEGY)
-  : 0;
 
 const oapi = openapi({
   openapi: "3.0.0",
@@ -186,7 +183,6 @@ app.get("/features", (req: any, res: any) => {
         ? JSON.parse(CLAIM_ENABLED.toLowerCase())
         : CLAIM_ENABLED,
     network: CARDANO_NETWORK,
-    coin_selection_strategy: COIN_SELECTION_STRATEGY,
   };
 
   return res.status(200).send(features);
