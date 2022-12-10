@@ -139,11 +139,13 @@ export interface PopUpInfo {
   buttonText: string;
 }
 
+type StakePoolVisibility = "t" | "f";
 export interface StakePoolInfo {
   ticker: string;
   name: string;
   logo: string;
   description: string;
+  visible: StakePoolVisibility;
 }
 
 export interface ParsedReward {

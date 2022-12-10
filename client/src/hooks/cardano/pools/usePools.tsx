@@ -11,7 +11,8 @@ export default function usePools() {
   useEffect(() => {
     const fetchPools = async () => {
       try {
-        const pools = await getPools();
+        let pools = await getPools();
+        pools = pools.filter((pool) => pool.visible === "t");
         setPools(pools);
       } catch (error) {
         handleError(error);
