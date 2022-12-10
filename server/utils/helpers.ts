@@ -21,7 +21,9 @@ import { CardanoNetwork } from ".";
 require("dotenv").config();
 
 let Buffer = require("buffer").Buffer;
-const MIN_PAIRS_API = process.env.MIN_PAIRS_API || "https://api-mainnet-prod.minswap.org/coinmarketcap/v2/pairs"
+const MIN_PAIRS_API =
+  process.env.MIN_PAIRS_API ||
+  "https://api-mainnet-prod.minswap.org/coinmarketcap/v2/pairs";
 const VM_API_TOKEN =
   process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
 const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
@@ -166,6 +168,7 @@ export async function getRewards(stakeAddress: string) {
   if (getRewardsResponse == null) return;
   const tokens = await getTokens();
   if (tokens == null) return;
+  const prices = await getPrices();
 
   const consolidatedAvailableReward: { [key: string]: number } = {};
   const consolidatedAvailableRewardPremium: { [key: string]: number } = {};
@@ -202,6 +205,7 @@ export async function getRewards(stakeAddress: string) {
         decimals: token.decimals,
         amount: consolidatedAvailableReward[assetId],
         premium: false,
+        price: tokenPrice(assetId, prices),
       });
     }
   });
@@ -237,6 +241,7 @@ export async function getRewards(stakeAddress: string) {
         decimals: token.decimals,
         amount: consolidatedAvailableRewardPremium[assetId],
         premium: true,
+        price: tokenPrice(assetId, prices),
       });
     }
   });
@@ -270,4 +275,13 @@ export function formatTokens(
   } else {
     return amount || "0";
   }
+}
+
+export function tokenPrice(token: string, prices: GetPricePairs): string {
+  token = token.replace(".", "");
+  const price = prices[token + "_lovelace"];
+  console.log("DEBUG: " + token + "_lovelace");
+  console.log("DEBUG: " + price["last_price"]);
+  if (price) return Number(price["last_price"]).toFixed(6).replace(/0*$/, "");
+  return "N/A";
 }
