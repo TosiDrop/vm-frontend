@@ -1,27 +1,13 @@
-import { useEffect, useState } from "react";
 import Pool from "src/components/Pool";
-import { StakePoolInfo } from "src/entities/common.entities";
-import useErrorHandler from "src/hooks/useErrorHandler";
-import { getPools } from "src/services/common";
+import usePools from "src/hooks/cardano/pools/usePools";
+import Loading from "src/pages/Loading";
 
 const Pools = () => {
-  const { handleError } = useErrorHandler();
-  const [pools, setPools] = useState<StakePoolInfo[]>([]);
+  const { pools, loading } = usePools();
 
-  const fetchPools = async () => {
-    try {
-      const pools = await getPools();
-      setPools(pools);
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchPools();
-  });
-
-  return (
+  return loading ? (
+    <Loading></Loading>
+  ) : (
     <>
       <p className="text-3xl">Participating Pools</p>
       <div className="flex flex-col gap-4">
