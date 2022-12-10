@@ -1,5 +1,3 @@
-import { CoinSelectionStrategyCIP2 } from "@emurgo/cardano-serialization-lib-nodejs";
-
 export enum CardanoNetwork {
   preview = "preview",
   mainnet = "mainnet",
@@ -21,5 +19,4 @@ export interface ITosiFeatures {
   airdrop_enabled: boolean;
   claim_enabled: boolean;
   network: string;
-  coin_selection_strategy: CoinSelectionStrategyCIP2;
 }
