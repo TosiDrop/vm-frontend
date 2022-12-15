@@ -292,7 +292,7 @@ function Claim() {
             <div className="text-premium">
               <FontAwesomeIcon icon={faStar} />
             </div>
-            Premium tokens incur a premium token fee when claiming
+            These tokens incur a TosiFee when claiming
           </div>
           <div className={"flex flex-row flex-wrap gap-4"}>
             {claimableTokens.map((token, index) => {
