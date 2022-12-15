@@ -42,8 +42,7 @@ const ClaimableTokenBox = ({
               icon={faStar}
             />
             <div className="tooltip w-64 p-3.5 rounded-2xl right-5 bottom-5 absolute">
-              The star indicates premium token. Premium token requires premium
-              fee to claim.
+              TosiFee is applied to tokens that use TosiDrop services.
             </div>
           </span>
         ) : null}
