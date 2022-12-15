@@ -78,9 +78,9 @@ const TransactionDetail = ({
             {lovelaceToAda(settings.tosiFee)} ADA
           </div>
           <div className="tooltip-activator cursor-help text-right">
-            Premium token fee <FontAwesomeIcon icon={faQuestionCircle} />
+            TosiFee <FontAwesomeIcon icon={faQuestionCircle} />
             <div className="tooltip p-3.5 rounded-2xl right-5 bottom-4 absolute min-w-52 max-w-64">
-              This fee is required to claim premium tokens.
+              TosiFee is applied to tokens that use TosiDrop services
             </div>
           </div>
         </div>
