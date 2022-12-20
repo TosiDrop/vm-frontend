@@ -37,6 +37,8 @@ function Claim() {
   const [claimableTokens, setClaimableTokens] = useState<ClaimableToken[]>([]);
   const [poolInfo, setPoolInfo] = useState<any>(null);
   const [numberOfSelectedTokens, setNumberOfSelectedTokens] = useState(0);
+  const [numberOfSelectedPremiumTokens, setNumberOfSelectedPremiumTokens] =
+    useState(0);
 
   const [searchAddress, setSearchAddress] = useState<string>("");
   const [rewardsLoader, setRewardsLoader] = useState(false);
@@ -74,6 +76,15 @@ function Claim() {
     }, 0);
   }, [claimableTokens]);
 
+  const getNumberOfSelectedPremiumTokens = useCallback(() => {
+    return claimableTokens.reduce((prev, token) => {
+      if (token.selected && token.premium) {
+        prev += 1;
+      }
+      return prev;
+    }, 0);
+  }, [claimableTokens]);
+
   /**
    * select/unselect all tokens
    */
@@ -86,6 +97,7 @@ function Claim() {
     }
     setClaimableTokens(updatedClaimableTokens);
     setNumberOfSelectedTokens(getNumberOfSelectedTokens());
+    setNumberOfSelectedPremiumTokens(getNumberOfSelectedPremiumTokens());
   };
 
   /**
@@ -97,6 +109,7 @@ function Claim() {
       !updatedClaimableTokens[position].selected;
     setClaimableTokens(updatedClaimableTokens);
     setNumberOfSelectedTokens(getNumberOfSelectedTokens());
+    setNumberOfSelectedPremiumTokens(getNumberOfSelectedPremiumTokens());
   };
 
   const checkRewards = async () => {
@@ -318,7 +331,13 @@ function Claim() {
           <div
             className={"background flex flex-row items-center p-5 rounded-2xl"}
           >
-            <div>Selected {numberOfSelectedTokens} token</div>
+            <div>
+              Selected {numberOfSelectedTokens} token
+              {numberOfSelectedTokens !== 1 ? "s" : null}
+              {numberOfSelectedPremiumTokens !== 0
+                ? `, ${numberOfSelectedPremiumTokens} premium tokens`
+                : null}
+            </div>
             <div className="ml-auto flex flex-row w-fit">
               <button
                 className="tosi-button py-2.5 px-5 rounded-lg"
