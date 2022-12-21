@@ -15,6 +15,7 @@ export interface GetRewardsDto {
   min_balance?: number;
   vending_address?: string;
   withdrawal_fee?: string;
+  withdraw_all_tokens_deposit?: number;
   project_locked_rewards?: {
     consolidated_promises: Assets;
     consolidated_rewards: Assets;
