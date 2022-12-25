@@ -9,7 +9,10 @@ const Project = ({ projectData }: { projectData: ProjectData }) => {
         <div className="basis-3/12">
           <Logo projectLogos={projectData.logos}></Logo>
         </div>
-        <div className="basis-9/12 w-full">{projectData.descs.descShort}</div>
+        <div className="basis-9/12 w-full">
+          <div className="w-full">{projectData.descs.descShort}</div>
+          <div className="w-full pt-2">Requirements: {projectData.descs.claimDesc}</div>
+        </div>
       </div>
 
       <hr className="hidden lg:block lg:h-16 lg:border-r" />
