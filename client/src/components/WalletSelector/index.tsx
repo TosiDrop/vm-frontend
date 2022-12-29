@@ -1,4 +1,4 @@
-import { faLinkSlash } from "@fortawesome/free-solid-svg-icons";
+import { faLinkSlash, faWallet } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -67,8 +67,8 @@ function WalletSelector({ connectWallet }: Props) {
           </>
         ) : (
           <div className="flex flex-row items-center gap-2">
-            Connecting
             <Spinner></Spinner>
+            Connecting
           </div>
         )}
       </div>
@@ -86,7 +86,10 @@ function WalletSelector({ connectWallet }: Props) {
         )
       }
     >
-      <p>Connect</p>
+      <p>
+        <FontAwesomeIcon className="mr-2.5" icon={faWallet} />
+        Connect
+      </p>
     </div>
   );
 
