@@ -1,29 +1,20 @@
 ---
-- name: Create Redis cache container
-  docker_container:
+- name: Disable unused redis container
+  community.docker.docker_container:
     name: redis
-    image: redis
-    ports:
-      - 6379:6379
-    pull: false # false to prevent cache loss
-    read_only: true
-    restart_policy: unless-stopped
-    state: started
-  when: redis_enabled
+    state: absent
 
 - name: Disable old VM frontend container
-  docker_container:
+  community.docker.docker_container:
     name: vm-frontend
     state: absent
 
 - name: Create VM frontend container
-  docker_container:
+  community.docker.docker_container:
     name: 'vm-frontend-{{ vm_frontend_port }}'
     env:
       NODE_ENV: 'production'
       PORT: '{{ vm_frontend_port | string }}'
-      REDIS_ENABLED: '{{ redis_enabled | string }}'
-      REDIS_HOST: '172.17.0.1'
     image: '{{ vm_frontend_image }}'
     ports:
       - '{{ vm_frontend_port }}:{{ vm_frontend_port }}'
