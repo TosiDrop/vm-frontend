@@ -7,7 +7,14 @@ const Project = ({ projectData }: { projectData: ProjectData }) => {
     <div className="rounded-2xl background px-2.5 py-2.5 items-center text-base flex flex-col lg:flex-row lg:gap-6">
       <div className="m-2.5 p-2.5 flex grow w-full items-center gap-6 basis-7/12">
         <div className="basis-3/12">
-          <Logo projectLogos={projectData.logos}></Logo>
+          <a
+            href={projectData.urls.website}
+            target="_blank"
+            rel="noreferrer"
+            className="ml-auto"
+          >
+            <Logo projectLogos={projectData.logos}></Logo>
+          </a>
         </div>
         <div className="basis-9/12 w-full">{projectData.descs.descShort}</div>
       </div>
