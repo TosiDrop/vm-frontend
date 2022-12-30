@@ -3,6 +3,7 @@ import { ModalTypes } from "src/entities/common.entities";
 import useClickOutside from "src/hooks/useClickOutside";
 import { hideModal } from "src/reducers/globalSlice";
 import { RootState } from "src/store";
+import ErgoWalletModal from "./ErgoWalletModal";
 import { InfoModal } from "./InfoModal";
 import { WalletModal } from "./WalletModal";
 
@@ -17,6 +18,8 @@ function Modal() {
         return <InfoModal />;
       case ModalTypes.wallet:
         return <WalletModal />;
+      case ModalTypes.ergoWallet:
+        return <ErgoWalletModal />;
       default:
         return null;
     }

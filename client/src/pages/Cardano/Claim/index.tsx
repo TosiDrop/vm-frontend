@@ -351,12 +351,12 @@ function Claim() {
 
   return (
     <>
-      <p className="text-3xl flex items-center gap-2">
+      <div className="text-3xl flex items-center gap-2">
         Claim your rewards
         <div className="background rounded-lg w-fit text-sm h-full flex items-center justify-center px-2.5">
           Queue: {queue}
         </div>
-      </p>
+      </div>
       <div className="flex flex-col gap-4">
         {renderCheckRewardsStep()}
         {renderStakingInfoStep()}
