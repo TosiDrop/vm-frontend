@@ -5,25 +5,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import logoDark from "src/assets/tosidrop-dark.png";
 import logoLight from "src/assets/tosidrop-light.png";
-import WalletSelector from "src/components/WalletSelector";
 import { Blockchain, Themes } from "src/entities/common.entities";
-import useWallet from "src/hooks/useWallet";
 import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
 import { RootState } from "src/store";
 import BlockchainSelector from "../BlockchainSelector";
+import CardanoWalletSelector from "../WalletSelector/CardanoWalletSelector";
+import ErgoWalletSelector from "../WalletSelector/ErgoWalletSelector";
 
 function Header() {
   const dispatch = useDispatch();
-  const { connectWallet } = useWallet();
   const theme = useSelector((state: RootState) => state.global.theme);
   const chain = useSelector((state: RootState) => state.global.chain);
 
   const RenderWalletConnector = () => {
     switch (chain) {
       case Blockchain.cardano:
-        return <WalletSelector connectWallet={connectWallet} />;
+        return <CardanoWalletSelector></CardanoWalletSelector>;
       case Blockchain.ergo:
-        return null;
+        return <ErgoWalletSelector></ErgoWalletSelector>;
     }
   };
 

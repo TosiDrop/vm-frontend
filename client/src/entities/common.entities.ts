@@ -77,6 +77,7 @@ export enum NetworkId {
 export enum ModalTypes {
   wallet,
   info,
+  ergoWallet,
 }
 
 export enum InfoModalTypes {
@@ -154,4 +155,18 @@ export interface ParsedReward {
   amount: number;
   delivered_on: string;
   decimals: number;
+}
+
+export enum WalletState {
+  notConnected,
+  connecting,
+  connected,
+  wrongNetwork,
+}
+
+export interface WalletInfo {
+  address: string;
+  iconUrl: string;
+  isApiConnected: boolean;
+  prefix?: string;
 }

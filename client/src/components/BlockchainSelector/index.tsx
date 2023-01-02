@@ -33,24 +33,20 @@ export default function BlockchainSelector({
   const { ref, visible, setVisible } = useComponentVisible(false);
 
   return (
-    <div
-      className={`h-full ${isMobile ? "w-full" : "w-32"} relative`}
-      ref={ref}
-    >
+    <div className={`relative h-full ${isMobile ? "" : "w-32"}`} ref={ref}>
       <button
         className={`${
-          isMobile ? "w-full h-full" : "px-5"
-        } h-full background rounded-lg py-2.5 flex items-center justify-center gap-2`}
+          isMobile ? "" : "px-5"
+        } w-full h-full background rounded-lg py-2.5 flex justify-center items-center gap-2`}
         onClick={() => setVisible(!visible)}
       >
         <img alt="blockchain logo" className="h-5" src={network.img}></img>
         {isMobile ? null : network.text}
       </button>
       {visible ? (
-        <Link to={"#"} onClick={() => setVisible(false)}>
+        <Link to={network.to} onClick={() => setVisible(false)}>
           <button
-            className="h-full absolute mt-2.5 w-full background rounded-lg px-5 py-2.5 flex items-center justify-center gap-2"
-            disabled={true} // disabled until ergo is ready
+            className={`w-full h-full absolute mt-2.5 background rounded-lg px-5 py-2.5 flex items-center justify-center gap-2 right-0`}
           >
             <img
               alt="blockchain logo"

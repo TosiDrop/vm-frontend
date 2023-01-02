@@ -11,6 +11,7 @@ export default function RouterWrapper() {
   return (
     <Routes>
       <Route path={PageRoute.claimCardano} element={<Claim />} />
+      <Route path={PageRoute.claimErgo} element={<Claim />} />
       <Route path={PageRoute.historyCardano} element={<ClaimHistory />} />
       <Route path={PageRoute.depositCardano} element={<DepositInfoPage />} />
       <Route path={PageRoute.projectsCardano} element={<Projects />} />

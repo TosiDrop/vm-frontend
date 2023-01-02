@@ -1,5 +1,6 @@
-import { NetworkId } from "src/entities/common.entities";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { NetworkId } from "src/entities/common.entities";
+import { ErgoWalletApi } from "src/entities/ergo";
 import WalletApi, {
   CIP0030API,
 } from "src/services/connectors/wallet.connector";
@@ -10,6 +11,7 @@ interface WalletState {
   name: string;
   networkId: NetworkId | undefined;
   isWrongNetwork: boolean;
+  ergoWalletApi: ErgoWalletApi | null;
 }
 
 const initialState: WalletState = {
@@ -18,6 +20,7 @@ const initialState: WalletState = {
   name: "",
   networkId: undefined,
   isWrongNetwork: false,
+  ergoWalletApi: null,
 };
 
 export const walletSlice = createSlice({
@@ -37,9 +40,12 @@ export const walletSlice = createSlice({
     setIsWrongNetwork: (state, action: PayloadAction<boolean>) => {
       state.isWrongNetwork = action.payload;
     },
+    setErgoWallet: (state, action: PayloadAction<ErgoWalletApi | null>) => {
+      state.ergoWalletApi = action.payload;
+    },
   },
 });
 
-export const { connectWallet, setNetworkId, setIsWrongNetwork } =
+export const { connectWallet, setNetworkId, setIsWrongNetwork, setErgoWallet } =
   walletSlice.actions;
 export default walletSlice.reducer;
