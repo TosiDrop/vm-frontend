@@ -16,6 +16,7 @@ if (typeof window !== "undefined") {
 
 export enum WalletKeys {
   anetawallet = "anetawallet",
+  begin = "begin",
   cardwallet = "cardwallet",
   eternl = "eternl",
   flint = "flint",
