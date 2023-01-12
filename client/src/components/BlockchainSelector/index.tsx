@@ -29,6 +29,9 @@ export default function BlockchainSelector({
   isMobile: boolean;
 }) {
   const chain = useSelector((state: RootState) => state.global.chain);
+  const ergoEnabled = useSelector(
+    (state: RootState) => state.global.ergoEnabled
+  );
   const network = NETWORK_INFO[chain];
   const { ref, visible, setVisible } = useComponentVisible(false);
 
@@ -47,6 +50,7 @@ export default function BlockchainSelector({
         <Link to={network.to} onClick={() => setVisible(false)}>
           <button
             className={`w-full h-full absolute mt-2.5 background rounded-lg px-5 py-2.5 flex items-center justify-center gap-2 right-0`}
+            disabled={!ergoEnabled}
           >
             <img
               alt="blockchain logo"
