@@ -279,7 +279,8 @@ export function formatTokens(
 
 export function tokenPrice(token: string, prices: GetPricePairs): string {
   token = token.replace(".", "");
+  if (token === "lovelace") return "1.0";
   const price = prices[token + "_lovelace"];
-  if (price) return Number(price["last_price"]).toFixed(8).toString(); //.replace(/0*$/, "");
+  if (price) return Number(price["last_price"]).toString(); //.replace(/0*$/, "");
   return "N/A";
 }

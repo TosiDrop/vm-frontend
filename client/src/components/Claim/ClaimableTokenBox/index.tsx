@@ -50,8 +50,17 @@ const ClaimableTokenBox = ({
         ) : null}
       </div>
       <img alt="logo" src={logo} className=" h-24"></img>
-      <div className="text-center">Quantity: {amount / Math.pow(10, decimals)}</div>
-      <div className="text-center">Price: {price === "N/A" ? price : price + " ₳ each"}</div>
+      <div>
+        <div className="text-center">
+          Quantity: {amount / Math.pow(10, decimals)}
+        </div>
+        <div className="text-center">
+          Price: {price === "N/A" ? price : (Number(price).toFixed(8).toString()) + " ₳"}
+        </div>
+        <div className="text-center">
+          Total: {price === "N/A" ? price : (Number(Number(price).toFixed(8)) * (amount / Math.pow(10, decimals))).toString() + " ₳"}
+        </div>
+      </div>
     </div>
   );
 };
