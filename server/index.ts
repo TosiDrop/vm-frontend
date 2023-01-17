@@ -28,15 +28,15 @@ import { ICustomRewards } from "./utils/entities";
 require("dotenv").config();
 const openapi = require("@wesleytodd/openapi");
 const fs = require("fs");
-const AIRDROP_ENABLED = process.env.AIRDROP_ENABLED || true;
 const CARDANO_NETWORK = process.env.CARDANO_NETWORK || CardanoNetwork.preview;
-const CLAIM_ENABLED = process.env.CLAIM_ENABLED || true;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const LOG_TYPE = process.env.LOG_TYPE || "dev";
 const PORT = process.env.PORT || 3000;
 const TOSIFEE = process.env.TOSIFEE || 500000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
+const CLAIM_ENABLED = process.env.CLAIM_ENABLED === "true";
+const ERGO_ENABLED = process.env.ERGO_ENABLED === "true";
 
 const oapi = openapi({
   openapi: "3.0.0",
@@ -174,15 +174,9 @@ app.get("/features", (req: any, res: any) => {
   const features: ITosiFeatures = {
     tosi_fee: Number(TOSIFEE),
     tosi_fee_whitelist: TOSIFEE_WHITELIST,
-    airdrop_enabled:
-      typeof AIRDROP_ENABLED == "string"
-        ? JSON.parse(AIRDROP_ENABLED.toLowerCase())
-        : AIRDROP_ENABLED,
-    claim_enabled:
-      typeof CLAIM_ENABLED == "string"
-        ? JSON.parse(CLAIM_ENABLED.toLowerCase())
-        : CLAIM_ENABLED,
+    claim_enabled: CLAIM_ENABLED,
     network: CARDANO_NETWORK,
+    ergo_enabled: ERGO_ENABLED,
   };
 
   return res.status(200).send(features);

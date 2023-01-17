@@ -11,13 +11,19 @@ import { Blockchain } from "./entities/common.entities";
 import BlockchainWrapper from "./layouts/BlockchainWrapper";
 import MenuWrapper from "./layouts/MenuWrapper";
 import ThemeWrapper from "./layouts/ThemeWrapper";
-import { setChain } from "./reducers/globalSlice";
+import { setChain, setErgoEnabled } from "./reducers/globalSlice";
+import { getFeatures } from "./services/common";
 
 function App() {
   const location = useLocation().pathname;
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  const init = async () => {
+    const features = await getFeatures();
+    dispatch(setErgoEnabled(features.ergo_enabled));
+  };
+
+  const initLocation = () => {
     const isOnCardano = location.includes("cardano");
     const isOnErgo = location.includes("ergo");
     if (isOnCardano) {
@@ -25,7 +31,14 @@ function App() {
     } else if (isOnErgo) {
       dispatch(setChain(Blockchain.ergo));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  useEffect(() => {
+    initLocation();
   }, [location]);
 
   return (
