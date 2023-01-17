@@ -1,22 +1,22 @@
 import axios from "axios";
+import { CardanoNetwork } from ".";
+import {
+  ExtendedMetadata,
+  Metadata,
+} from "../../client/src/entities/common.entities";
 import {
   AccountAddress,
   AccountInfo,
   EpochParams,
   PoolInfo,
 } from "../../client/src/entities/koios.entities";
-import {
-  GetPools,
-  GetTokens,
-  ClaimableToken,
-  GetRewardsDto,
-} from "../../client/src/entities/vm.entities";
-import {
-  ExtendedMetadata,
-  Metadata,
-} from "../../client/src/entities/common.entities";
 import { GetPricePairs } from "../../client/src/entities/min.entities";
-import { CardanoNetwork } from ".";
+import {
+  ClaimableToken,
+  GetPools,
+  GetRewardsDto,
+  GetTokens,
+} from "../../client/src/entities/vm.entities";
 
 require("dotenv").config();
 
@@ -197,15 +197,18 @@ export async function getRewards(stakeAddress: string) {
 
   Object.keys(consolidatedAvailableReward).forEach((assetId) => {
     const token = tokens[assetId];
+    const amount = consolidatedAvailableReward[assetId];
+    const { price, total } = getTokenValue(assetId, amount, prices);
     if (token) {
       claimableTokens.push({
         assetId,
         ticker: token.ticker,
         logo: token.logo,
         decimals: token.decimals,
-        amount: consolidatedAvailableReward[assetId],
+        amount,
         premium: false,
-        price: tokenPrice(assetId, prices),
+        price,
+        total,
       });
     }
   });
@@ -233,15 +236,18 @@ export async function getRewards(stakeAddress: string) {
 
   Object.keys(consolidatedAvailableRewardPremium).forEach((assetId) => {
     const token = tokens[assetId];
+    const amount = consolidatedAvailableReward[assetId];
+    const { price, total } = getTokenValue(assetId, amount, prices);
     if (token) {
       claimableTokens.push({
         assetId,
         ticker: token.ticker,
         logo: token.logo,
         decimals: token.decimals,
-        amount: consolidatedAvailableRewardPremium[assetId],
+        amount,
         premium: true,
-        price: tokenPrice(assetId, prices),
+        price,
+        total,
       });
     }
   });
@@ -277,10 +283,41 @@ export function formatTokens(
   }
 }
 
-export function tokenPrice(token: string, prices: GetPricePairs): string {
-  token = token.replace(".", "");
-  if (token === "lovelace") return "1.0";
-  const price = prices[token + "_lovelace"];
-  if (price) return Number(price["last_price"]).toString(); //.replace(/0*$/, "");
-  return "N/A";
+export function getTokenValue(
+  assetId: string,
+  amount: number,
+  prices: GetPricePairs
+): {
+  price: string;
+  total: string;
+} {
+  assetId = assetId.replace(".", "");
+  if (assetId === "lovelace") {
+    return {
+      price: "1₳",
+      total: `${amount}₳`,
+    };
+  }
+  const price = prices[assetId + "_lovelace"];
+  if (price) {
+    const truncatedPrice = getTruncatedPrice(price["last_price"]);
+    return {
+      price: `${truncatedPrice}₳`,
+      total: `${truncatedPrice * amount}₳`,
+    };
+  }
+  return {
+    price: "N/A",
+    total: "N/A",
+  };
+}
+
+function getTruncatedPrice(price: string): number {
+  if (price.includes(".")) {
+    const priceSplit = price.split(".");
+    const normalizedPrice = `${priceSplit[0]}.${priceSplit[1].slice(0, 6)}`;
+    return Number(normalizedPrice);
+  } else {
+    return parseInt(price);
+  }
 }

@@ -1,11 +1,12 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import TokenInfoTooltip from "../TokenInfoTooltip";
+import TosifeeTooltip from "../TosifeeTooltip";
 import "./index.scss";
 
 interface Props {
   index: number;
   ticker: string;
   price: string;
+  total: string;
   selected: boolean;
   handleOnChange: Function;
   amount: number;
@@ -19,12 +20,11 @@ const ClaimableTokenBox = ({
   index,
   ticker,
   price,
+  total,
   selected,
   handleOnChange,
   amount,
-  decimals,
   logo,
-  assetId,
   premium,
 }: Props) => {
   return (
@@ -36,30 +36,15 @@ const ClaimableTokenBox = ({
       onClick={() => handleOnChange(index)}
     >
       <div className="w-full flex flex-row items-center">
-        <div>{ticker}</div>
-        {premium ? (
-          <span className="premium-token tooltip-activator ml-auto">
-            <FontAwesomeIcon
-              className="text-premium cursor-help premium-pulse"
-              icon={faStar}
-            />
-            <div className="tooltip w-64 p-3.5 rounded-2xl right-5 bottom-5 absolute">
-              TosiFee is applied to tokens that use TosiDrop services.
-            </div>
-          </span>
-        ) : null}
+        <div>{amount} available</div>
+        <div className="ml-auto flex flex-row align-center gap-2">
+          <TokenInfoTooltip price={price} total={total}></TokenInfoTooltip>
+          {premium ? <TosifeeTooltip></TosifeeTooltip> : null}
+        </div>
       </div>
-      <img alt="logo" src={logo} className=" h-24"></img>
+      <img alt="logo" src={logo} className="h-24"></img>
       <div>
-        <div className="text-center">
-          Quantity: {amount / Math.pow(10, decimals)}
-        </div>
-        <div className="text-center">
-          Price: {price === "N/A" ? price : (Number(price).toFixed(8).toString()) + " ₳"}
-        </div>
-        <div className="text-center">
-          Total: {price === "N/A" ? price : (Number(Number(price).toFixed(8)) * (amount / Math.pow(10, decimals))).toString() + " ₳"}
-        </div>
+        <div className="text-center">{ticker}</div>
       </div>
     </div>
   );
