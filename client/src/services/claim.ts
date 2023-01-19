@@ -1,10 +1,10 @@
+import axios from "axios";
 import { TransactionStatus } from "src/entities/koios.entities";
 import {
-  GetRewardsDto,
   GetCustomRewards,
+  GetRewardsDto,
   GetRewardsHistory,
 } from "../entities/vm.entities";
-import axios from "axios";
 
 export async function getRewards(
   address: string

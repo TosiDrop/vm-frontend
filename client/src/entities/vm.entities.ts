@@ -60,8 +60,9 @@ export interface ClaimableToken {
   decimals: number;
   amount: number;
   premium: boolean;
+  price: string;
+  total: string;
   selected?: boolean;
-  price?: string;
 }
 
 export interface GetTokens {

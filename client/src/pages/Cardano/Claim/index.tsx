@@ -303,7 +303,8 @@ function Claim() {
                   key={index}
                   index={index}
                   ticker={token.ticker}
-                  price={token.price || "N/A"}
+                  price={token.price ?? "N/A"}
+                  total={token.total ?? "N/A"}
                   selected={token.selected || false}
                   handleOnChange={handleTokenSelect}
                   amount={token.amount}
