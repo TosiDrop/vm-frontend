@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
-import { StakePoolInfo } from "src/entities/common.entities";
+import { GetPoolsDto } from "src/entities/dto";
 import useErrorHandler from "src/hooks/useErrorHandler";
 import { getPools } from "src/services/common";
 
 export default function usePools() {
   const [loading, setLoading] = useState<boolean>(true);
-  const [pools, setPools] = useState<StakePoolInfo[]>([]);
+  const [pools, setPools] = useState<GetPoolsDto>({
+    whitelistedPools: [],
+    regularPools: [],
+  });
   const { handleError } = useErrorHandler();
 
   useEffect(() => {
     const fetchPools = async () => {
       try {
-        let pools = await getPools();
-        pools = pools.filter((pool) => pool.visible === "t");
-        setPools(pools);
+        const getPoolsData = await getPools();
+        setPools(getPoolsData);
       } catch (error) {
         handleError(error);
       } finally {

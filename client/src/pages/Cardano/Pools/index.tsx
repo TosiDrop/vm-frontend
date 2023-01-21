@@ -11,8 +11,16 @@ const Pools = () => {
     <>
       <p className="text-3xl">Participating Pools</p>
       <div className="flex flex-col gap-4">
-        {pools.map((pool) => (
-          <Pool key={pool.ticker} pool={pool}></Pool>
+        <p className="text-xl">
+          Stake to TosiDrop team pools to support the devs and pay no TosiFee on
+          claims
+        </p>
+        {pools.whitelistedPools.map((pool) => (
+          <Pool key={pool.id} pool={pool}></Pool>
+        ))}
+        <p className="text-xl">CSPA pools registered with VM</p>
+        {pools.regularPools.map((pool) => (
+          <Pool key={pool.id} pool={pool}></Pool>
         ))}
       </div>
     </>

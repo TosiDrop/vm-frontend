@@ -18,7 +18,6 @@ const Project = ({ projectData }: { projectData: ProjectData }) => {
         </div>
         <div className="basis-9/12 w-full">
           <div className="w-full">{projectData.descs.descShort}</div>
-          <div className="w-full pt-2">{projectData.descs.claimDesc ? `Requirements: ${projectData.descs.claimDesc}` : null }</div>
         </div>
       </div>
 

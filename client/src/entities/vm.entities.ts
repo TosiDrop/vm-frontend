@@ -84,6 +84,8 @@ export interface GetPools {
   [key: string]: PoolInfo;
 }
 
+type PoolVisibility = "t" | "f";
+
 export interface PoolInfo {
   id: string;
   ticker: string;
@@ -93,6 +95,6 @@ export interface PoolInfo {
   last_delegator_refresh: string;
   loading_addr: string;
   description: string;
-  visible: string;
+  visible: PoolVisibility;
   delegator_count: string;
 }
