@@ -18,7 +18,7 @@ const Pools = () => {
         {pools.whitelistedPools.map((pool) => (
           <Pool key={pool.id} pool={pool}></Pool>
         ))}
-        <p className="text-xl">Participating Pools</p>
+        <p className="text-xl">CSPA pools registered with VM</p>
         {pools.regularPools.map((pool) => (
           <Pool key={pool.id} pool={pool}></Pool>
         ))}

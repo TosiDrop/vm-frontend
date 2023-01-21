@@ -8,7 +8,7 @@ export default function Pool({ pool }: { pool: PoolInfo }) {
       </div>
       <div className="w-full flex flex-col gap-2">
         <div className="font-extrabold text-lg">
-          ({pool.ticker}) {pool.name}
+          [{pool.ticker}] {pool.name}
         </div>
         <div className="break-all">{pool.description}</div>
       </div>
