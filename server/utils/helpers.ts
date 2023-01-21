@@ -162,37 +162,44 @@ export async function getPoolMetadata(accountInfo: any) {
 }
 
 export async function getRewards(stakeAddress: string) {
-  const getRewardsResponse = await getFromVM<GetRewardsDto>(
-    `get_rewards&staking_address=${stakeAddress}`
-  );
+  const [getRewardsResponse, tokens, prices] = await Promise.all([
+    getFromVM<GetRewardsDto>(`get_rewards&staking_address=${stakeAddress}`),
+    getTokens(),
+    getPrices(),
+  ]);
   if (getRewardsResponse == null) return;
-  const tokens = await getTokens();
   if (tokens == null) return;
-  const prices = await getPrices();
 
   const consolidatedAvailableReward: { [key: string]: number } = {};
   const consolidatedAvailableRewardPremium: { [key: string]: number } = {};
   const claimableTokens: ClaimableToken[] = [];
 
-  /**
-   * handle regular tokens
-   */
+  /** handle regular tokens */
+  const regularRewards: Record<string, number> = {
+    ...getRewardsResponse.consolidated_promises,
+    ...getRewardsResponse.consolidated_rewards,
+  };
 
-  let rewardArray = [
-    getRewardsResponse.consolidated_promises,
-    getRewardsResponse.consolidated_rewards,
-  ];
+  Object.entries(regularRewards).forEach(([assetId, amount]) => {
+    if (consolidatedAvailableReward[assetId]) {
+      consolidatedAvailableReward[assetId] += amount;
+    } else {
+      consolidatedAvailableReward[assetId] = amount;
+    }
+  });
 
-  if (rewardArray == null) return [];
+  /** handle premium tokens */
+  const premiumRewards: Record<string, number> = {
+    ...(getRewardsResponse.project_locked_rewards?.consolidated_promises ?? {}),
+    ...(getRewardsResponse.project_locked_rewards?.consolidated_rewards ?? {}),
+  };
 
-  rewardArray.forEach((reward: any) => {
-    Object.keys(reward).forEach((assetId: string) => {
-      if (consolidatedAvailableReward[assetId]) {
-        consolidatedAvailableReward[assetId] += reward[assetId];
-      } else {
-        consolidatedAvailableReward[assetId] = reward[assetId];
-      }
-    });
+  Object.entries(premiumRewards).forEach(([assetId, amount]) => {
+    if (consolidatedAvailableRewardPremium[assetId]) {
+      consolidatedAvailableRewardPremium[assetId] += amount;
+    } else {
+      consolidatedAvailableRewardPremium[assetId] = amount;
+    }
   });
 
   Object.keys(consolidatedAvailableReward).forEach((assetId) => {
@@ -213,30 +220,9 @@ export async function getRewards(stakeAddress: string) {
     }
   });
 
-  /**
-   * handle premium tokens
-   */
-
-  if (getRewardsResponse.project_locked_rewards != null) {
-    rewardArray = [
-      getRewardsResponse.project_locked_rewards.consolidated_promises,
-      getRewardsResponse.project_locked_rewards.consolidated_rewards,
-    ];
-  }
-
-  rewardArray.forEach((reward: any) => {
-    Object.keys(reward).forEach((assetId: string) => {
-      if (consolidatedAvailableRewardPremium[assetId]) {
-        consolidatedAvailableRewardPremium[assetId] += reward[assetId];
-      } else {
-        consolidatedAvailableRewardPremium[assetId] = reward[assetId];
-      }
-    });
-  });
-
   Object.keys(consolidatedAvailableRewardPremium).forEach((assetId) => {
     const token = tokens[assetId];
-    const amount = consolidatedAvailableReward[assetId];
+    const amount = consolidatedAvailableRewardPremium[assetId];
     const { price, total } = getTokenValue(assetId, amount, prices);
     if (token) {
       claimableTokens.push({
@@ -298,12 +284,11 @@ export function getTokenValue(
       total: `${amount}₳`,
     };
   }
-  const price = prices[assetId + "_lovelace"];
-  if (price) {
-    const truncatedPrice = getTruncatedPrice(price["last_price"]);
+  const price = prices[assetId + "_lovelace"]?.last_price;
+  if (price && amount) {
     return {
-      price: `${truncatedPrice}₳`,
-      total: `${truncatedPrice * amount}₳`,
+      price: `${Number(price).toFixed(10)}₳`,
+      total: `${(Number(price) * amount).toFixed(10)}₳`,
     };
   }
   return {
@@ -313,11 +298,5 @@ export function getTokenValue(
 }
 
 function getTruncatedPrice(price: string): number {
-  if (price.includes(".")) {
-    const priceSplit = price.split(".");
-    const normalizedPrice = `${priceSplit[0]}.${priceSplit[1].slice(0, 6)}`;
-    return Number(normalizedPrice);
-  } else {
-    return parseInt(price);
-  }
+  return Number(Number(price).toFixed(10));
 }
