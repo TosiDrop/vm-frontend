@@ -5,8 +5,9 @@ import {
 } from "@emurgo/cardano-serialization-lib-nodejs";
 import express, { Request, Response } from "express";
 import url from "url";
-import { GetQueueDto } from "../client/src/entities/dto";
+import { GetPoolsDto, GetQueueDto } from "../client/src/entities/dto";
 import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
+import { PoolInfo } from "../client/src/entities/vm.entities";
 import {
   CardanoNetwork,
   getAccountsInfo,
@@ -115,10 +116,32 @@ app.get("/api/getprices", oapi.path(resp200Ok), async (req, res) => {
   return res.status(200).send(prices);
 });
 
-app.get("/api/getpools", oapi.path(resp200Ok), async (req, res) => {
-  const pools = await getPools();
-  return res.status(200).send(pools);
-});
+app.get(
+  "/api/getpools",
+  oapi.path(resp200Ok),
+  async (_, res: Response<GetPoolsDto>) => {
+    const pools = await getPools();
+
+    /** did this because value in env use 'pool...' as ID whereas VM retuns pool ID */
+    const whitelistedPoolTickers = ["BBHMM", "OTG", "PSB", "SEAL", "APEX"];
+    const whitelistedPools: PoolInfo[] = [];
+    const regularPools: PoolInfo[] = [];
+    Object.values(pools).forEach((pool) => {
+      if (pool.visible === "f") {
+        return;
+      }
+      if (whitelistedPoolTickers.includes(pool.ticker)) {
+        whitelistedPools.push(pool);
+      } else {
+        regularPools.push(pool);
+      }
+    });
+    return res.status(200).send({
+      whitelistedPools,
+      regularPools,
+    });
+  }
+);
 
 app.get("/api/gettokens", oapi.path(resp200Ok), async (req, res) => {
   const tokens = await getTokens();

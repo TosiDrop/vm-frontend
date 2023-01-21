@@ -1,6 +1,6 @@
-import { StakePoolInfo } from "src/entities/common.entities";
+import { PoolInfo } from "src/entities/vm.entities";
 
-export default function Pool({ pool }: { pool: StakePoolInfo }) {
+export default function Pool({ pool }: { pool: PoolInfo }) {
   return (
     <div className="background p-5 rounded-2xl flex flex-row gap-4">
       <div className="h-full w-14 flex items-center justify-center">

@@ -1,10 +1,6 @@
 import axios from "axios";
-import {
-  NetworkId,
-  PopUpInfo,
-  StakePoolInfo,
-} from "src/entities/common.entities";
-import { GetQueueDto } from "src/entities/dto";
+import { NetworkId, PopUpInfo } from "src/entities/common.entities";
+import { GetPoolsDto, GetQueueDto } from "src/entities/dto";
 import { EpochParams, Tip } from "src/entities/koios.entities";
 import { ProjectData } from "src/entities/project.entities";
 import { GetTokens } from "src/entities/vm.entities";
@@ -61,10 +57,9 @@ export async function getPopUpInfo(): Promise<PopUpInfo> {
   return response.data;
 }
 
-export async function getPools(): Promise<StakePoolInfo[]> {
+export async function getPools(): Promise<GetPoolsDto> {
   const response = await axios.get(`/api/getpools`);
-  const pools = response.data;
-  return Object.values(pools);
+  return response.data;
 }
 
 export async function getTip(): Promise<Tip> {
