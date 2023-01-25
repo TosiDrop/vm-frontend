@@ -29,14 +29,14 @@ const ClaimableTokenBox = ({
 }: Props) => {
   return (
     <div
-      className={`box-border cursor-pointer background rounded-2xl p-5 flex flex-col gap-4 items-center w-full sm:w-60 border-2 duration-200 ${
+      className={`box-border cursor-pointer background rounded-2xl p-4 flex flex-col gap-4 items-center w-full sm:w-60 border-2 duration-200 ${
         selected ? "border-selected" : "border-transparent"
       }`}
       key={index}
       onClick={() => handleOnChange(index)}
     >
       <div className="w-full flex flex-row items-center">
-        <div>{amount} available</div>
+        <div className="text-sm">{amount} available</div>
         <div className="ml-auto flex flex-row align-center gap-2">
           <TokenInfoTooltip price={price} total={total}></TokenInfoTooltip>
           {premium ? <TosifeeTooltip></TosifeeTooltip> : null}
