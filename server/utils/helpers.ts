@@ -204,14 +204,16 @@ export async function getRewards(stakeAddress: string) {
 
   Object.keys(consolidatedAvailableReward).forEach((assetId) => {
     const token = tokens[assetId];
-    const amount = consolidatedAvailableReward[assetId];
+    const { decimals, logo, ticker } = token;
+    const amount =
+      consolidatedAvailableReward[assetId] / Math.pow(10, decimals);
     const { price, total } = getTokenValue(assetId, amount, prices);
     if (token) {
       claimableTokens.push({
         assetId,
-        ticker: token.ticker,
-        logo: token.logo,
-        decimals: token.decimals,
+        ticker,
+        logo,
+        decimals,
         amount,
         premium: false,
         price,
@@ -222,14 +224,16 @@ export async function getRewards(stakeAddress: string) {
 
   Object.keys(consolidatedAvailableRewardPremium).forEach((assetId) => {
     const token = tokens[assetId];
-    const amount = consolidatedAvailableRewardPremium[assetId];
+    const { decimals, logo, ticker } = token;
+    const amount =
+      consolidatedAvailableRewardPremium[assetId] / Math.pow(10, decimals);
     const { price, total } = getTokenValue(assetId, amount, prices);
     if (token) {
       claimableTokens.push({
         assetId,
-        ticker: token.ticker,
-        logo: token.logo,
-        decimals: token.decimals,
+        ticker,
+        logo,
+        decimals,
         amount,
         premium: true,
         price,
