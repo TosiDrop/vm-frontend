@@ -17,6 +17,7 @@ import {
   GetRewardsDto,
   GetTokens,
 } from "../../client/src/entities/vm.entities";
+import { longTermCache, shortTermCache } from "./cache";
 
 require("dotenv").config();
 
@@ -116,15 +117,25 @@ export async function postPoolInfo(pools: string[]) {
 }
 
 export async function getPools() {
-  return getFromVM<GetPools>("get_pools");
+  let pools: GetPools | undefined = longTermCache.get("pools");
+  if (pools == null) {
+    pools = await getFromVM<GetPools>("get_pools");
+    longTermCache.set("pools", pools);
+  }
+  return pools;
 }
 
 export async function getTokens() {
   return getFromVM<GetTokens>("get_tokens");
 }
 
-export async function getPrices() {
-  return (await axios.get<GetPricePairs>(MIN_PAIRS_API)).data;
+export async function getPrices(): Promise<GetPricePairs> {
+  let prices = shortTermCache.get("prices") as GetPricePairs;
+  if (prices == null) {
+    prices = (await axios.get<GetPricePairs>(MIN_PAIRS_API)).data;
+    shortTermCache.set("prices", prices);
+  }
+  return prices;
 }
 
 export async function getPoolMetadata(accountInfo: any) {
