@@ -4,6 +4,7 @@ import {
   RewardAddress,
 } from "@emurgo/cardano-serialization-lib-nodejs";
 import express, { Request, Response } from "express";
+import * as _ from "lodash";
 import url from "url";
 import { GetPoolsDto, GetQueueDto } from "../client/src/entities/dto";
 import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
@@ -119,7 +120,7 @@ app.get("/api/getprices", oapi.path(resp200Ok), async (req, res) => {
 app.get(
   "/api/getpools",
   oapi.path(resp200Ok),
-  async (_, res: Response<GetPoolsDto>) => {
+  async (req, res: Response<GetPoolsDto>) => {
     const pools = await getPools();
 
     /** did this because value in env use 'pool...' as ID whereas VM retuns pool ID */
@@ -127,7 +128,7 @@ app.get(
     const whitelistedPools: PoolInfo[] = [];
     const regularPools: PoolInfo[] = [];
     Object.values(pools).forEach((pool) => {
-      if (pool.visible === "f") {
+      if (pool.visible === "f" || pool.id.includes("project_")) {
         return;
       }
       if (whitelistedPoolTickers.includes(pool.ticker)) {
@@ -137,8 +138,8 @@ app.get(
       }
     });
     return res.status(200).send({
-      whitelistedPools,
-      regularPools,
+      whitelistedPools: _.shuffle(whitelistedPools),
+      regularPools: _.shuffle(regularPools),
     });
   }
 );
