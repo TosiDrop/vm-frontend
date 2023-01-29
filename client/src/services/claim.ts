@@ -1,10 +1,7 @@
 import axios from "axios";
+import { GetDeliveredRewardsDto } from "src/entities/dto";
 import { TransactionStatus } from "src/entities/koios.entities";
-import {
-  GetCustomRewards,
-  GetRewardsDto,
-  GetRewardsHistory,
-} from "../entities/vm.entities";
+import { GetCustomRewards, GetRewardsDto } from "../entities/vm.entities";
 
 export async function getRewards(
   address: string
@@ -34,15 +31,12 @@ export async function getCustomRewards(
 }
 
 export async function getDeliveredRewards(
-  staking_address: string
-): Promise<GetRewardsHistory[] | undefined> {
+  stakingAddress: string
+): Promise<GetDeliveredRewardsDto> {
   const response = await axios.get(
-    `/api/getdeliveredrewards?staking_address=${staking_address}`
+    `/api/getdeliveredrewards?staking_address=${stakingAddress}`
   );
-  if (response && response.data) {
-    return response.data;
-  }
-  return undefined;
+  return response.data;
 }
 
 export async function getTransactionStatus(

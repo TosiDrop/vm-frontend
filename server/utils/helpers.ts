@@ -1,6 +1,7 @@
 import axios from "axios";
 import { CardanoNetwork } from ".";
 import {
+  DeliveredReward,
   ExtendedMetadata,
   Metadata,
 } from "../../client/src/entities/common.entities";
@@ -15,7 +16,8 @@ import {
   ClaimableToken,
   GetPools,
   GetRewardsDto,
-  GetTokens,
+  VmDeliveredReward,
+  VmTokenInfoMap,
 } from "../../client/src/entities/vm.entities";
 import { longTermCache, shortTermCache } from "./cache";
 
@@ -125,8 +127,13 @@ export async function getPools() {
   return pools;
 }
 
-export async function getTokens() {
-  return getFromVM<GetTokens>("get_tokens");
+export async function getTokens(): Promise<VmTokenInfoMap> {
+  let tokenInfo = longTermCache.get<VmTokenInfoMap>("tokenInfo");
+  if (tokenInfo == null) {
+    tokenInfo = await getFromVM<VmTokenInfoMap>("get_tokens");
+    longTermCache.set("tokenInfo", tokenInfo);
+  }
+  return tokenInfo;
 }
 
 export async function getPrices(): Promise<GetPricePairs> {
@@ -215,7 +222,8 @@ export async function getRewards(stakeAddress: string) {
 
   Object.keys(consolidatedAvailableReward).forEach((assetId) => {
     const token = tokens[assetId];
-    const { decimals, logo, ticker } = token;
+    const { decimals: tokenDecimals, logo, ticker } = token;
+    const decimals = Number(tokenDecimals);
     const amount =
       consolidatedAvailableReward[assetId] / Math.pow(10, decimals);
     const { price, total } = getTokenValue(assetId, amount, prices);
@@ -235,7 +243,8 @@ export async function getRewards(stakeAddress: string) {
 
   Object.keys(consolidatedAvailableRewardPremium).forEach((assetId) => {
     const token = tokens[assetId];
-    const { decimals, logo, ticker } = token;
+    const { decimals: tokenDecimals, logo, ticker } = token;
+    const decimals = Number(tokenDecimals);
     const amount =
       consolidatedAvailableRewardPremium[assetId] / Math.pow(10, decimals);
     const { price, total } = getTokenValue(assetId, amount, prices);
@@ -312,6 +321,55 @@ export function getTokenValue(
   };
 }
 
-function getTruncatedPrice(price: string): number {
-  return Number(Number(price).toFixed(10));
+export async function getDeliveredRewards(
+  stakingAddress: string
+): Promise<DeliveredReward[]> {
+  const [vmDeliveredRewards, tokenInfo] = await Promise.all([
+    getFromVM<VmDeliveredReward[]>(
+      `delivered_rewards&staking_address=${stakingAddress}`
+    ),
+    getTokens(),
+  ]);
+  return parseVmDeliveredRewards(vmDeliveredRewards, tokenInfo);
+}
+
+export function parseVmDeliveredRewards(
+  vmDeliveredRewards: VmDeliveredReward[],
+  tokenInfo: VmTokenInfoMap
+): DeliveredReward[] {
+  type RewardMap = Record<string, DeliveredReward>;
+  const rewardMap: RewardMap = {};
+
+  for (let vmDeliveredReward of vmDeliveredRewards) {
+    const { token, delivered_on, amount } = vmDeliveredReward;
+    let ticker: string;
+    if (token === "lovelace") {
+      ticker = "ADA";
+    } else {
+      ticker = Buffer.from(token.split(".")[1], "hex").toString("utf8");
+    }
+
+    const key = `${delivered_on}_${ticker}`;
+    let decimals = 0;
+
+    if (tokenInfo[token]?.decimals) {
+      decimals = Number(tokenInfo[token].decimals);
+    }
+
+    const tokenAmount = Number(amount) / Math.pow(10, decimals);
+
+    if (rewardMap[key]) {
+      rewardMap[key].amount += tokenAmount;
+    } else {
+      rewardMap[key] = {
+        token: token,
+        amount: tokenAmount,
+        delivered_on: delivered_on,
+        ticker,
+        decimals,
+      };
+    }
+  }
+
+  return Object.values(rewardMap);
 }

@@ -1,5 +1,4 @@
 import { ParsedReward } from "src/entities/common.entities";
-import { normalizeAmount } from "src/utils";
 
 export default function HistoryTable({
   claimHistory,
@@ -16,8 +15,8 @@ export default function HistoryTable({
         </tr>
       </thead>
       <tbody className="align-top">
-        {claimHistory.map((reward, i) => {
-          const date = new Date(reward.delivered_on + "+0100");
+        {claimHistory.map(({ delivered_on, ticker, amount }, i) => {
+          const date = new Date(delivered_on + "+0100");
           return (
             <tr key={i}>
               <td>
@@ -25,13 +24,8 @@ export default function HistoryTable({
                   {date.toLocaleDateString() + " " + date.toLocaleTimeString()}
                 </div>
               </td>
-              <td className="break-all">{reward.ticker}</td>
-              <td className="break-all">
-                {normalizeAmount(
-                  Number(reward.amount),
-                  Number(reward.decimals)
-                )}
-              </td>
+              <td className="break-all">{ticker}</td>
+              <td className="break-all">{amount}</td>
             </tr>
           );
         })}
