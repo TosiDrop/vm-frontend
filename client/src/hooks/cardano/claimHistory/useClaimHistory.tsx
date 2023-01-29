@@ -1,72 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
+  DeliveredReward,
   InfoModalTypes,
   ModalTypes,
-  ParsedReward,
 } from "src/entities/common.entities";
-import { GetRewardsHistory, GetTokens } from "src/entities/vm.entities";
 import useErrorHandler from "src/hooks/useErrorHandler";
 import { showModal } from "src/reducers/globalSlice";
 import { getDeliveredRewards } from "src/services/claim";
-import { getStakeKey, getTokens } from "src/services/common";
-
-const Buffer = require("buffer").Buffer;
+import { getStakeKey } from "src/services/common";
 
 export default function useClaimHistory() {
   const dispatch = useDispatch();
   const { handleError } = useErrorHandler();
-  const [tokensInfo, setTokensInfo] = useState<GetTokens>({});
-  const [claimHistory, setClaimHistory] = useState<ParsedReward[]>([]);
+  const [claimHistory, setClaimHistory] = useState<DeliveredReward[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    async function init() {
-      let info = await getTokens();
-      setTokensInfo(info);
-    }
-    init();
-  }, []);
-
-  function parseRewardHistory(history: GetRewardsHistory[]): ParsedReward[] {
-    type RewardMap = Record<string, ParsedReward>;
-    const rewardMap: RewardMap = {};
-
-    for (let entry of history) {
-      let ticker: string;
-      if (entry.token === "lovelace") {
-        ticker = "ADA";
-      } else {
-        ticker = Buffer.from(entry.token.split(".")[1], "hex").toString("utf8");
-      }
-
-      const key = `${entry.delivered_on}_${ticker}`;
-      let decimals = 0;
-
-      if (tokensInfo != null) {
-        if (tokensInfo[entry.token]?.decimals) {
-          decimals = Number(tokensInfo[entry.token].decimals);
-        }
-      }
-
-      if (rewardMap[key]) {
-        rewardMap[key].amount += Number(entry.amount);
-      } else {
-        rewardMap[key] = {
-          token: entry.token,
-          amount: Number(entry.amount),
-          delivered_on: entry.delivered_on,
-          ticker,
-          decimals,
-        };
-      }
-    }
-
-    return Object.values(rewardMap);
-  }
-
   async function checkClaimHistory(searchAddress: string) {
-    if (!searchAddress) return;
+    if (!searchAddress) {
+      throw new Error("No address provided!");
+    }
+
     try {
       setLoading(true);
       const address = await getStakeKey(searchAddress);
@@ -74,9 +28,8 @@ export default function useClaimHistory() {
 
       let getRewardsHistory = await getDeliveredRewards(stakingAddress);
 
-      if (getRewardsHistory?.length) {
-        let parsedHistory = parseRewardHistory(getRewardsHistory as any[]);
-        setClaimHistory(parsedHistory);
+      if (getRewardsHistory.deliveredRewards.length) {
+        setClaimHistory(getRewardsHistory.deliveredRewards);
         setLoading(false);
       } else {
         dispatch(

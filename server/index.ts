@@ -6,12 +6,18 @@ import {
 import express, { Request, Response } from "express";
 import * as _ from "lodash";
 import url from "url";
-import { GetPoolsDto, GetQueueDto } from "../client/src/entities/dto";
+import {
+  GetDeliveredRewardsDto,
+  GetPoolsDto,
+  GetQueueDto,
+  ServerErrorDto,
+} from "../client/src/entities/dto";
 import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
 import { PoolInfo } from "../client/src/entities/vm.entities";
 import {
   CardanoNetwork,
   getAccountsInfo,
+  getDeliveredRewards,
   getEpochParams,
   getFromKoios,
   getFromVM,
@@ -26,6 +32,7 @@ import {
   translateAdaHandle,
 } from "./utils";
 import { ICustomRewards } from "./utils/entities";
+import { logError } from "./utils/error";
 
 require("dotenv").config();
 const openapi = require("@wesleytodd/openapi");
@@ -535,6 +542,7 @@ app.get(
 
       return res.send(customReward);
     } catch (e: any) {
+      logError(e);
       return res
         .status(500)
         .send({ error: "An error occurred in /api/getcustomrewards" });
@@ -544,70 +552,28 @@ app.get(
 
 app.get(
   "/api/getdeliveredrewards",
-  oapi.path({
-    description: "Return delivered rewards from a given stake address.",
-    parameters: [
-      {
-        name: "staking_address",
-        in: "query",
-        required: true,
-      },
-    ],
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-            },
-          },
-        },
-      },
-      400: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-      500: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-    },
-  }),
-  async (req: any, res: any) => {
+  async (req: any, res: Response<GetDeliveredRewardsDto | ServerErrorDto>) => {
     try {
       const queryObject = url.parse(req.url, true).query;
-      const { staking_address } = queryObject;
-      let vmArgs = `delivered_rewards&staking_address=${staking_address}`;
-      if (!staking_address)
+      const { staking_address: stakingAddress } = queryObject;
+      if (!stakingAddress) {
         return res
           .status(400)
           .send({ error: "No address provided to /api/getdeliveredrewards" });
-
-      const deliveredRewards: any = await getFromVM(vmArgs);
-      if (deliveredRewards == null) {
-        throw new Error();
       }
-      return res.send(deliveredRewards);
+
+      const deliveredRewards = await getDeliveredRewards(
+        stakingAddress as string
+      );
+
+      return res.status(200).send({
+        deliveredRewards,
+      });
     } catch (e: any) {
+      logError(e);
       return res
         .status(500)
-        .send({ error: "An error occurred in /api/getcustomrewards" });
+        .send({ error: "An error occurred in /api/getdeliveredrewards" });
     }
   }
 );

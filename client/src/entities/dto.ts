@@ -1,3 +1,4 @@
+import { DeliveredReward } from "./common.entities";
 import { PoolInfo } from "./vm.entities";
 
 export interface GetQueueDto {
@@ -7,4 +8,12 @@ export interface GetQueueDto {
 export interface GetPoolsDto {
   whitelistedPools: PoolInfo[];
   regularPools: PoolInfo[];
+}
+
+export interface GetDeliveredRewardsDto {
+  deliveredRewards: DeliveredReward[];
+}
+
+export interface ServerErrorDto {
+  error: string;
 }
