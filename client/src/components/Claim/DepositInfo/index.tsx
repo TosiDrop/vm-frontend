@@ -1,13 +1,13 @@
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { lovelaceToAda } from "src/utils";
 import { GetCustomRewards } from "src/entities/vm.entities";
+import { lovelaceToAda } from "src/utils";
 
-import SendAdaInfo from "../SendAdaInfo";
-import TransactionStatus from "../TransactionStatus";
-import TransactionDetail from "../TransactionDetail";
 import { TransactionStatusDetail } from "src/entities/common.entities";
+import SendAdaInfo from "../SendAdaInfo";
+import TransactionDetail from "../TransactionDetail";
+import TransactionStatus from "../TransactionStatus";
 
 interface Params {
   txDetail: GetCustomRewards | undefined;
@@ -32,7 +32,7 @@ const DepositInfo = ({
     <div className="flex flex-col gap-4">
       <div className="bg-yellow-400 rounded-2xl p-5 text-black">
         <FontAwesomeIcon className="mr-2.5" icon={faWarning} />
-        <span>Please send ONLY from the wallet with the same stake key</span>
+        <span>Cross-wallet claims are now supported!</span>
       </div>
       <div className="background rounded-2xl p-5">
         <div>

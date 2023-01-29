@@ -10,8 +10,6 @@ import { showModal } from "src/reducers/globalSlice";
 import { getDeliveredRewards } from "src/services/claim";
 import { getStakeKey } from "src/services/common";
 
-const Buffer = require("buffer").Buffer;
-
 export default function useClaimHistory() {
   const dispatch = useDispatch();
   const { handleError } = useErrorHandler();
