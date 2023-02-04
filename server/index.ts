@@ -14,6 +14,7 @@ import {
 } from "../client/src/entities/dto";
 import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
 import { PoolInfo } from "../client/src/entities/vm.entities";
+import errorHandlerMiddleware from "./middleware/error-handler";
 import {
   CardanoNetwork,
   getAccountsInfo,
@@ -32,11 +33,12 @@ import {
   translateAdaHandle,
 } from "./utils";
 import { ICustomRewards } from "./utils/entities";
-import { logError } from "./utils/error";
-
+require("express-async-errors");
 require("dotenv").config();
 const openapi = require("@wesleytodd/openapi");
 const fs = require("fs");
+
+/** environment variables */
 const CARDANO_NETWORK = process.env.CARDANO_NETWORK || CardanoNetwork.preview;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const LOG_TYPE = process.env.LOG_TYPE || "dev";
@@ -542,7 +544,6 @@ app.get(
 
       return res.send(customReward);
     } catch (e: any) {
-      logError(e);
       return res
         .status(500)
         .send({ error: "An error occurred in /api/getcustomrewards" });
@@ -570,7 +571,6 @@ app.get(
         deliveredRewards,
       });
     } catch (e: any) {
-      logError(e);
       return res
         .status(500)
         .send({ error: "An error occurred in /api/getdeliveredrewards" });
@@ -826,3 +826,5 @@ app.use("/api/img", express.static(__dirname + "/public/img"));
 app.get("*", (req, res) => {
   res.sendFile("client/build/index.html", { root: "../" });
 });
+
+app.use(errorHandlerMiddleware);
