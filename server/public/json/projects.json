@@ -131,5 +131,29 @@
       "docs": "https://merkaba-token.io/",
       "cardanoScan": "https://cardanoscan.io/token/f4d97191f857096b441a410c036f63d6697dde0c71d2755dd664e3024d4b41"
     }
+  },
+  {
+    "logos": {
+      "logoDefault": "/api/img/project-logo/nunet/nunet-full-light.png",
+      "logoDark": "/api/img/project-logo/nunet/nunet-full-dark.png",
+      "logoCompact": "/api/img/project-logo/nunet/nunet-compact.png"
+    },
+    "descs": {
+      "descShort": "NuNet is a computing framework that provides globally distributed computing power for decentralized networks.",
+      "descLong": "NuNet is a computing framework that provides globally distributed computing power for decentralized networks, by connecting the owners of data and computing resources with computational processes in demand of these resources.",
+      "claimDesc": ""
+    },
+    "token": {
+      "token": "NTX",
+      "totalSupply": 1000000000,
+      "policyID": "edfd7a1d77bcb8b884c474bdc92a16002d1fb720e454fa6e99344479"
+    },
+    "urls": {
+      "website": "https://www.nunet.io/",
+      "medium": "https://medium.com/nunet",
+      "twitter": "https://twitter.com/nunet_global",
+      "discord": "https://discord.gg/8S7JNRBHJa",
+      "telegram": "https://t.me/NuNet_community"
+    }
   }
 ]
