@@ -14,7 +14,7 @@ import {
 } from "../client/src/entities/dto";
 import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
 import { PoolInfo } from "../client/src/entities/vm.entities";
-import errorHandlerMiddleware from "./middleware/error-handler";
+import errorHandlerMiddleware from "./middlewares/error-handler";
 import {
   CardanoNetwork,
   getAccountsInfo,
