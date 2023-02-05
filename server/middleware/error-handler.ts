@@ -11,7 +11,7 @@ export default async function errorHandlerMiddleware(
   res: Response,
   _next: NextFunction
 ) {
-  let statusCode: HttpStatusCode = 500;
+  let statusCode: HttpStatusCode = HttpStatusCode.INTERNAL_SERVER_ERROR;
   let errorMessage: string;
   if (error instanceof ErrorWithCode) {
     errorMessage = error.message;
