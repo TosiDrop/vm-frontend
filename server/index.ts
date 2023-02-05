@@ -690,7 +690,7 @@ app.get(
     const getTransactionStatusResponse = await postFromKoios<
       TransactionStatus[]
     >(`tx_status`, { _tx_hashes: [queryObject.txHash] });
-    res.send(getTransactionStatusResponse);
+    return res.send(getTransactionStatusResponse);
   }
 );
 
@@ -699,7 +699,7 @@ app.get(
   oapi.path(resp200Ok500Bad),
   async (req: any, res: any) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
-    res.send({
+    return res.send({
       abs_slot:
         getTipResponse && getTipResponse.length
           ? getTipResponse[0].abs_slot
@@ -713,7 +713,7 @@ app.get(
   oapi.path(resp200Ok500Bad),
   async (req: any, res: any) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
-    res.send({
+    return res.send({
       block_no:
         getTipResponse && getTipResponse.length
           ? getTipResponse[0].block_no
@@ -739,7 +739,7 @@ app.get(
     const getEpochParamsResponse = await getEpochParams(
       getTipResponse && getTipResponse.length ? getTipResponse[0].epoch_no : 0
     );
-    res.send(getEpochParamsResponse);
+    return res.send(getEpochParamsResponse);
   }
 );
 
@@ -775,7 +775,7 @@ app.use("/api/img", express.static(__dirname + "/public/img"));
 
 // Fallback to React app
 app.get("*", (req, res) => {
-  res.sendFile("client/build/index.html", { root: "../" });
+  return res.sendFile("client/build/index.html", { root: "../" });
 });
 
 const server = app.listen(PORT, () => {
