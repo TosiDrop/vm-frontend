@@ -1,12 +1,6 @@
 export interface GetRewardsDto {
   claimable_tokens: ClaimableToken[];
-  pool_info: {
-    delegated_pool_name: string;
-    delegated_pool_description: string;
-    total_balance: string;
-    delegated_pool_ticker: string;
-    delegated_pool_logo: string;
-  };
+  pool_info: VmPoolInfo;
   total_rewards?: number;
   consolidated_promises?: Assets;
   consolidated_rewards?: Assets;
@@ -22,6 +16,14 @@ export interface GetRewardsDto {
     nfts: any[];
     assets: Assets;
   };
+}
+
+export interface VmPoolInfo {
+  delegated_pool_name: string;
+  delegated_pool_description: string;
+  total_balance: string;
+  delegated_pool_ticker: string;
+  delegated_pool_logo: string;
 }
 
 export interface GetCustomRewards {
