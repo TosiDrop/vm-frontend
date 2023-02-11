@@ -552,6 +552,51 @@ app.get(
 
 app.get(
   "/api/getdeliveredrewards",
+  oapi.path({
+    description: "Return delivered rewards from a given stake address.",
+    parameters: [
+      {
+        name: "staking_address",
+        in: "query",
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+            },
+          },
+        },
+      },
+      400: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+  }), 
   async (req: any, res: Response<GetDeliveredRewardsDto | ServerErrorDto>) => {
     try {
       const queryObject = url.parse(req.url, true).query;
