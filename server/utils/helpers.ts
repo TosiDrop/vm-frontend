@@ -1,4 +1,5 @@
 import axios from "axios";
+import converter from "bech32-converting";
 import { CardanoNetwork } from ".";
 import {
   DeliveredReward,
@@ -372,4 +373,8 @@ export function parseVmDeliveredRewards(
   }
 
   return Object.values(rewardMap);
+}
+
+export function convertPoolIdToBech32(poolIdInHex: string) {
+  return converter("pool").toBech32(poolIdInHex);
 }

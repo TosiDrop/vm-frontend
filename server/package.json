@@ -24,6 +24,7 @@
     "@emurgo/cardano-serialization-lib-nodejs": "^11.1.0",
     "@wesleytodd/openapi": "^0.1.0",
     "axios": "^0.26.0",
+    "bech32-converting": "^1.0.9",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",

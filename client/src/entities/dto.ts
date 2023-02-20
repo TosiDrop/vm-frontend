@@ -37,3 +37,24 @@ export interface GetDeliveredRewardsDto {
 export interface ServerErrorDto {
   error: string;
 }
+
+export namespace StakeTxDto {
+  export interface CreateRequest {
+    poolId: string;
+    address: string;
+  }
+
+  export interface CreateResponse {
+    witness: string;
+    txBody: string;
+  }
+
+  export interface SubmitRequest {
+    signedWitness: string;
+    txBody: string;
+  }
+
+  export interface SubmitResponse {
+    tx: string;
+  }
+}
