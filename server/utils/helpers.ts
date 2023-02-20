@@ -125,6 +125,9 @@ export async function getPools() {
     pools = await getFromVM<GetPools>("get_pools");
     longTermCache.set("pools", pools);
   }
+  Object.values(pools).forEach((pool) => {
+    pool.id = convertPoolIdToBech32(pool.id);
+  });
   return pools;
 }
 
