@@ -1,6 +1,7 @@
 // import BlockchainSelector from "src/components/BlockchainSelector";
 import { faBars, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import logoDark from "src/assets/tosidrop-dark.png";
@@ -16,15 +17,18 @@ function Header() {
   const dispatch = useDispatch();
   const theme = useSelector((state: RootState) => state.global.theme);
   const chain = useSelector((state: RootState) => state.global.chain);
+  const connectedWallet = useSelector(
+    (state: RootState) => state.wallet.walletApi
+  );
 
-  const RenderWalletConnector = () => {
+  const RenderWalletConnector = useCallback(() => {
     switch (chain) {
       case Blockchain.cardano:
         return <CardanoWalletSelector></CardanoWalletSelector>;
       case Blockchain.ergo:
         return <ErgoWalletSelector></ErgoWalletSelector>;
     }
-  };
+  }, [connectedWallet]);
 
   return (
     <>
