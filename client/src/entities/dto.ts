@@ -39,22 +39,22 @@ export interface ServerErrorDto {
 }
 
 export namespace StakeTxDto {
-  export interface CreateRequest {
+  export interface GetTxRequest {
     poolId: string;
     address: string;
   }
 
-  export interface CreateResponse {
+  export interface GetTxResponse {
     witness: string;
     txBody: string;
   }
 
-  export interface SubmitRequest {
+  export interface PostSignedTxRequest {
     signedWitness: string;
     txBody: string;
   }
 
-  export interface SubmitResponse {
+  export interface PostSignedTxResponse {
     tx: string;
   }
 }

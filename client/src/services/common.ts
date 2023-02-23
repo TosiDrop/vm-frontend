@@ -1,6 +1,6 @@
 import axios from "axios";
 import { NetworkId, PopUpInfo } from "src/entities/common.entities";
-import { GetPoolsDto, GetQueueDto } from "src/entities/dto";
+import { GetPoolsDto, GetQueueDto, StakeTxDto } from "src/entities/dto";
 import { EpochParams, Tip } from "src/entities/koios.entities";
 import { ProjectData } from "src/entities/project.entities";
 import { GetTokens } from "src/entities/vm.entities";
@@ -74,5 +74,24 @@ export async function getQueue(): Promise<GetQueueDto> {
 
 export async function getTokens(): Promise<GetTokens> {
   const response = await axios.get(`/api/gettokens`);
+  return response.data;
+}
+
+export async function createStakeTx(
+  params: StakeTxDto.GetTxRequest
+): Promise<StakeTxDto.GetTxResponse> {
+  const response = await axios.get<StakeTxDto.GetTxResponse>(
+    `/api/tx/stake?poolId=${params.poolId}&address=${params.address}`
+  );
+  return response.data;
+}
+
+export async function submitStakeTx(
+  params: StakeTxDto.PostSignedTxRequest
+): Promise<StakeTxDto.PostSignedTxResponse> {
+  const response = await axios.post<StakeTxDto.PostSignedTxResponse>(
+    `/api/tx/stake`,
+    params
+  );
   return response.data;
 }

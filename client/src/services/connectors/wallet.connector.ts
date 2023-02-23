@@ -105,6 +105,15 @@ class WalletApi {
     return address;
   }
 
+  async getBech32Address(): Promise<string> {
+    if (!this.isEnabled() || !this.wallet) throw new Error(ERROR.NOT_CONNECTED);
+
+    const addresses = await this.wallet.api.getUsedAddresses();
+    const address = addresses[0] as any;
+
+    return wasm.Address.from_hex(address).to_bech32();
+  }
+
   async getNetworkId() {
     if (!this.isEnabled() || !this.wallet) throw ERROR.NOT_CONNECTED;
 
@@ -283,6 +292,10 @@ class WalletApi {
       });
     }
     return UTXOS;
+  }
+
+  async signTx(txInHex: string) {
+    return this.wallet?.api.signTx(txInHex);
   }
 
   private utxoToAssets(utxo: wasm.TransactionUnspentOutput) {

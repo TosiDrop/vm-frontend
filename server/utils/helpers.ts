@@ -123,11 +123,11 @@ export async function getPools() {
   let pools: GetPools | undefined = longTermCache.get("pools");
   if (pools == null) {
     pools = await getFromVM<GetPools>("get_pools");
+    Object.values(pools).forEach((pool) => {
+      pool.id = convertPoolIdToBech32(pool.id);
+    });
     longTermCache.set("pools", pools);
   }
-  Object.values(pools).forEach((pool) => {
-    pool.id = convertPoolIdToBech32(pool.id);
-  });
   return pools;
 }
 

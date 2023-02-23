@@ -9,8 +9,8 @@ const router = express.Router();
 router.get(
   "/stake",
   errorHandlerWrapper(async function (
-    req: Request<any, any, any, StakeTxDto.CreateRequest>,
-    res: Response<StakeTxDto.CreateResponse>
+    req: Request<any, any, any, StakeTxDto.GetTxRequest>,
+    res: Response<StakeTxDto.GetTxResponse>
   ) {
     const { poolId, address } = req.query;
     if (!poolId) {
@@ -34,8 +34,8 @@ router.get(
 router.post(
   "/stake",
   errorHandlerWrapper(async function (
-    req: Request<any, any, StakeTxDto.SubmitRequest>,
-    res: Response<StakeTxDto.SubmitResponse>
+    req: Request<any, any, StakeTxDto.PostSignedTxRequest>,
+    res: Response<StakeTxDto.PostSignedTxResponse>
   ) {
     const { signedWitness, txBody } = req.body;
     const tx = await TxService.createTxToSubmit(signedWitness, txBody);
