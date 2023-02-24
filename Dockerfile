@@ -1,4 +1,4 @@
-FROM node:16 AS base
+FROM node:18 AS base
 
 FROM base AS builder
 WORKDIR /code/client
