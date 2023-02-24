@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import Footer from "src/components/Footer";
 import Modal from "src/components/Modal";
@@ -13,10 +13,14 @@ import MenuWrapper from "./layouts/MenuWrapper";
 import ThemeWrapper from "./layouts/ThemeWrapper";
 import { setChain, setErgoEnabled } from "./reducers/globalSlice";
 import { getFeatures } from "./services/common";
+import { RootState } from "./store";
 
 function App() {
   const location = useLocation().pathname;
   const dispatch = useDispatch();
+  const connectedWallet = useSelector(
+    (state: RootState) => state.wallet.walletApi
+  );
 
   const init = async () => {
     const features = await getFeatures();
@@ -41,12 +45,14 @@ function App() {
     initLocation();
   }, [location]);
 
+  const OptHeader = useCallback(() => <Header></Header>, [connectedWallet]);
+
   return (
     <ThemeWrapper>
       <>
         <PopUp></PopUp>
         <Modal />
-        <Header></Header>
+        <OptHeader></OptHeader>
         <BlockchainWrapper>
           <MenuWrapper>
             <RouterWrapper />

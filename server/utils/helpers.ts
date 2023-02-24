@@ -1,4 +1,5 @@
 import axios from "axios";
+import converter from "bech32-converting";
 import { CardanoNetwork } from ".";
 import {
   DeliveredReward,
@@ -122,6 +123,9 @@ export async function getPools() {
   let pools: GetPools | undefined = longTermCache.get("pools");
   if (pools == null) {
     pools = await getFromVM<GetPools>("get_pools");
+    Object.values(pools).forEach((pool) => {
+      pool.id = convertPoolIdToBech32(pool.id);
+    });
     longTermCache.set("pools", pools);
   }
   return pools;
@@ -372,4 +376,8 @@ export function parseVmDeliveredRewards(
   }
 
   return Object.values(rewardMap);
+}
+
+export function convertPoolIdToBech32(poolIdInHex: string) {
+  return converter("pool").toBech32(poolIdInHex);
 }

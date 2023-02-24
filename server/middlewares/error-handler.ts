@@ -26,3 +26,13 @@ export default async function errorHandlerMiddleware(
   }
   return res.status(statusCode).send(createErrorResponse(errorMessage));
 }
+
+export const errorHandlerWrapper =
+  (func: Function) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await func(req, res);
+    } catch (error) {
+      next(error);
+    }
+  };

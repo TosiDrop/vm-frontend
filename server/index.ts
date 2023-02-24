@@ -15,6 +15,7 @@ import {
 import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
 import { PoolInfo } from "../client/src/entities/vm.entities";
 import errorHandlerMiddleware from "./middlewares/error-handler";
+import TxRouter from "./routes/tx";
 import {
   CardanoNetwork,
   getAccountsInfo,
@@ -40,13 +41,15 @@ const openapi = require("@wesleytodd/openapi");
 const fs = require("fs");
 
 /** environment variables */
-const CARDANO_NETWORK = process.env.CARDANO_NETWORK || CardanoNetwork.preview;
+export const VM_KOIOS_URL =
+  process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
+export const CARDANO_NETWORK =
+  process.env.CARDANO_NETWORK || CardanoNetwork.preview;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const LOG_TYPE = process.env.LOG_TYPE || "dev";
 const PORT = process.env.PORT || 3000;
 const TOSIFEE = process.env.TOSIFEE || 500000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
-const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 const CLAIM_ENABLED = process.env.CLAIM_ENABLED === "true";
 const ERGO_ENABLED = process.env.ERGO_ENABLED === "true";
 
@@ -107,6 +110,8 @@ const resp200Ok500Bad = {
     },
   },
 };
+
+app.use("/api/tx", TxRouter);
 
 app.get("/api/getprices", oapi.path(resp200Ok), async (req, res) => {
   const prices = await getPrices();
