@@ -14,7 +14,9 @@ import {
 } from "../client/src/entities/dto";
 import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
 import { PoolInfo } from "../client/src/entities/vm.entities";
-import errorHandlerMiddleware from "./middlewares/error-handler";
+import errorHandlerMiddleware, {
+  errorHandlerWrapper,
+} from "./middlewares/error-handler";
 import TxRouter from "./routes/tx";
 import {
   CardanoNetwork,
@@ -35,9 +37,8 @@ import {
 } from "./utils";
 import { ICustomRewards } from "./utils/entities";
 import { createErrorWithCode, HttpStatusCode } from "./utils/error";
-require("express-async-errors");
 require("dotenv").config();
-const openapi = require("@wesleytodd/openapi");
+const openapi = require("@reqlez/express-openapi");
 const fs = require("fs");
 
 /** environment variables */
@@ -113,15 +114,19 @@ const resp200Ok500Bad = {
 
 app.use("/api/tx", TxRouter);
 
-app.get("/api/getprices", oapi.path(resp200Ok), async (req, res) => {
-  const prices = await getPrices();
-  return res.status(200).send(prices);
-});
+app.get(
+  "/api/getprices",
+  oapi.path(resp200Ok),
+  errorHandlerWrapper(async (_req: Request, res: Response) => {
+    const prices = await getPrices();
+    return res.status(200).send(prices);
+  })
+);
 
 app.get(
   "/api/getpools",
   oapi.path(resp200Ok),
-  async (req, res: Response<GetPoolsDto>) => {
+  errorHandlerWrapper(async (_req: Request, res: Response<GetPoolsDto>) => {
     const pools = await getPools();
 
     /** did this because value in env use 'pool...' as ID whereas VM retuns pool ID */
@@ -142,62 +147,83 @@ app.get(
       whitelistedPools: _.shuffle(whitelistedPools),
       regularPools: _.shuffle(regularPools),
     });
-  }
+  })
 );
 
-app.get("/api/gettokens", oapi.path(resp200Ok), async (req, res) => {
-  const tokens = await getTokens();
-  return res.status(200).send(tokens);
-});
+app.get(
+  "/api/gettokens",
+  oapi.path(resp200Ok),
+  errorHandlerWrapper(async (_req: Request, res: Response) => {
+    const tokens = await getTokens();
+    return res.status(200).send(tokens);
+  })
+);
 
-app.get("/api/getsettings", oapi.path(resp200Ok), async (req, res) => {
-  const settings: IVMSettings = await getFromVM("get_settings");
-  return res.status(200).send(settings);
-});
+app.get(
+  "/api/getsettings",
+  oapi.path(resp200Ok),
+  errorHandlerWrapper(async (_req: Request, res: Response) => {
+    const settings: IVMSettings = await getFromVM("get_settings");
+    return res.status(200).send(settings);
+  })
+);
 
-app.get("/api/systeminfo", oapi.path(resp200Ok), async (req, res) => {
-  const systeminfo = await getFromVM("system_info");
-  return res.status(200).send(systeminfo);
-});
+app.get(
+  "/api/systeminfo",
+  oapi.path(resp200Ok),
+  errorHandlerWrapper(async (_req: Request, res: Response) => {
+    const systeminfo = await getFromVM("system_info");
+    return res.status(200).send(systeminfo);
+  })
+);
 
-app.get("/health", (req: any, res: any) => {
-  res.status(200).json({
-    status: "UP",
-  });
-});
-
-app.get("/healthz", async (req: any, res: any) => {
-  await getFromKoios<Tip[]>(`tip`);
-  if (CLOUDFLARE_PSK) {
-    if (req.headers["x-cloudflare-psk"]) {
-      const myPsk = req.headers["x-cloudflare-psk"];
-      if (myPsk == CLOUDFLARE_PSK) {
-        const authResponse = await getFromVM("is_authenticated");
-        return res.send(authResponse);
-      } else {
-        throw createErrorWithCode(HttpStatusCode.BAD_REQUEST, "PSK invalid");
-      }
-    } else {
-      throw createErrorWithCode(HttpStatusCode.BAD_REQUEST, "PSK is missing");
-    }
-  } else {
-    return res.status(200).json({
+app.get(
+  "/health",
+  errorHandlerWrapper((_req: Request, res: Response) => {
+    res.status(200).json({
       status: "UP",
     });
-  }
-});
+  })
+);
 
-app.get("/features", (req: any, res: any) => {
-  const features: ITosiFeatures = {
-    tosi_fee: Number(TOSIFEE),
-    tosi_fee_whitelist: TOSIFEE_WHITELIST,
-    claim_enabled: CLAIM_ENABLED,
-    network: CARDANO_NETWORK,
-    ergo_enabled: ERGO_ENABLED,
-  };
+app.get(
+  "/healthz",
+  errorHandlerWrapper(async (req: Request, res: Response) => {
+    await getFromKoios<Tip[]>(`tip`);
+    if (CLOUDFLARE_PSK) {
+      if (req.headers["x-cloudflare-psk"]) {
+        const myPsk = req.headers["x-cloudflare-psk"];
+        if (myPsk == CLOUDFLARE_PSK) {
+          const authResponse = await getFromVM("is_authenticated");
+          return res.send(authResponse);
+        } else {
+          throw createErrorWithCode(HttpStatusCode.BAD_REQUEST, "PSK invalid");
+        }
+      } else {
+        throw createErrorWithCode(HttpStatusCode.BAD_REQUEST, "PSK is missing");
+      }
+    } else {
+      return res.status(200).json({
+        status: "UP",
+      });
+    }
+  })
+);
 
-  return res.status(200).send(features);
-});
+app.get(
+  "/features",
+  errorHandlerWrapper((_req: Request, res: Response) => {
+    const features: ITosiFeatures = {
+      tosi_fee: Number(TOSIFEE),
+      tosi_fee_whitelist: TOSIFEE_WHITELIST,
+      claim_enabled: CLAIM_ENABLED,
+      network: CARDANO_NETWORK,
+      ergo_enabled: ERGO_ENABLED,
+    };
+
+    return res.status(200).send(features);
+  })
+);
 
 app.get(
   "/api/getstakekey",
@@ -250,7 +276,7 @@ app.get(
       },
     },
   }),
-  async (req: any, res: any) => {
+  errorHandlerWrapper(async (req: Request, res: Response) => {
     if (!VM_KOIOS_URL) {
       throw createErrorWithCode(
         HttpStatusCode.INTERNAL_SERVER_ERROR,
@@ -332,7 +358,7 @@ app.get(
     return res.send({
       staking_address: rewardAddress.to_address().to_bech32(),
     });
-  }
+  })
 );
 
 /**
@@ -391,7 +417,7 @@ app.get(
       },
     },
   }),
-  async (req: any, res: any) => {
+  errorHandlerWrapper(async (req: Request, res: Response) => {
     const queryObject = url.parse(req.url, true).query;
     const stakeAddress = queryObject.address as string;
     if (!stakeAddress) {
@@ -411,7 +437,7 @@ app.get(
     };
 
     return res.send(consolidatedGetRewards);
-  }
+  })
 );
 
 app.get(
@@ -483,7 +509,7 @@ app.get(
       },
     },
   }),
-  async (req: any, res: any) => {
+  errorHandlerWrapper(async (req: Request, res: Response) => {
     const queryObject = url.parse(req.url, true).query;
     const {
       staking_address: stakeAddress,
@@ -534,7 +560,7 @@ app.get(
     };
 
     return res.send(customReward);
-  }
+  })
 );
 
 app.get(
@@ -583,25 +609,30 @@ app.get(
         },
       },
     },
-  }), 
-  async (req: any, res: Response<GetDeliveredRewardsDto | ServerErrorDto>) => {
-    const queryObject = url.parse(req.url, true).query;
-    const { staking_address: stakingAddress } = queryObject;
-    if (!stakingAddress) {
-      throw createErrorWithCode(
-        HttpStatusCode.BAD_REQUEST,
-        "Address is required"
+  }),
+  errorHandlerWrapper(
+    async (
+      req: Request,
+      res: Response<GetDeliveredRewardsDto | ServerErrorDto>
+    ) => {
+      const queryObject = url.parse(req.url, true).query;
+      const { staking_address: stakingAddress } = queryObject;
+      if (!stakingAddress) {
+        throw createErrorWithCode(
+          HttpStatusCode.BAD_REQUEST,
+          "Address is required"
+        );
+      }
+
+      const deliveredRewards = await getDeliveredRewards(
+        stakingAddress as string
       );
+
+      return res.status(200).send({
+        deliveredRewards,
+      });
     }
-
-    const deliveredRewards = await getDeliveredRewards(
-      stakingAddress as string
-    );
-
-    return res.status(200).send({
-      deliveredRewards,
-    });
-  }
+  )
 );
 
 app.get(
@@ -657,7 +688,7 @@ app.get(
       },
     },
   }),
-  async (req, res) => {
+  errorHandlerWrapper(async (req: Request, res: Response) => {
     const queryObject = url.parse(req.url, true).query;
     const { request_id, session_id } = queryObject;
 
@@ -679,7 +710,7 @@ app.get(
       `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`
     );
     return res.send(txStatus);
-  }
+  })
 );
 
 app.get(
@@ -729,7 +760,7 @@ app.get(
       },
     },
   }),
-  async (req: any, res: any) => {
+  errorHandlerWrapper(async (req: Request, res: Response) => {
     const queryObject = url.parse(req.url, true).query;
     if (!queryObject.txHash) {
       throw createErrorWithCode(
@@ -741,13 +772,13 @@ app.get(
       TransactionStatus[]
     >(`tx_status`, { _tx_hashes: [queryObject.txHash] });
     return res.send(getTransactionStatusResponse);
-  }
+  })
 );
 
 app.get(
   "/api/getabsslot",
   oapi.path(resp200Ok500Bad),
-  async (req: any, res: any) => {
+  errorHandlerWrapper(async (_req: Request, res: Response) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     return res.send({
       abs_slot:
@@ -755,13 +786,13 @@ app.get(
           ? getTipResponse[0].abs_slot
           : 0,
     });
-  }
+  })
 );
 
 app.get(
   "/api/getblock",
   oapi.path(resp200Ok500Bad),
-  async (req: any, res: any) => {
+  errorHandlerWrapper(async (_req: Request, res: Response) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     return res.send({
       block_no:
@@ -769,64 +800,70 @@ app.get(
           ? getTipResponse[0].block_no
           : 0,
     });
-  }
+  })
 );
 
 app.get(
   "/api/gettip",
   oapi.path(resp200Ok500Bad),
-  async (req: any, res: any) => {
+  errorHandlerWrapper(async (_req: Request, res: Response) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     res.send(getTipResponse[0]);
-  }
+  })
 );
 
 app.get(
   "/api/getepochparams",
   oapi.path(resp200Ok500Bad),
-  async (req: any, res: any) => {
+  errorHandlerWrapper(async (_req: Request, res: Response) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     const getEpochParamsResponse = await getEpochParams(
       getTipResponse && getTipResponse.length ? getTipResponse[0].epoch_no : 0
     );
     return res.send(getEpochParamsResponse);
-  }
+  })
 );
 
 app.get(
   "/api/getprojects",
   oapi.path(resp200Ok),
-  async (req: any, res: any) => {
+  errorHandlerWrapper(async (_req: Request, res: Response) => {
     const projects = JSON.parse(
       fs.readFileSync(__dirname + "/public/json/projects.json", "utf8")
     );
     return res.status(200).send(projects);
-  }
+  })
 );
 
 app.get(
   "/api/getpopupinfo",
   oapi.path(resp200Ok),
-  async (req: any, res: any) => {
+  errorHandlerWrapper(async (_req: Request, res: Response) => {
     const popupInfo = JSON.parse(
       fs.readFileSync(__dirname + "/public/json/popup.json", "utf8")
     );
     return res.status(200).send(popupInfo);
-  }
+  })
 );
 
-app.get("/api/getqueue", async (req: Request, res: Response<GetQueueDto>) => {
-  const queue: GetQueueDto = await getFromVM("get_pending_tx_count");
-  return res.status(200).send(queue);
-});
+app.get(
+  "/api/getqueue",
+  errorHandlerWrapper(async (_req: Request, res: Response<GetQueueDto>) => {
+    const queue: GetQueueDto = await getFromVM("get_pending_tx_count");
+    return res.status(200).send(queue);
+  })
+);
 
 // host static files such as images
 app.use("/api/img", express.static(__dirname + "/public/img"));
 
 // Fallback to React app
-app.get("*", (req, res) => {
-  return res.sendFile("client/build/index.html", { root: "../" });
-});
+app.get(
+  "*",
+  errorHandlerWrapper((_req: Request, res: Response) => {
+    return res.sendFile("client/build/index.html", { root: "../" });
+  })
+);
 
 const server = app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
