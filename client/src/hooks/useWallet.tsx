@@ -27,7 +27,7 @@ const useWallet = () => {
     const walletApi = await getWalletApi();
 
     if (!walletKey) {
-      dispatch(connectWalletRedux(walletApi));
+      dispatch(connectWalletRedux(undefined));
       dispatch(setIsWrongNetwork(false));
       localStorage.removeItem("wallet-provider");
       return;
