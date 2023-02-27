@@ -128,16 +128,14 @@ app.get(
   oapi.path(resp200Ok),
   errorHandlerWrapper(async (_req: Request, res: Response<GetPoolsDto>) => {
     const pools = await getPools();
-
-    /** did this because value in env use 'pool...' as ID whereas VM retuns pool ID */
-    const whitelistedPoolTickers = ["BBHMM", "OTG", "PSB", "SEAL", "APEX"];
+    const whitelist = TOSIFEE_WHITELIST ? TOSIFEE_WHITELIST.split(",") : [];
     const whitelistedPools: PoolInfo[] = [];
     const regularPools: PoolInfo[] = [];
     Object.values(pools).forEach((pool) => {
       if (pool.visible === "f" || pool.id.includes("project_")) {
         return;
       }
-      if (whitelistedPoolTickers.includes(pool.ticker)) {
+      if (whitelist.includes(pool.id)) {
         whitelistedPools.push(pool);
       } else {
         regularPools.push(pool);
