@@ -27,12 +27,15 @@ export const walletSlice = createSlice({
   name: "wallet",
   initialState,
   reducers: {
-    connectWallet: (state, action: PayloadAction<WalletApi>) => {
-      if (!action.payload) return;
+    connectWallet: (state, action: PayloadAction<WalletApi | undefined>) => {
       state.walletApi = action.payload;
-      if (!action.payload.wallet) return;
-      state.name = action.payload.wallet.name;
-      state.api = action.payload.wallet.api;
+      if (action.payload?.wallet !== undefined) {
+        state.name = action.payload.wallet.name;
+        state.api = action.payload.wallet.api;
+      } else {
+        state.name = "";
+        state.api = undefined;
+      }
     },
     setNetworkId: (state, action: PayloadAction<NetworkId>) => {
       state.networkId = action.payload;
