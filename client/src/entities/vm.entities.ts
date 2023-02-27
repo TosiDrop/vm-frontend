@@ -24,6 +24,7 @@ export interface VmPoolInfo {
   total_balance: string;
   delegated_pool_ticker: string;
   delegated_pool_logo: string;
+  isWhitelisted: boolean;
 }
 
 export interface GetCustomRewards {

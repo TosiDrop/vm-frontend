@@ -64,7 +64,9 @@ export default function RewardsView({
           <div className="text-premium">
             <FontAwesomeIcon icon={faStar} />
           </div>
-          These tokens incur a TosiFee when claiming
+          {poolInfo?.isWhitelisted
+            ? "No TosiFee on claims because you have staked to a TosiDrop core pool"
+            : "These tokens incur a TosiFee when claiming"}
         </div>
         <div className={"flex flex-row flex-wrap gap-4"}>
           {claimableTokens.map((token, index) => {
