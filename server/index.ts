@@ -428,11 +428,14 @@ app.get(
     let claimableTokens = await getRewards(stakeAddress);
     const accountsInfo = await getAccountsInfo(stakeAddress);
     const poolInfo = await getPoolMetadata(accountsInfo[0]);
-    poolInfo.isWhitelisted = false;
 
-    const whitelist = TOSIFEE_WHITELIST ? TOSIFEE_WHITELIST.split(",") : [];
-    if (whitelist.includes(poolInfo.delegated_pool_id_bech32)) {
-      poolInfo.isWhitelisted = true;
+    if (poolInfo != null) {
+      poolInfo.isWhitelisted = false;
+
+      const whitelist = TOSIFEE_WHITELIST ? TOSIFEE_WHITELIST.split(",") : [];
+      if (whitelist.includes(poolInfo.delegated_pool_id_bech32)) {
+        poolInfo.isWhitelisted = true;
+      }
     }
 
     const consolidatedGetRewards = {
