@@ -81,9 +81,17 @@ export namespace KoiosTypes {
     utxo_set: UTxO[];
   }
 
+  export interface NativeToken {
+    policy_id: string;
+    asset_name: string;
+    fingerprint: string;
+    quantity: string;
+  }
+
   export interface UTxO {
     value: string;
     tx_hash: string;
     tx_index: string;
+    asset_list: NativeToken[];
   }
 }

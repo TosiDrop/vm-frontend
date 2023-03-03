@@ -12,13 +12,8 @@ import {
   TransactionBody,
   TransactionBuilder,
   TransactionBuilderConfigBuilder,
-  TransactionHash,
-  TransactionInput,
-  TransactionOutput,
-  TransactionUnspentOutput,
   TransactionUnspentOutputs,
   TransactionWitnessSet,
-  Value,
 } from "@emurgo/cardano-serialization-lib-nodejs";
 import { CardanoService } from "./cardano";
 import { KoiosService } from "./koios";
@@ -78,8 +73,8 @@ export namespace TxService {
     const txBuilder = TransactionBuilder.new(txBuilderConfig);
     txBuilder.set_ttl_bignum(BigNum.from_str((tip.abs_slot + 3600).toString()));
 
+    /** add delegation certs */
     const certs = Certificates.new();
-
     if (accountInformation.status !== "registered") {
       certs.add(
         Certificate.new_stake_registration(
@@ -101,34 +96,24 @@ export namespace TxService {
 
     txBuilder.set_certs(certs);
 
+    /** assemble utxos from stake address */
     const addressesRelatedToStakeAddress =
       await KoiosService.getAddressesFromStakeAddress(stakeAddress);
-    const getAddressesInformation = await KoiosService.getAddressesInformation(
+    const addressesInformation = await KoiosService.getAddressesInformation(
       addressesRelatedToStakeAddress
     );
-
-    const utxosOutput = TransactionUnspentOutputs.new();
-    getAddressesInformation.forEach((info) => {
+    const availableUtxos = TransactionUnspentOutputs.new();
+    addressesInformation.forEach((info) => {
       const utxos = info.utxo_set;
       utxos.forEach((utxo) => {
-        const input = TransactionInput.new(
-          TransactionHash.from_hex(utxo.tx_hash),
-          Number(utxo.tx_index)
-        );
-        const output = TransactionOutput.new(
-          Address.from_bech32(info.address),
-          Value.new(BigNum.from_str(utxo.value))
-        );
-        utxosOutput.add(TransactionUnspentOutput.new(input, output));
+        const availableUtxo = CardanoService.createUtxo(utxo, info.address);
+        availableUtxos.add(availableUtxo);
       });
     });
 
-    txBuilder.add_inputs_from(utxosOutput, 0);
-
+    txBuilder.add_inputs_from(availableUtxos, 0);
     txBuilder.add_change_if_needed(Address.from_bech32(delegatorAddress));
-
     const txBody = txBuilder.build();
-
     const transaction = Transaction.new(txBody, TransactionWitnessSet.new());
 
     return {
