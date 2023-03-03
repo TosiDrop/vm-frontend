@@ -381,3 +381,7 @@ export function parseVmDeliveredRewards(
 export function convertPoolIdToBech32(poolIdInHex: string) {
   return converter("pool").toBech32(poolIdInHex);
 }
+
+export function convertHexToBuffer(_: string): Uint8Array {
+  return Buffer.from(_, "hex");
+}
