@@ -1,5 +1,5 @@
 import { DeliveredReward } from "./common.entities";
-import { EpochParams } from "./koios.entities";
+import { EpochParams, Tip } from "./koios.entities";
 import { Assets, ClaimableToken, PoolInfo, VmPoolInfo } from "./vm.entities";
 
 export interface GetRewardsDto {
@@ -109,3 +109,5 @@ export namespace ProjectsDto {
 }
 
 export type GetEpochParamsDto = EpochParams;
+
+export type GetTipDto = Tip;

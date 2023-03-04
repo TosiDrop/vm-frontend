@@ -2,6 +2,7 @@ import {
   GetEpochParamsDto,
   GetPopupInfoDto,
   GetQueueDto,
+  GetTipDto,
   ProjectsDto,
 } from "../../client/src/entities/dto";
 
@@ -172,6 +173,28 @@ export const getepochparamsOapiPath: OapiPath<GetEpochParamsDto> = {
               collateral_percent: { type: "integer" },
               max_collateral_inputs: { type: "integer" },
               coins_per_utxo_size: { type: "integer" },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const gettipOapiPath: OapiPath<GetTipDto> = {
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              hash: { type: "string" },
+              epoch_no: { type: "integer" },
+              abs_slot: { type: "integer" },
+              epoch_slot: { type: "integer" },
+              block_no: { type: "integer" },
+              block_time: { type: "integer" },
             },
           },
         },

@@ -28,14 +28,6 @@ export async function getStakeKey(addr: string) {
   return response.data;
 }
 
-export async function getBlock(): Promise<{ block_no: number }> {
-  const response = await axios.get(`/api/getblock`);
-  if (response && response.data) {
-    return response.data;
-  }
-  return { block_no: 0 };
-}
-
 export async function getEpochParams(): Promise<EpochParams> {
   const response = await axios.get<GetEpochParamsDto>(`/api/getepochparams`);
   return response.data;

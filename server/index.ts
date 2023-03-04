@@ -23,6 +23,7 @@ import {
   getpopupinfoOapiPath,
   getprojectsOapiPath,
   getqueueOapiPath,
+  gettipOapiPath,
 } from "./oapi";
 import TxRouter from "./routes/tx";
 import {
@@ -790,36 +791,8 @@ app.get(
 );
 
 app.get(
-  "/api/getabsslot",
-  oapi.path(resp200Ok500Bad),
-  errorHandlerWrapper(async (_req: Request, res: Response) => {
-    const getTipResponse = await getFromKoios<Tip[]>(`tip`);
-    return res.send({
-      abs_slot:
-        getTipResponse && getTipResponse.length
-          ? getTipResponse[0].abs_slot
-          : 0,
-    });
-  })
-);
-
-app.get(
-  "/api/getblock",
-  oapi.path(resp200Ok500Bad),
-  errorHandlerWrapper(async (_req: Request, res: Response) => {
-    const getTipResponse = await getFromKoios<Tip[]>(`tip`);
-    return res.send({
-      block_no:
-        getTipResponse && getTipResponse.length
-          ? getTipResponse[0].block_no
-          : 0,
-    });
-  })
-);
-
-app.get(
   "/api/gettip",
-  oapi.path(resp200Ok500Bad),
+  oapi.path(gettipOapiPath),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     res.send(getTipResponse[0]);
