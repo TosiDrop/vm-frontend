@@ -1,3 +1,6 @@
+/**
+ * @deprecated in favor of {@link ProjectsDto.Urls}
+ */
 export interface ProjectURLs {
   website?: string;
   medium?: string;
@@ -11,6 +14,9 @@ export interface ProjectURLs {
   poolpm?: string;
 }
 
+/**
+ * @deprecated in favor of {@link ProjectsDto.Logo}
+ */
 export interface ProjectLogos {
   logoDefault: string;
   logoDark?: string;
@@ -18,20 +24,27 @@ export interface ProjectLogos {
   logoCompactDark?: string;
 }
 
+/**
+ * @deprecated in favor of {@link ProjectsDto.Desc}
+ */
 export interface ProjectDescs {
   descShort: string;
   descLong?: string;
   claimDesc?: string;
 }
 
+/**
+ * @deprecated in favor of {@link ProjectsDto.TokenInfo}
+ */
 export interface ProjectTokenInfo {
   token: string;
   totalSupply?: number;
   policyID: string;
-  //marketCap: number; //Need to pull this info dynamically, will likely be a method instead of an member
-  //fdMarketCap: number; //Need to pull this info dynamically, will likely be a method instead of an member
 }
 
+/**
+ * @deprecated in favor of {@link ProjectsDto.Data}
+ */
 export interface ProjectData {
   logos: ProjectLogos;
   descs: ProjectDescs;

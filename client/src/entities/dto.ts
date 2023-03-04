@@ -1,4 +1,5 @@
 import { DeliveredReward } from "./common.entities";
+import { EpochParams } from "./koios.entities";
 import { Assets, ClaimableToken, PoolInfo, VmPoolInfo } from "./vm.entities";
 
 export interface GetRewardsDto {
@@ -58,3 +59,53 @@ export namespace StakeTxDto {
     tx: string;
   }
 }
+
+export interface GetPopupInfoDto {
+  title: string;
+  text: string;
+  buttonText: string;
+  buttonLink: string;
+}
+
+export namespace ProjectsDto {
+  export interface Url {
+    website?: string;
+    medium?: string;
+    twitter?: string;
+    discord?: string;
+    telegram?: string;
+    paper?: string;
+    docs?: string;
+    github?: string;
+    cardanoScan?: string;
+    poolpm?: string;
+  }
+
+  export interface Logo {
+    logoDefault: string;
+    logoDark?: string;
+    logoCompact?: string;
+    logoCompactDark?: string;
+  }
+
+  export interface Desc {
+    descShort: string;
+    descLong?: string;
+    claimDesc?: string;
+  }
+
+  export interface TokenInfo {
+    token: string;
+    totalSupply?: number;
+    policyID: string;
+  }
+
+  export interface GetProjects {
+    logos: Logo;
+    descs: Desc;
+    token: TokenInfo;
+    urls: Url;
+  }
+}
+
+export type GetEpochParamsDto = EpochParams;

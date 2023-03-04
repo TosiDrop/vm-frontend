@@ -1,6 +1,11 @@
 import axios from "axios";
 import { NetworkId, PopUpInfo } from "src/entities/common.entities";
-import { GetPoolsDto, GetQueueDto, StakeTxDto } from "src/entities/dto";
+import {
+  GetEpochParamsDto,
+  GetPoolsDto,
+  GetQueueDto,
+  StakeTxDto,
+} from "src/entities/dto";
 import { EpochParams, Tip } from "src/entities/koios.entities";
 import { ProjectData } from "src/entities/project.entities";
 import { GetTokens } from "src/entities/vm.entities";
@@ -32,8 +37,8 @@ export async function getBlock(): Promise<{ block_no: number }> {
 }
 
 export async function getEpochParams(): Promise<EpochParams> {
-  const response = await axios.get(`/api/getepochparams`);
-  return response.data[0];
+  const response = await axios.get<GetEpochParamsDto>(`/api/getepochparams`);
+  return response.data;
 }
 
 export async function getNetworkId(): Promise<{ network: NetworkId }> {

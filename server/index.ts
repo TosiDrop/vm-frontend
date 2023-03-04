@@ -8,6 +8,7 @@ import * as _ from "lodash";
 import url from "url";
 import {
   GetDeliveredRewardsDto,
+  GetEpochParamsDto,
   GetPoolsDto,
   GetQueueDto,
   ServerErrorDto,
@@ -17,6 +18,12 @@ import { PoolInfo } from "../client/src/entities/vm.entities";
 import errorHandlerMiddleware, {
   errorHandlerWrapper,
 } from "./middlewares/error-handler";
+import {
+  getepochparamsOapiPath,
+  getpopupinfoOapiPath,
+  getprojectsOapiPath,
+  getqueueOapiPath,
+} from "./oapi";
 import TxRouter from "./routes/tx";
 import {
   CardanoNetwork,
@@ -821,19 +828,21 @@ app.get(
 
 app.get(
   "/api/getepochparams",
-  oapi.path(resp200Ok500Bad),
-  errorHandlerWrapper(async (_req: Request, res: Response) => {
-    const getTipResponse = await getFromKoios<Tip[]>(`tip`);
-    const getEpochParamsResponse = await getEpochParams(
-      getTipResponse && getTipResponse.length ? getTipResponse[0].epoch_no : 0
-    );
-    return res.send(getEpochParamsResponse);
-  })
+  oapi.path(getepochparamsOapiPath),
+  errorHandlerWrapper(
+    async (_req: Request, res: Response<GetEpochParamsDto>) => {
+      const getTipResponse = await getFromKoios<Tip[]>(`tip`);
+      const getEpochParamsResponse = await getEpochParams(
+        getTipResponse && getTipResponse.length ? getTipResponse[0].epoch_no : 0
+      );
+      return res.send(getEpochParamsResponse);
+    }
+  )
 );
 
 app.get(
   "/api/getprojects",
-  oapi.path(resp200Ok),
+  oapi.path(getprojectsOapiPath),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const projects = JSON.parse(
       fs.readFileSync(__dirname + "/public/json/projects.json", "utf8")
@@ -844,7 +853,7 @@ app.get(
 
 app.get(
   "/api/getpopupinfo",
-  oapi.path(resp200Ok),
+  oapi.path(getpopupinfoOapiPath),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const popupInfo = JSON.parse(
       fs.readFileSync(__dirname + "/public/json/popup.json", "utf8")
@@ -855,6 +864,7 @@ app.get(
 
 app.get(
   "/api/getqueue",
+  oapi.path(getqueueOapiPath),
   errorHandlerWrapper(async (_req: Request, res: Response<GetQueueDto>) => {
     const queue: GetQueueDto = await getFromVM("get_pending_tx_count");
     return res.status(200).send(queue);

@@ -112,7 +112,11 @@ export async function getAccountsAddresses(stakeAddress: string) {
 }
 
 export async function getEpochParams(epochNo: number) {
-  return getFromKoios<EpochParams>("epoch_params", `_epoch_no=${epochNo}`);
+  const response = await getFromKoios<EpochParams[]>(
+    "epoch_params",
+    `_epoch_no=${epochNo}`
+  );
+  return response[0];
 }
 
 export async function postPoolInfo(pools: string[]) {
