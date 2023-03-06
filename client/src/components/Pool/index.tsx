@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
-import { PoolInfo } from "src/entities/vm.entities";
+import { PoolInfo } from "src/entities/vm";
 import useStakeToPool from "src/hooks/cardano/useStakeToPool";
 import { showModal } from "src/reducers/globalSlice";
 import Spinner from "../Spinner";

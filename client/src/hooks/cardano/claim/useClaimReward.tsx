@@ -11,7 +11,7 @@ import {
   ModalTypes,
   PageRoute,
 } from "src/entities/common.entities";
-import { ClaimableToken, VmPoolInfo } from "src/entities/vm.entities";
+import { ClaimableToken, VmPoolInfo } from "src/entities/vm";
 import useErrorHandler from "src/hooks/useErrorHandler";
 import { showModal } from "src/reducers/globalSlice";
 import { getCustomRewards, getRewards } from "src/services/claim";

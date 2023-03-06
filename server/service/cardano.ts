@@ -14,19 +14,19 @@ import {
   Value,
 } from "@emurgo/cardano-serialization-lib-nodejs";
 import { CARDANO_NETWORK } from "..";
-import { KoiosTypes } from "../types/koios";
-import { convertHexToBuffer } from "../utils";
+import { CardanoTypes } from "../../client/src/entities/cardano";
+import { KoiosTypes } from "../../client/src/entities/koios";
 import { createErrorWithCode, HttpStatusCode } from "../utils/error";
-import { CardanoNetwork } from "../utils/interfaces";
+import { convertHexToBuffer } from "../utils/helpers";
 
 export namespace CardanoService {
   export function getStakeAddress(address: string): string {
     let rewardAddressBytes = new Uint8Array(29);
     switch (CARDANO_NETWORK) {
-      case CardanoNetwork.mainnet:
+      case CardanoTypes.Network.mainnet:
         rewardAddressBytes.set([0xe1], 0);
         break;
-      case CardanoNetwork.preview:
+      case CardanoTypes.Network.preview:
       default:
         rewardAddressBytes.set([0xe0], 0);
         break;

@@ -6,13 +6,15 @@ import {
 import express, { Request, Response } from "express";
 import * as lodash from "lodash";
 import url from "url";
+import { CardanoTypes } from "../client/src/entities/cardano";
 import { Dto } from "../client/src/entities/dto";
-import { Tip } from "../client/src/entities/koios.entities";
-import { PoolInfo } from "../client/src/entities/vm.entities";
+import { Tip } from "../client/src/entities/koios";
+import { TosidropTypes } from "../client/src/entities/tosidrop";
+import { PoolInfo, VmTypes } from "../client/src/entities/vm";
 import { errorHandlerWrapper } from "./middlewares/error-handler";
 import TxRouter from "./routes/tx";
+import { createErrorWithCode, HttpStatusCode } from "./utils/error";
 import {
-  CardanoNetwork,
   getAccountsInfo,
   getDeliveredRewards,
   getEpochParams,
@@ -23,21 +25,17 @@ import {
   getPrices,
   getRewards,
   getTokens,
-  ITosiFeatures,
-  IVMSettings,
   translateAdaHandle,
-} from "./utils";
-import { ICustomRewards } from "./utils/entities";
-import { createErrorWithCode, HttpStatusCode } from "./utils/error";
-require("dotenv").config();
+} from "./utils/helpers";
 const openapi = require("@reqlez/express-openapi");
 const fs = require("fs");
+require("dotenv").config();
 
 /** environment variables */
 export const VM_KOIOS_URL =
   process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 export const CARDANO_NETWORK =
-  process.env.CARDANO_NETWORK || CardanoNetwork.preview;
+  process.env.CARDANO_NETWORK || CardanoTypes.Network.preview;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const LOG_TYPE = process.env.LOG_TYPE || "dev";
 const PORT = process.env.PORT || 3000;
@@ -127,7 +125,7 @@ app.get(
       _: Request<{}, {}, Dto.GetSettings["body"], Dto.GetSettings["query"]>,
       res: Response<Dto.GetSettings["response"]>
     ) => {
-      const settings: IVMSettings = await getFromVM("get_settings");
+      const settings: VmTypes.Settings = await getFromVM("get_settings");
       return res.status(200).send(settings);
     }
   )
@@ -193,7 +191,7 @@ app.get(
       _: Request<{}, {}, Dto.GetFeatures["body"], Dto.GetFeatures["query"]>,
       res: Response<Dto.GetFeatures["response"]>
     ) => {
-      const features: ITosiFeatures = {
+      const features: TosidropTypes.Features = {
         tosi_fee: Number(TOSIFEE),
         tosi_fee_whitelist: TOSIFEE_WHITELIST,
         claim_enabled: CLAIM_ENABLED,
@@ -243,7 +241,7 @@ app.get(
           address = translatedAddress;
           break;
         case prefix === "addr_":
-          if (CARDANO_NETWORK === CardanoNetwork.mainnet) {
+          if (CARDANO_NETWORK === CardanoTypes.Network.mainnet) {
             throw createErrorWithCode(
               HttpStatusCode.BAD_REQUEST,
               "Inserted address is for a testnet"
@@ -251,7 +249,7 @@ app.get(
           }
           break;
         case prefix === "addr1":
-          if (CARDANO_NETWORK === CardanoNetwork.preview) {
+          if (CARDANO_NETWORK === CardanoTypes.Network.preview) {
             throw createErrorWithCode(
               HttpStatusCode.BAD_REQUEST,
               "Inserted address is for a mainnet"
@@ -270,10 +268,10 @@ app.get(
 
       let rewardAddressBytes = new Uint8Array(29);
       switch (CARDANO_NETWORK) {
-        case CardanoNetwork.mainnet:
+        case CardanoTypes.Network.mainnet:
           rewardAddressBytes.set([0xe1], 0);
           break;
-        case CardanoNetwork.preview:
+        case CardanoTypes.Network.preview:
         default:
           rewardAddressBytes.set([0xe0], 0);
           break;
@@ -387,7 +385,7 @@ app.get(
         throw new Error();
       }
 
-      const customReward: ICustomRewards = {
+      const customReward: VmTypes.CustomRewards = {
         request_id: submitCustomReward.request_id,
         deposit: submitCustomReward.deposit,
         overhead_fee: submitCustomReward.overhead_fee,

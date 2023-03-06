@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import DepositInfo from "src/components/Claim/DepositInfo";
-import { GetCustomRewards } from "src/entities/vm.entities";
+import { GetCustomRewards } from "src/entities/vm";
 import { useQueue } from "src/hooks/cardano/claim/useQueue";
 import Loading from "src/pages/Loading";
 import { getTxStatus } from "src/services/claim";

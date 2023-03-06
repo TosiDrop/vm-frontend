@@ -2,7 +2,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ClaimableTokenBox from "src/components/Claim/ClaimableTokenBox";
 import Spinner from "src/components/Spinner";
-import { ClaimableToken } from "src/entities/vm.entities";
+import { ClaimableToken } from "src/entities/vm";
 
 interface Props {
   claimableTokens: ClaimableToken[];

@@ -1,13 +1,8 @@
 import { DeliveredReward, TransactionStatusDetail } from "./common.entities";
-import { EpochParams, Tip } from "./koios.entities";
+import { EpochParams, Tip } from "./koios";
 import { PricePair } from "./min.entities";
 import { ProjectData } from "./project.entities";
-import {
-  ClaimableToken,
-  PoolInfo,
-  VmPoolInfo,
-  VmTokenInfoMap,
-} from "./vm.entities";
+import { ClaimableToken, PoolInfo, VmPoolInfo, VmTokenInfoMap } from "./vm";
 
 export namespace Dto {
   export interface BaseDto {
@@ -193,6 +188,12 @@ export namespace Dto {
 
     response: {
       tx: string;
+    };
+  }
+
+  export interface ServerError extends BaseDto {
+    response: {
+      error: string;
     };
   }
 }

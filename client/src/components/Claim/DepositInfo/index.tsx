@@ -1,7 +1,7 @@
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { GetCustomRewards } from "src/entities/vm.entities";
+import { GetCustomRewards } from "src/entities/vm";
 import { lovelaceToAda } from "src/utils";
 
 import { TransactionStatusDetail } from "src/entities/common.entities";

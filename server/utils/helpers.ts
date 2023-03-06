@@ -1,6 +1,6 @@
 import axios from "axios";
 import converter from "bech32-converting";
-import { CardanoNetwork } from ".";
+import { CardanoTypes } from "../../client/src/entities/cardano";
 import {
   DeliveredReward,
   ExtendedMetadata,
@@ -10,16 +10,16 @@ import {
   AccountAddress,
   AccountInfo,
   EpochParams,
-  PoolInfo,
-} from "../../client/src/entities/koios.entities";
+  KoiosTypes,
+} from "../../client/src/entities/koios";
 import { GetPricePairs } from "../../client/src/entities/min.entities";
 import {
   ClaimableToken,
-  GetPools,
   GetRewardsDto,
+  PoolInfo,
   VmDeliveredReward,
   VmTokenInfoMap,
-} from "../../client/src/entities/vm.entities";
+} from "../../client/src/entities/vm";
 import { longTermCache, shortTermCache } from "./cache";
 
 require("dotenv").config();
@@ -41,11 +41,11 @@ export async function translateAdaHandle(
   let urlPrefix, policyId;
 
   switch (network) {
-    case CardanoNetwork.mainnet:
+    case CardanoTypes.Network.mainnet:
       urlPrefix = "api";
       policyId = "f0ff48bbb7bbe9d59a40f1ce90e9e9d0ff5002ec48f232b49ca0fb9a";
       break;
-    case CardanoNetwork.preview:
+    case CardanoTypes.Network.preview:
     default:
       urlPrefix = "preview";
       // same as mainnet, per $conrad
@@ -119,14 +119,18 @@ export async function getEpochParams(epochNo: number) {
   return response[0];
 }
 
-export async function postPoolInfo(pools: string[]) {
-  return postFromKoios<PoolInfo[]>("pool_info", { _pool_bech32_ids: pools });
+export async function postPoolInfo(
+  pools: string[]
+): Promise<KoiosTypes.PoolInfo[]> {
+  return postFromKoios<KoiosTypes.PoolInfo[]>("pool_info", {
+    _pool_bech32_ids: pools,
+  });
 }
 
 export async function getPools() {
-  let pools: GetPools | undefined = longTermCache.get("pools");
+  let pools: PoolInfo[] | undefined = longTermCache.get("pools");
   if (pools == null) {
-    pools = await getFromVM<GetPools>("get_pools");
+    pools = await getFromVM<PoolInfo[]>("get_pools");
     Object.values(pools).forEach((pool) => {
       pool.id = convertPoolIdToBech32(pool.id);
     });
