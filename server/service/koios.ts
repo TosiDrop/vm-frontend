@@ -1,6 +1,6 @@
 import axios from "axios";
 import { VM_KOIOS_URL } from "..";
-import { KoiosTypes } from "../types/koios";
+import { KoiosTypes } from "../../client/src/entities/koios";
 import { createErrorWithCode, HttpStatusCode } from "../utils/error";
 
 export namespace KoiosService {

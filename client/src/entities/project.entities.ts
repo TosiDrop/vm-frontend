@@ -28,8 +28,6 @@ export interface ProjectTokenInfo {
   token: string;
   totalSupply?: number;
   policyID: string;
-  //marketCap: number; //Need to pull this info dynamically, will likely be a method instead of an member
-  //fdMarketCap: number; //Need to pull this info dynamically, will likely be a method instead of an member
 }
 
 export interface ProjectData {

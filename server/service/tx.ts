@@ -18,16 +18,6 @@ import {
 import { CardanoService } from "./cardano";
 import { KoiosService } from "./koios";
 
-enum StakeCredentialKind {
-  StakeKeyHash = 0,
-  StakeScriptHash = 1,
-}
-
-enum PaymentCredential {
-  PaymentKeyHash = 0,
-  PaymentScriptHash = 1,
-}
-
 export namespace TxService {
   export async function createDelegationTx(
     poolId: string,

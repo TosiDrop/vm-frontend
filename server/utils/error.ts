@@ -1,4 +1,4 @@
-import { ServerErrorDto } from "../../client/src/entities/dto";
+import { Dto } from "../../client/src/entities/dto";
 
 export class ErrorWithCode extends Error {
   code: HttpStatusCode;
@@ -12,7 +12,9 @@ export function createErrorWithCode(code: HttpStatusCode, message: string) {
   return new ErrorWithCode(code, message);
 }
 
-export function createErrorResponse(error: string): ServerErrorDto {
+export function createErrorResponse(
+  error: string
+): Dto.ServerError["response"] {
   return {
     error,
   };

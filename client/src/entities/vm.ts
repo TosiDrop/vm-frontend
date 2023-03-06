@@ -18,15 +18,6 @@ export interface GetRewardsDto {
   };
 }
 
-export interface VmPoolInfo {
-  delegated_pool_name: string;
-  delegated_pool_description: string;
-  total_balance: string;
-  delegated_pool_ticker: string;
-  delegated_pool_logo: string;
-  isWhitelisted: boolean;
-}
-
 export interface GetCustomRewards {
   request_id: string;
   deposit: number;
@@ -116,10 +107,6 @@ export interface VmTokenInfo {
   info: string | null;
 }
 
-export interface GetPools {
-  [key: string]: PoolInfo;
-}
-
 type PoolVisibility = "t" | "f";
 
 export interface PoolInfo {
@@ -136,3 +123,23 @@ export interface PoolInfo {
 }
 
 export type VmTokenInfoMap = Record<string, VmTokenInfo>;
+
+export namespace VmTypes {
+  export interface CustomRewards {
+    request_id: string;
+    deposit: number;
+    overhead_fee: number;
+    withdrawal_address: string;
+    is_whitelisted: boolean;
+  }
+
+  export interface Settings {
+    withdrawal_fee: number;
+    epoch: number;
+    switching_epoch: boolean;
+    frontend_version: string;
+    backend_version: string;
+    min_balance: number;
+    confirmations_required: number;
+  }
+}
