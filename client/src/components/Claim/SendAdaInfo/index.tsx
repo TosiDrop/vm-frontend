@@ -1,13 +1,12 @@
-import { useState } from "react";
 import QRCode from "react-qr-code";
 import { useSelector } from "react-redux";
 
-import Spinner from "src/components/Spinner";
-import { isTxHash } from "src/utils";
-import { RootState } from "src/store";
 import Copyable from "src/components/Copyable";
-import { lovelaceToAda } from "src/utils";
+import Spinner from "src/components/Spinner";
+import useTransfer from "src/hooks/cardano/useTransfer";
 import useErrorHandler from "src/hooks/useErrorHandler";
+import { RootState } from "src/store";
+import { lovelaceToAda } from "src/utils";
 
 interface Params {
   txDetail: any;
@@ -34,7 +33,7 @@ const SendAdaInfo = ({
   const isWrongNetwork = useSelector(
     (state: RootState) => state.wallet.isWrongNetwork
   );
-  const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
+  const { transfer, loading: transferLoading } = useTransfer();
 
   /**
    * render QR Code
@@ -62,7 +61,7 @@ const SendAdaInfo = ({
             onClick={sendADA}
           >
             Send ADA{" "}
-            {sendAdaSpinner ? (
+            {transferLoading ? (
               <div className="ml-2.5">
                 <Spinner></Spinner>
               </div>
@@ -75,29 +74,12 @@ const SendAdaInfo = ({
     }
   };
 
-  /**
-   * function to open wallet and start TX
-   */
   const sendADA = async () => {
-    try {
-      if (txDetail == null) throw new Error("Transaction not found");
-      setSendAdaSpinner(true);
-      const txHash = await connectedWallet?.transferAda(
-        txDetail.withdrawal_address,
-        txDetail.deposit.toString()
-      );
-      if (!txHash) throw new Error("Fail to hash transaction");
-      if (isTxHash(txHash)) {
-        setTransactionStatus(TransactionStatusDetail.processing);
-        setTransactionId(txHash);
-      } else {
-        throw new Error("Fail to hash transaction");
-      }
-    } catch (e) {
-      handleError(e);
-    } finally {
-      setSendAdaSpinner(false);
-    }
+    if (txDetail == null) throw new Error("Transaction not found");
+    const tx = await transfer({
+      toAddress: txDetail.withdrawal_address,
+      amountToSend: txDetail.deposit.toString(),
+    });
   };
 
   return (

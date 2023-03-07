@@ -38,23 +38,46 @@ export interface ServerErrorDto {
   error: string;
 }
 
-export namespace StakeTxDto {
-  export interface GetTxRequest {
-    poolId: string;
-    address: string;
+export namespace Dto {
+  export interface Base {
+    query: {};
+    body: {};
+    response: {};
   }
 
-  export interface GetTxResponse {
-    witness: string;
-    txBody: string;
+  export interface CreateTransferTx extends Base {
+    body: {
+      fromAddress: string;
+      toAddress: string;
+      amountToSend: string;
+    };
+
+    response: {
+      witness: string;
+      txBody: string;
+    };
   }
 
-  export interface PostSignedTxRequest {
-    signedWitness: string;
-    txBody: string;
+  export interface CreateDelegationTx extends Base {
+    body: {
+      poolId: string;
+      address: string;
+    };
+
+    response: {
+      witness: string;
+      txBody: string;
+    };
   }
 
-  export interface PostSignedTxResponse {
-    tx: string;
+  export interface SubmitTx extends Base {
+    body: {
+      signedWitness: string;
+      txBody: string;
+    };
+
+    response: {
+      tx: string;
+    };
   }
 }

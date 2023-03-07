@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { Dto } from "../../client/src/entities/dto";
 import {
   createErrorResponse,
   ErrorWithCode,
@@ -29,6 +30,21 @@ export default async function errorHandlerMiddleware(
 
 export const errorHandlerWrapper =
   (func: Function) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await func(req, res);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export const typedErrorHandlerWrapper =
+  <T extends Dto.Base>(
+    func: (
+      req: Request<{}, {}, T["body"], T["query"]>,
+      res: Response<T["response"]>
+    ) => {}
+  ) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await func(req, res);
