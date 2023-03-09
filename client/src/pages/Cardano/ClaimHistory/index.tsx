@@ -6,9 +6,6 @@ import useClaimHistory from "src/hooks/cardano/claimHistory/useClaimHistory";
 import { RootState } from "src/store";
 
 function ClaimHistory() {
-  const connectedWalletApi = useSelector(
-    (state: RootState) => state.wallet.walletApi
-  );
   const connectedWalletAddress = useSelector(
     (state: RootState) => state.wallet.walletAddress
   );

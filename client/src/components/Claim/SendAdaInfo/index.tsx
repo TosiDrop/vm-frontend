@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import Copyable from "src/components/Copyable";
 import Spinner from "src/components/Spinner";
 import useTransfer from "src/hooks/cardano/useTransfer";
-import useErrorHandler from "src/hooks/useErrorHandler";
 import { RootState } from "src/store";
 import { lovelaceToAda } from "src/utils";
 
@@ -26,7 +25,6 @@ const SendAdaInfo = ({
   setTransactionId,
   setTransactionStatus,
 }: Params) => {
-  const { handleError } = useErrorHandler();
   const connectedWalletApi = useSelector(
     (state: RootState) => state.wallet.walletApi
   );
@@ -76,7 +74,7 @@ const SendAdaInfo = ({
 
   const sendADA = async () => {
     if (txDetail == null) throw new Error("Transaction not found");
-    const tx = await transfer(
+    await transfer(
       {
         toAddress: txDetail.withdrawal_address,
         amountToSend: txDetail.deposit.toString(),
