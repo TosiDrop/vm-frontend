@@ -16,7 +16,7 @@ export default function useTransfer() {
 
   async function transfer(
     { toAddress, amountToSend }: { toAddress: string; amountToSend: string },
-    callback?: () => void
+    callback?: (txId?: string) => void
   ) {
     setLoading(true);
     try {
@@ -30,9 +30,9 @@ export default function useTransfer() {
       });
       const signedWitness = await connectedWalletApi.signTx(witness);
       const { tx } = await submitStakeTx({ signedWitness, txBody });
-      await connectedWalletApi.submitTx(tx);
+      const txId = await connectedWalletApi.submitTx(tx);
       if (callback != null) {
-        callback();
+        callback(txId);
       }
     } catch (error) {
       handleError(error);

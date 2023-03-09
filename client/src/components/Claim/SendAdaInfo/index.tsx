@@ -76,10 +76,16 @@ const SendAdaInfo = ({
 
   const sendADA = async () => {
     if (txDetail == null) throw new Error("Transaction not found");
-    const tx = await transfer({
-      toAddress: txDetail.withdrawal_address,
-      amountToSend: txDetail.deposit.toString(),
-    });
+    const tx = await transfer(
+      {
+        toAddress: txDetail.withdrawal_address,
+        amountToSend: txDetail.deposit.toString(),
+      },
+      (txId) => {
+        setTransactionStatus(TransactionStatusDetail.processing);
+        setTransactionId(txId);
+      }
+    );
   };
 
   return (
