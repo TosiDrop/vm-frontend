@@ -1,6 +1,7 @@
 import axios from "axios";
-import { NetworkId, PopUpInfo } from "src/entities/common.entities";
-import { GetPoolsDto, GetQueueDto, StakeTxDto } from "src/entities/dto";
+import { CardanoTypes } from "src/entities/cardano";
+import { PopUpInfo } from "src/entities/common.entities";
+import { Dto, GetPoolsDto, GetQueueDto } from "src/entities/dto";
 import { EpochParams, Tip } from "src/entities/koios.entities";
 import { ProjectData } from "src/entities/project.entities";
 import { GetTokens } from "src/entities/vm.entities";
@@ -36,15 +37,15 @@ export async function getEpochParams(): Promise<EpochParams> {
   return response.data[0];
 }
 
-export async function getNetworkId(): Promise<{ network: NetworkId }> {
+export async function getNetworkId(): Promise<CardanoTypes.NetworkId> {
   const response = await axios.get(`/features`);
   if (response && response.data) {
     if (response.data.network === "preview") {
-      return { network: NetworkId.preview };
+      return CardanoTypes.NetworkId.preview;
     }
-    return { network: NetworkId.mainnet };
+    return CardanoTypes.NetworkId.mainnet;
   }
-  return { network: NetworkId.undefined };
+  return CardanoTypes.NetworkId.undefined;
 }
 
 export async function getProjects(): Promise<ProjectData[]> {
@@ -78,20 +79,42 @@ export async function getTokens(): Promise<GetTokens> {
 }
 
 export async function createStakeTx(
-  params: StakeTxDto.GetTxRequest
-): Promise<StakeTxDto.GetTxResponse> {
-  const response = await axios.get<StakeTxDto.GetTxResponse>(
-    `/api/tx/stake?poolId=${params.poolId}&address=${params.address}`
+  params: Dto.CreateDelegationTx["body"]
+): Promise<Dto.CreateDelegationTx["response"]> {
+  const response = await axios.post<Dto.CreateDelegationTx["response"]>(
+    `/api/tx/delegate`,
+    params
+  );
+  return response.data;
+}
+
+export async function createTransferTx(
+  params: Dto.CreateTransferTx["body"]
+): Promise<Dto.CreateTransferTx["response"]> {
+  const response = await axios.post<Dto.CreateTransferTx["response"]>(
+    `/api/tx/transfer`,
+    params
   );
   return response.data;
 }
 
 export async function submitStakeTx(
-  params: StakeTxDto.PostSignedTxRequest
-): Promise<StakeTxDto.PostSignedTxResponse> {
-  const response = await axios.post<StakeTxDto.PostSignedTxResponse>(
-    `/api/tx/stake`,
+  params: Dto.SubmitTx["body"]
+): Promise<Dto.SubmitTx["response"]> {
+  const response = await axios.post<Dto.SubmitTx["response"]>(
+    `/api/tx/submit`,
     params
   );
   return response.data;
+}
+
+export async function getBech32Address({
+  addressInHex,
+}: Dto.GetBech32Address["query"]): Promise<
+  Dto.GetBech32Address["response"]["addressInBech32"]
+> {
+  const response = await axios.get<Dto.GetBech32Address["response"]>(
+    `/api/util/bech32-address?addressInHex=${addressInHex}`
+  );
+  return response.data.addressInBech32;
 }

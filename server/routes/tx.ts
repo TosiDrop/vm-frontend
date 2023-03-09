@@ -1,18 +1,15 @@
-import express, { Request, Response } from "express";
-import { StakeTxDto } from "../../client/src/entities/dto";
-import { errorHandlerWrapper } from "../middlewares/error-handler";
+import express from "express";
+import { Dto } from "../../client/src/entities/dto";
+import { typedErrorHandlerWrapper } from "../middlewares/error-handler";
 import { TxService } from "../service/tx";
 import { createErrorWithCode, HttpStatusCode } from "../utils/error";
 const router = express.Router();
 
 /** get unsigned transaction */
-router.get(
-  "/stake",
-  errorHandlerWrapper(async function (
-    req: Request<any, any, any, StakeTxDto.GetTxRequest>,
-    res: Response<StakeTxDto.GetTxResponse>
-  ) {
-    const { poolId, address } = req.query;
+router.post(
+  "/delegate",
+  typedErrorHandlerWrapper<Dto.CreateDelegationTx>(async function (req, res) {
+    const { poolId, address } = req.body;
     if (!poolId) {
       throw createErrorWithCode(
         HttpStatusCode.BAD_REQUEST,
@@ -32,15 +29,28 @@ router.get(
 
 /** post signed transaction */
 router.post(
-  "/stake",
-  errorHandlerWrapper(async function (
-    req: Request<any, any, StakeTxDto.PostSignedTxRequest>,
-    res: Response<StakeTxDto.PostSignedTxResponse>
-  ) {
+  "/submit",
+  typedErrorHandlerWrapper<Dto.SubmitTx>(async function (req, res) {
     const { signedWitness, txBody } = req.body;
     const tx = await TxService.createTxToSubmit(signedWitness, txBody);
-    return res.status(201).send({
+    return res.status(200).send({
       tx,
+    });
+  })
+);
+
+router.post(
+  "/transfer",
+  typedErrorHandlerWrapper<Dto.CreateTransferTx>(async function (req, res) {
+    const { fromAddress, toAddress, amountToSend } = req.body;
+    const { witness, txBody } = await TxService.createTransferTx({
+      fromAddress,
+      toAddress,
+      amountToSend,
+    });
+    return res.status(200).send({
+      witness,
+      txBody,
     });
   })
 );

@@ -6,8 +6,8 @@ import useClaimHistory from "src/hooks/cardano/claimHistory/useClaimHistory";
 import { RootState } from "src/store";
 
 function ClaimHistory() {
-  const connectedWallet = useSelector(
-    (state: RootState) => state.wallet.walletApi
+  const connectedWalletAddress = useSelector(
+    (state: RootState) => state.wallet.walletAddress
   );
   const isWrongNetwork = useSelector(
     (state: RootState) => state.wallet.isWrongNetwork
@@ -16,13 +16,8 @@ function ClaimHistory() {
   const [searchAddress, setSearchAddress] = useState<string>("");
 
   useEffect(() => {
-    async function init() {
-      if (connectedWallet?.wallet?.api && !isWrongNetwork) {
-        setSearchAddress(await connectedWallet.getAddress());
-      }
-    }
-    init();
-  }, [connectedWallet?.wallet?.api, connectedWallet, isWrongNetwork]);
+    setSearchAddress(isWrongNetwork ? "" : connectedWalletAddress);
+  }, [connectedWalletAddress, isWrongNetwork]);
 
   return (
     <>
@@ -45,11 +40,7 @@ function ClaimHistory() {
                 checkClaimHistory(searchAddress);
               }
             }}
-            disabled={
-              loading ||
-              (typeof connectedWallet?.wallet?.api !== "undefined" &&
-                !isWrongNetwork)
-            }
+            disabled={loading}
           ></input>
           <div className="flex flex-row items-center">
             <button

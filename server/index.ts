@@ -18,6 +18,7 @@ import errorHandlerMiddleware, {
   errorHandlerWrapper,
 } from "./middlewares/error-handler";
 import TxRouter from "./routes/tx";
+import UtilRouter from "./routes/util";
 import {
   CardanoNetwork,
   getAccountsInfo,
@@ -113,6 +114,7 @@ const resp200Ok500Bad = {
 };
 
 app.use("/api/tx", TxRouter);
+app.use("/api/util", UtilRouter);
 
 app.get(
   "/api/getprices",

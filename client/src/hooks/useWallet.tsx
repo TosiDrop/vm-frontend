@@ -1,82 +1,82 @@
-import { useDispatch, useSelector } from "react-redux";
-import { InfoModalTypes, ModalTypes } from "src/entities/common.entities";
-import { showModal } from "src/reducers/globalSlice";
+import { Cip30Wallet, WalletApi } from "@cardano-sdk/cip30";
+import { useDispatch } from "react-redux";
+import { CardanoTypes } from "src/entities/cardano";
 import {
   connectWallet as connectWalletRedux,
   setIsWrongNetwork,
+  setNetworkId,
+  setWalletState,
 } from "src/reducers/walletSlice";
-import { getNetworkId } from "src/services/common";
-import WalletApi, {
-  CIP0030Wallet,
-  WalletKeys,
-} from "src/services/connectors/wallet.connector";
-import { RootState } from "src/store";
+import { getBech32Address, getNetworkId } from "src/services/common";
+
+declare global {
+  interface Window {
+    cardano: Record<CardanoTypes.WalletKeys, Cip30Wallet>;
+  }
+}
 
 const useWallet = () => {
   const dispatch = useDispatch();
-  const networkId = useSelector((state: RootState) => state.wallet.networkId);
 
-  const getWalletApi = async (
-    walletApi?: CIP0030Wallet
-  ): Promise<WalletApi> => {
-    const api = new WalletApi(walletApi);
-    return api;
-  };
-
-  const connectWallet = async (walletKey?: WalletKeys) => {
-    const walletApi = await getWalletApi();
-
+  const connectWallet = async (walletKey?: CardanoTypes.WalletKeys) => {
     if (!walletKey) {
-      dispatch(connectWalletRedux(undefined));
+      dispatch(connectWalletRedux());
       dispatch(setIsWrongNetwork(false));
       localStorage.removeItem("wallet-provider");
+      dispatch(setWalletState(CardanoTypes.WalletState.notConnected));
       return;
     }
 
-    let localNetworkId = networkId;
-    /**
-     * only happens on first render
-     * the value isnt in redux yet
-     * TODO: find out solution on late redux value
-     */
-    if (localNetworkId == null) localNetworkId = (await getNetworkId()).network;
+    dispatch(setWalletState(CardanoTypes.WalletState.connecting));
 
-    let connectedWalletApi = await walletApi.enable(walletKey);
-    if (connectedWalletApi == null) return;
+    const networkId = await getNetworkId();
 
-    if (typeof connectedWalletApi !== "string") {
-      const connectedWalletNetworkId = {
-        network: await connectedWalletApi.getNetworkId(),
-      };
+    const cardanoApi = window.cardano;
+    const connectedWallet = cardanoApi[walletKey];
+    const connectedWalletApi = await connectedWallet.enable();
 
-      if (connectedWalletNetworkId.network === localNetworkId) {
-        dispatch(setIsWrongNetwork(false));
-      } else {
-        dispatch(setIsWrongNetwork(true));
-      }
-      const connectedWalletUpdate: CIP0030Wallet = {
-        ...window.cardano[WalletKeys[walletKey]],
-        api: connectedWalletApi,
-      };
-      const walletApi = await getWalletApi(connectedWalletUpdate);
-      dispatch(connectWalletRedux(walletApi));
-      localStorage.setItem("wallet-provider", walletKey);
+    const connectedWalletApiNetworkId =
+      (await connectedWalletApi.getNetworkId()) as unknown as CardanoTypes.NetworkId;
+
+    const addressInBech32 = await getWalletAddressInBech32(connectedWalletApi);
+
+    dispatch(setNetworkId(networkId));
+    dispatch(
+      connectWalletRedux({
+        wallet: connectedWallet,
+        walletApi: connectedWalletApi,
+        walletAddress: addressInBech32,
+      })
+    );
+    localStorage.setItem("wallet-provider", walletKey);
+
+    if (connectedWalletApiNetworkId === networkId) {
+      dispatch(setIsWrongNetwork(false));
+      dispatch(setWalletState(CardanoTypes.WalletState.connected));
     } else {
-      dispatch(
-        showModal({
-          modalType: ModalTypes.info,
-          details: {
-            text: connectedWalletApi,
-            type: InfoModalTypes.info,
-          },
-        })
-      );
+      dispatch(setIsWrongNetwork(true));
+      dispatch(setWalletState(CardanoTypes.WalletState.wrongNetwork));
     }
   };
 
+  const getWalletAddressInBech32 = async (
+    walletApi: WalletApi
+  ): Promise<string> => {
+    if (walletApi == null) {
+      return "";
+    }
+    const addresses = await walletApi?.getUsedAddresses();
+    const address = addresses[0];
+
+    const addressInBech32 = await getBech32Address({
+      addressInHex: address,
+    });
+
+    return addressInBech32;
+  };
+
   return {
-    connectWallet: connectWallet,
-    getWalletApi: getWalletApi,
+    connectWallet,
   };
 };
 
