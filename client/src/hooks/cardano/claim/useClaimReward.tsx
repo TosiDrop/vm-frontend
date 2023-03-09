@@ -21,8 +21,8 @@ export default function useClaimReward() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { handleError } = useErrorHandler();
-  const connectedWallet = useSelector(
-    (state: RootState) => state.wallet.walletApi
+  const connectedWalletAddress = useSelector(
+    (state: RootState) => state.wallet.walletAddress
   );
   const isWrongNetwork = useSelector(
     (state: RootState) => state.wallet.isWrongNetwork
@@ -37,13 +37,8 @@ export default function useClaimReward() {
   const [numberOfSelectedTokens, setNumberOfSelectedTokens] = useState(0);
 
   useEffect(() => {
-    async function init() {
-      if (connectedWallet?.wallet?.api && !isWrongNetwork) {
-        setSearchAddress(await connectedWallet.getAddress());
-      }
-    }
-    init();
-  }, [connectedWallet?.wallet?.api, connectedWallet, isWrongNetwork]);
+    setSearchAddress(isWrongNetwork ? "" : connectedWalletAddress);
+  }, [connectedWalletAddress, isWrongNetwork]);
 
   useEffect(() => {
     setNumberOfSelectedTokens(

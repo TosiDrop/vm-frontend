@@ -80,4 +80,13 @@ export namespace Dto {
       tx: string;
     };
   }
+
+  export interface GetBech32Address extends Base {
+    query: {
+      addressInHex: string;
+    };
+    response: {
+      addressInBech32: string;
+    };
+  }
 }

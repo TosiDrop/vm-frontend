@@ -27,7 +27,7 @@ const SendAdaInfo = ({
   setTransactionStatus,
 }: Params) => {
   const { handleError } = useErrorHandler();
-  const connectedWallet = useSelector(
+  const connectedWalletApi = useSelector(
     (state: RootState) => state.wallet.walletApi
   );
   const isWrongNetwork = useSelector(
@@ -53,7 +53,7 @@ const SendAdaInfo = ({
    * render button to send ada
    */
   const renderSendAdaButton = () => {
-    if (connectedWallet?.wallet?.api && !isWrongNetwork) {
+    if (connectedWalletApi && !isWrongNetwork) {
       return (
         <div className="w-full flex justify-center">
           <button
