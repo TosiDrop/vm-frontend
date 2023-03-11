@@ -34,6 +34,7 @@ import {
   ITosiFeatures,
   IVMSettings,
   postFromKoios,
+  sanitizeString,
   translateAdaHandle,
 } from "./utils";
 import { ICustomRewards } from "./utils/entities";
@@ -286,6 +287,9 @@ app.get(
 
     const queryObject = url.parse(req.url, true).query;
     let address = queryObject.address as string;
+
+    address = sanitizeString(address);
+
     let translatedAddress;
 
     if (!address) {
