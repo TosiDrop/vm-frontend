@@ -94,4 +94,17 @@ export namespace Dto {
   export interface GetVmSettings extends Base {
     response: VmTypes.Settings;
   }
+
+  export interface PostBannerText extends Base {
+    body: {
+      text: string;
+      adminKey: string;
+    };
+  }
+
+  export interface GetBannerText extends Base {
+    response: {
+      text: string;
+    };
+  }
 }
