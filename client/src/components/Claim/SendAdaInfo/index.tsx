@@ -1,13 +1,11 @@
-import { useState } from "react";
 import QRCode from "react-qr-code";
 import { useSelector } from "react-redux";
 
-import Spinner from "src/components/Spinner";
-import { isTxHash } from "src/utils";
-import { RootState } from "src/store";
 import Copyable from "src/components/Copyable";
+import Spinner from "src/components/Spinner";
+import useTransfer from "src/hooks/cardano/useTransfer";
+import { RootState } from "src/store";
 import { lovelaceToAda } from "src/utils";
-import useErrorHandler from "src/hooks/useErrorHandler";
 
 interface Params {
   txDetail: any;
@@ -27,14 +25,13 @@ const SendAdaInfo = ({
   setTransactionId,
   setTransactionStatus,
 }: Params) => {
-  const { handleError } = useErrorHandler();
-  const connectedWallet = useSelector(
+  const connectedWalletApi = useSelector(
     (state: RootState) => state.wallet.walletApi
   );
   const isWrongNetwork = useSelector(
     (state: RootState) => state.wallet.isWrongNetwork
   );
-  const [sendAdaSpinner, setSendAdaSpinner] = useState(false);
+  const { transfer, loading: transferLoading } = useTransfer();
 
   /**
    * render QR Code
@@ -54,7 +51,7 @@ const SendAdaInfo = ({
    * render button to send ada
    */
   const renderSendAdaButton = () => {
-    if (connectedWallet?.wallet?.api && !isWrongNetwork) {
+    if (connectedWalletApi && !isWrongNetwork) {
       return (
         <div className="w-full flex justify-center">
           <button
@@ -62,7 +59,7 @@ const SendAdaInfo = ({
             onClick={sendADA}
           >
             Send ADA{" "}
-            {sendAdaSpinner ? (
+            {transferLoading ? (
               <div className="ml-2.5">
                 <Spinner></Spinner>
               </div>
@@ -75,29 +72,18 @@ const SendAdaInfo = ({
     }
   };
 
-  /**
-   * function to open wallet and start TX
-   */
   const sendADA = async () => {
-    try {
-      if (txDetail == null) throw new Error("Transaction not found");
-      setSendAdaSpinner(true);
-      const txHash = await connectedWallet?.transferAda(
-        txDetail.withdrawal_address,
-        txDetail.deposit.toString()
-      );
-      if (!txHash) throw new Error("Fail to hash transaction");
-      if (isTxHash(txHash)) {
+    if (txDetail == null) throw new Error("Transaction not found");
+    await transfer(
+      {
+        toAddress: txDetail.withdrawal_address,
+        amountToSend: txDetail.deposit.toString(),
+      },
+      (txId) => {
         setTransactionStatus(TransactionStatusDetail.processing);
-        setTransactionId(txHash);
-      } else {
-        throw new Error("Fail to hash transaction");
+        setTransactionId(txId);
       }
-    } catch (e) {
-      handleError(e);
-    } finally {
-      setSendAdaSpinner(false);
-    }
+    );
   };
 
   return (

@@ -1,5 +1,6 @@
 import axios from "axios";
 import converter from "bech32-converting";
+import validator from "validator";
 import { CardanoNetwork } from ".";
 import {
   DeliveredReward,
@@ -21,6 +22,7 @@ import {
   VmTokenInfoMap,
 } from "../../client/src/entities/vm.entities";
 import { longTermCache, shortTermCache } from "./cache";
+import { createErrorWithCode, HttpStatusCode } from "./error";
 
 require("dotenv").config();
 
@@ -33,12 +35,20 @@ const VM_API_TOKEN =
 const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
 const VM_KOIOS_URL = process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 
+export function sanitizeString(input: string) {
+  let output: string = input;
+  output = validator.escape(input);
+  return output;
+}
+
 export async function translateAdaHandle(
   handle: string,
   network: any,
   koiosUrl: string
 ) {
   let urlPrefix, policyId;
+
+  handle = handle.toLowerCase();
 
   switch (network) {
     case CardanoNetwork.mainnet:
@@ -52,12 +62,26 @@ export async function translateAdaHandle(
       policyId = "f0ff48bbb7bbe9d59a40f1ce90e9e9d0ff5002ec48f232b49ca0fb9a";
   }
 
-  handle = handle.slice(1); // remove $
-  if (!handle.length) return null; // check if handle is $
+  handle = handle.slice(1);
+  if (handle.length === 0) {
+    throw createErrorWithCode(
+      HttpStatusCode.BAD_REQUEST,
+      "Handle is malformed"
+    );
+  }
+
   const handleInHex = Buffer.from(handle).toString("hex");
   const url = `${koiosUrl}/asset_address_list?_asset_policy=${policyId}&_asset_name=${handleInHex}`;
+
   const data = (await axios.get(url)).data;
-  if (!data.length) return null;
+
+  if (data.length === 0) {
+    throw createErrorWithCode(
+      HttpStatusCode.NOT_FOUND,
+      "Handle does not exist"
+    );
+  }
+
   const address = data[0].payment_address;
   return address;
 }

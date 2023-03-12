@@ -18,6 +18,7 @@ import errorHandlerMiddleware, {
   errorHandlerWrapper,
 } from "./middlewares/error-handler";
 import TxRouter from "./routes/tx";
+import UtilRouter from "./routes/util";
 import {
   CardanoNetwork,
   getAccountsInfo,
@@ -33,6 +34,7 @@ import {
   ITosiFeatures,
   IVMSettings,
   postFromKoios,
+  sanitizeString,
   translateAdaHandle,
 } from "./utils";
 import { ICustomRewards } from "./utils/entities";
@@ -113,6 +115,7 @@ const resp200Ok500Bad = {
 };
 
 app.use("/api/tx", TxRouter);
+app.use("/api/util", UtilRouter);
 
 app.get(
   "/api/getprices",
@@ -284,6 +287,9 @@ app.get(
 
     const queryObject = url.parse(req.url, true).query;
     let address = queryObject.address as string;
+
+    address = sanitizeString(address);
+
     let translatedAddress;
 
     if (!address) {
