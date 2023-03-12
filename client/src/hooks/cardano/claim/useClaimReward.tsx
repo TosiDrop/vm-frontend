@@ -1,11 +1,6 @@
-import { useSelector } from "react-redux";
-
-import { RootState } from "src/store";
-
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 import {
   InfoModalTypes,
   ModalTypes,
@@ -13,14 +8,18 @@ import {
 } from "src/entities/common.entities";
 import { ClaimableToken, VmPoolInfo } from "src/entities/vm.entities";
 import useErrorHandler from "src/hooks/useErrorHandler";
+import useModal from "src/hooks/useModal";
 import { showModal } from "src/reducers/globalSlice";
 import { getCustomRewards, getRewards } from "src/services/claim";
 import { getStakeKey } from "src/services/common";
+import { RootState } from "src/store";
+import { shuffleArray } from "src/utils";
 
 export default function useClaimReward() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { handleError } = useErrorHandler();
+  const { showInfoModal } = useModal();
   const connectedWalletAddress = useSelector(
     (state: RootState) => state.wallet.walletAddress
   );
@@ -35,6 +34,8 @@ export default function useClaimReward() {
   const [isClaimRewardLoading, setIsClaimRewardLoading] = useState(false);
   const [stakeAddress, setStakeAddress] = useState<string>("");
   const [numberOfSelectedTokens, setNumberOfSelectedTokens] = useState(0);
+  /** default max number of token to claim */
+  const [maxTokenSelected, setMaxTokenSelected] = useState(1000);
 
   useEffect(() => {
     setSearchAddress(isWrongNetwork ? "" : connectedWalletAddress);
@@ -51,30 +52,58 @@ export default function useClaimReward() {
     );
   }, [claimableTokens]);
 
-  const selectAllClaimableTokens = () => {
-    const updatedClaimableTokens = [...claimableTokens];
-    if (numberOfSelectedTokens < claimableTokens.length) {
-      updatedClaimableTokens.forEach((token) => (token.selected = true));
-    } else {
-      updatedClaimableTokens.forEach((token) => (token.selected = false));
-    }
-    setClaimableTokens(updatedClaimableTokens);
-  };
-
   const handleTokenSelect = (position: number) => {
     const updatedClaimableTokens = [...claimableTokens];
+
+    if (
+      !updatedClaimableTokens[position].selected &&
+      numberOfSelectedTokens === maxTokenSelected
+    ) {
+      showInfoModal(
+        `You have selected the maximum number of tokens to claim (${maxTokenSelected}).
+         Please deselect other tokens first`
+      );
+      return;
+    }
+
     updatedClaimableTokens[position].selected =
       !updatedClaimableTokens[position].selected;
     setClaimableTokens(updatedClaimableTokens);
   };
 
   const selectAll = () => {
+    const positions = [...Array(claimableTokens.length).keys()].slice(
+      0,
+      maxTokenSelected
+    );
+
     const updatedClaimableTokens = [...claimableTokens];
-    if (numberOfSelectedTokens < claimableTokens.length) {
-      updatedClaimableTokens.forEach((token) => (token.selected = true));
+    if (
+      numberOfSelectedTokens <
+      Math.min(maxTokenSelected, claimableTokens.length)
+    ) {
+      positions.forEach(
+        (position) => (updatedClaimableTokens[position].selected = true)
+      );
     } else {
-      updatedClaimableTokens.forEach((token) => (token.selected = false));
+      positions.forEach(
+        (position) => (updatedClaimableTokens[position].selected = false)
+      );
     }
+    setClaimableTokens(updatedClaimableTokens);
+  };
+
+  const selectRandomTokens = () => {
+    const positions = shuffleArray([
+      ...Array(claimableTokens.length).keys(),
+    ]).slice(0, maxTokenSelected);
+
+    const updatedClaimableTokens = [...claimableTokens];
+    updatedClaimableTokens.forEach((token) => (token.selected = false));
+    positions.forEach(
+      (position) => (updatedClaimableTokens[position].selected = true)
+    );
+
     setClaimableTokens(updatedClaimableTokens);
   };
 
@@ -177,9 +206,9 @@ export default function useClaimReward() {
     checkRewards,
     claimRewards,
     selectAll,
+    selectRandomTokens,
     cancelClaim,
     claimableTokens,
-    selectAllClaimableTokens,
     handleTokenSelect,
     numberOfSelectedTokens,
     isCheckRewardLoading,
