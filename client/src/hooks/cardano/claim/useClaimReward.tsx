@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  InfoModalTypes,
-  ModalTypes,
-  PageRoute,
-} from "src/entities/common.entities";
+import { PageRoute } from "src/entities/common.entities";
 import { ClaimableToken, VmPoolInfo } from "src/entities/vm.entities";
 import useErrorHandler from "src/hooks/useErrorHandler";
 import useModal from "src/hooks/useModal";
-import { showModal } from "src/reducers/globalSlice";
 import { getCustomRewards, getRewards } from "src/services/claim";
-import { getStakeKey } from "src/services/common";
+import { getSettings, getStakeKey } from "src/services/common";
 import { RootState } from "src/store";
 import { shuffleArray } from "src/utils";
 
@@ -110,51 +105,48 @@ export default function useClaimReward() {
   const checkRewards = async () => {
     setIsCheckRewardLoading(true);
     try {
-      /**
-       * check if the inserted address is cardano address, we want the stake address
-       * if it is cardano address, get the staking address
-       */
       let address = await getStakeKey(searchAddress);
-
       address = address.staking_address;
-
       setStakeAddress(address);
-      const getRewardsDto = await getRewards(address);
-      if (getRewardsDto == null) {
+
+      const [getRewardsResponse, vmSettings] = await Promise.all([
+        getRewards(address),
+        getSettings(),
+      ]);
+
+      if (getRewardsResponse == null) {
         throw new Error("Something went wrong when checking reward");
       }
-      if (getRewardsDto.claimable_tokens.length !== 0) {
-        setClaimableTokens(
-          getRewardsDto.claimable_tokens
-            .map((token) => {
-              token.selected = false;
-              return token;
-            })
-            .sort((a, b) => {
-              if (a.premium === b.premium) {
-                if (a.ticker < b.ticker) {
-                  return -1;
-                } else {
-                  return 1;
-                }
-              } else {
-                return a.premium ? -1 : 1;
-              }
-            })
-        );
-        setPoolInfo(getRewardsDto.pool_info);
-        setIsCheckRewardLoading(false);
-      } else {
-        dispatch(
-          showModal({
-            modalType: ModalTypes.info,
-            details: {
-              text: "No rewards found for the account, yet.",
-              type: InfoModalTypes.info,
-            },
-          })
-        );
+
+      if (getRewardsResponse.claimable_tokens.length === 0) {
+        showInfoModal("No rewards found for the account, yet.");
+        return;
       }
+
+      if (vmSettings.max_assets_in_request) {
+        setMaxTokenSelected(vmSettings.max_assets_in_request);
+      }
+
+      setClaimableTokens(
+        getRewardsResponse.claimable_tokens
+          .map((token) => {
+            token.selected = false;
+            return token;
+          })
+          .sort((a, b) => {
+            if (a.premium === b.premium) {
+              if (a.ticker < b.ticker) {
+                return -1;
+              } else {
+                return 1;
+              }
+            } else {
+              return a.premium ? -1 : 1;
+            }
+          })
+      );
+      setPoolInfo(getRewardsResponse.pool_info);
+      setIsCheckRewardLoading(false);
     } catch (e: any) {
       handleError(e);
     } finally {

@@ -7,15 +7,18 @@ import express, { Request, Response } from "express";
 import * as _ from "lodash";
 import url from "url";
 import {
+  Dto,
   GetDeliveredRewardsDto,
   GetPoolsDto,
   GetQueueDto,
   ServerErrorDto,
 } from "../client/src/entities/dto";
 import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
+import { VmTypes } from "../client/src/entities/vm";
 import { PoolInfo } from "../client/src/entities/vm.entities";
 import errorHandlerMiddleware, {
   errorHandlerWrapper,
+  typedErrorHandlerWrapper,
 } from "./middlewares/error-handler";
 import TxRouter from "./routes/tx";
 import UtilRouter from "./routes/util";
@@ -32,7 +35,6 @@ import {
   getRewards,
   getTokens,
   ITosiFeatures,
-  IVMSettings,
   postFromKoios,
   sanitizeString,
   translateAdaHandle,
@@ -163,8 +165,8 @@ app.get(
 app.get(
   "/api/getsettings",
   oapi.path(resp200Ok),
-  errorHandlerWrapper(async (_req: Request, res: Response) => {
-    const settings: IVMSettings = await getFromVM("get_settings");
+  typedErrorHandlerWrapper<Dto.GetVmSettings>(async (_, res) => {
+    const settings = await getFromVM<VmTypes.Settings>("get_settings");
     return res.status(200).send(settings);
   })
 );

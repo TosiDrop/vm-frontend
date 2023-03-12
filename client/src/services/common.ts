@@ -11,8 +11,10 @@ export async function getFeatures() {
   return response.data;
 }
 
-export async function getSettings() {
-  const response = await axios.get(`/api/getsettings`);
+export async function getSettings(): Promise<Dto.GetVmSettings["response"]> {
+  const response = await axios.get<Dto.GetVmSettings["response"]>(
+    `/api/getsettings`
+  );
   return response.data;
 }
 
