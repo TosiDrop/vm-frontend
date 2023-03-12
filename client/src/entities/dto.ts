@@ -1,4 +1,5 @@
 import { DeliveredReward } from "./common.entities";
+import { VmTypes } from "./vm";
 import { Assets, ClaimableToken, PoolInfo, VmPoolInfo } from "./vm.entities";
 
 export interface GetRewardsDto {
@@ -88,5 +89,9 @@ export namespace Dto {
     response: {
       addressInBech32: string;
     };
+  }
+
+  export interface GetVmSettings extends Base {
+    response: VmTypes.Settings;
   }
 }

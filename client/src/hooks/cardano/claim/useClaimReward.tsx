@@ -1,26 +1,20 @@
-import { useSelector } from "react-redux";
-
-import { RootState } from "src/store";
-
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-import {
-  InfoModalTypes,
-  ModalTypes,
-  PageRoute,
-} from "src/entities/common.entities";
+import { PageRoute } from "src/entities/common.entities";
 import { ClaimableToken, VmPoolInfo } from "src/entities/vm.entities";
 import useErrorHandler from "src/hooks/useErrorHandler";
-import { showModal } from "src/reducers/globalSlice";
+import useModal from "src/hooks/useModal";
 import { getCustomRewards, getRewards } from "src/services/claim";
-import { getStakeKey } from "src/services/common";
+import { getSettings, getStakeKey } from "src/services/common";
+import { RootState } from "src/store";
+import { shuffleArray } from "src/utils";
 
 export default function useClaimReward() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { handleError } = useErrorHandler();
+  const { showInfoModal } = useModal();
   const connectedWalletAddress = useSelector(
     (state: RootState) => state.wallet.walletAddress
   );
@@ -35,6 +29,8 @@ export default function useClaimReward() {
   const [isClaimRewardLoading, setIsClaimRewardLoading] = useState(false);
   const [stakeAddress, setStakeAddress] = useState<string>("");
   const [numberOfSelectedTokens, setNumberOfSelectedTokens] = useState(0);
+  /** default max number of token to claim */
+  const [maxTokenSelected, setMaxTokenSelected] = useState(1000);
 
   useEffect(() => {
     setSearchAddress(isWrongNetwork ? "" : connectedWalletAddress);
@@ -51,81 +47,106 @@ export default function useClaimReward() {
     );
   }, [claimableTokens]);
 
-  const selectAllClaimableTokens = () => {
-    const updatedClaimableTokens = [...claimableTokens];
-    if (numberOfSelectedTokens < claimableTokens.length) {
-      updatedClaimableTokens.forEach((token) => (token.selected = true));
-    } else {
-      updatedClaimableTokens.forEach((token) => (token.selected = false));
-    }
-    setClaimableTokens(updatedClaimableTokens);
-  };
-
   const handleTokenSelect = (position: number) => {
     const updatedClaimableTokens = [...claimableTokens];
+
+    if (
+      !updatedClaimableTokens[position].selected &&
+      numberOfSelectedTokens === maxTokenSelected
+    ) {
+      showInfoModal(
+        `You have selected the maximum number of tokens to claim (${maxTokenSelected}).
+         Please deselect other tokens first`
+      );
+      return;
+    }
+
     updatedClaimableTokens[position].selected =
       !updatedClaimableTokens[position].selected;
     setClaimableTokens(updatedClaimableTokens);
   };
 
   const selectAll = () => {
+    const positions = [...Array(claimableTokens.length).keys()].slice(
+      0,
+      maxTokenSelected
+    );
+
     const updatedClaimableTokens = [...claimableTokens];
-    if (numberOfSelectedTokens < claimableTokens.length) {
-      updatedClaimableTokens.forEach((token) => (token.selected = true));
+    if (
+      numberOfSelectedTokens <
+      Math.min(maxTokenSelected, claimableTokens.length)
+    ) {
+      positions.forEach(
+        (position) => (updatedClaimableTokens[position].selected = true)
+      );
     } else {
-      updatedClaimableTokens.forEach((token) => (token.selected = false));
+      positions.forEach(
+        (position) => (updatedClaimableTokens[position].selected = false)
+      );
     }
+    setClaimableTokens(updatedClaimableTokens);
+  };
+
+  const selectRandomTokens = () => {
+    const positions = shuffleArray([
+      ...Array(claimableTokens.length).keys(),
+    ]).slice(0, maxTokenSelected);
+
+    const updatedClaimableTokens = [...claimableTokens];
+    updatedClaimableTokens.forEach((token) => (token.selected = false));
+    positions.forEach(
+      (position) => (updatedClaimableTokens[position].selected = true)
+    );
+
     setClaimableTokens(updatedClaimableTokens);
   };
 
   const checkRewards = async () => {
     setIsCheckRewardLoading(true);
     try {
-      /**
-       * check if the inserted address is cardano address, we want the stake address
-       * if it is cardano address, get the staking address
-       */
       let address = await getStakeKey(searchAddress);
-
       address = address.staking_address;
-
       setStakeAddress(address);
-      const getRewardsDto = await getRewards(address);
-      if (getRewardsDto == null) {
+
+      const [getRewardsResponse, vmSettings] = await Promise.all([
+        getRewards(address),
+        getSettings(),
+      ]);
+
+      if (getRewardsResponse == null) {
         throw new Error("Something went wrong when checking reward");
       }
-      if (getRewardsDto.claimable_tokens.length !== 0) {
-        setClaimableTokens(
-          getRewardsDto.claimable_tokens
-            .map((token) => {
-              token.selected = false;
-              return token;
-            })
-            .sort((a, b) => {
-              if (a.premium === b.premium) {
-                if (a.ticker < b.ticker) {
-                  return -1;
-                } else {
-                  return 1;
-                }
-              } else {
-                return a.premium ? -1 : 1;
-              }
-            })
-        );
-        setPoolInfo(getRewardsDto.pool_info);
-        setIsCheckRewardLoading(false);
-      } else {
-        dispatch(
-          showModal({
-            modalType: ModalTypes.info,
-            details: {
-              text: "No rewards found for the account, yet.",
-              type: InfoModalTypes.info,
-            },
-          })
-        );
+
+      if (getRewardsResponse.claimable_tokens.length === 0) {
+        showInfoModal("No rewards found for the account, yet.");
+        return;
       }
+
+      if (vmSettings.max_assets_in_request) {
+        setMaxTokenSelected(vmSettings.max_assets_in_request);
+      }
+
+      setClaimableTokens(
+        getRewardsResponse.claimable_tokens
+          .map((token) => {
+            token.selected = false;
+            return token;
+          })
+          .sort((a, b) => {
+            if (a.premium === b.premium) {
+              if (a.ticker < b.ticker) {
+                return -1;
+              } else {
+                return 1;
+              }
+            } else {
+              return a.premium ? -1 : 1;
+            }
+          })
+      );
+      setPoolInfo(getRewardsResponse.pool_info);
+      setIsCheckRewardLoading(false);
     } catch (e: any) {
       handleError(e);
     } finally {
@@ -177,9 +198,9 @@ export default function useClaimReward() {
     checkRewards,
     claimRewards,
     selectAll,
+    selectRandomTokens,
     cancelClaim,
     claimableTokens,
-    selectAllClaimableTokens,
     handleTokenSelect,
     numberOfSelectedTokens,
     isCheckRewardLoading,
