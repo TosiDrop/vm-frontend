@@ -9,6 +9,7 @@ import logoLight from "src/assets/tosidrop-light.png";
 import { Blockchain, Themes } from "src/entities/common.entities";
 import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
 import { RootState } from "src/store";
+import Banner from "../Banner";
 import BlockchainSelector from "../BlockchainSelector";
 import CardanoWalletSelector from "../WalletSelector/CardanoWalletSelector";
 import ErgoWalletSelector from "../WalletSelector/ErgoWalletSelector";
@@ -32,6 +33,8 @@ function Header() {
 
   return (
     <>
+      <Banner></Banner>
+
       {/* Web header */}
       <div className="flex-row items-center w-full p-5 pb-0 hidden sm:flex">
         <Link to="/">
