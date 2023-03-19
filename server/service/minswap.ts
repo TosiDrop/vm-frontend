@@ -17,7 +17,7 @@ export namespace MinswapService {
         const axiosRequestConfig: AxiosRequestConfig<MinswapTypes.PriceInfoMap> =
           {
             method: "GET",
-            url: "https://hub.dummyapis.com/delay?seconds=30",
+            url: MIN_PAIRS_API,
             timeout: 10000,
           };
         prices = (await axios(axiosRequestConfig)).data;
