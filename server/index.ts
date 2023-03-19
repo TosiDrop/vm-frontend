@@ -20,6 +20,7 @@ import errorHandlerMiddleware, {
   errorHandlerWrapper,
   typedErrorHandlerWrapper,
 } from "./middlewares/error-handler";
+import AdminRouter from "./routes/admin";
 import TxRouter from "./routes/tx";
 import UtilRouter from "./routes/util";
 import {
@@ -49,6 +50,8 @@ export const VM_KOIOS_URL =
   process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 export const CARDANO_NETWORK =
   process.env.CARDANO_NETWORK || CardanoNetwork.preview;
+export const TOSIDROP_ADMIN_KEY =
+  process.env.TOSIDROP_ADMIN_KEY || "admin key is not set";
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const LOG_TYPE = process.env.LOG_TYPE || "dev";
 const PORT = process.env.PORT || 3000;
@@ -117,6 +120,7 @@ const resp200Ok500Bad = {
 
 app.use("/api/tx", TxRouter);
 app.use("/api/util", UtilRouter);
+app.use("/api/admin", AdminRouter);
 
 app.get(
   "/api/getpools",

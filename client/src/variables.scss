@@ -40,6 +40,7 @@ $avenir-font-medium: "Avenir Next Cyr Medium", sans-serif;
     #002c69;
   --primary: #181c1e;
   --primary-hover: #272c2ea9;
+  --primary-see-through: rgba(24, 28, 30, 0.5);
   --tooltip-background: #9b9b9c;
   --tooltip-font-color: #181c1e;
   --font-color: #515355;
@@ -100,6 +101,7 @@ $avenir-font-medium: "Avenir Next Cyr Medium", sans-serif;
     linear-gradient(0deg, rgba(226, 216, 250, 0.12), rgba(226, 216, 250, 0.12)),
     #bcd4f2;
   --primary: #ffffff;
+  --primary-see-through: rgba(255, 255, 255, 0.5);
   --primary-hover: #dbdbdb;
   --tooltip-background: #9b9b9c;
   --tooltip-font-color: #ffffff;

@@ -120,3 +120,12 @@ export async function getBech32Address({
   );
   return response.data.addressInBech32;
 }
+
+export async function getBannerText(): Promise<
+  Dto.GetBannerText["response"]["text"]
+> {
+  const response = await axios.get<Dto.GetBannerText["response"]>(
+    `/api/admin/banner`
+  );
+  return response.data.text;
+}

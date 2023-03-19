@@ -98,5 +98,17 @@ export namespace Dto {
 
   export interface GetMinswapPriceInfoMap extends Base {
     response: MinswapTypes.PriceInfoMap;
+
+  export interface PostBannerText extends Base {
+    body: {
+      text: string;
+      adminKey: string;
+    };
+  }
+
+  export interface GetBannerText extends Base {
+    response: {
+      text: string;
+    };
   }
 }

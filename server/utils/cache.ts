@@ -9,3 +9,7 @@ export const longTermCache = new LRUCache({
   ttl: 1000 * 60 * 60 * 24,
   max: 10,
 });
+
+export const persistentCache = new LRUCache({
+  max: 10,
+});
