@@ -21,6 +21,7 @@ import {
   VmDeliveredReward,
   VmTokenInfoMap,
 } from "../../client/src/entities/vm.entities";
+import { MinswapService } from "../service/minswap";
 import { longTermCache, shortTermCache } from "./cache";
 import { createErrorWithCode, HttpStatusCode } from "./error";
 
@@ -164,6 +165,10 @@ export async function getTokens(): Promise<VmTokenInfoMap> {
   return tokenInfo;
 }
 
+/**
+ * @deprecated replaced by {@link MinswapService.getPrices}
+ * the new function has timeout and handle error better
+ */
 export async function getPrices(): Promise<GetPricePairs> {
   let prices = shortTermCache.get("prices") as GetPricePairs;
   if (prices == null) {
@@ -211,8 +216,9 @@ export async function getRewards(stakeAddress: string) {
   const [getRewardsResponse, tokens, prices] = await Promise.all([
     getFromVM<GetRewardsDto>(`get_rewards&staking_address=${stakeAddress}`),
     getTokens(),
-    getPrices(),
+    MinswapService.getPrices(),
   ]);
+
   if (getRewardsResponse == null) return;
   if (tokens == null) return;
 
