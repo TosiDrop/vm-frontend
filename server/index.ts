@@ -31,7 +31,6 @@ import {
   getFromVM,
   getPoolMetadata,
   getPools,
-  getPrices,
   getRewards,
   getTokens,
   ITosiFeatures,
@@ -118,15 +117,6 @@ const resp200Ok500Bad = {
 
 app.use("/api/tx", TxRouter);
 app.use("/api/util", UtilRouter);
-
-app.get(
-  "/api/getprices",
-  oapi.path(resp200Ok),
-  errorHandlerWrapper(async (_req: Request, res: Response) => {
-    const prices = await getPrices();
-    return res.status(200).send(prices);
-  })
-);
 
 app.get(
   "/api/getpools",
