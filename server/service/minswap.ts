@@ -2,6 +2,7 @@ require("dotenv").config();
 import axios, { AxiosRequestConfig } from "axios";
 import { MinswapTypes } from "../../client/src/entities/minswap";
 import { shortTermCache } from "../utils/cache";
+import { LoggerService } from "./logger";
 
 const MIN_PAIRS_API =
   process.env.MIN_PAIRS_API ||
@@ -16,13 +17,13 @@ export namespace MinswapService {
         const axiosRequestConfig: AxiosRequestConfig<MinswapTypes.PriceInfoMap> =
           {
             method: "GET",
-            url: MIN_PAIRS_API,
+            url: "https://hub.dummyapis.com/delay?seconds=30",
             timeout: 10000,
           };
         prices = (await axios(axiosRequestConfig)).data;
         shortTermCache.set("prices", prices);
       } catch (error: unknown) {
-        console.warn("WARNING: Fail to fetch price info from minswap");
+        LoggerService.warn("Fail to fetch price info from minswap");
         prices = {};
       }
     }
