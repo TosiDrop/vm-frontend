@@ -100,19 +100,18 @@ export default function RewardsView({
           <div className="ml-auto flex flex-row w-fit gap-4">
             <button
               className="tosi-button py-2.5 px-5 rounded-lg"
+              onClick={selectAll}
+            >
+              Unselect All
+            </button>
+
+            <button
+              className="tosi-button py-2.5 px-5 rounded-lg"
               onClick={selectRandomTokens}
             >
               I'm feeling lucky
             </button>
-            <button
-              className="tosi-button py-2.5 px-5 rounded-lg"
-              onClick={selectAll}
-            >
-              {numberOfSelectedTokens ===
-              Math.min(claimableTokens.length, maxTokenSelected)
-                ? "Unselect All"
-                : "Select All"}
-            </button>
+
             <button
               className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
               disabled={numberOfSelectedTokens === 0}
