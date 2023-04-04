@@ -69,11 +69,12 @@ export default function useClaimReward() {
   const selectAll = () => {
     const updatedClaimableTokens = [...claimableTokens];
     updatedClaimableTokens.forEach((_) => (_.selected = false));
-    if (numberOfSelectedTokens !== maxTokenSelected) {
-      for (let i = 0; i < maxTokenSelected; i++) {
-        updatedClaimableTokens[i].selected = true;
-      }
-    }
+    // const limit = Math.min(maxTokenSelected, claimableTokens.length);
+    // if (numberOfSelectedTokens !== limit) {
+    //   for (let i = 0; i < limit; i++) {
+    //     updatedClaimableTokens[i].selected = true;
+    //   }
+    // }
     setClaimableTokens(updatedClaimableTokens);
   };
 
