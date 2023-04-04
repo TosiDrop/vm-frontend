@@ -67,23 +67,12 @@ export default function useClaimReward() {
   };
 
   const selectAll = () => {
-    const positions = [...Array(claimableTokens.length).keys()].slice(
-      0,
-      maxTokenSelected
-    );
-
     const updatedClaimableTokens = [...claimableTokens];
-    if (
-      numberOfSelectedTokens <
-      Math.min(maxTokenSelected, claimableTokens.length)
-    ) {
-      positions.forEach(
-        (position) => (updatedClaimableTokens[position].selected = true)
-      );
-    } else {
-      positions.forEach(
-        (position) => (updatedClaimableTokens[position].selected = false)
-      );
+    updatedClaimableTokens.forEach((_) => (_.selected = false));
+    if (numberOfSelectedTokens !== maxTokenSelected) {
+      for (let i = 0; i < maxTokenSelected; i++) {
+        updatedClaimableTokens[i].selected = true;
+      }
     }
     setClaimableTokens(updatedClaimableTokens);
   };
@@ -206,5 +195,6 @@ export default function useClaimReward() {
     isCheckRewardLoading,
     isClaimRewardLoading,
     poolInfo,
+    maxTokenSelected,
   };
 }
