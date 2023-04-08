@@ -12,6 +12,8 @@ interface Props {
   isLoadingClaimReward: boolean;
   selectAll: () => void;
   poolInfo?: any;
+  maxTokenSelected: number;
+  selectRandomTokens: any;
 }
 
 export default function RewardsView({
@@ -22,6 +24,8 @@ export default function RewardsView({
   isLoadingClaimReward,
   selectAll,
   poolInfo,
+  maxTokenSelected,
+  selectRandomTokens,
 }: Props) {
   if (claimableTokens.length > 0) {
     return (
@@ -93,17 +97,23 @@ export default function RewardsView({
           className={"background flex flex-row items-center p-5 rounded-2xl"}
         >
           <div>Selected {numberOfSelectedTokens} token</div>
-          <div className="ml-auto flex flex-row w-fit">
+          <div className="ml-auto flex flex-row w-fit gap-4">
             <button
               className="tosi-button py-2.5 px-5 rounded-lg"
               onClick={selectAll}
             >
-              {numberOfSelectedTokens === claimableTokens.length
-                ? "Unselect All"
-                : "Select All"}
+              Unselect All
             </button>
+
             <button
-              className="tosi-button ml-5 py-2.5 px-5 rounded-lg flex flex-row items-center"
+              className="tosi-button py-2.5 px-5 rounded-lg"
+              onClick={selectRandomTokens}
+            >
+              I'm feeling lucky
+            </button>
+
+            <button
+              className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
               disabled={numberOfSelectedTokens === 0}
               onClick={claimRewards}
             >

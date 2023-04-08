@@ -11,8 +11,10 @@ export async function getFeatures() {
   return response.data;
 }
 
-export async function getSettings() {
-  const response = await axios.get(`/api/getsettings`);
+export async function getSettings(): Promise<Dto.GetVmSettings["response"]> {
+  const response = await axios.get<Dto.GetVmSettings["response"]>(
+    `/api/getsettings`
+  );
   return response.data;
 }
 
@@ -117,4 +119,13 @@ export async function getBech32Address({
     `/api/util/bech32-address?addressInHex=${addressInHex}`
   );
   return response.data.addressInBech32;
+}
+
+export async function getBannerText(): Promise<
+  Dto.GetBannerText["response"]["text"]
+> {
+  const response = await axios.get<Dto.GetBannerText["response"]>(
+    `/api/admin/banner`
+  );
+  return response.data.text;
 }

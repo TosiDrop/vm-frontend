@@ -17,6 +17,8 @@ function Claim() {
     numberOfSelectedTokens,
     claimRewards,
     poolInfo,
+    maxTokenSelected,
+    selectRandomTokens,
   } = useClaimReward();
   const queue = useQueue();
 
@@ -45,6 +47,8 @@ function Claim() {
           isLoadingClaimReward={isClaimRewardLoading}
           selectAll={selectAll}
           poolInfo={poolInfo}
+          maxTokenSelected={maxTokenSelected}
+          selectRandomTokens={selectRandomTokens}
         />
       </div>
     </>

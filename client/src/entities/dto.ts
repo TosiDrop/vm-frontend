@@ -1,4 +1,6 @@
 import { DeliveredReward } from "./common.entities";
+import { MinswapTypes } from "./minswap";
+import { VmTypes } from "./vm";
 import { Assets, ClaimableToken, PoolInfo, VmPoolInfo } from "./vm.entities";
 
 export interface GetRewardsDto {
@@ -87,6 +89,27 @@ export namespace Dto {
     };
     response: {
       addressInBech32: string;
+    };
+  }
+
+  export interface GetVmSettings extends Base {
+    response: VmTypes.Settings;
+  }
+
+  export interface GetMinswapPriceInfoMap extends Base {
+    response: MinswapTypes.PriceInfoMap;
+  }
+  
+  export interface PostBannerText extends Base {
+    body: {
+      text: string;
+      adminKey: string;
+    };
+  }
+
+  export interface GetBannerText extends Base {
+    response: {
+      text: string;
     };
   }
 }

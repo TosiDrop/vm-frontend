@@ -7,16 +7,20 @@ import express, { Request, Response } from "express";
 import * as _ from "lodash";
 import url from "url";
 import {
+  Dto,
   GetDeliveredRewardsDto,
   GetPoolsDto,
   GetQueueDto,
   ServerErrorDto,
 } from "../client/src/entities/dto";
 import { Tip, TransactionStatus } from "../client/src/entities/koios.entities";
+import { VmTypes } from "../client/src/entities/vm";
 import { PoolInfo } from "../client/src/entities/vm.entities";
 import errorHandlerMiddleware, {
   errorHandlerWrapper,
+  typedErrorHandlerWrapper,
 } from "./middlewares/error-handler";
+import AdminRouter from "./routes/admin";
 import TxRouter from "./routes/tx";
 import UtilRouter from "./routes/util";
 import {
@@ -28,11 +32,9 @@ import {
   getFromVM,
   getPoolMetadata,
   getPools,
-  getPrices,
   getRewards,
   getTokens,
   ITosiFeatures,
-  IVMSettings,
   postFromKoios,
   sanitizeString,
   translateAdaHandle,
@@ -48,6 +50,8 @@ export const VM_KOIOS_URL =
   process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 export const CARDANO_NETWORK =
   process.env.CARDANO_NETWORK || CardanoNetwork.preview;
+export const TOSIDROP_ADMIN_KEY =
+  process.env.TOSIDROP_ADMIN_KEY || "admin key is not set";
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const LOG_TYPE = process.env.LOG_TYPE || "dev";
 const PORT = process.env.PORT || 3000;
@@ -116,15 +120,7 @@ const resp200Ok500Bad = {
 
 app.use("/api/tx", TxRouter);
 app.use("/api/util", UtilRouter);
-
-app.get(
-  "/api/getprices",
-  oapi.path(resp200Ok),
-  errorHandlerWrapper(async (_req: Request, res: Response) => {
-    const prices = await getPrices();
-    return res.status(200).send(prices);
-  })
-);
+app.use("/api/admin", AdminRouter);
 
 app.get(
   "/api/getpools",
@@ -163,8 +159,8 @@ app.get(
 app.get(
   "/api/getsettings",
   oapi.path(resp200Ok),
-  errorHandlerWrapper(async (_req: Request, res: Response) => {
-    const settings: IVMSettings = await getFromVM("get_settings");
+  typedErrorHandlerWrapper<Dto.GetVmSettings>(async (_, res) => {
+    const settings = await getFromVM<VmTypes.Settings>("get_settings");
     return res.status(200).send(settings);
   })
 );

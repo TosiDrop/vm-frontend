@@ -48,3 +48,20 @@ export const hexToUTF8 = (hex: string): string => {
   }
   return new TextDecoder().decode(ints);
 };
+
+export const shuffleArray = (array: any[]): any[] => {
+  array = [...array];
+  let currentIndex = array.length,
+    randomIndex;
+
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+};
