@@ -23,7 +23,7 @@ import {
 } from "../../client/src/entities/vm.entities";
 import { MinswapService } from "../service/minswap";
 import { longTermCache, shortTermCache } from "./cache";
-import { createErrorWithCode, HttpStatusCode } from "./error";
+import { HttpStatusCode, createErrorWithCode } from "./error";
 
 require("dotenv").config();
 
@@ -156,12 +156,24 @@ export async function getPools() {
   return pools;
 }
 
-export async function getTokens(): Promise<VmTokenInfoMap> {
-  let tokenInfo = longTermCache.get<VmTokenInfoMap>("tokenInfo");
-  if (tokenInfo == null) {
+export async function getTokens(options?: {
+  flushCache?: boolean;
+}): Promise<VmTokenInfoMap> {
+  let tokenInfo: VmTokenInfoMap;
+
+  if (options?.flushCache) {
     tokenInfo = await getFromVM<VmTokenInfoMap>("get_tokens");
     longTermCache.set("tokenInfo", tokenInfo);
+  } else {
+    const tempTokenInfo = longTermCache.get<VmTokenInfoMap>("tokenInfo");
+    if (tempTokenInfo == null) {
+      tokenInfo = await getFromVM<VmTokenInfoMap>("get_tokens");
+      longTermCache.set("tokenInfo", tokenInfo);
+    } else {
+      tokenInfo = tempTokenInfo;
+    }
   }
+
   return tokenInfo;
 }
 
@@ -213,7 +225,7 @@ export async function getPoolMetadata(accountInfo: any) {
 }
 
 export async function getRewards(stakeAddress: string) {
-  const [getRewardsResponse, tokens, prices] = await Promise.all([
+  let [getRewardsResponse, tokens, prices] = await Promise.all([
     getFromVM<GetRewardsDto>(`get_rewards&staking_address=${stakeAddress}`),
     getTokens(),
     MinswapService.getPrices(),
@@ -254,9 +266,21 @@ export async function getRewards(stakeAddress: string) {
     }
   });
 
+  /** if there is no token info in the map, flush the cache and re-fetch token info */
+  for (const assetId of [
+    ...Object.keys(consolidatedAvailableReward),
+    ...Object.keys(consolidatedAvailableRewardPremium),
+  ]) {
+    const token = tokens[assetId];
+    if (token == null) {
+      tokens = await getTokens({ flushCache: true });
+    }
+  }
+
   Object.keys(consolidatedAvailableReward).forEach((assetId) => {
     const token = tokens[assetId];
-    const { decimals: tokenDecimals, logo, ticker } = token;
+    /** add default values just to be safe */
+    const { decimals: tokenDecimals = 0, logo = "", ticker = "" } = token;
     const decimals = Number(tokenDecimals);
     const amount =
       consolidatedAvailableReward[assetId] / Math.pow(10, decimals);
@@ -277,7 +301,8 @@ export async function getRewards(stakeAddress: string) {
 
   Object.keys(consolidatedAvailableRewardPremium).forEach((assetId) => {
     const token = tokens[assetId];
-    const { decimals: tokenDecimals, logo, ticker } = token;
+    /** add default values just to be safe */
+    const { decimals: tokenDecimals = 0, logo = "", ticker = "" } = token;
     const decimals = Number(tokenDecimals);
     const amount =
       consolidatedAvailableRewardPremium[assetId] / Math.pow(10, decimals);

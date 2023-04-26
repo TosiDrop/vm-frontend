@@ -25,6 +25,7 @@ import TxRouter from "./routes/tx";
 import UtilRouter from "./routes/util";
 import {
   CardanoNetwork,
+  ITosiFeatures,
   getAccountsInfo,
   getDeliveredRewards,
   getEpochParams,
@@ -33,14 +34,12 @@ import {
   getPoolMetadata,
   getPools,
   getRewards,
-  getTokens,
-  ITosiFeatures,
   postFromKoios,
   sanitizeString,
   translateAdaHandle,
 } from "./utils";
 import { ICustomRewards } from "./utils/entities";
-import { createErrorWithCode, HttpStatusCode } from "./utils/error";
+import { HttpStatusCode, createErrorWithCode } from "./utils/error";
 require("dotenv").config();
 const openapi = require("@reqlez/express-openapi");
 const fs = require("fs");
@@ -144,15 +143,6 @@ app.get(
       whitelistedPools: _.shuffle(whitelistedPools),
       regularPools: _.shuffle(regularPools),
     });
-  })
-);
-
-app.get(
-  "/api/gettokens",
-  oapi.path(resp200Ok),
-  errorHandlerWrapper(async (_req: Request, res: Response) => {
-    const tokens = await getTokens();
-    return res.status(200).send(tokens);
   })
 );
 
