@@ -70,21 +70,31 @@ export async function translateAdaHandle(
       "Handle is malformed"
     );
   }
-
   const handleInHex = Buffer.from(handle).toString("hex");
-  const url = `${koiosUrl}/asset_address_list?_asset_policy=${policyId}&_asset_name=${handleInHex}`;
+  const address222 =  await resolveAddress("000de140"+handleInHex);
+  if (address222) return address222;
+  const address314 =  await resolveAddress("0013ab30"+handleInHex);
+  if (address314) return address314;
 
-  const data = (await axios.get(url)).data;
+  const address = await resolveAddress(handleInHex);
+  if (address) return address; else throw createErrorWithCode(
+    HttpStatusCode.NOT_FOUND,
+    "Handle does not exist"
+  );
 
-  if (data.length === 0) {
-    throw createErrorWithCode(
-      HttpStatusCode.NOT_FOUND,
-      "Handle does not exist"
-    );
+
+  async function resolveAddress(handleInHex: string){
+    const url = `${koiosUrl}/asset_address_list?_asset_policy=${policyId}&_asset_name=${handleInHex}`;
+  
+    const data = (await axios.get(url)).data;
+  
+    if (data.length === 0) {
+      return null;
+    }
+  
+    const address = data[0].payment_address;
+    return address;
   }
-
-  const address = data[0].payment_address;
-  return address;
 }
 
 export async function getFromVM<T>(params: any) {
