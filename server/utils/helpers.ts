@@ -47,7 +47,7 @@ export async function translateAdaHandle(
   network: any,
   koiosUrl: string
 ) {
-  let urlPrefix, policyId;
+  let urlPrefix, policyId : string;
 
   handle = handle.toLowerCase();
 
@@ -70,21 +70,31 @@ export async function translateAdaHandle(
       "Handle is malformed"
     );
   }
+  const handleInHex : string = Buffer.from(handle).toString("hex");
+  const address222  : string  =  await resolveAddress("000de140"+handleInHex, policyId , koiosUrl);
+  if (address222) return address222;
+  const address314 : string  =  await resolveAddress("0013ab30"+handleInHex , policyId , koiosUrl);
+  if (address314)  return address314;
 
-  const handleInHex = Buffer.from(handle).toString("hex");
-  const url = `${koiosUrl}/asset_address_list?_asset_policy=${policyId}&_asset_name=${handleInHex}`;
+  const address = await resolveAddress(handleInHex , policyId , koiosUrl);
+  if (address) return address; else throw createErrorWithCode(
+    HttpStatusCode.NOT_FOUND,
+    "Handle does not exist"
+  );
 
-  const data = (await axios.get(url)).data;
 
-  if (data.length === 0) {
-    throw createErrorWithCode(
-      HttpStatusCode.NOT_FOUND,
-      "Handle does not exist"
-    );
+  async function resolveAddress(handleInHex: string , policyId: string , koiosUrl: string ){
+    const url = `${koiosUrl}/asset_address_list?_asset_policy=${policyId}&_asset_name=${handleInHex}`;
+  
+    const data = (await axios.get(url)).data;
+  
+    if (data.length === 0) {
+      return null;
+    }
+  
+    const address = data[0].payment_address;
+    return address;
   }
-
-  const address = data[0].payment_address;
-  return address;
 }
 
 export async function getFromVM<T>(params: any) {
