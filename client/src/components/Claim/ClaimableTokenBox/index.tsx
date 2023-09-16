@@ -1,4 +1,4 @@
-import TokenInfoTooltip from "../TokenInfoTooltip";
+// import TokenInfoTooltip from "../TokenInfoTooltip";
 import TosifeeTooltip from "../TosifeeTooltip";
 import "./index.scss";
 
@@ -38,7 +38,7 @@ const ClaimableTokenBox = ({
       <div className="w-full flex flex-row items-center">
         <div className="text-sm">{amount} available</div>
         <div className="ml-auto flex flex-row align-center gap-2">
-          <TokenInfoTooltip price={price} total={total}></TokenInfoTooltip>
+          {/* Disabled <TokenInfoTooltip price={price} total={total}></TokenInfoTooltip> */}
           {premium ? <TosifeeTooltip></TosifeeTooltip> : null}
         </div>
       </div>
