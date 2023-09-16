@@ -148,7 +148,7 @@ export default function MenuErgo() {
                     key={socialMediaItem.url}
                     socialMediaItem={socialMediaItem}
                   />
-                )
+                ),
               )}
             </div>
           </div>

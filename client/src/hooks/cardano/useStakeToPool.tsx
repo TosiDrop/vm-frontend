@@ -8,10 +8,10 @@ export default function useStakeToPool() {
   const [loading, setLoading] = useState(false);
   const { handleError } = useErrorHandler();
   const connectedWalletApi = useSelector(
-    (state: RootState) => state.wallet.walletApi
+    (state: RootState) => state.wallet.walletApi,
   );
   const connectedWalletAddress = useSelector(
-    (state: RootState) => state.wallet.walletAddress
+    (state: RootState) => state.wallet.walletAddress,
   );
 
   async function stakeToPool(poolId: string, callback?: () => void) {

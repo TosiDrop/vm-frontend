@@ -39,7 +39,7 @@ export default function useClaimHistory() {
               text: "No claim history found for the account, yet.",
               type: InfoModalTypes.info,
             },
-          })
+          }),
         );
       }
     } catch (e: unknown) {

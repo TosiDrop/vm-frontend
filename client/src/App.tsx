@@ -19,7 +19,7 @@ function App() {
   const location = useLocation().pathname;
   const dispatch = useDispatch();
   const connectedWallet = useSelector(
-    (state: RootState) => state.wallet.walletApi
+    (state: RootState) => state.wallet.walletApi,
   );
 
   const init = async () => {

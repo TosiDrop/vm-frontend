@@ -22,7 +22,7 @@ const Disconnect = forwardRef<HTMLDivElement, Props>(
         Disconnect
       </div>
     );
-  }
+  },
 );
 
 export default Disconnect;

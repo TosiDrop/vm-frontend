@@ -1,7 +1,7 @@
 export const abbreviateAddress = (
   address: string,
   start = 7,
-  end = 4
+  end = 4,
 ): string => {
   return (
     address.substring(0, start) +

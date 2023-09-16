@@ -11,9 +11,8 @@ export async function getFeatures() {
 }
 
 export async function getSettings(): Promise<Dto.GetVmSettings["response"]> {
-  const response = await axios.get<Dto.GetVmSettings["response"]>(
-    `/api/getsettings`
-  );
+  const response =
+    await axios.get<Dto.GetVmSettings["response"]>(`/api/getsettings`);
   return response.data;
 }
 
@@ -75,31 +74,31 @@ export async function getQueue(): Promise<GetQueueDto> {
 }
 
 export async function createStakeTx(
-  params: Dto.CreateDelegationTx["body"]
+  params: Dto.CreateDelegationTx["body"],
 ): Promise<Dto.CreateDelegationTx["response"]> {
   const response = await axios.post<Dto.CreateDelegationTx["response"]>(
     `/api/tx/delegate`,
-    params
+    params,
   );
   return response.data;
 }
 
 export async function createTransferTx(
-  params: Dto.CreateTransferTx["body"]
+  params: Dto.CreateTransferTx["body"],
 ): Promise<Dto.CreateTransferTx["response"]> {
   const response = await axios.post<Dto.CreateTransferTx["response"]>(
     `/api/tx/transfer`,
-    params
+    params,
   );
   return response.data;
 }
 
 export async function submitStakeTx(
-  params: Dto.SubmitTx["body"]
+  params: Dto.SubmitTx["body"],
 ): Promise<Dto.SubmitTx["response"]> {
   const response = await axios.post<Dto.SubmitTx["response"]>(
     `/api/tx/submit`,
-    params
+    params,
   );
   return response.data;
 }
@@ -110,7 +109,7 @@ export async function getBech32Address({
   Dto.GetBech32Address["response"]["addressInBech32"]
 > {
   const response = await axios.get<Dto.GetBech32Address["response"]>(
-    `/api/util/bech32-address?addressInHex=${addressInHex}`
+    `/api/util/bech32-address?addressInHex=${addressInHex}`,
   );
   return response.data.addressInBech32;
 }
@@ -118,8 +117,7 @@ export async function getBech32Address({
 export async function getBannerText(): Promise<
   Dto.GetBannerText["response"]["text"]
 > {
-  const response = await axios.get<Dto.GetBannerText["response"]>(
-    `/api/admin/banner`
-  );
+  const response =
+    await axios.get<Dto.GetBannerText["response"]>(`/api/admin/banner`);
   return response.data.text;
 }

@@ -70,7 +70,7 @@ const DepositInfoPage = () => {
        */
       const txStatus: TransactionStatus = await getTxStatus(
         requestId,
-        stakeAddress.slice(0, 40)
+        stakeAddress.slice(0, 40),
       );
 
       /**
