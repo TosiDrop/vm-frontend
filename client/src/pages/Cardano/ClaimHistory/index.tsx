@@ -7,10 +7,10 @@ import { RootState } from "src/store";
 
 function ClaimHistory() {
   const connectedWalletAddress = useSelector(
-    (state: RootState) => state.wallet.walletAddress
+    (state: RootState) => state.wallet.walletAddress,
   );
   const isWrongNetwork = useSelector(
-    (state: RootState) => state.wallet.isWrongNetwork
+    (state: RootState) => state.wallet.isWrongNetwork,
   );
   const { claimHistory, loading, checkClaimHistory } = useClaimHistory();
   const [searchAddress, setSearchAddress] = useState<string>("");

@@ -124,7 +124,7 @@ export default function MobileMenuCardano() {
                 key={socialMediaItem.url}
                 socialMediaItem={socialMediaItem}
               />
-            )
+            ),
           )}
         </div>
       </div>

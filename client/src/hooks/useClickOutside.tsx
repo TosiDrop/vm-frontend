@@ -10,7 +10,7 @@ const useClickOutside = (action: Function) => {
         action();
       }
     },
-    [action]
+    [action],
   );
 
   useEffect(() => {

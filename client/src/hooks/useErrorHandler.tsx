@@ -35,7 +35,7 @@ const useErrorHandler = () => {
           text,
           type: InfoModalTypes.failure,
         },
-      })
+      }),
     );
   };
 

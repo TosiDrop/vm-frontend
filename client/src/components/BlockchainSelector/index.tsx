@@ -30,7 +30,7 @@ export default function BlockchainSelector({
 }) {
   const chain = useSelector((state: RootState) => state.global.chain);
   const ergoEnabled = useSelector(
-    (state: RootState) => state.global.ergoEnabled
+    (state: RootState) => state.global.ergoEnabled,
   );
   const network = NETWORK_INFO[chain];
   const { ref, visible, setVisible } = useComponentVisible(false);

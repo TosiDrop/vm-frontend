@@ -45,7 +45,7 @@ const TransactionDetail = ({
   }, []);
 
   const calcTxFee = () => {
-    let txCalc = ((numberOfTokens * 4000) + settings.txFee).toFixed(6);
+    let txCalc = (numberOfTokens * 4000 + settings.txFee).toFixed(6);
     if (Number(txCalc) >= Number(settings.txFee)) return Number(txCalc);
     return Number(settings.txFee);
   };

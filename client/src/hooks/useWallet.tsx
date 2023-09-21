@@ -46,7 +46,7 @@ const useWallet = () => {
         wallet: connectedWallet,
         walletApi: connectedWalletApi,
         walletAddress: addressInBech32,
-      })
+      }),
     );
     localStorage.setItem("wallet-provider", walletKey);
 
@@ -60,7 +60,7 @@ const useWallet = () => {
   };
 
   const getWalletAddressInBech32 = async (
-    walletApi: WalletApi
+    walletApi: WalletApi,
   ): Promise<string> => {
     if (walletApi == null) {
       return "";

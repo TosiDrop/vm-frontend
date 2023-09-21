@@ -18,7 +18,7 @@ export default function Pool({ pool }: { pool: PoolInfo }) {
             text: `Staking to ${pool.ticker} is successful!`,
             type: InfoModalTypes.success,
           },
-        })
+        }),
       );
     });
   }

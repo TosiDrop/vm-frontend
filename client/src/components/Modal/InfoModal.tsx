@@ -12,7 +12,7 @@ import { InfoModalTypes } from "src/entities/common.entities";
 export const InfoModal = () => {
   const dispatch = useDispatch();
   const { text, type } = useSelector(
-    (state: RootState) => state.global.infoModalDetails
+    (state: RootState) => state.global.infoModalDetails,
   );
 
   const renderIcon = () => {

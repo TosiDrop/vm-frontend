@@ -13,7 +13,7 @@ function CardanoWalletSelector() {
     dispatch(
       showModal({
         modalType: ModalTypes.wallet,
-      })
+      }),
     );
   };
 

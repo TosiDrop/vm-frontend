@@ -26,10 +26,10 @@ const SendAdaInfo = ({
   setTransactionStatus,
 }: Params) => {
   const connectedWalletApi = useSelector(
-    (state: RootState) => state.wallet.walletApi
+    (state: RootState) => state.wallet.walletApi,
   );
   const isWrongNetwork = useSelector(
-    (state: RootState) => state.wallet.isWrongNetwork
+    (state: RootState) => state.wallet.isWrongNetwork,
   );
   const { transfer, loading: transferLoading } = useTransfer();
 
@@ -82,7 +82,7 @@ const SendAdaInfo = ({
       (txId) => {
         setTransactionStatus(TransactionStatusDetail.processing);
         setTransactionId(txId);
-      }
+      },
     );
   };
 

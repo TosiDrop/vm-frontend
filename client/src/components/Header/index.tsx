@@ -19,7 +19,7 @@ function Header() {
   const theme = useSelector((state: RootState) => state.global.theme);
   const chain = useSelector((state: RootState) => state.global.chain);
   const connectedWallet = useSelector(
-    (state: RootState) => state.wallet.walletApi
+    (state: RootState) => state.wallet.walletApi,
   );
 
   const RenderWalletConnector = useCallback(() => {
