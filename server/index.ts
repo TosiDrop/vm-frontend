@@ -40,6 +40,7 @@ import {
 } from "./utils";
 import { ICustomRewards } from "./utils/entities";
 import { HttpStatusCode, createErrorWithCode } from "./utils/error";
+import cors from "cors";
 require("dotenv").config();
 const openapi = require("@reqlez/express-openapi");
 const fs = require("fs");
@@ -72,6 +73,7 @@ const app = express();
 app.use(express.json());
 app.use(require("morgan")(LOG_TYPE));
 app.use(oapi);
+app.use(cors({origin: '*'}));
 app.use("/swaggerui", oapi.swaggerui);
 app.use(express.static("../client/build"));
 
