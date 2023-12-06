@@ -18,10 +18,13 @@ export async function getCustomRewards(
   session_id: string,
   selected: string,
   unlock: boolean,
+  native: boolean,
 ): Promise<GetCustomRewards | undefined> {
   const response = await axios.get(
     `/api/getcustomrewards?staking_address=${staking_address}&session_id=${session_id}&selected=${selected}&unlock=${
       unlock ? "true" : "false"
+    }&native=${
+      native ? "true" : "false"
     }`,
   );
   if (response && response.data) {
