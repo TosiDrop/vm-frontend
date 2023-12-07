@@ -530,6 +530,8 @@ app.get(
     } = queryObject;
     let vmArgs = `custom_request&staking_address=${stakeAddress}&session_id=${session_id}&selected=${selected}&xwallet=true`;
     let isWhitelisted = false;
+    let isNativeSelected = false;
+    let isPremiumSelected = false;
 
     if (!stakeAddress) {
       throw createErrorWithCode(
@@ -560,11 +562,23 @@ app.get(
         if (whitelist.includes(accountInfo.delegated_pool)) {
           vmArgs += "&unlocks_special=true";
           isWhitelisted = true;
-        } else {
-          vmArgs += `&overhead_fee=${NATIVE_TOKEN_FEE}&unlocks_special=true`;
         }
       } else {
-        vmArgs += `&overhead_fee=${NATIVE_TOKEN_FEE}&unlocks_special=true`;
+        const claimableTokens = await getRewards(stakeAddress);
+        for (let token of claimableTokens) {
+          if (token.native) {
+            isNativeSelected = true;
+          } else if (token.premium) {
+            // cheeky monkey
+            isPremiumSelected = true;
+          }
+        }
+        if (isNativeSelected && !isPremiumSelected) {
+          vmArgs += `&overhead_fee=${NATIVE_TOKEN_FEE}&unlocks_special=true`;
+        } else {
+          // Do not unlock
+          vmArgs += "&unlocks_special=false";
+        }
       }
     } else {
       vmArgs += "&unlocks_special=false";
