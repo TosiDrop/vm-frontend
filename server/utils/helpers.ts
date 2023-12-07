@@ -255,12 +255,12 @@ export async function getRewards(stakeAddress: string) {
     MinswapService.getPrices(),
   ]);
 
-  if (getRewardsResponse == null) return;
-  if (tokens == null) return;
+  const claimableTokens: ClaimableToken[] = [];
+  if (getRewardsResponse == null) return claimableTokens;
+  if (tokens == null) return claimableTokens;
 
   const consolidatedAvailableReward: { [key: string]: number } = {};
   const consolidatedAvailableRewardPremium: { [key: string]: number } = {};
-  const claimableTokens: ClaimableToken[] = [];
 
   /** handle regular tokens */
   const regularRewards: Record<string, number> = {
