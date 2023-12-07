@@ -23,9 +23,7 @@ export async function getCustomRewards(
   const response = await axios.get(
     `/api/getcustomrewards?staking_address=${staking_address}&session_id=${session_id}&selected=${selected}&unlock=${
       unlock ? "true" : "false"
-    }&native=${
-      native ? "true" : "false"
-    }`,
+    }&native=${native ? "true" : "false"}`,
   );
   if (response && response.data) {
     return response.data;

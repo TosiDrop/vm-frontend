@@ -42,7 +42,11 @@ const ClaimableTokenBox = ({
         <div className="text-sm">{amount} available</div>
         <div className="ml-auto flex flex-row align-center gap-2">
           {/* Disabled <TokenInfoTooltip price={price} total={total}></TokenInfoTooltip> */}
-          {native? <NativefeeTooltip></NativefeeTooltip> : (premium ? <TosifeeTooltip></TosifeeTooltip> : null)}
+          {native ? (
+            <NativefeeTooltip></NativefeeTooltip>
+          ) : premium ? (
+            <TosifeeTooltip></TosifeeTooltip>
+          ) : null}
         </div>
       </div>
       <img alt="logo" src={logo} className="h-24"></img>

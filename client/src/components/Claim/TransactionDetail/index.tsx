@@ -61,7 +61,8 @@ const TransactionDetail = ({
       // unlock
       if (unlock && !isWhitelisted) returnedAda -= settings.tosiFee;
       // only native, charging native fee
-      if (native && !unlock && !isWhitelisted) returnedAda -= settings.nativeFee;
+      if (native && !unlock && !isWhitelisted)
+        returnedAda -= settings.nativeFee;
     }
     return returnedAda;
   };
