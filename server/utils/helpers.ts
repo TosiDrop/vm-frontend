@@ -31,6 +31,7 @@ let Buffer = require("buffer").Buffer;
 const MIN_PAIRS_API =
   process.env.MIN_PAIRS_API ||
   "https://api-mainnet-prod.minswap.org/coinmarketcap/v2/pairs";
+const NATIVE_TOKEN_ID = process.env.NATIVE_TOKEN_ID;
 const VM_API_TOKEN =
   process.env.VM_API_TOKEN_TESTNET || process.env.VM_API_TOKEN;
 const VM_URL = process.env.VM_URL_TESTNET || process.env.VM_URL;
@@ -254,12 +255,12 @@ export async function getRewards(stakeAddress: string) {
     MinswapService.getPrices(),
   ]);
 
-  if (getRewardsResponse == null) return;
-  if (tokens == null) return;
+  const claimableTokens: ClaimableToken[] = [];
+  if (getRewardsResponse == null) return claimableTokens;
+  if (tokens == null) return claimableTokens;
 
   const consolidatedAvailableReward: { [key: string]: number } = {};
   const consolidatedAvailableRewardPremium: { [key: string]: number } = {};
-  const claimableTokens: ClaimableToken[] = [];
 
   /** handle regular tokens */
   const regularRewards: Record<string, number> = {
@@ -316,6 +317,7 @@ export async function getRewards(stakeAddress: string) {
         decimals,
         amount,
         premium: false,
+        native: false,
         price,
         total,
       });
@@ -338,6 +340,7 @@ export async function getRewards(stakeAddress: string) {
         decimals,
         amount,
         premium: true,
+        native: isNativeToken(assetId),
         price,
         total,
       });
@@ -454,6 +457,13 @@ export function parseVmDeliveredRewards(
   }
 
   return Object.values(rewardMap);
+}
+
+export function isNativeToken(assetId: string) {
+  if (NATIVE_TOKEN_ID) {
+    if (assetId === NATIVE_TOKEN_ID) return true;
+  }
+  return false;
 }
 
 export function convertPoolIdToBech32(poolIdInHex: string) {

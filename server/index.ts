@@ -54,6 +54,8 @@ export const TOSIDROP_ADMIN_KEY =
   process.env.TOSIDROP_ADMIN_KEY || "admin key is not set";
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const LOG_TYPE = process.env.LOG_TYPE || "dev";
+const NATIVE_TOKEN_FEE = process.env.NATIVE_TOKEN_FEE || 500000;
+const NATIVE_TOKEN_ID = process.env.NATIVE_TOKEN_ID;
 const PORT = process.env.PORT || 3000;
 const TOSIFEE = process.env.TOSIFEE || 500000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
@@ -73,7 +75,7 @@ const app = express();
 app.use(express.json());
 app.use(require("morgan")(LOG_TYPE));
 app.use(oapi);
-app.use(cors({origin: '*'}));
+app.use(cors({ origin: "*" }));
 app.use("/swaggerui", oapi.swaggerui);
 app.use(express.static("../client/build"));
 
@@ -206,6 +208,8 @@ app.get(
       tosi_fee: Number(TOSIFEE),
       tosi_fee_whitelist: TOSIFEE_WHITELIST,
       claim_enabled: CLAIM_ENABLED,
+      native_token_fee: Number(NATIVE_TOKEN_FEE),
+      native_token_id: NATIVE_TOKEN_ID,
       network: CARDANO_NETWORK,
       ergo_enabled: ERGO_ENABLED,
     };
@@ -466,6 +470,11 @@ app.get(
         in: "query",
         required: false,
       },
+      {
+        name: "native",
+        in: "query",
+        required: false,
+      },
     ],
     responses: {
       200: {
@@ -517,9 +526,12 @@ app.get(
       session_id,
       selected,
       unlock,
+      native,
     } = queryObject;
     let vmArgs = `custom_request&staking_address=${stakeAddress}&session_id=${session_id}&selected=${selected}&xwallet=true`;
     let isWhitelisted = false;
+    let isNativeSelected = false;
+    let isPremiumSelected = false;
 
     if (!stakeAddress) {
       throw createErrorWithCode(
@@ -541,6 +553,32 @@ app.get(
         }
       } else {
         vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
+      }
+    } else if (native === "true") {
+      if (TOSIFEE_WHITELIST) {
+        const whitelist = TOSIFEE_WHITELIST.split(",");
+        const accountsInfo = await getAccountsInfo(`${stakeAddress}`);
+        const accountInfo = accountsInfo[0];
+        if (whitelist.includes(accountInfo.delegated_pool)) {
+          vmArgs += "&unlocks_special=true";
+          isWhitelisted = true;
+        }
+      } else {
+        const claimableTokens = await getRewards(`${stakeAddress}`);
+        for (let token of claimableTokens) {
+          if (token.native) {
+            isNativeSelected = true;
+          } else if (token.premium) {
+            // cheeky monkey
+            isPremiumSelected = true;
+          }
+        }
+        if (isNativeSelected && !isPremiumSelected) {
+          vmArgs += `&overhead_fee=${NATIVE_TOKEN_FEE}&unlocks_special=true`;
+        } else {
+          // Do not unlock
+          vmArgs += "&unlocks_special=false";
+        }
       }
     } else {
       vmArgs += "&unlocks_special=false";
