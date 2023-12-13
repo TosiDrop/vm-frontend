@@ -15,7 +15,7 @@ interface Props {
 
 function WalletSelector({ disconnectWallet, showWalletSelection }: Props) {
   const walletState = useSelector(
-    (state: RootState) => state.wallet.walletState
+    (state: RootState) => state.wallet.walletState,
   );
 
   switch (walletState) {

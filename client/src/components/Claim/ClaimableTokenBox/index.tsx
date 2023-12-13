@@ -1,4 +1,5 @@
-import TokenInfoTooltip from "../TokenInfoTooltip";
+// import TokenInfoTooltip from "../TokenInfoTooltip";
+import NativefeeTooltip from "../NativefeeTooltip";
 import TosifeeTooltip from "../TosifeeTooltip";
 import "./index.scss";
 
@@ -14,6 +15,7 @@ interface Props {
   logo: string;
   assetId: string;
   premium: boolean;
+  native: boolean;
 }
 
 const ClaimableTokenBox = ({
@@ -26,6 +28,7 @@ const ClaimableTokenBox = ({
   amount,
   logo,
   premium,
+  native,
 }: Props) => {
   return (
     <div
@@ -38,8 +41,12 @@ const ClaimableTokenBox = ({
       <div className="w-full flex flex-row items-center">
         <div className="text-sm">{amount} available</div>
         <div className="ml-auto flex flex-row align-center gap-2">
-          <TokenInfoTooltip price={price} total={total}></TokenInfoTooltip>
-          {premium ? <TosifeeTooltip></TosifeeTooltip> : null}
+          {/* Disabled <TokenInfoTooltip price={price} total={total}></TokenInfoTooltip> */}
+          {native ? (
+            <NativefeeTooltip></NativefeeTooltip>
+          ) : premium ? (
+            <TosifeeTooltip></TosifeeTooltip>
+          ) : null}
         </div>
       </div>
       <img alt="logo" src={logo} className="h-24"></img>

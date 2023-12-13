@@ -8,15 +8,15 @@ export default function useTransfer() {
   const [loading, setLoading] = useState(false);
   const { handleError } = useErrorHandler();
   const connectedWalletApi = useSelector(
-    (state: RootState) => state.wallet.walletApi
+    (state: RootState) => state.wallet.walletApi,
   );
   const connectedWalletAddress = useSelector(
-    (state: RootState) => state.wallet.walletAddress
+    (state: RootState) => state.wallet.walletAddress,
   );
 
   async function transfer(
     { toAddress, amountToSend }: { toAddress: string; amountToSend: string },
-    callback?: (txId?: string) => void
+    callback?: (txId?: string) => void,
   ) {
     setLoading(true);
     try {

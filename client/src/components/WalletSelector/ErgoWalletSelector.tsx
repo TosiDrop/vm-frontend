@@ -15,7 +15,7 @@ import WalletSelector from "./WalletSelector";
 export default function ErgoWalletSelector() {
   const dispatch = useDispatch();
   const connectedWallet = useSelector(
-    (state: RootState) => state.wallet.ergoWalletApi
+    (state: RootState) => state.wallet.ergoWalletApi,
   );
   const { connectWallet, disconnectWallet } = useErgoWallet();
   const walletInfoNotConnected = {
@@ -24,10 +24,10 @@ export default function ErgoWalletSelector() {
     isApiConnected: false,
   };
   const [walletInfo, setWalletInfo] = useState<WalletInfo>(
-    walletInfoNotConnected
+    walletInfoNotConnected,
   );
   const [walletState, setWalletState] = useState<WalletState>(
-    WalletState.notConnected
+    WalletState.notConnected,
   );
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function ErgoWalletSelector() {
     dispatch(
       showModal({
         modalType: ModalTypes.ergoWallet,
-      })
+      }),
     );
   };
 

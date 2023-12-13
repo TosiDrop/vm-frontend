@@ -13,7 +13,7 @@ export default function useModal() {
           text: text,
           type: InfoModalTypes.info,
         },
-      })
+      }),
     );
   };
 
@@ -25,7 +25,7 @@ export default function useModal() {
           text: text,
           type: InfoModalTypes.failure,
         },
-      })
+      }),
     );
   };
 
@@ -37,7 +37,7 @@ export default function useModal() {
           text: text,
           type: InfoModalTypes.success,
         },
-      })
+      }),
     );
   };
 

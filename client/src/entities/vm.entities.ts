@@ -81,6 +81,7 @@ export interface ClaimableToken {
   decimals: number;
   amount: number;
   premium: boolean;
+  native: boolean;
   price: string;
   total: string;
   selected?: boolean;

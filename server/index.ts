@@ -40,6 +40,7 @@ import {
 } from "./utils";
 import { ICustomRewards } from "./utils/entities";
 import { HttpStatusCode, createErrorWithCode } from "./utils/error";
+import cors from "cors";
 require("dotenv").config();
 const openapi = require("@reqlez/express-openapi");
 const fs = require("fs");
@@ -53,6 +54,8 @@ export const TOSIDROP_ADMIN_KEY =
   process.env.TOSIDROP_ADMIN_KEY || "admin key is not set";
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const LOG_TYPE = process.env.LOG_TYPE || "dev";
+const NATIVE_TOKEN_FEE = process.env.NATIVE_TOKEN_FEE || 500000;
+const NATIVE_TOKEN_ID = process.env.NATIVE_TOKEN_ID;
 const PORT = process.env.PORT || 3000;
 const TOSIFEE = process.env.TOSIFEE || 500000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
@@ -72,6 +75,7 @@ const app = express();
 app.use(express.json());
 app.use(require("morgan")(LOG_TYPE));
 app.use(oapi);
+app.use(cors({ origin: "*" }));
 app.use("/swaggerui", oapi.swaggerui);
 app.use(express.static("../client/build"));
 
@@ -143,7 +147,7 @@ app.get(
       whitelistedPools: _.shuffle(whitelistedPools),
       regularPools: _.shuffle(regularPools),
     });
-  })
+  }),
 );
 
 app.get(
@@ -152,7 +156,7 @@ app.get(
   typedErrorHandlerWrapper<Dto.GetVmSettings>(async (_, res) => {
     const settings = await getFromVM<VmTypes.Settings>("get_settings");
     return res.status(200).send(settings);
-  })
+  }),
 );
 
 app.get(
@@ -161,7 +165,7 @@ app.get(
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const systeminfo = await getFromVM("system_info");
     return res.status(200).send(systeminfo);
-  })
+  }),
 );
 
 app.get(
@@ -170,7 +174,7 @@ app.get(
     res.status(200).json({
       status: "UP",
     });
-  })
+  }),
 );
 
 app.get(
@@ -194,7 +198,7 @@ app.get(
         status: "UP",
       });
     }
-  })
+  }),
 );
 
 app.get(
@@ -204,12 +208,14 @@ app.get(
       tosi_fee: Number(TOSIFEE),
       tosi_fee_whitelist: TOSIFEE_WHITELIST,
       claim_enabled: CLAIM_ENABLED,
+      native_token_fee: Number(NATIVE_TOKEN_FEE),
+      native_token_id: NATIVE_TOKEN_ID,
       network: CARDANO_NETWORK,
       ergo_enabled: ERGO_ENABLED,
     };
 
     return res.status(200).send(features);
-  })
+  }),
 );
 
 app.get(
@@ -267,7 +273,7 @@ app.get(
     if (!VM_KOIOS_URL) {
       throw createErrorWithCode(
         HttpStatusCode.INTERNAL_SERVER_ERROR,
-        "KOIOS URL is not defined"
+        "KOIOS URL is not defined",
       );
     }
 
@@ -281,7 +287,7 @@ app.get(
     if (!address) {
       throw createErrorWithCode(
         HttpStatusCode.BAD_REQUEST,
-        "Address seems invalid"
+        "Address seems invalid",
       );
     }
 
@@ -293,7 +299,7 @@ app.get(
         translatedAddress = await translateAdaHandle(
           address,
           CARDANO_NETWORK,
-          VM_KOIOS_URL
+          VM_KOIOS_URL,
         );
         address = translatedAddress;
         break;
@@ -301,7 +307,7 @@ app.get(
         if (CARDANO_NETWORK === CardanoNetwork.mainnet) {
           throw createErrorWithCode(
             HttpStatusCode.BAD_REQUEST,
-            "Inserted address is for a testnet"
+            "Inserted address is for a testnet",
           );
         }
         break;
@@ -309,7 +315,7 @@ app.get(
         if (CARDANO_NETWORK === CardanoNetwork.preview) {
           throw createErrorWithCode(
             HttpStatusCode.BAD_REQUEST,
-            "Inserted address is for a mainnet"
+            "Inserted address is for a mainnet",
           );
         }
         break;
@@ -319,7 +325,7 @@ app.get(
       default:
         throw createErrorWithCode(
           HttpStatusCode.BAD_REQUEST,
-          "Address seems invalid"
+          "Address seems invalid",
         );
     }
 
@@ -340,7 +346,7 @@ app.get(
     rewardAddressBytes.set(baseAddress.stake_cred().to_bytes().slice(4, 32), 1);
 
     let rewardAddress = RewardAddress.from_address(
-      Address.from_bytes(rewardAddressBytes)
+      Address.from_bytes(rewardAddressBytes),
     );
 
     if (rewardAddress == null) return null;
@@ -348,7 +354,7 @@ app.get(
     return res.send({
       staking_address: rewardAddress.to_address().to_bech32(),
     });
-  })
+  }),
 );
 
 /**
@@ -413,7 +419,7 @@ app.get(
     if (!stakeAddress) {
       throw createErrorWithCode(
         HttpStatusCode.BAD_REQUEST,
-        "Address is required"
+        "Address is required",
       );
     }
 
@@ -436,7 +442,7 @@ app.get(
     };
 
     return res.send(consolidatedGetRewards);
-  })
+  }),
 );
 
 app.get(
@@ -461,6 +467,11 @@ app.get(
       },
       {
         name: "unlock",
+        in: "query",
+        required: false,
+      },
+      {
+        name: "native",
         in: "query",
         required: false,
       },
@@ -515,14 +526,17 @@ app.get(
       session_id,
       selected,
       unlock,
+      native,
     } = queryObject;
     let vmArgs = `custom_request&staking_address=${stakeAddress}&session_id=${session_id}&selected=${selected}&xwallet=true`;
     let isWhitelisted = false;
+    let isNativeSelected = false;
+    let isPremiumSelected = false;
 
     if (!stakeAddress) {
       throw createErrorWithCode(
         HttpStatusCode.BAD_REQUEST,
-        "Address is required"
+        "Address is required",
       );
     }
 
@@ -539,6 +553,32 @@ app.get(
         }
       } else {
         vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
+      }
+    } else if (native === "true") {
+      if (TOSIFEE_WHITELIST) {
+        const whitelist = TOSIFEE_WHITELIST.split(",");
+        const accountsInfo = await getAccountsInfo(`${stakeAddress}`);
+        const accountInfo = accountsInfo[0];
+        if (whitelist.includes(accountInfo.delegated_pool)) {
+          vmArgs += "&unlocks_special=true";
+          isWhitelisted = true;
+        }
+      } else {
+        const claimableTokens = await getRewards(`${stakeAddress}`);
+        for (let token of claimableTokens) {
+          if (token.native) {
+            isNativeSelected = true;
+          } else if (token.premium) {
+            // cheeky monkey
+            isPremiumSelected = true;
+          }
+        }
+        if (isNativeSelected && !isPremiumSelected) {
+          vmArgs += `&overhead_fee=${NATIVE_TOKEN_FEE}&unlocks_special=true`;
+        } else {
+          // Do not unlock
+          vmArgs += "&unlocks_special=false";
+        }
       }
     } else {
       vmArgs += "&unlocks_special=false";
@@ -559,7 +599,7 @@ app.get(
     };
 
     return res.send(customReward);
-  })
+  }),
 );
 
 app.get(
@@ -612,26 +652,26 @@ app.get(
   errorHandlerWrapper(
     async (
       req: Request,
-      res: Response<GetDeliveredRewardsDto | ServerErrorDto>
+      res: Response<GetDeliveredRewardsDto | ServerErrorDto>,
     ) => {
       const queryObject = url.parse(req.url, true).query;
       const { staking_address: stakingAddress } = queryObject;
       if (!stakingAddress) {
         throw createErrorWithCode(
           HttpStatusCode.BAD_REQUEST,
-          "Address is required"
+          "Address is required",
         );
       }
 
       const deliveredRewards = await getDeliveredRewards(
-        stakingAddress as string
+        stakingAddress as string,
       );
 
       return res.status(200).send({
         deliveredRewards,
       });
-    }
-  )
+    },
+  ),
 );
 
 app.get(
@@ -694,22 +734,22 @@ app.get(
     if (!request_id) {
       throw createErrorWithCode(
         HttpStatusCode.BAD_REQUEST,
-        "Request ID is required"
+        "Request ID is required",
       );
     }
 
     if (!session_id) {
       throw createErrorWithCode(
         HttpStatusCode.BAD_REQUEST,
-        "Session ID is required"
+        "Session ID is required",
       );
     }
 
     const txStatus = await getFromVM(
-      `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`
+      `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`,
     );
     return res.send(txStatus);
-  })
+  }),
 );
 
 app.get(
@@ -764,14 +804,14 @@ app.get(
     if (!queryObject.txHash) {
       throw createErrorWithCode(
         HttpStatusCode.BAD_REQUEST,
-        "Tx hash is invalid"
+        "Tx hash is invalid",
       );
     }
     const getTransactionStatusResponse = await postFromKoios<
       TransactionStatus[]
     >(`tx_status`, { _tx_hashes: [queryObject.txHash] });
     return res.send(getTransactionStatusResponse);
-  })
+  }),
 );
 
 app.get(
@@ -785,7 +825,7 @@ app.get(
           ? getTipResponse[0].abs_slot
           : 0,
     });
-  })
+  }),
 );
 
 app.get(
@@ -799,7 +839,7 @@ app.get(
           ? getTipResponse[0].block_no
           : 0,
     });
-  })
+  }),
 );
 
 app.get(
@@ -808,7 +848,7 @@ app.get(
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     res.send(getTipResponse[0]);
-  })
+  }),
 );
 
 app.get(
@@ -817,10 +857,10 @@ app.get(
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     const getEpochParamsResponse = await getEpochParams(
-      getTipResponse && getTipResponse.length ? getTipResponse[0].epoch_no : 0
+      getTipResponse && getTipResponse.length ? getTipResponse[0].epoch_no : 0,
     );
     return res.send(getEpochParamsResponse);
-  })
+  }),
 );
 
 app.get(
@@ -828,10 +868,10 @@ app.get(
   oapi.path(resp200Ok),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const projects = JSON.parse(
-      fs.readFileSync(__dirname + "/public/json/projects.json", "utf8")
+      fs.readFileSync(__dirname + "/public/json/projects.json", "utf8"),
     );
     return res.status(200).send(projects);
-  })
+  }),
 );
 
 app.get(
@@ -839,10 +879,10 @@ app.get(
   oapi.path(resp200Ok),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const popupInfo = JSON.parse(
-      fs.readFileSync(__dirname + "/public/json/popup.json", "utf8")
+      fs.readFileSync(__dirname + "/public/json/popup.json", "utf8"),
     );
     return res.status(200).send(popupInfo);
-  })
+  }),
 );
 
 app.get(
@@ -850,7 +890,7 @@ app.get(
   errorHandlerWrapper(async (_req: Request, res: Response<GetQueueDto>) => {
     const queue: GetQueueDto = await getFromVM("get_pending_tx_count");
     return res.status(200).send(queue);
-  })
+  }),
 );
 
 // host static files such as images
@@ -861,7 +901,7 @@ app.get(
   "*",
   errorHandlerWrapper((_req: Request, res: Response) => {
     return res.sendFile("client/build/index.html", { root: "../" });
-  })
+  }),
 );
 
 const server = app.listen(PORT, () => {

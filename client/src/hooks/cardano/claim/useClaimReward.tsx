@@ -16,10 +16,10 @@ export default function useClaimReward() {
   const { handleError } = useErrorHandler();
   const { showInfoModal } = useModal();
   const connectedWalletAddress = useSelector(
-    (state: RootState) => state.wallet.walletAddress
+    (state: RootState) => state.wallet.walletAddress,
   );
   const isWrongNetwork = useSelector(
-    (state: RootState) => state.wallet.isWrongNetwork
+    (state: RootState) => state.wallet.isWrongNetwork,
   );
 
   const [searchAddress, setSearchAddress] = useState("");
@@ -43,7 +43,7 @@ export default function useClaimReward() {
           agg += 1;
         }
         return agg;
-      }, 0)
+      }, 0),
     );
   }, [claimableTokens]);
 
@@ -56,7 +56,7 @@ export default function useClaimReward() {
     ) {
       showInfoModal(
         `You have selected the maximum number of tokens to claim (${maxTokenSelected}).
-         Please deselect other tokens first`
+         Please deselect other tokens first`,
       );
       return;
     }
@@ -86,7 +86,7 @@ export default function useClaimReward() {
     const updatedClaimableTokens = [...claimableTokens];
     updatedClaimableTokens.forEach((token) => (token.selected = false));
     positions.forEach(
-      (position) => (updatedClaimableTokens[position].selected = true)
+      (position) => (updatedClaimableTokens[position].selected = true),
     );
 
     setClaimableTokens(updatedClaimableTokens);
@@ -133,7 +133,7 @@ export default function useClaimReward() {
             } else {
               return a.premium ? -1 : 1;
             }
-          })
+          }),
       );
       setPoolInfo(getRewardsResponse.pool_info);
       setIsCheckRewardLoading(false);
@@ -148,12 +148,15 @@ export default function useClaimReward() {
     if (numberOfSelectedTokens === 0) return;
 
     setIsClaimRewardLoading(true);
+    let selectedNativeToken = false;
     let selectedPremiumToken = false;
 
     const selectedTokenId: string[] = [];
     claimableTokens.forEach((token) => {
       if (token.selected) {
-        if (token.premium) {
+        if (token.native) {
+          selectedNativeToken = true;
+        } else if (token.premium) {
           selectedPremiumToken = true;
         }
         selectedTokenId.push(token.assetId);
@@ -165,11 +168,12 @@ export default function useClaimReward() {
         stakeAddress,
         stakeAddress.slice(0, 40),
         selectedTokenId.join(","),
-        selectedPremiumToken
+        selectedPremiumToken,
+        selectedNativeToken,
       );
       if (res == null) throw new Error();
 
-      let depositInfoUrl = `${PageRoute.depositCardano}?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}&isWhitelisted=${res.is_whitelisted}`;
+      let depositInfoUrl = `${PageRoute.depositCardano}?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}&native=${selectedNativeToken}&isWhitelisted=${res.is_whitelisted}`;
       navigate(depositInfoUrl, { replace: true });
     } catch (e) {
       handleError(e);

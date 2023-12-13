@@ -39,7 +39,7 @@ export const walletSlice = createSlice({
             walletAddress: string;
           }
         | undefined
-      >
+      >,
     ) => {
       state.wallet = action.payload?.wallet;
       state.walletApi = action.payload?.walletApi;
@@ -47,7 +47,7 @@ export const walletSlice = createSlice({
     },
     setWalletState: (
       state,
-      action: PayloadAction<CardanoTypes.WalletState>
+      action: PayloadAction<CardanoTypes.WalletState>,
     ) => {
       state.walletState = action.payload;
     },

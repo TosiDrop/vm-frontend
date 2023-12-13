@@ -23,6 +23,7 @@ enum QueryKey {
   requestId = "requestId",
   isWhitelisted = "isWhitelisted",
   unlock = "unlock",
+  native = "native",
 }
 
 export enum TransactionStatusDetail {
@@ -45,6 +46,7 @@ const DepositInfoPage = () => {
   const isWhitelisted =
     searchParams.get(QueryKey.isWhitelisted) === "true" ? true : false;
   const unlock = searchParams.get(QueryKey.unlock) === "true" ? true : false;
+  const native = searchParams.get(QueryKey.native) === "true" ? true : false;
 
   const [txDetail, setTxDetail] = useState<GetCustomRewards>({
     deposit: 0,
@@ -70,7 +72,7 @@ const DepositInfoPage = () => {
        */
       const txStatus: TransactionStatus = await getTxStatus(
         requestId,
-        stakeAddress.slice(0, 40)
+        stakeAddress.slice(0, 40),
       );
 
       /**
@@ -133,6 +135,7 @@ const DepositInfoPage = () => {
         setTransactionId={setTransactionId}
         setTransactionStatus={setTransactionStatus}
         unlock={unlock}
+        native={native}
       ></DepositInfo>
     </>
   ) : null;

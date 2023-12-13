@@ -36,7 +36,7 @@ export default function useErgoWallet() {
   };
 
   const connectNautilus = async (
-    ergoConnector: ErgoConnector
+    ergoConnector: ErgoConnector,
   ): Promise<NautilusErgoWalletApi> => {
     const nautilus = ergoConnector.nautilus;
     if (nautilus == null)

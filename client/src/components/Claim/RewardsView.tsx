@@ -88,6 +88,7 @@ export default function RewardsView({
                 logo={token.logo}
                 assetId={token.assetId}
                 premium={token.premium}
+                native={token.native}
               />
             );
           })}

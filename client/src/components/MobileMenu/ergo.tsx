@@ -124,7 +124,7 @@ export default function MobileMenuErgo() {
                 key={socialMediaItem.url}
                 socialMediaItem={socialMediaItem}
               />
-            )
+            ),
           )}
         </div>
       </div>

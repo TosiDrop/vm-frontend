@@ -58,7 +58,7 @@ export const globalSlice = createSlice({
       action: PayloadAction<{
         modalType: ModalTypes;
         details?: InfoModalDetails;
-      }>
+      }>,
     ) => {
       const { modalType, details } = action.payload;
       switch (modalType) {
