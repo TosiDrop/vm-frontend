@@ -74,7 +74,7 @@ function Dashboard() {
           }
         );
         const jsonData = await response.json();
-        setPriceData(jsonData.price_ba * 1000000 * 1000);
+        setPriceData(jsonData.price_ba * 1000000000);
       } catch (error) {
         console.error("Error fetching price data:", error);
       }
