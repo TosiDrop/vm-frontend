@@ -13,6 +13,7 @@ import {
   faMessage,
   faProjectDiagram,
   faWallet,
+  faTableColumns,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useLocation } from "react-router-dom";
@@ -75,12 +76,12 @@ export const menuItems: Record<string, MenuItem> = {
     activeRoute: [PageRoute.poolsCardano],
     icon: faCubesStacked,
   },
-  // dashboard: {
-  //   text: "Dashboard",
-  //   to: PageRoute.dashboardCardano,
-  //   activeRoute: [PageRoute.dashboardCardano],
-  //   icon: faTableColumns,
-  // },
+  dashboard: {
+    text: "Dashboard",
+    to: PageRoute.dashboardCardano,
+    activeRoute: [PageRoute.dashboardCardano],
+    icon: faTableColumns,
+  },
   feedback: {
     text: "Feedback",
     to: PageRoute.feedback,
@@ -158,7 +159,7 @@ export default function MenuCardano() {
                     key={socialMediaItem.url}
                     socialMediaItem={socialMediaItem}
                   />
-                ),
+                )
               )}
             </div>
           </div>

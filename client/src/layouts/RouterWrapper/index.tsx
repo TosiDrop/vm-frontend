@@ -7,12 +7,13 @@ import DepositInfoPage from "src/pages/Cardano/Deposit";
 import Pools from "src/pages/Cardano/Pools";
 import Projects from "src/pages/Cardano/Projects";
 import ComingSoonPage from "src/pages/ComingSoon";
+import Dashboard from "src/pages/Dashboard";
 import Feedback from "src/pages/Feedback";
 import { RootState } from "src/store";
 
 export default function RouterWrapper() {
   const ergoEnabled = useSelector(
-    (state: RootState) => state.global.ergoEnabled,
+    (state: RootState) => state.global.ergoEnabled
   );
   return (
     <Routes>
@@ -20,6 +21,7 @@ export default function RouterWrapper() {
       <Route path={PageRoute.historyCardano} element={<ClaimHistory />} />
       <Route path={PageRoute.depositCardano} element={<DepositInfoPage />} />
       <Route path={PageRoute.projectsCardano} element={<Projects />} />
+      <Route path={PageRoute.dashboardCardano} element={<Dashboard />} />
       <Route path={PageRoute.poolsCardano} element={<Pools />} />
       <Route path={PageRoute.feedback} element={<Feedback />} />
 
