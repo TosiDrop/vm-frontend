@@ -18,3 +18,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.line-gradient {
+  background: linear-gradient(to right, #3b64de, #5a7cc7);
+}
+
+.progress-color::-webkit-progress-value {
+  background-color: #1eff6a;
+  border-radius: 1rem;
+}
+
+.progress-color::-webkit-progress-bar {
+  background-color: #000000;
+}
