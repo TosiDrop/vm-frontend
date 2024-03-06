@@ -10,7 +10,6 @@ import { Blockchain, Themes } from "src/entities/common.entities";
 import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
 import { RootState } from "src/store";
 import Banner from "../Banner";
-import BlockchainSelector from "../BlockchainSelector";
 import CardanoWalletSelector from "../WalletSelector/CardanoWalletSelector";
 import ErgoWalletSelector from "../WalletSelector/ErgoWalletSelector";
 
@@ -19,7 +18,7 @@ function Header() {
   const theme = useSelector((state: RootState) => state.global.theme);
   const chain = useSelector((state: RootState) => state.global.chain);
   const connectedWallet = useSelector(
-    (state: RootState) => state.wallet.walletApi,
+    (state: RootState) => state.wallet.walletApi
   );
 
   const RenderWalletConnector = useCallback(() => {
@@ -47,7 +46,6 @@ function Header() {
           </div>
         </Link>
         <div className="flex flex-row gap-4 items-center ml-auto">
-          <BlockchainSelector isMobile={false}></BlockchainSelector>
           <RenderWalletConnector></RenderWalletConnector>
           <button
             className="background rounded-lg px-5 py-2.5"
@@ -59,15 +57,7 @@ function Header() {
       </div>
 
       {/* Mobile header */}
-      <div className="w-full flex flex-row items-center justify-center p-5 pb-0 h-fit sm:hidden">
-        <div className="flex flex-row items-center mr-auto w-14">
-          <button
-            className="background rounded-lg py-2.5 w-full"
-            onClick={() => dispatch(toggleMenu())}
-          >
-            <FontAwesomeIcon icon={faBars} />
-          </button>
-        </div>
+      <div className="w-full flex flex-row items-center justify-between p-5 pb-0 h-fit sm:hidden">
         <div>
           <img
             src={theme === Themes.dark ? logoDark : logoLight}
@@ -75,8 +65,18 @@ function Header() {
             alt="tosidrop logo"
           ></img>
         </div>
-        <div className="w-14 h-full ml-auto">
-          <BlockchainSelector isMobile={true}></BlockchainSelector>
+        <div className="flex gap-4">
+          <div className="flex flex-row items-center mr-auto w-14">
+            <button
+              className="background rounded-lg py-2.5 w-full"
+              onClick={() => dispatch(toggleMenu())}
+            >
+              <FontAwesomeIcon icon={faBars} />
+            </button>
+          </div>
+          <div className="h-full ml-auto">
+            <RenderWalletConnector></RenderWalletConnector>
+          </div>
         </div>
       </div>
     </>
