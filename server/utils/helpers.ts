@@ -98,7 +98,7 @@ export async function translateAdaHandle(
     policyId: string,
     koiosUrl: string,
   ) {
-    const url = `${koiosUrl}/asset_address_list?_asset_policy=${policyId}&_asset_name=${handleInHex}`;
+    const url = `${koiosUrl}/asset_addresses?_asset_policy=${policyId}&_asset_name=${handleInHex}`;
 
     const data = (await axios.get(url)).data;
 
