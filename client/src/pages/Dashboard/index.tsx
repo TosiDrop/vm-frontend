@@ -25,7 +25,7 @@ function Dashboard() {
         const baseDate = new Date(Date.UTC(2024, 1, 14, 21, 45));
         const difference = today.getTime() - baseDate.getTime();
         const intervalsSinceBase = Math.floor(
-          difference / (5 * 24 * 60 * 60 * 1000)
+          difference / (5 * 24 * 60 * 60 * 1000),
         );
 
         const nextInterval =
@@ -40,10 +40,10 @@ function Dashboard() {
       const timeDifference = nextFiveDayInterval.getTime() - today.getTime();
       const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
       const hoursDifference = Math.floor(
-        (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
       );
       const minutesDifference = Math.floor(
-        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+        (timeDifference % (1000 * 60 * 60)) / (1000 * 60),
       );
 
       setCountdown({
@@ -71,7 +71,7 @@ function Dashboard() {
               "X-Partner-Id":
                 "tosidrop616464723171396b347435723668783279366577636b65746a6b6167376e736e79643539747278326e72376d7435396c34737138386568717166666e70616c6d74666d736c6d6e707a6764776b643979717132663464653566326371716e733373676d6d74766cda39a3ee5e6b4b0d3255bfef95601890afd80709",
             },
-          }
+          },
         );
         const jsonData = await response.json();
         setPriceData(jsonData.price_ba * 1000000000);
