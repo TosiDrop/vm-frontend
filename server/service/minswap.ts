@@ -20,8 +20,8 @@ export namespace MinswapService {
             url: MIN_PAIRS_API,
             timeout: 10000,
           };
-        // prices = (await axios(axiosRequestConfig)).data;
-        // shortTermCache.set("prices", prices);
+        prices = (await axios(axiosRequestConfig)).data;
+        shortTermCache.set("prices", prices);
       } catch (error: unknown) {
         LoggerService.warn("Fail to fetch price info from minswap");
         prices = {};
