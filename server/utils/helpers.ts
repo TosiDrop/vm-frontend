@@ -169,7 +169,7 @@ export async function postPoolInfo(pools: string[]) {
 }
 
 export async function getPools() {
-  let pools: GetPools | undefined = longTermCache.get("pools");
+  let pools = longTermCache.get("pools") as GetPools;
   if (pools == null) {
     pools = await getFromVM<GetPools>("get_pools");
     Object.values(pools).forEach((pool) => {
@@ -189,7 +189,7 @@ export async function getTokens(options?: {
     tokenInfo = await getFromVM<VmTokenInfoMap>("get_tokens");
     longTermCache.set("tokenInfo", tokenInfo);
   } else {
-    const tempTokenInfo = longTermCache.get<VmTokenInfoMap>("tokenInfo");
+    const tempTokenInfo = longTermCache.get("tokenInfo") as VmTokenInfoMap;
     if (tempTokenInfo == null) {
       tokenInfo = await getFromVM<VmTokenInfoMap>("get_tokens");
       longTermCache.set("tokenInfo", tokenInfo);
