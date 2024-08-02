@@ -29,7 +29,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           flavor: |
             latest=false
@@ -40,7 +40,7 @@ jobs:
             # tag the sha version unless we are a git tag
             type=sha,enable=${{ !startsWith(github.ref, 'refs/tags/v') }},priority=300,format=long,prefix=
       - id: meta-arch
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           flavor: |
             latest=false
@@ -98,7 +98,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           flavor: |
             latest=false
@@ -109,7 +109,7 @@ jobs:
             # tag the sha version unless we are a git tag
             type=sha,enable=${{ !startsWith(github.ref, 'refs/tags/v') }},priority=300,format=long,prefix=
       - id: meta-arch
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           flavor: |
             latest=false
@@ -166,7 +166,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           flavor: |
             latest=false
