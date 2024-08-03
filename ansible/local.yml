@@ -1,27 +1,28 @@
 ---
-- hosts: all
+- name: Node Playbook
+  hosts: all
   gather_facts: true
   become: true
   vars:
     manage_datadog: "{{ MANAGE_DATADOG | default('false') }}"
     manage_docker: "{{ MANAGE_DOCKER | default('true') }}"
   tasks:
-    - name: nodePlaybook | Update apt cache
-      apt:
+    - name: NodePlaybook | Update Apt Cache
+      ansible.builtin.apt:
         update_cache: true
         cache_valid_time: '{{ 60 * 60 * 24 }}'
       tags:
         - always
       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-    - name: nodePlaybook | Include geerlingguy.docker role
-      include_role:
+    - name: NodePlaybook | Include Geerlingguy Docker Role
+      ansible.builtin.include_role:
         name: geerlingguy.docker
         apply:
           tags:
             - docker
       vars:
-        docker_apt_arch: "{{ { 'aarch64': 'arm64', 'x86_64': 'amd64' }[ansible_facts.architecture] }}"
+        docker_apt_arch: "{{ {'aarch64': 'arm64', 'x86_64': 'amd64'}[ansible_facts.architecture] }}"
         docker_compose_version: "v2.2.3"
         docker_users: "{{ DOCKER_USERS | default(['ubuntu']) }}"
         docker_daemon_options:
@@ -30,8 +31,8 @@
         - always
       when: manage_docker | bool
 
-    - name: nodePlaybook | install DataDog
-      include_role:
+    - name: NodePlaybook | Install DataDog
+      ansible.builtin.include_role:
         name: datadog.datadog
         apply:
           tags:
@@ -57,8 +58,8 @@
           tags:
             - product:tosidrop
 
-    - name: nodePlaybook | include vm_frontend role
-      include_role:
+    - name: NodePlaybook | Include VM Frontend Role
+      ansible.builtin.include_role:
         name: vm_frontend
         apply:
           tags:

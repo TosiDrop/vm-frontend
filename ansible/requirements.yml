@@ -1,6 +1,7 @@
 # Collections
 collections:
   - name: community.general
+  - name: community.docker
 # From Galaxy
 roles:
   - src: datadog.datadog
