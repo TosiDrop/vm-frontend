@@ -56,7 +56,7 @@ jobs:
           echo "const version = \"${{ steps.meta.outputs.version }}\";" > client/src/version.ts
           echo "export default version;" >> client/src/version.ts
       - name: push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
@@ -125,7 +125,7 @@ jobs:
           echo "const version = \"${{ steps.meta.outputs.version }}\";" > client/src/version.ts
           echo "export default version;" >> client/src/version.ts
       - name: push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
