@@ -13,7 +13,7 @@ import { RootState } from "src/store";
 
 export default function RouterWrapper() {
   const ergoEnabled = useSelector(
-    (state: RootState) => state.global.ergoEnabled
+    (state: RootState) => state.global.ergoEnabled,
   );
   return (
     <Routes>
