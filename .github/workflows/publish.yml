@@ -9,7 +9,7 @@ concurrency: ${{ github.ref }}
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: tosidrop/vm-frontend
+  IMAGE_NAME: ${{ github.repository == 'TosiDrop/vm-frontend' && 'tosidrop/vm-frontend' || github.repository }}
 
 jobs:
   build-amd64:
