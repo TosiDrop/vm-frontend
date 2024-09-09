@@ -30,7 +30,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.19.2",
     "lodash": "^4.17.21",
-    "lru-cache": "^7.14.1",
+    "lru-cache": "^11.0.1",
     "morgan": "^1.10.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2",
