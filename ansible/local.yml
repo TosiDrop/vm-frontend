@@ -44,6 +44,13 @@
         datadog_additional_groups:
           - docker
         datadog_checks:
+          # Configure openmetrics for db-sync
+          openmetrics:
+            instances:
+              - prometheus_url: http://localhost:8080/
+                metrics:
+                  - cardano*
+                namespace: "cardano"
           # Configure haproxy to detect Koios frontend
           haproxy:
             instances:
