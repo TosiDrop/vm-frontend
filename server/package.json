@@ -33,7 +33,7 @@
     "lru-cache": "^7.14.1",
     "morgan": "^1.10.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.3.2",
+    "typescript": "^5.7.2",
     "validator": "^13.11.0"
   },
   "devDependencies": {
