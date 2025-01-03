@@ -67,7 +67,7 @@ fi
 # From here on out, bail on failure
 set -e
 . ${__repo}/.venv/bin/activate
-pip install ansible==5.1.0 docker requests
+pip install ansible docker requests
 ansible-galaxy install -r ${__repo}/ansible/requirements.yml
 ansible-playbook ${__repo}/ansible/local.yml \
 	-e REPO=${__repo} \
