@@ -5,14 +5,16 @@ import { Dto, GetPoolsDto, GetQueueDto } from "src/entities/dto";
 import { EpochParams, Tip } from "src/entities/koios.entities";
 import { ProjectData } from "src/entities/project.entities";
 
+const API_URL = process.env.REACT_APP_CLAIM_API || "http://localhost:3000"
+
 export async function getFeatures() {
-  const response = await axios.get(`/features`);
+  const response = await axios.get(`${API_URL}/features`);
   return response.data;
 }
 
 export async function getSettings(): Promise<Dto.GetVmSettings["response"]> {
   const response =
-    await axios.get<Dto.GetVmSettings["response"]>(`/api/getsettings`);
+    await axios.get<Dto.GetVmSettings["response"]>(`${API_URL}/api/getsettings`);
   return response.data;
 }
 
@@ -20,12 +22,12 @@ export async function getStakeKey(addr: string) {
   if (addr.slice(0, 5) === "stake") {
     return { staking_address: addr };
   }
-  const response = await axios.get(`/api/getstakekey?address=${addr}`);
+  const response = await axios.get(`${API_URL}/api/getstakekey?address=${addr}`);
   return response.data;
 }
 
 export async function getBlock(): Promise<{ block_no: number }> {
-  const response = await axios.get(`/api/getblock`);
+  const response = await axios.get(`${API_URL}/api/getblock`);
   if (response && response.data) {
     return response.data;
   }
@@ -33,12 +35,12 @@ export async function getBlock(): Promise<{ block_no: number }> {
 }
 
 export async function getEpochParams(): Promise<EpochParams> {
-  const response = await axios.get(`/api/getepochparams`);
+  const response = await axios.get(`${API_URL}/api/getepochparams`);
   return response.data[0];
 }
 
 export async function getNetworkId(): Promise<CardanoTypes.NetworkId> {
-  const response = await axios.get(`/features`);
+  const response = await axios.get(`${API_URL}/features`);
   if (response && response.data) {
     if (response.data.network === "preview") {
       return CardanoTypes.NetworkId.preview;
@@ -49,27 +51,27 @@ export async function getNetworkId(): Promise<CardanoTypes.NetworkId> {
 }
 
 export async function getProjects(): Promise<ProjectData[]> {
-  const response = await axios.get(`/api/getprojects`);
+  const response = await axios.get(`${API_URL}/api/getprojects`);
   return response.data;
 }
 
 export async function getPopUpInfo(): Promise<PopUpInfo> {
-  const response = await axios.get(`/api/getpopupinfo`);
+  const response = await axios.get(`${API_URL}/api/getpopupinfo`);
   return response.data;
 }
 
 export async function getPools(): Promise<GetPoolsDto> {
-  const response = await axios.get(`/api/getpools`);
+  const response = await axios.get(`${API_URL}/api/getpools`);
   return response.data;
 }
 
 export async function getTip(): Promise<Tip> {
-  const response = await axios.get(`/api/gettip`);
+  const response = await axios.get(`${API_URL}/api/gettip`);
   return response.data;
 }
 
 export async function getQueue(): Promise<GetQueueDto> {
-  const response = await axios.get(`/api/getqueue`);
+  const response = await axios.get(`${API_URL}/api/getqueue`);
   return response.data;
 }
 
@@ -77,7 +79,7 @@ export async function createStakeTx(
   params: Dto.CreateDelegationTx["body"],
 ): Promise<Dto.CreateDelegationTx["response"]> {
   const response = await axios.post<Dto.CreateDelegationTx["response"]>(
-    `/api/tx/delegate`,
+    `${API_URL}/api/tx/delegate`,
     params,
   );
   return response.data;
@@ -87,7 +89,7 @@ export async function createTransferTx(
   params: Dto.CreateTransferTx["body"],
 ): Promise<Dto.CreateTransferTx["response"]> {
   const response = await axios.post<Dto.CreateTransferTx["response"]>(
-    `/api/tx/transfer`,
+    `${API_URL}/api/tx/transfer`,
     params,
   );
   return response.data;
@@ -97,7 +99,7 @@ export async function submitStakeTx(
   params: Dto.SubmitTx["body"],
 ): Promise<Dto.SubmitTx["response"]> {
   const response = await axios.post<Dto.SubmitTx["response"]>(
-    `/api/tx/submit`,
+    `${API_URL}/api/tx/submit`,
     params,
   );
   return response.data;
@@ -109,7 +111,7 @@ export async function getBech32Address({
   Dto.GetBech32Address["response"]["addressInBech32"]
 > {
   const response = await axios.get<Dto.GetBech32Address["response"]>(
-    `/api/util/bech32-address?addressInHex=${addressInHex}`,
+    `${API_URL}/api/util/bech32-address?addressInHex=${addressInHex}`,
   );
   return response.data.addressInBech32;
 }
@@ -118,6 +120,6 @@ export async function getBannerText(): Promise<
   Dto.GetBannerText["response"]["text"]
 > {
   const response =
-    await axios.get<Dto.GetBannerText["response"]>(`/api/admin/banner`);
+    await axios.get<Dto.GetBannerText["response"]>(`${API_URL}/api/admin/banner`);
   return response.data.text;
 }
