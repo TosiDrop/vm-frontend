@@ -5,5 +5,5 @@ docker run --rm -ti \
 	--workdir /code \
 	--user $(id -u) \
 	--entrypoint bash \
-	node:18 \
+	node:23 \
 	-c 'cd client && npm run format && cd ../server && npx prettier --write .'
