@@ -4,11 +4,11 @@ import { PageRoute } from "src/entities/common.entities";
 import Claim from "src/pages/Cardano/Claim";
 import ClaimHistory from "src/pages/Cardano/ClaimHistory";
 import DepositInfoPage from "src/pages/Cardano/Deposit";
-import Pools from "src/pages/Cardano/Pools";
-import Projects from "src/pages/Cardano/Projects";
+// import Pools from "src/pages/Cardano/Pools";
+// import Projects from "src/pages/Cardano/Projects";
 import ComingSoonPage from "src/pages/ComingSoon";
-import Dashboard from "src/pages/Dashboard";
-import Feedback from "src/pages/Feedback";
+// import Dashboard from "src/pages/Dashboard";
+// import Feedback from "src/pages/Feedback";
 import { RootState } from "src/store";
 
 export default function RouterWrapper() {
@@ -20,10 +20,10 @@ export default function RouterWrapper() {
       <Route path={PageRoute.claimCardano} element={<Claim />} />
       <Route path={PageRoute.historyCardano} element={<ClaimHistory />} />
       <Route path={PageRoute.depositCardano} element={<DepositInfoPage />} />
-      <Route path={PageRoute.projectsCardano} element={<Projects />} />
+      {/* Disabled routes <Route path={PageRoute.projectsCardano} element={<Projects />} />
       <Route path={PageRoute.dashboardCardano} element={<Dashboard />} />
       <Route path={PageRoute.poolsCardano} element={<Pools />} />
-      <Route path={PageRoute.feedback} element={<Feedback />} />
+      <Route path={PageRoute.feedback} element={<Feedback />} /> */}
 
       {ergoEnabled ? (
         <Route path={PageRoute.claimErgo} element={<ComingSoonPage />} />
