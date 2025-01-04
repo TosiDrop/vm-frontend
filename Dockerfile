@@ -1,6 +1,7 @@
 FROM node:23 AS base
 
 FROM base AS builder
+ENV REACT_APP_CLAIM_API=https://app.tosidrop.io
 WORKDIR /code/client
 COPY client .
 RUN npm run build
@@ -22,4 +23,5 @@ COPY --from=builder /code/client/src/entities/ ./client/src/entities/
 COPY --from=builder /code/client/src/services/ ./client/src/services/
 COPY --from=builder /code/client/build/ ./client/build/
 COPY --chmod=555 docker-entrypoint.sh .
+ENV REACT_APP_CLAIM_API=https://app.tosidrop.io
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
