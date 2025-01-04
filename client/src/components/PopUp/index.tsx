@@ -50,18 +50,6 @@ const PopUp = () => {
           ></FontAwesomeIcon>
         </div>
         <p className="mt-5">{popupInfo.text}</p>
-        <div className="flex w-full mt-5">
-          <a
-            href={popupInfo.buttonLink}
-            target="_blank"
-            rel="noreferrer"
-            className="ml-auto"
-          >
-            <button className="tosi-button px-5 py-2.5 rounded-lg">
-              {popupInfo.buttonText}
-            </button>
-          </a>
-        </div>
       </div>
     </div>
   );

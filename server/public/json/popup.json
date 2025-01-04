@@ -1,6 +1,5 @@
 {
-  "title": "TosiDrop has moved to a new domain!",
-  "text": "TosiDrop has moved from app.tosidrop.io to tosidrop.me! Update your bookmarks and saved links.",
-  "buttonText": "Let's go!",
-  "buttonLink": "https://tosidrop.me/"
+  "title": "Welcome to TosiDrop!",
+  "text": "Welcome to the new TosiDrop. We're making some updates, so it may look a little different, but the team is working on bringing new features to the site. Be sure to update your bookmarks to tosidrop.me",
+  "buttonText": "Close"
 }
