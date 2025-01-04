@@ -3,6 +3,7 @@ name: publish
 on:
   push:
     branches: ['master']
+    paths: [ 'Dockerfile','server/**','docker-entrypoint.sh','.github/workflows/publish.yml' ]
     tags: ['v*.*.*']
 
 concurrency: ${{ github.ref }}

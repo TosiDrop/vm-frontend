@@ -77,7 +77,6 @@ app.use(require("morgan")(LOG_TYPE));
 app.use(oapi);
 app.use(cors({ origin: "*" }));
 app.use("/swaggerui", oapi.swaggerui);
-app.use(express.static("../client/build"));
 
 const resp200Ok = {
   responses: {
