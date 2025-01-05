@@ -39,6 +39,6 @@ instance of the backends. Also, make sure API token (and PSK) matches mainnet.
 ```
 AIRDROP_ENABLED=false
 CARDANO_NETWORK=mainnet
-KOIOS_URL=https://api.koios.rest/api/v0
+KOIOS_URL=https://api.koios.rest/api/v1
 VM_URL=https://vm.adaseal.eu
 ```
