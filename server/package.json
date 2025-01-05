@@ -22,7 +22,6 @@
   "keywords": [],
   "dependencies": {
     "@emurgo/cardano-serialization-lib-nodejs": "^11.5.0",
-    "@reqlez/express-openapi": "^2.1.2",
     "@types/validator": "^13.12.2",
     "axios": "^1.7.9",
     "bech32-converting": "^1.0.9",
