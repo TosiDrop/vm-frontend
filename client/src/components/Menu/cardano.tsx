@@ -140,7 +140,7 @@ export default function MenuCardano() {
                 <a
                   target="_blank"
                   rel="noreferrer"
-                  href="https://docs.tosidrop.io/"
+                  href="https://docs.tosidrop.me/"
                   className="flex flex-row items-center gap-2 text-inactive"
                 >
                   <FontAwesomeIcon className="w-4" icon={faBook} />
