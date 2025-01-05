@@ -42,7 +42,6 @@ import { ICustomRewards } from "./utils/entities";
 import { HttpStatusCode, createErrorWithCode } from "./utils/error";
 import cors from "cors";
 require("dotenv").config();
-const openapi = require("@reqlez/express-openapi");
 const fs = require("fs");
 
 /** environment variables */
@@ -60,23 +59,12 @@ const PORT = process.env.PORT || 3000;
 const TOSIFEE = process.env.TOSIFEE || 500000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 const CLAIM_ENABLED = process.env.CLAIM_ENABLED === "true";
-const ERGO_ENABLED = process.env.ERGO_ENABLED === "true";
-
-const oapi = openapi({
-  openapi: "3.0.0",
-  info: {
-    title: "TosiDrop",
-    description: "Generated API docs for TosiDrop",
-    version: "1",
-  },
-});
+const ERGO_ENABLED = process.env.ERGO_ENABLED === "false";
 
 const app = express();
 app.use(express.json());
 app.use(require("morgan")(LOG_TYPE));
-app.use(oapi);
 app.use(cors({ origin: "*" }));
-app.use("/swaggerui", oapi.swaggerui);
 
 const resp200Ok = {
   responses: {
@@ -126,7 +114,6 @@ app.use("/api/admin", AdminRouter);
 
 app.get(
   "/api/getpools",
-  oapi.path(resp200Ok),
   errorHandlerWrapper(async (_req: Request, res: Response<GetPoolsDto>) => {
     const pools = await getPools();
     const whitelist = TOSIFEE_WHITELIST ? TOSIFEE_WHITELIST.split(",") : [];
@@ -151,7 +138,6 @@ app.get(
 
 app.get(
   "/api/getsettings",
-  oapi.path(resp200Ok),
   typedErrorHandlerWrapper<Dto.GetVmSettings>(async (_, res) => {
     const settings = await getFromVM<VmTypes.Settings>("get_settings");
     return res.status(200).send(settings);
@@ -160,7 +146,6 @@ app.get(
 
 app.get(
   "/api/systeminfo",
-  oapi.path(resp200Ok),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const systeminfo = await getFromVM("system_info");
     return res.status(200).send(systeminfo);
@@ -219,55 +204,6 @@ app.get(
 
 app.get(
   "/api/getstakekey",
-  oapi.path({
-    description:
-      "Return a stake address from a given address string. Resolves adahandles.",
-    parameters: [
-      {
-        name: "address",
-        in: "query",
-        required: true,
-      },
-    ],
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                staking_address: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-      400: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-      500: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-    },
-  }),
   errorHandlerWrapper(async (req: Request, res: Response) => {
     if (!VM_KOIOS_URL) {
       throw createErrorWithCode(
@@ -363,55 +299,6 @@ app.get(
  */
 app.get(
   "/api/getrewards",
-  oapi.path({
-    description: "Return available rewards from a given stake address.",
-    parameters: [
-      {
-        name: "address",
-        in: "query",
-        required: true,
-      },
-    ],
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                pool_info: { type: "object" },
-                claimable_tokens: { type: "object" },
-              },
-            },
-          },
-        },
-      },
-      400: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-      500: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-    },
-  }),
   errorHandlerWrapper(async (req: Request, res: Response) => {
     const queryObject = url.parse(req.url, true).query;
     const stakeAddress = queryObject.address as string;
@@ -446,78 +333,6 @@ app.get(
 
 app.get(
   "/api/getcustomrewards",
-  oapi.path({
-    description: "Return available rewards from a given stake address.",
-    parameters: [
-      {
-        name: "staking_address",
-        in: "query",
-        required: true,
-      },
-      {
-        name: "session_id",
-        in: "query",
-        required: true,
-      },
-      {
-        name: "selected",
-        in: "query",
-        required: true,
-      },
-      {
-        name: "unlock",
-        in: "query",
-        required: false,
-      },
-      {
-        name: "native",
-        in: "query",
-        required: false,
-      },
-    ],
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                request_id: { type: "string" },
-                deposit: { type: "number" },
-                overhead_fee: { type: "number" },
-                withdrawal_address: { type: "string" },
-                is_whitelisted: { type: "boolean" },
-              },
-            },
-          },
-        },
-      },
-      400: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-      500: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-    },
-  }),
   errorHandlerWrapper(async (req: Request, res: Response) => {
     const queryObject = url.parse(req.url, true).query;
     const {
@@ -603,51 +418,6 @@ app.get(
 
 app.get(
   "/api/getdeliveredrewards",
-  oapi.path({
-    description: "Return delivered rewards from a given stake address.",
-    parameters: [
-      {
-        name: "staking_address",
-        in: "query",
-        required: true,
-      },
-    ],
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-            },
-          },
-        },
-      },
-      400: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-      500: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-    },
-  }),
   errorHandlerWrapper(
     async (
       req: Request,
@@ -675,57 +445,6 @@ app.get(
 
 app.get(
   "/api/txstatus",
-  oapi.path({
-    description:
-      "Return status of a transaction from request_id and session_id",
-    parameters: [
-      {
-        name: "request_id",
-        in: "query",
-        required: true,
-      },
-      {
-        name: "session_id",
-        in: "query",
-        required: true,
-      },
-    ],
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-            },
-          },
-        },
-      },
-      400: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-      500: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-    },
-  }),
   errorHandlerWrapper(async (req: Request, res: Response) => {
     const queryObject = url.parse(req.url, true).query;
     const { request_id, session_id } = queryObject;
@@ -753,51 +472,6 @@ app.get(
 
 app.get(
   "/api/gettransactionstatus",
-  oapi.path({
-    description: "Return status of a transaction from txHash",
-    parameters: [
-      {
-        name: "txHash",
-        in: "query",
-        required: true,
-      },
-    ],
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-            },
-          },
-        },
-      },
-      400: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-      500: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-            },
-          },
-        },
-      },
-    },
-  }),
   errorHandlerWrapper(async (req: Request, res: Response) => {
     const queryObject = url.parse(req.url, true).query;
     if (!queryObject.txHash) {
@@ -815,7 +489,6 @@ app.get(
 
 app.get(
   "/api/getabsslot",
-  oapi.path(resp200Ok500Bad),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     return res.send({
@@ -829,7 +502,6 @@ app.get(
 
 app.get(
   "/api/getblock",
-  oapi.path(resp200Ok500Bad),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     return res.send({
@@ -843,7 +515,6 @@ app.get(
 
 app.get(
   "/api/gettip",
-  oapi.path(resp200Ok500Bad),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     res.send(getTipResponse[0]);
@@ -852,7 +523,6 @@ app.get(
 
 app.get(
   "/api/getepochparams",
-  oapi.path(resp200Ok500Bad),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const getTipResponse = await getFromKoios<Tip[]>(`tip`);
     const getEpochParamsResponse = await getEpochParams(
@@ -864,7 +534,6 @@ app.get(
 
 app.get(
   "/api/getprojects",
-  oapi.path(resp200Ok),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const projects = JSON.parse(
       fs.readFileSync(__dirname + "/public/json/projects.json", "utf8"),
@@ -875,7 +544,6 @@ app.get(
 
 app.get(
   "/api/getpopupinfo",
-  oapi.path(resp200Ok),
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const popupInfo = JSON.parse(
       fs.readFileSync(__dirname + "/public/json/popup.json", "utf8"),
@@ -894,14 +562,6 @@ app.get(
 
 // host static files such as images
 app.use("/api/img", express.static(__dirname + "/public/img"));
-
-// Fallback to React app
-app.get(
-  "*",
-  errorHandlerWrapper((_req: Request, res: Response) => {
-    return res.sendFile("client/build/index.html", { root: "../" });
-  }),
-);
 
 const server = app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
