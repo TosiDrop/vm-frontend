@@ -1,41 +1,25 @@
-// import BlockchainSelector from "src/components/BlockchainSelector";
 import { faBars, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import logoDark from "src/assets/tosidrop-dark.png";
 import logoLight from "src/assets/tosidrop-light.png";
-import { Blockchain, Themes } from "src/entities/common.entities";
+import { Themes } from "src/entities/common.entities";
 import { toggleMenu, toggleTheme } from "src/reducers/globalSlice";
 import { RootState } from "src/store";
 import Banner from "../Banner";
 import CardanoWalletSelector from "../WalletSelector/CardanoWalletSelector";
-import ErgoWalletSelector from "../WalletSelector/ErgoWalletSelector";
 
 function Header() {
   const dispatch = useDispatch();
   const theme = useSelector((state: RootState) => state.global.theme);
-  const chain = useSelector((state: RootState) => state.global.chain);
-  const connectedWallet = useSelector(
-    (state: RootState) => state.wallet.walletApi,
-  );
-
-  const RenderWalletConnector = useCallback(() => {
-    switch (chain) {
-      case Blockchain.cardano:
-        return <CardanoWalletSelector></CardanoWalletSelector>;
-      case Blockchain.ergo:
-        return <ErgoWalletSelector></ErgoWalletSelector>;
-    }
-  }, [connectedWallet]);
 
   return (
     <>
       <Banner></Banner>
 
       {/* Web header */}
-      <div className="flex-row items-center w-full p-5 pb-0 hidden sm:flex">
+      <div className="flex-row items-center max-w-8xl w-full p-5 pb-0 hidden sm:flex">
         <Link to="/">
           <div className="">
             <img
@@ -46,7 +30,7 @@ function Header() {
           </div>
         </Link>
         <div className="flex flex-row gap-4 items-center ml-auto">
-          <RenderWalletConnector></RenderWalletConnector>
+          <CardanoWalletSelector></CardanoWalletSelector>
           <button
             className="background rounded-lg px-5 py-2.5"
             onClick={() => dispatch(toggleTheme())}
@@ -75,7 +59,7 @@ function Header() {
             </button>
           </div>
           <div className="h-full ml-auto">
-            <RenderWalletConnector></RenderWalletConnector>
+            <CardanoWalletSelector></CardanoWalletSelector>
           </div>
         </div>
       </div>
