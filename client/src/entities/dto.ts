@@ -27,11 +27,6 @@ export interface GetQueueDto {
   pending_tx: number;
 }
 
-export interface GetPoolsDto {
-  whitelistedPools: PoolInfo[];
-  regularPools: PoolInfo[];
-}
-
 export interface GetDeliveredRewardsDto {
   deliveredRewards: DeliveredReward[];
 }
