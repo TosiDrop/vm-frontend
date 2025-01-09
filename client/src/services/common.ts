@@ -4,7 +4,7 @@ import { PopUpInfo } from "src/entities/common.entities";
 import { Dto, GetQueueDto } from "src/entities/dto";
 import { EpochParams, Tip } from "src/entities/koios.entities";
 
-const API_URL = process.env.REACT_APP_CLAIM_API || "http://localhost:3000"
+const API_URL = process.env.REACT_APP_CLAIM_API || "http://localhost:3000";
 
 export async function getFeatures() {
   const response = await axios.get(`${API_URL}/features`);
@@ -12,8 +12,9 @@ export async function getFeatures() {
 }
 
 export async function getSettings(): Promise<Dto.GetVmSettings["response"]> {
-  const response =
-    await axios.get<Dto.GetVmSettings["response"]>(`${API_URL}/api/getsettings`);
+  const response = await axios.get<Dto.GetVmSettings["response"]>(
+    `${API_URL}/api/getsettings`,
+  );
   return response.data;
 }
 
@@ -21,7 +22,9 @@ export async function getStakeKey(addr: string) {
   if (addr.slice(0, 5) === "stake") {
     return { staking_address: addr };
   }
-  const response = await axios.get(`${API_URL}/api/getstakekey?address=${addr}`);
+  const response = await axios.get(
+    `${API_URL}/api/getstakekey?address=${addr}`,
+  );
   return response.data;
 }
 
@@ -108,7 +111,8 @@ export async function getBech32Address({
 export async function getBannerText(): Promise<
   Dto.GetBannerText["response"]["text"]
 > {
-  const response =
-    await axios.get<Dto.GetBannerText["response"]>(`${API_URL}/api/admin/banner`);
+  const response = await axios.get<Dto.GetBannerText["response"]>(
+    `${API_URL}/api/admin/banner`,
+  );
   return response.data.text;
 }
