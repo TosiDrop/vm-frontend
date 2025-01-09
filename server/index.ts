@@ -9,7 +9,6 @@ import url from "url";
 import {
   Dto,
   GetDeliveredRewardsDto,
-  GetPoolsDto,
   GetQueueDto,
   ServerErrorDto,
 } from "../client/src/entities/dto";
@@ -32,7 +31,6 @@ import {
   getFromKoios,
   getFromVM,
   getPoolMetadata,
-  getPools,
   getRewards,
   postFromKoios,
   sanitizeString,
@@ -66,75 +64,9 @@ app.use(express.json());
 app.use(require("morgan")(LOG_TYPE));
 app.use(cors({ origin: "*" }));
 
-const resp200Ok = {
-  responses: {
-    200: {
-      description: "Success",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-          },
-        },
-      },
-    },
-  },
-};
-
-const resp200Ok500Bad = {
-  responses: {
-    200: {
-      description: "Success",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-          },
-        },
-      },
-    },
-    500: {
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              error: { type: "string" },
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
 app.use("/api/tx", TxRouter);
 app.use("/api/util", UtilRouter);
 app.use("/api/admin", AdminRouter);
-
-app.get(
-  "/api/getpools",
-  errorHandlerWrapper(async (_req: Request, res: Response<GetPoolsDto>) => {
-    const pools = await getPools();
-    const whitelist = TOSIFEE_WHITELIST ? TOSIFEE_WHITELIST.split(",") : [];
-    const whitelistedPools: PoolInfo[] = [];
-    const regularPools: PoolInfo[] = [];
-    Object.values(pools).forEach((pool) => {
-      if (pool.visible === "f" || pool.id.includes("project_")) {
-        return;
-      }
-      if (whitelist.includes(pool.id)) {
-        whitelistedPools.push(pool);
-      } else {
-        regularPools.push(pool);
-      }
-    });
-    return res.status(200).send({
-      whitelistedPools: _.shuffle(whitelistedPools),
-      regularPools: _.shuffle(regularPools),
-    });
-  }),
-);
 
 app.get(
   "/api/getsettings",
@@ -533,16 +465,6 @@ app.get(
 );
 
 app.get(
-  "/api/getprojects",
-  errorHandlerWrapper(async (_req: Request, res: Response) => {
-    const projects = JSON.parse(
-      fs.readFileSync(__dirname + "/public/json/projects.json", "utf8"),
-    );
-    return res.status(200).send(projects);
-  }),
-);
-
-app.get(
   "/api/getpopupinfo",
   errorHandlerWrapper(async (_req: Request, res: Response) => {
     const popupInfo = JSON.parse(
@@ -559,9 +481,6 @@ app.get(
     return res.status(200).send(queue);
   }),
 );
-
-// host static files such as images
-app.use("/api/img", express.static(__dirname + "/public/img"));
 
 const server = app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
