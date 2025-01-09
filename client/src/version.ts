@@ -1,2 +1,2 @@
-const version = process.env.REACT_APP_CLIENT_VERSION || "dev";
+const version = process.env.CF_PAGES_COMMIT_SHA || "dev";
 export default version;
