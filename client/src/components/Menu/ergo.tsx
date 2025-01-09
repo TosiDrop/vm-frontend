@@ -47,30 +47,6 @@ export const socialMediaItems: Record<string, SocialMediaItem> = {
 };
 
 export const menuItems: Record<string, MenuItem> = {
-  // claim: {
-  //   text: "Claim",
-  //   to: PageRoute.claimCardano,
-  //   activeRoute: [PageRoute.claimCardano, PageRoute.depositCardano],
-  //   icon: faWallet,
-  // },
-  // // history: {
-  // //   text: "History",
-  // //   to: PageRoute.history,
-  // //   activeRoute: [PageRoute.history],
-  // //   icon: faClockRotateLeft,
-  // // },
-  // projects: {
-  //   text: "Projects",
-  //   to: PageRoute.projectsCardano,
-  //   activeRoute: [PageRoute.projectsCardano],
-  //   icon: faProjectDiagram,
-  // },
-  // /*dashboard: {
-  //   text: "Dashboard",
-  //   to: PageRoute.dashboardCardano,
-  //   activeRoute: [PageRoute.dashboardCardano],
-  //   icon: faTableColumns,
-  // },*/
   feedback: {
     text: "Feedback",
     to: PageRoute.feedback,
