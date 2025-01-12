@@ -57,7 +57,6 @@ const PORT = process.env.PORT || 3000;
 const TOSIFEE = process.env.TOSIFEE || 500000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 const CLAIM_ENABLED = process.env.CLAIM_ENABLED === "true";
-const ERGO_ENABLED = process.env.ERGO_ENABLED === "false";
 
 const app = express();
 app.use(express.json());
@@ -127,7 +126,6 @@ app.get(
       native_token_fee: Number(NATIVE_TOKEN_FEE),
       native_token_id: NATIVE_TOKEN_ID,
       network: CARDANO_NETWORK,
-      ergo_enabled: ERGO_ENABLED,
     };
 
     return res.status(200).send(features);

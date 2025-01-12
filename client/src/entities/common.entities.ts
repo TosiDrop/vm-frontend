@@ -77,7 +77,6 @@ export enum NetworkId {
 export enum ModalTypes {
   wallet,
   info,
-  ergoWallet,
 }
 
 export enum InfoModalTypes {
@@ -93,24 +92,12 @@ export enum Themes {
 
 export enum Blockchain {
   cardano = "cardano",
-  ergo = "ergo",
 }
 
 export enum PageRoute {
   claimCardano = "/cardano/claim",
   depositCardano = "/cardano/deposit",
   historyCardano = "/cardano/history",
-  dashboardCardano = "/cardano/dashboard",
-  projectsCardano = "/cardano/projects",
-  feedbackCardano = "/cardano/feedback",
-  poolsCardano = "/cardano/pools",
-  claimErgo = "/ergo/claim",
-  depositErgo = "/ergo/deposit",
-  historyErgo = "/ergo/history",
-  dashboardErgo = "/ergo/dashboard",
-  projectsErgo = "/ergo/projects",
-  feedbackErgo = "/ergo/feedback",
-  feedback = "/feedback",
 }
 
 export interface MenuItem {

@@ -2,7 +2,6 @@ import { Cip30Wallet, WalletApi } from "@cardano-sdk/cip30";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CardanoTypes } from "src/entities/cardano";
 import { NetworkId } from "src/entities/common.entities";
-import { ErgoWalletApi } from "src/entities/ergo";
 
 interface WalletState {
   wallet: Cip30Wallet | undefined;
@@ -12,7 +11,6 @@ interface WalletState {
   name: string;
   networkId: NetworkId | undefined;
   isWrongNetwork: boolean;
-  ergoWalletApi: ErgoWalletApi | null;
 }
 
 const initialState: WalletState = {
@@ -23,7 +21,6 @@ const initialState: WalletState = {
   name: "",
   networkId: undefined,
   isWrongNetwork: false,
-  ergoWalletApi: null,
 };
 
 export const walletSlice = createSlice({
@@ -57,9 +54,6 @@ export const walletSlice = createSlice({
     setIsWrongNetwork: (state, action: PayloadAction<boolean>) => {
       state.isWrongNetwork = action.payload;
     },
-    setErgoWallet: (state, action: PayloadAction<ErgoWalletApi | null>) => {
-      state.ergoWalletApi = action.payload;
-    },
   },
 });
 
@@ -67,7 +61,6 @@ export const {
   connectWallet,
   setNetworkId,
   setIsWrongNetwork,
-  setErgoWallet,
   setWalletState,
 } = walletSlice.actions;
 export default walletSlice.reducer;
