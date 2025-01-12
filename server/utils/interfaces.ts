@@ -20,5 +20,4 @@ export interface ITosiFeatures {
   native_token_fee: number;
   native_token_id: any;
   network: string;
-  ergo_enabled: boolean;
 }

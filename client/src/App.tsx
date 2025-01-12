@@ -11,7 +11,7 @@ import { Blockchain } from "./entities/common.entities";
 import BlockchainWrapper from "./layouts/BlockchainWrapper";
 import MenuWrapper from "./layouts/MenuWrapper";
 import ThemeWrapper from "./layouts/ThemeWrapper";
-import { setChain, setErgoEnabled } from "./reducers/globalSlice";
+import { setChain } from "./reducers/globalSlice";
 import { getFeatures } from "./services/common";
 import { RootState } from "./store";
 
@@ -24,16 +24,12 @@ function App() {
 
   const init = async () => {
     const features = await getFeatures();
-    dispatch(setErgoEnabled(features.ergo_enabled));
   };
 
   const initLocation = () => {
     const isOnCardano = location.includes("cardano");
-    const isOnErgo = location.includes("ergo");
     if (isOnCardano) {
       dispatch(setChain(Blockchain.cardano));
-    } else if (isOnErgo) {
-      dispatch(setChain(Blockchain.ergo));
     }
   };
 
