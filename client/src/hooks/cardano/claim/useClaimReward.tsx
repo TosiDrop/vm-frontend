@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PageRoute } from "src/entities/common.entities";
 import { ClaimableToken, VmPoolInfo } from "src/entities/vm.entities";
@@ -11,7 +11,6 @@ import { RootState } from "src/store";
 import { shuffleArray } from "src/utils";
 
 export default function useClaimReward() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { handleError } = useErrorHandler();
   const { showInfoModal } = useModal();

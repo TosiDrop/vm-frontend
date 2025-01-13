@@ -1,47 +1,16 @@
-import { useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useCallback } from "react";
 import Footer from "src/components/Footer";
 import Modal from "src/components/Modal";
 import PopUp from "src/components/PopUp";
 import RouterWrapper from "src/layouts/RouterWrapper";
 import "src/styles.scss";
 import Header from "./components/Header";
-import { Blockchain } from "./entities/common.entities";
 import BlockchainWrapper from "./layouts/BlockchainWrapper";
 import MenuWrapper from "./layouts/MenuWrapper";
 import ThemeWrapper from "./layouts/ThemeWrapper";
-import { setChain } from "./reducers/globalSlice";
-import { getFeatures } from "./services/common";
-import { RootState } from "./store";
 
 function App() {
-  const location = useLocation().pathname;
-  const dispatch = useDispatch();
-  const connectedWallet = useSelector(
-    (state: RootState) => state.wallet.walletApi,
-  );
-
-  const init = async () => {
-    const features = await getFeatures();
-  };
-
-  const initLocation = () => {
-    const isOnCardano = location.includes("cardano");
-    if (isOnCardano) {
-      dispatch(setChain(Blockchain.cardano));
-    }
-  };
-
-  useEffect(() => {
-    init();
-  }, []);
-
-  useEffect(() => {
-    initLocation();
-  }, [location]);
-
-  const OptHeader = useCallback(() => <Header></Header>, [connectedWallet]);
+  const OptHeader = useCallback(() => <Header></Header>, []);
 
   return (
     <ThemeWrapper>
