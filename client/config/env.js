@@ -88,6 +88,8 @@ function getClientEnvironment(publicUrl) {
         // Whether or not react-refresh is enabled.
         // It is defined here so it is available in the webpackHotDevClient.
         FAST_REFRESH: process.env.FAST_REFRESH !== 'false',
+        // Hack in the CF_PAGES_COMMIT_SHA
+        CF_PAGES_COMMIT_SHA: process.env.CF_PAGES_COMMIT_SHA
       }
     );
   // Stringify all values so we can feed into webpack DefinePlugin
