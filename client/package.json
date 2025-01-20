@@ -95,7 +95,7 @@
     "eslint-webpack-plugin": "^4.2.0",
     "postcss": "^8.4.49",
     "postcss-flexbugs-fixes": "^5.0.2",
-    "postcss-loader": "^6.2.1",
+    "postcss-loader": "^8.1.1",
     "postcss-normalize": "^10.0.1",
     "postcss-preset-env": "^7.0.1",
     "tailwindcss": "^3.3.5",
