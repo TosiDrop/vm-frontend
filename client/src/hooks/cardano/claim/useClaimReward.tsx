@@ -38,7 +38,7 @@ export default function useClaimReward() {
   useEffect(() => {
     setNumberOfSelectedTokens(
       claimableTokens.reduce((agg, i) => {
-        if (i.selected) {
+        if (i.selected && i.ticker !== "ADA") {
           agg += 1;
         }
         return agg;
@@ -59,9 +59,12 @@ export default function useClaimReward() {
       );
       return;
     }
-
-    updatedClaimableTokens[position].selected =
-      !updatedClaimableTokens[position].selected;
+    if (updatedClaimableTokens[position].ticker === "ADA") {
+      updatedClaimableTokens[position].selected = true;
+    } else {
+      updatedClaimableTokens[position].selected =
+        !updatedClaimableTokens[position].selected;
+    }
     setClaimableTokens(updatedClaimableTokens);
   };
 
@@ -119,15 +122,19 @@ export default function useClaimReward() {
       setClaimableTokens(
         getRewardsResponse.claimable_tokens
           .map((token) => {
-            token.selected = false;
+            token.selected = token.ticker === "ADA" ? true : false;
             return token;
           })
           .sort((a, b) => {
-            if (a.premium === b.premium) {
+            if (a.ticker === "ADA") {
+              return -1;
+	    } else if (b.ticker === "ADA") {
+              return 1;
+	    } else if (a.premium === b.premium) {
               if (a.ticker < b.ticker) {
                 return -1;
               } else {
-                return 1;
+                return a.ticker === "ADA" ? -1 : 1;
               }
             } else {
               return a.premium ? -1 : 1;
