@@ -130,14 +130,10 @@ export default function useClaimReward() {
               return -1;
 	    } else if (b.ticker === "ADA") {
               return 1;
-	    } else if (a.premium === b.premium) {
-              if (a.ticker < b.ticker) {
+	    } else if (a.ticker < b.ticker) {
                 return -1;
-              } else {
-                return a.ticker === "ADA" ? -1 : 1;
-              }
             } else {
-              return a.premium ? -1 : 1;
+              return a.ticker === "ADA" ? -1 : 1;
             }
           }),
       );
@@ -154,17 +150,10 @@ export default function useClaimReward() {
     if (numberOfSelectedTokens === 0) return;
 
     setIsClaimRewardLoading(true);
-    let selectedNativeToken = false;
-    let selectedPremiumToken = false;
 
     const selectedTokenId: string[] = [];
     claimableTokens.forEach((token) => {
       if (token.selected) {
-        if (token.native) {
-          selectedNativeToken = true;
-        } else if (token.premium) {
-          selectedPremiumToken = true;
-        }
         selectedTokenId.push(token.assetId);
       }
     });
@@ -174,12 +163,10 @@ export default function useClaimReward() {
         stakeAddress,
         stakeAddress.slice(0, 40),
         selectedTokenId.join(","),
-        selectedPremiumToken,
-        selectedNativeToken,
       );
       if (res == null) throw new Error();
 
-      let depositInfoUrl = `${PageRoute.depositCardano}?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}&native=${selectedNativeToken}&isWhitelisted=${res.is_whitelisted}`;
+      let depositInfoUrl = `${PageRoute.depositCardano}?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=true&native=false&isWhitelisted=${res.is_whitelisted}`;
       navigate(depositInfoUrl, { replace: true });
     } catch (e) {
       handleError(e);
