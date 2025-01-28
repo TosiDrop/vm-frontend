@@ -31,40 +31,6 @@
         - always
       when: manage_docker | bool
 
-    - name: NodePlaybook | Install DataDog
-      ansible.builtin.include_role:
-        name: datadog.datadog
-        apply:
-          tags:
-            - datadog
-      when: manage_datadog | bool
-      vars:
-        datadog_api_key: "{{ DD_API_KEY }}"
-        datadog_site: "us5.datadoghq.com"
-        datadog_additional_groups:
-          - docker
-        datadog_checks:
-          # Configure openmetrics for db-sync
-          openmetrics:
-            instances:
-              - prometheus_url: http://localhost:8080/
-                metrics:
-                  - cardano*
-                namespace: "cardano"
-          # Configure haproxy to detect Koios frontend
-          haproxy:
-            instances:
-              - use_openmetrics: true
-                openmetrics_endpoint: http://localhost:8053/metrics
-        datadog_config:
-          apm_config:
-            enabled: false
-          logs_enabled: true
-          process_config:
-            enabled: "false" # string, per docs
-          tags:
-            - product:tosidrop
-
     - name: NodePlaybook | Include VM Frontend Role
       ansible.builtin.include_role:
         name: vm_frontend
