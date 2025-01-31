@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import CheckRewardInput from "src/components/Claim/CheckRewardInput";
 import RewardsView from "src/components/Claim/RewardsView";
+import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
 import useClaimReward from "src/hooks/cardano/claim/useClaimReward";
 import { useQueue } from "src/hooks/cardano/claim/useQueue";
 
@@ -21,6 +23,12 @@ function Claim() {
     selectRandomTokens,
   } = useClaimReward();
   const queue = useQueue();
+  const { address } = useWalletConnector();
+  useEffect(() => {
+    if (address) {
+      setSearchAddress(address);
+    }
+  }, [address, setSearchAddress]);
 
   return (
     <>

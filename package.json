@@ -18,5 +18,9 @@
   "homepage": "https://github.com/TosiDrop/vm-frontend#readme",
   "devDependencies": {
     "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "@newm.io/cardano-dapp-wallet-connector": "^1.4.7",
+    "styled-components": "^6.1.14"
   }
 }
