@@ -3,6 +3,5 @@ interface Props {
 }
 
 export default function Cardano({ children }: Props) {
-
   return <>{children}</>;
 }

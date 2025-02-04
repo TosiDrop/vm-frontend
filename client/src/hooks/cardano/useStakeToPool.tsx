@@ -1,18 +1,14 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { createStakeTx, submitStakeTx } from "src/services/common";
-import { RootState } from "src/store";
 import useErrorHandler from "../useErrorHandler";
+import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
 
 export default function useStakeToPool() {
   const [loading, setLoading] = useState(false);
   const { handleError } = useErrorHandler();
-  const connectedWalletApi = useSelector(
-    (state: RootState) => state.wallet.walletApi,
-  );
-  const connectedWalletAddress = useSelector(
-    (state: RootState) => state.wallet.walletAddress,
-  );
+  const { wallet, address } = useWalletConnector();
+  const connectedWalletApi = wallet;
+  const connectedWalletAddress = address;
 
   async function stakeToPool(poolId: string, callback?: () => void) {
     setLoading(true);
@@ -22,7 +18,7 @@ export default function useStakeToPool() {
       }
       const { witness, txBody } = await createStakeTx({
         poolId,
-        address: connectedWalletAddress,
+        address: connectedWalletAddress ?? ""
       });
       const signedWitness = await connectedWalletApi.signTx(witness);
       const { tx } = await submitStakeTx({ signedWitness, txBody });

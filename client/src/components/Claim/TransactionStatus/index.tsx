@@ -1,9 +1,8 @@
-import { useSelector } from "react-redux";
 import Spinner from "src/components/Spinner";
 import { NetworkId } from "src/entities/common.entities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { RootState } from "src/store";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
 
 enum TransactionStatusDetail {
   waiting = 0,
@@ -18,7 +17,7 @@ interface Params {
 }
 
 const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
-  const networkId = useSelector((state: RootState) => state.wallet.networkId);
+  const { networkId } = useWalletConnector();
 
   const renderTxId = () => {
     let cexplorerUrl = "";
@@ -54,8 +53,7 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
           <div className="">
             {renderTxId()}
             <div className="flex flex-row items-center">
-              Status: processing transaction{" "}
-              <Spinner className="ml-2.5"></Spinner>
+              Status: processing transaction <Spinner className="ml-2.5"></Spinner>
             </div>
           </div>
         );
@@ -73,10 +71,7 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
         return (
           <div className="">
             {renderTxId()}
-            Status:{" "}
-            <span className="text-red-600">
-              transaction fails, please try again
-            </span>
+            Status: <span className="text-red-600">transaction fails, please try again</span>
           </div>
         );
     }

@@ -1,9 +1,8 @@
-import { useSelector } from "react-redux";
 import useComponentVisible from "src/hooks/useComponentVisible";
-import { RootState } from "src/store";
 import { abbreviateAddress } from "src/utils";
 import Spinner from "../Spinner";
 import Disconnect from "./Disconnect";
+import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
 
 export default function Connected({
   connecting,
@@ -12,8 +11,7 @@ export default function Connected({
   connecting: boolean;
   disconnectWallet: () => void;
 }) {
-  const { wallet: connectedWallet, walletAddress: connectedWalletAddress } =
-    useSelector((state: RootState) => state.wallet);
+  const { wallet, address } = useWalletConnector();
 
   const disconnectButtonMenu = useComponentVisible(false);
 
@@ -24,7 +22,7 @@ export default function Connected({
   return (
     <div className="relative w-fit">
       <div
-        className="rounded-lg background flex items-center justify-center px-5 py-2.5 cursor-pointer flex items-center gap-2"
+        className="rounded-lg background flex items-center justify-center px-5 py-2.5 cursor-pointer gap-2"
         onClick={toggleDisconnectButton}
       >
         {connecting ? (
@@ -34,14 +32,8 @@ export default function Connected({
           </div>
         ) : (
           <>
-            {connectedWallet ? (
-              <img
-                src={connectedWallet.icon}
-                className="h-5"
-                alt="wallet icon"
-              ></img>
-            ) : null}
-            <p>{abbreviateAddress(connectedWalletAddress)}</p>
+            {wallet ? <img src={wallet.icon} className="h-5" alt="wallet icon"></img> : null}
+            <p>{address ? abbreviateAddress(address) : ""}</p>
           </>
         )}
       </div>

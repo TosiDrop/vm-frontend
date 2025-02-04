@@ -1,9 +1,12 @@
 import { useEffect } from "react";
 import CheckRewardInput from "src/components/Claim/CheckRewardInput";
 import RewardsView from "src/components/Claim/RewardsView";
-import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
+import { useConnectWallet } from "@newm.io/cardano-dapp-wallet-connector";
 import useClaimReward from "src/hooks/cardano/claim/useClaimReward";
 import { useQueue } from "src/hooks/cardano/claim/useQueue";
+import { setFailed, setLoading, setWalletDetails } from "src/reducers/walletSlice";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "src/store"; // Adjust the import path as necessary
 
 function Claim() {
   const {
@@ -22,13 +25,37 @@ function Claim() {
     maxTokenSelected,
     selectRandomTokens,
   } = useClaimReward();
+  const { wallet, getAddress } = useConnectWallet();
   const queue = useQueue();
-  const { address } = useWalletConnector();
+  const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
-    if (address) {
-      setSearchAddress(address);
-    }
-  }, [address, setSearchAddress]);
+    const fetchWalletDetails = async () => {
+      dispatch(setLoading());
+
+      if (wallet) {
+        try {
+          const networkId = await wallet.getNetworkId();
+          console.log("networkId ----", networkId);
+
+          const address = await new Promise<string>((resolve) => {
+            getAddress((addr: string) => resolve(addr));
+          });
+          console.log("address ----", address);
+
+          dispatch(setWalletDetails({ address, networkId }));
+        } catch (error) {
+          dispatch(setFailed());
+          console.error("Failed to fetch wallet details:", error);
+        }
+      } else {
+        dispatch(setFailed());
+        console.error("Wallet not connected");
+      }
+    };
+
+    fetchWalletDetails();
+  }, [wallet, getAddress, dispatch]);
 
   return (
     <>
