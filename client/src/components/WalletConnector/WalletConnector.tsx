@@ -20,7 +20,24 @@ const WalletConnector = () => {
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   };
 
-  return <ConnectWallet mainButtonStyle={mainButtonStyle} />;
+  const modalStyle: React.CSSProperties = {
+    backgroundColor: theme === Themes.dark ? "#1a1a1a" : "#fff",
+    color: theme === Themes.dark ? "#fff" : "#000",
+  };
+
+  const modalHeaderStyle: React.CSSProperties = {
+    backgroundColor: theme === Themes.dark ? "#333" : "#f5f5f5",
+    color: theme === Themes.dark ? "#fff" : "#000",
+  };
+
+  return (
+    <ConnectWallet
+      mainButtonStyle={mainButtonStyle}
+      modalStyle={modalStyle}
+      modalHeaderStyle={modalHeaderStyle}
+      isInverted={theme === Themes.dark}
+    />
+  );
 };
 
 export default WalletConnector;

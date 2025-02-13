@@ -20,7 +20,6 @@ enum TransactionStatusDetail {
 
 const SendAdaInfo = ({ txDetail, setTransactionId, setTransactionStatus }: Params) => {
   const { wallet, networkId } = useWalletConnector();
-  const connectedWalletApi = wallet;
   const isWrongNetwork = networkId !== 1;
   const { transfer, loading: transferLoading } = useTransfer();
 
@@ -42,14 +41,14 @@ const SendAdaInfo = ({ txDetail, setTransactionId, setTransactionStatus }: Param
    * render button to send ada
    */
   const renderSendAdaButton = () => {
-    if (connectedWalletApi && !isWrongNetwork) {
+    if (wallet) {
       return (
         <div className="w-full flex justify-center">
           <button
             className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
             onClick={sendADA}
           >
-            Send ADA{" "}
+            Send ADA
             {transferLoading ? (
               <div className="ml-2.5">
                 <Spinner></Spinner>
