@@ -2,11 +2,14 @@ import { useState } from "react";
 import { createTransferTx, submitStakeTx } from "src/services/common";
 import useErrorHandler from "../useErrorHandler";
 import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
+import { useSelector } from "react-redux";
 
 export default function useTransfer() {
   const [loading, setLoading] = useState(false);
   const { handleError } = useErrorHandler();
-  const { wallet, address } = useWalletConnector();
+  const { wallet } = useWalletConnector();
+  const { address } = useSelector((state: any) => state.wallet);
+  console.log('wallet from useTransfer', address);
 
   async function transfer(
     { toAddress, amountToSend }: { toAddress: string; amountToSend: string },
@@ -14,12 +17,15 @@ export default function useTransfer() {
   ) {
     setLoading(true);
     try {
-      if (wallet == null) {
+      if (!wallet) {
+        console.log('wallet is null');
         throw new Error("Please connect your wallet to transfer");
       }
-      if (address == null) {
+      if (!address) {
+        console.log('address is null');
         throw new Error("From address is not available. Please ensure your wallet is connected.");
       }
+      console.log('address from useTransfer', address);
       const { witness, txBody } = await createTransferTx({
         fromAddress: address,
         toAddress,
