@@ -1,10 +1,8 @@
 import QRCode from "react-qr-code";
-import { useSelector } from "react-redux";
-
 import Copyable from "src/components/Copyable";
 import Spinner from "src/components/Spinner";
 import useTransfer from "src/hooks/cardano/useTransfer";
-import { RootState } from "src/store";
+import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
 import { lovelaceToAda } from "src/utils";
 
 interface Params {
@@ -20,17 +18,9 @@ enum TransactionStatusDetail {
   success = 3,
 }
 
-const SendAdaInfo = ({
-  txDetail,
-  setTransactionId,
-  setTransactionStatus,
-}: Params) => {
-  const connectedWalletApi = useSelector(
-    (state: RootState) => state.wallet.walletApi,
-  );
-  const isWrongNetwork = useSelector(
-    (state: RootState) => state.wallet.isWrongNetwork,
-  );
+const SendAdaInfo = ({ txDetail, setTransactionId, setTransactionStatus }: Params) => {
+  const { wallet, networkId } = useWalletConnector();
+  const isWrongNetwork = networkId !== 1;
   const { transfer, loading: transferLoading } = useTransfer();
 
   /**
@@ -51,14 +41,14 @@ const SendAdaInfo = ({
    * render button to send ada
    */
   const renderSendAdaButton = () => {
-    if (connectedWalletApi && !isWrongNetwork) {
+    if (wallet) {
       return (
         <div className="w-full flex justify-center">
           <button
             className="tosi-button py-2.5 px-5 rounded-lg flex flex-row items-center"
             onClick={sendADA}
           >
-            Send ADA{" "}
+            Send ADA
             {transferLoading ? (
               <div className="ml-2.5">
                 <Spinner></Spinner>
@@ -82,7 +72,7 @@ const SendAdaInfo = ({
       (txId) => {
         setTransactionStatus(TransactionStatusDetail.processing);
         setTransactionId(txId);
-      },
+      }
     );
   };
 

@@ -1,54 +1,59 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheck,
-  faInfoCircle,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "react-redux";
-import { hideModal } from "src/reducers/globalSlice";
-import { RootState } from "src/store";
-import { InfoModalTypes } from "src/entities/common.entities";
+// import { faXmark } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { useDispatch } from "react-redux";
+// import { CardanoTypes } from "src/entities/cardano";
+// import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
+// import { hideModal } from "src/reducers/globalSlice";
 
-export const InfoModal = () => {
-  const dispatch = useDispatch();
-  const { text, type } = useSelector(
-    (state: RootState) => state.global.infoModalDetails,
-  );
+// export const WalletModal = () => {
+//   const dispatch = useDispatch();
+//   const { wallet } = useWalletConnector();
+//   const cardanoApi = window.cardano;
 
-  const renderIcon = () => {
-    switch (type) {
-      case InfoModalTypes.failure:
-        return (
-          <div className="m-auto text-center text-failure">
-            <FontAwesomeIcon className="text-3xl" icon={faXmark} />
-          </div>
-        );
-      case InfoModalTypes.success:
-        return (
-          <div className="m-auto text-center text-success">
-            <FontAwesomeIcon className="text-3xl" icon={faCheck} />
-          </div>
-        );
-      case InfoModalTypes.info:
-      default:
-        return (
-          <div className="m-auto text-center text">
-            <FontAwesomeIcon className="text-3xl" icon={faInfoCircle} />
-          </div>
-        );
-    }
-  };
+//   return (
+//     <>
+//       <div className="w-full flex flex-row items-center">
+//         Connect Wallet
+//         <div
+//           className="ml-auto cursor-pointer"
+//           onClick={() => dispatch(hideModal())}
+//         >
+//           <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
+//         </div>
+//       </div>
+//       <div className="w-full flex flex-col gap-4">
+//         {cardanoApi ? (
+//           Object.keys(CardanoTypes.WalletKeys).map((key) => {
+//             const typedKey = key as CardanoTypes.WalletKeys;
+//             const wallet = cardanoApi[typedKey];
+//             if (cardanoApi[typedKey]) {
+//               return (
+//                 <div
+//                   key={key}
+//                   className="w-full flex flex-row items-center cursor-pointer rounded-lg border-gray-400 border p-2.5"
+//                   onClick={() => {
+//                     dispatch(hideModal());
+//                   }}
+//                 >
+//                   {wallet.name.charAt(0).toUpperCase() + wallet.name.slice(1)}
+//                   <img
+//                     className="ml-auto h-6"
+//                     src={wallet.icon}
+//                     alt="wallet"
+//                   ></img>
+//                 </div>
+//               );
+//             } else {
+//               return null;
+//             }
+//           })
+//         ) : (
+//           <div className="w-full flex flex-row items-center rounded-lg border-gray-400 border p-2.5">
+//             No wallet found
+//           </div>
+//         )}
+//       </div>
+//     </>
+//   );
+// };
 
-  return (
-    <>
-      {renderIcon()}
-      <div className="text-center">{text}</div>
-      <button
-        className="tosi-button py-2.5 px-6 rounded-lg text-center w-fit"
-        onClick={() => dispatch(hideModal())}
-      >
-        Ok
-      </button>
-    </>
-  );
-};
