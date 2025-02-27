@@ -1,33 +1,29 @@
 import { KeyboardEvent, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import HistoryTable from "src/components/HistoryTable";
 import Spinner from "src/components/Spinner";
 import useClaimHistory from "src/hooks/cardano/claimHistory/useClaimHistory";
-import { RootState } from "src/store";
+import { useWalletConnector } from "../Claim/useWalletConnector";
 
 function ClaimHistory() {
-  const connectedWalletAddress = useSelector(
-    (state: RootState) => state.wallet.walletAddress,
-  );
-  const isWrongNetwork = useSelector(
-    (state: RootState) => state.wallet.isWrongNetwork,
-  );
+  const { address } = useWalletConnector();
+  // const connectedWalletAddress = address;
+  // const isWrongNetwork = networkId !== 1;
   const { claimHistory, loading, checkClaimHistory } = useClaimHistory();
   const [searchAddress, setSearchAddress] = useState<string>("");
 
   useEffect(() => {
-    setSearchAddress(isWrongNetwork ? "" : connectedWalletAddress);
-  }, [connectedWalletAddress, isWrongNetwork]);
+    if (address) {
+      console.log("history address", address);
+      setSearchAddress(address);
+    }
+  }, [address]);
 
   return (
     <>
       <p className="text-3xl">History</p>
       <div className="flex flex-col gap-4">
         <div className="p-5 background text rounded-2xl flex flex-col gap-4">
-          <p>
-            Enter your wallet/stake address or $handle to view your reward
-            history
-          </p>
+          <p>Enter your wallet/stake address or $handle to view your reward history</p>
           <input
             className={`w-full rounded-lg bg-transparent border-gray-400 border p-1 disabled:cursor-not-allowed`}
             type="text"

@@ -75,7 +75,6 @@ export enum NetworkId {
 }
 
 export enum ModalTypes {
-  wallet,
   info,
 }
 

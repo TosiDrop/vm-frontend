@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PageRoute } from "src/entities/common.entities";
 import { ClaimableToken, VmPoolInfo } from "src/entities/vm.entities";
 import useErrorHandler from "src/hooks/useErrorHandler";
 import useModal from "src/hooks/useModal";
+import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
 import { getCustomRewards, getRewards } from "src/services/claim";
 import { getSettings, getStakeKey } from "src/services/common";
-import { RootState } from "src/store";
 import { shuffleArray } from "src/utils";
 
 export default function useClaimReward() {
   const navigate = useNavigate();
   const { handleError } = useErrorHandler();
   const { showInfoModal } = useModal();
-  const connectedWalletAddress = useSelector(
-    (state: RootState) => state.wallet.walletAddress,
-  );
-  const isWrongNetwork = useSelector(
-    (state: RootState) => state.wallet.isWrongNetwork,
-  );
+  const { address } = useWalletConnector();
+  // const connectedWalletAddress = address;
+  // const isWrongNetwork = networkId !== 1;
 
   const [searchAddress, setSearchAddress] = useState("");
   const [claimableTokens, setClaimableTokens] = useState<ClaimableToken[]>([]);
@@ -32,8 +28,10 @@ export default function useClaimReward() {
   const [maxTokenSelected, setMaxTokenSelected] = useState(1000);
 
   useEffect(() => {
-    setSearchAddress(isWrongNetwork ? "" : connectedWalletAddress);
-  }, [connectedWalletAddress, isWrongNetwork]);
+    if (address) {
+      setSearchAddress(address);
+    }
+  }, [address]);
 
   useEffect(() => {
     setNumberOfSelectedTokens(
@@ -42,28 +40,24 @@ export default function useClaimReward() {
           agg += 1;
         }
         return agg;
-      }, 0),
+      }, 0)
     );
   }, [claimableTokens]);
 
   const handleTokenSelect = (position: number) => {
     const updatedClaimableTokens = [...claimableTokens];
 
-    if (
-      !updatedClaimableTokens[position].selected &&
-      numberOfSelectedTokens === maxTokenSelected
-    ) {
+    if (!updatedClaimableTokens[position].selected && numberOfSelectedTokens === maxTokenSelected) {
       showInfoModal(
         `You have selected the maximum number of tokens to claim (${maxTokenSelected}).
-         Please deselect other tokens first`,
+         Please deselect other tokens first`
       );
       return;
     }
     if (updatedClaimableTokens[position].ticker === "ADA") {
       updatedClaimableTokens[position].selected = true;
     } else {
-      updatedClaimableTokens[position].selected =
-        !updatedClaimableTokens[position].selected;
+      updatedClaimableTokens[position].selected = !updatedClaimableTokens[position].selected;
     }
     setClaimableTokens(updatedClaimableTokens);
   };
@@ -81,15 +75,14 @@ export default function useClaimReward() {
   };
 
   const selectRandomTokens = () => {
-    const positions = shuffleArray([
-      ...Array(claimableTokens.length).keys(),
-    ]).slice(0, maxTokenSelected);
+    const positions = shuffleArray([...Array(claimableTokens.length).keys()]).slice(
+      0,
+      maxTokenSelected
+    );
 
     const updatedClaimableTokens = [...claimableTokens];
     updatedClaimableTokens.forEach((token) => (token.selected = false));
-    positions.forEach(
-      (position) => (updatedClaimableTokens[position].selected = true),
-    );
+    positions.forEach((position) => (updatedClaimableTokens[position].selected = true));
 
     setClaimableTokens(updatedClaimableTokens);
   };
@@ -128,9 +121,9 @@ export default function useClaimReward() {
           .sort((a, b) => {
             if (a.ticker === "ADA") {
               return -1;
-	    } else if (b.ticker === "ADA") {
+            } else if (b.ticker === "ADA") {
               return 1;
-	    } else if (a.premium === b.premium) {
+            } else if (a.premium === b.premium) {
               if (a.ticker < b.ticker) {
                 return -1;
               } else {
@@ -139,7 +132,7 @@ export default function useClaimReward() {
             } else {
               return a.premium ? -1 : 1;
             }
-          }),
+          })
       );
       setPoolInfo(getRewardsResponse.pool_info);
       setIsCheckRewardLoading(false);
@@ -175,7 +168,7 @@ export default function useClaimReward() {
         stakeAddress.slice(0, 40),
         selectedTokenId.join(","),
         selectedPremiumToken,
-        selectedNativeToken,
+        selectedNativeToken
       );
       if (res == null) throw new Error();
 

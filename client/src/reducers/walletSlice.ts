@@ -1,66 +1,37 @@
-import { Cip30Wallet, WalletApi } from "@cardano-sdk/cip30";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CardanoTypes } from "src/entities/cardano";
-import { NetworkId } from "src/entities/common.entities";
-
+import { createSlice } from "@reduxjs/toolkit";
+import { EnabledWallet } from "@newm.io/cardano-dapp-wallet-connector";
 interface WalletState {
-  wallet: Cip30Wallet | undefined;
-  walletApi: WalletApi | undefined;
-  walletAddress: string;
-  walletState: CardanoTypes.WalletState;
-  name: string;
-  networkId: NetworkId | undefined;
-  isWrongNetwork: boolean;
+  address: string | null;
+  networkId: number | null;
+  wallet: EnabledWallet | null;
+  status: "idle" | "loading" | "failed";
 }
 
 const initialState: WalletState = {
-  wallet: undefined,
-  walletApi: undefined,
-  walletAddress: "",
-  walletState: CardanoTypes.WalletState.notConnected,
-  name: "",
-  networkId: undefined,
-  isWrongNetwork: false,
+  address: null,
+  networkId: null,
+  wallet: null,
+  status: "idle",
 };
 
-export const walletSlice = createSlice({
+const walletSlice = createSlice({
   name: "wallet",
   initialState,
   reducers: {
-    connectWallet: (
-      state,
-      action: PayloadAction<
-        | {
-            wallet: Cip30Wallet;
-            walletApi: WalletApi;
-            walletAddress: string;
-          }
-        | undefined
-      >,
-    ) => {
-      state.wallet = action.payload?.wallet;
-      state.walletApi = action.payload?.walletApi;
-      state.walletAddress = action.payload?.walletAddress ?? "";
+    setLoading: (state) => {
+      state.status = "loading";
     },
-    setWalletState: (
-      state,
-      action: PayloadAction<CardanoTypes.WalletState>,
-    ) => {
-      state.walletState = action.payload;
+    setWalletDetails: (state, action) => {
+      state.address = action.payload.address;
+      state.networkId = action.payload.networkId;
     },
-    setNetworkId: (state, action: PayloadAction<NetworkId>) => {
-      state.networkId = action.payload;
-    },
-    setIsWrongNetwork: (state, action: PayloadAction<boolean>) => {
-      state.isWrongNetwork = action.payload;
+    setFailed: (state) => {
+      state.status = "failed";
     },
   },
+  extraReducers: (builder) => {},
 });
 
-export const {
-  connectWallet,
-  setNetworkId,
-  setIsWrongNetwork,
-  setWalletState,
-} = walletSlice.actions;
+export const { setLoading, setWalletDetails, setFailed } = walletSlice.actions;
+
 export default walletSlice.reducer;

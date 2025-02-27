@@ -4,7 +4,6 @@ import useClickOutside from "src/hooks/useClickOutside";
 import { hideModal } from "src/reducers/globalSlice";
 import { RootState } from "src/store";
 import { InfoModal } from "./InfoModal";
-import { WalletModal } from "./WalletModal";
 
 function Modal() {
   const showModal = useSelector((state: RootState) => state.global.showModal);
@@ -15,8 +14,6 @@ function Modal() {
     switch (showModal) {
       case ModalTypes.info:
         return <InfoModal />;
-      case ModalTypes.wallet:
-        return <WalletModal />;
       default:
         return null;
     }
