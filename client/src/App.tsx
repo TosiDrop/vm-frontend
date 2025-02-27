@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import Footer from "src/components/Footer";
+import Modal from "src/components/Modal";
 import PopUp from "src/components/PopUp";
 import RouterWrapper from "src/layouts/RouterWrapper";
 import "src/styles.scss";
@@ -15,6 +16,7 @@ function App() {
     <ThemeWrapper>
       <>
         <PopUp></PopUp>
+        <Modal />
         <OptHeader></OptHeader>
         <BlockchainWrapper>
           <MenuWrapper>
