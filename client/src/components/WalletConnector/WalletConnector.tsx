@@ -12,7 +12,7 @@ const WalletConnector = () => {
     flexDirection: "row" as "row",
     alignItems: "center",
     color: theme === Themes.dark ? "#fff" : "#333",
-    backgroundColor: theme === Themes.dark ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)",
+    backgroundColor: theme === Themes.dark ? "rgba(20, 20, 20, 0.7)" : "rgba(0, 0, 0, 0.1)",
     padding: "0.5rem 1rem",
     borderRadius: "0.375rem",
     transition: "background-color 0.3s, box-shadow 0.3s",

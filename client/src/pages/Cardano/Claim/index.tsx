@@ -36,21 +36,17 @@ function Claim() {
       if (wallet) {
         try {
           const networkId = await wallet.getNetworkId();
-          console.log("networkId ----", networkId);
 
           const address = await new Promise<string>((resolve) => {
             getAddress((addr: string) => resolve(addr));
           });
-          console.log("address ----", address);
 
           dispatch(setWalletDetails({ address, networkId }));
         } catch (error) {
-          dispatch(setFailed());
-          console.error("Failed to fetch wallet details:", error);
+          console.log("Failed to fetch wallet details:", error);
         }
       } else {
-        dispatch(setFailed());
-        console.error("Wallet not connected");
+        console.log("Wallet not connected");
       }
     };
 

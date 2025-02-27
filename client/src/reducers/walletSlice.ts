@@ -24,7 +24,6 @@ const walletSlice = createSlice({
     setWalletDetails: (state, action) => {
       state.address = action.payload.address;
       state.networkId = action.payload.networkId;
-      console.log('Redux state updated:', state);
     },
     setFailed: (state) => {
       state.status = "failed";

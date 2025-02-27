@@ -14,17 +14,15 @@ export function useWalletConnector() {
       if (wallet) {
         getAddress((address: string) => {
           setAddress(address);
-          console.log("Address retrieved:", address);
           dispatch(setWalletDetails({ address, networkId, wallet }));
         });
 
         try {
           const id = await wallet.getNetworkId();
-          setNetworkId(id);
-          console.log("Network ID:", id);
+          setNetworkId(id);;
           dispatch(setWalletDetails({ address, networkId: id, wallet }));
         } catch (error) {
-          console.error("Failed to retrieve network ID:", error);
+          console.log("Failed to retrieve network ID:", error);
         }
       } else {
         setAddress(null);
