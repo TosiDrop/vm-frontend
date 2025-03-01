@@ -53,7 +53,8 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
           <div className="">
             {renderTxId()}
             <div className="flex flex-row items-center">
-              Status: processing transaction <Spinner className="ml-2.5"></Spinner>
+              Status: processing transaction{" "}
+              <Spinner className="ml-2.5"></Spinner>
             </div>
           </div>
         );
@@ -71,7 +72,10 @@ const TransactionStatus = ({ transactionStatus, transactionId }: Params) => {
         return (
           <div className="">
             {renderTxId()}
-            Status: <span className="text-red-600">transaction fails, please try again</span>
+            Status:{" "}
+            <span className="text-red-600">
+              transaction fails, please try again
+            </span>
           </div>
         );
     }

@@ -18,7 +18,11 @@ enum TransactionStatusDetail {
   success = 3,
 }
 
-const SendAdaInfo = ({ txDetail, setTransactionId, setTransactionStatus }: Params) => {
+const SendAdaInfo = ({
+  txDetail,
+  setTransactionId,
+  setTransactionStatus,
+}: Params) => {
   const { wallet } = useWalletConnector();
   const { transfer, loading: transferLoading } = useTransfer();
 
@@ -41,7 +45,7 @@ const SendAdaInfo = ({ txDetail, setTransactionId, setTransactionStatus }: Param
    */
   const renderSendAdaButton = () => {
     if (wallet) {
-      console.log('wallet', wallet);
+      console.log("wallet", wallet);
       return (
         <div className="w-full flex justify-center">
           <button
@@ -65,11 +69,11 @@ const SendAdaInfo = ({ txDetail, setTransactionId, setTransactionStatus }: Param
   const sendADA = async () => {
     if (txDetail == null) {
       console.log("txDetail is null");
-      throw new Error("Transaction not found")
-    };
-    console.log('txDetail', txDetail);
-    console.log('txDetail.withdrawal_address', txDetail.withdrawal_address);
-    console.log('txDetail.deposit', txDetail.deposit);
+      throw new Error("Transaction not found");
+    }
+    console.log("txDetail", txDetail);
+    console.log("txDetail.withdrawal_address", txDetail.withdrawal_address);
+    console.log("txDetail.deposit", txDetail.deposit);
     await transfer(
       {
         toAddress: txDetail.withdrawal_address,
@@ -78,7 +82,7 @@ const SendAdaInfo = ({ txDetail, setTransactionId, setTransactionStatus }: Param
       (txId) => {
         setTransactionStatus(TransactionStatusDetail.processing);
         setTransactionId(txId);
-      }
+      },
     );
   };
 
