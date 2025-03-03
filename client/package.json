@@ -16,7 +16,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@reduxjs/toolkit": "^2.5.0",
     "@svgr/webpack": "^8.1.0",
-    "@types/node": "^22.10.7",
+    "@types/node": "^22.13.8",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "axios": "^1.7.9",
