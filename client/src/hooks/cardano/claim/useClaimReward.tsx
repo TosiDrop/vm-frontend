@@ -40,24 +40,28 @@ export default function useClaimReward() {
           agg += 1;
         }
         return agg;
-      }, 0)
+      }, 0),
     );
   }, [claimableTokens]);
 
   const handleTokenSelect = (position: number) => {
     const updatedClaimableTokens = [...claimableTokens];
 
-    if (!updatedClaimableTokens[position].selected && numberOfSelectedTokens === maxTokenSelected) {
+    if (
+      !updatedClaimableTokens[position].selected &&
+      numberOfSelectedTokens === maxTokenSelected
+    ) {
       showInfoModal(
         `You have selected the maximum number of tokens to claim (${maxTokenSelected}).
-         Please deselect other tokens first`
+         Please deselect other tokens first`,
       );
       return;
     }
     if (updatedClaimableTokens[position].ticker === "ADA") {
       updatedClaimableTokens[position].selected = true;
     } else {
-      updatedClaimableTokens[position].selected = !updatedClaimableTokens[position].selected;
+      updatedClaimableTokens[position].selected =
+        !updatedClaimableTokens[position].selected;
     }
     setClaimableTokens(updatedClaimableTokens);
   };
@@ -75,14 +79,15 @@ export default function useClaimReward() {
   };
 
   const selectRandomTokens = () => {
-    const positions = shuffleArray([...Array(claimableTokens.length).keys()]).slice(
-      0,
-      maxTokenSelected
-    );
+    const positions = shuffleArray([
+      ...Array(claimableTokens.length).keys(),
+    ]).slice(0, maxTokenSelected);
 
     const updatedClaimableTokens = [...claimableTokens];
     updatedClaimableTokens.forEach((token) => (token.selected = false));
-    positions.forEach((position) => (updatedClaimableTokens[position].selected = true));
+    positions.forEach(
+      (position) => (updatedClaimableTokens[position].selected = true),
+    );
 
     setClaimableTokens(updatedClaimableTokens);
   };
@@ -123,16 +128,12 @@ export default function useClaimReward() {
               return -1;
             } else if (b.ticker === "ADA") {
               return 1;
-            } else if (a.premium === b.premium) {
-              if (a.ticker < b.ticker) {
-                return -1;
-              } else {
-                return a.ticker === "ADA" ? -1 : 1;
-              }
+            } else if (a.ticker < b.ticker) {
+              return -1;
             } else {
-              return a.premium ? -1 : 1;
+              return a.ticker === "ADA" ? -1 : 1;
             }
-          })
+          }),
       );
       setPoolInfo(getRewardsResponse.pool_info);
       setIsCheckRewardLoading(false);
@@ -147,17 +148,10 @@ export default function useClaimReward() {
     if (numberOfSelectedTokens === 0) return;
 
     setIsClaimRewardLoading(true);
-    let selectedNativeToken = false;
-    let selectedPremiumToken = false;
 
     const selectedTokenId: string[] = [];
     claimableTokens.forEach((token) => {
       if (token.selected) {
-        if (token.native) {
-          selectedNativeToken = true;
-        } else if (token.premium) {
-          selectedPremiumToken = true;
-        }
         selectedTokenId.push(token.assetId);
       }
     });
@@ -167,12 +161,10 @@ export default function useClaimReward() {
         stakeAddress,
         stakeAddress.slice(0, 40),
         selectedTokenId.join(","),
-        selectedPremiumToken,
-        selectedNativeToken
       );
       if (res == null) throw new Error();
 
-      let depositInfoUrl = `${PageRoute.depositCardano}?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=${selectedPremiumToken}&native=${selectedNativeToken}&isWhitelisted=${res.is_whitelisted}`;
+      let depositInfoUrl = `${PageRoute.depositCardano}?stakeAddress=${stakeAddress}&withdrawAddress=${res.withdrawal_address}&requestId=${res.request_id}&selectedTokens=${numberOfSelectedTokens}&unlock=true&native=false&isWhitelisted=${res.is_whitelisted}`;
       navigate(depositInfoUrl, { replace: true });
     } catch (e) {
       handleError(e);

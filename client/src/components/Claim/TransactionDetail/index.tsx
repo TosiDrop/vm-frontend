@@ -8,13 +8,10 @@ import { lovelaceToAda } from "src/utils";
 interface Props {
   numberOfTokens: number;
   deposit: number;
-  unlock: boolean;
-  native: boolean;
   isWhitelisted: boolean;
 }
 
 interface ISettings {
-  nativeFee: number;
   vmFee: number;
   txFee: number;
   tosiFee: number;
@@ -23,12 +20,9 @@ interface ISettings {
 const TransactionDetail = ({
   numberOfTokens,
   deposit,
-  unlock,
-  native,
   isWhitelisted,
 }: Props) => {
   const [settings, setSettings] = useState<ISettings>({
-    nativeFee: 500000,
     vmFee: 0,
     txFee: 440000,
     tosiFee: 500000,
@@ -40,7 +34,6 @@ const TransactionDetail = ({
       const settingsFromFeatures = await getFeatures();
       setSettings({
         ...settings,
-        nativeFee: settingsFromFeatures.native_token_fee,
         tosiFee: settingsFromFeatures.tosi_fee,
         vmFee: settingsFromVM.withdrawal_fee,
       });
@@ -57,13 +50,8 @@ const TransactionDetail = ({
 
   const calcReturnedAda = () => {
     let returnedAda = deposit - settings.vmFee - calcTxFee();
-    if (unlock || native) {
-      // unlock
-      if (unlock && !isWhitelisted) returnedAda -= settings.tosiFee;
-      // only native, charging native fee
-      if (native && !unlock && !isWhitelisted)
-        returnedAda -= settings.nativeFee;
-    }
+    // Everyone is charged except whitelisted pools
+    if (!isWhitelisted) returnedAda -= settings.tosiFee;
     return returnedAda;
   };
 
@@ -84,15 +72,15 @@ const TransactionDetail = ({
         <div className="w-28 text-right">{lovelaceToAda(calcTxFee())} ADA</div>
         <div className="text-right">Transaction fee</div>
       </div>
-      {(unlock || native) && !isWhitelisted ? (
+      {!isWhitelisted ? (
         <div className="p-1 flex items-center flex-row-reverse border-b border-color text-premium">
           <div className="w-28 text-right">
-            {lovelaceToAda(unlock ? settings.tosiFee : settings.nativeFee)} ADA
+            {lovelaceToAda(settings.tosiFee)} ADA
           </div>
           <div className="tooltip-activator cursor-help text-right">
             TosiFee <FontAwesomeIcon icon={faQuestionCircle} />
             <div className="tooltip p-3.5 rounded-2xl right-5 bottom-4 absolute min-w-52 max-w-64">
-              TosiFee is applied to tokens that use TosiDrop services
+              TosiFee is applied to pay for TosiDrop services
             </div>
           </div>
         </div>
