@@ -90,7 +90,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/runtime": "^7.26.0",
     "@testing-library/jest-dom": "^6.6.3",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.21",
     "eslint": "^8.3.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-webpack-plugin": "^4.2.0",
