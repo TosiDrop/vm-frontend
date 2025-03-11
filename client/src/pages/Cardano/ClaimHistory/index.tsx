@@ -23,7 +23,10 @@ function ClaimHistory() {
       <p className="text-3xl">History</p>
       <div className="flex flex-col gap-4">
         <div className="p-5 background text rounded-2xl flex flex-col gap-4">
-          <p>Enter your wallet/stake address or $handle to view your reward history</p>
+          <p>
+            Enter your wallet/stake address or $handle to view your reward
+            history
+          </p>
           <input
             className={`w-full rounded-lg bg-transparent border-gray-400 border p-1 disabled:cursor-not-allowed`}
             type="text"

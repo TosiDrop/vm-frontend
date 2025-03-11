@@ -16,8 +16,6 @@ interface Params {
   transactionStatus: TransactionStatusDetail;
   setTransactionId: Function;
   setTransactionStatus: Function;
-  unlock: boolean;
-  native: boolean;
 }
 
 const DepositInfo = ({
@@ -27,8 +25,6 @@ const DepositInfo = ({
   transactionStatus,
   setTransactionId,
   setTransactionStatus,
-  unlock,
-  native,
 }: Params) => {
   return (
     <div className="flex flex-col gap-4">
@@ -65,8 +61,6 @@ const DepositInfo = ({
         <TransactionDetail
           numberOfTokens={checkedCount}
           deposit={txDetail.deposit}
-          unlock={unlock}
-          native={native}
           isWhitelisted={txDetail.is_whitelisted}
         ></TransactionDetail>
       ) : null}
