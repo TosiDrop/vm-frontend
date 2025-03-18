@@ -18,7 +18,7 @@ export default function useStakeToPool() {
       }
       const { witness, txBody } = await createStakeTx({
         poolId,
-        address: connectedWalletAddress ?? ""
+        address: connectedWalletAddress ?? "",
       });
       const signedWitness = await connectedWalletApi.signTx(witness);
       const { tx } = await submitStakeTx({ signedWitness, txBody });

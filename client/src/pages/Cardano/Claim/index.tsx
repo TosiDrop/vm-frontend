@@ -4,7 +4,11 @@ import RewardsView from "src/components/Claim/RewardsView";
 import { useConnectWallet } from "@newm.io/cardano-dapp-wallet-connector";
 import useClaimReward from "src/hooks/cardano/claim/useClaimReward";
 import { useQueue } from "src/hooks/cardano/claim/useQueue";
-import { setFailed, setLoading, setWalletDetails } from "src/reducers/walletSlice";
+import {
+  setFailed,
+  setLoading,
+  setWalletDetails,
+} from "src/reducers/walletSlice";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "src/store"; // Adjust the import path as necessary
 
