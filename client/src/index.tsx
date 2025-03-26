@@ -7,7 +7,9 @@ import "src/index.css";
 import reportWebVitals from "src/reportWebVitals";
 import store from "src/store";
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement,
+);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
@@ -15,7 +17,7 @@ root.render(
         <App />
       </Provider>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
