@@ -23,7 +23,7 @@
   "dependencies": {
     "@emurgo/cardano-serialization-lib-nodejs": "^11.5.0",
     "@types/validator": "^13.12.2",
-    "axios": "^1.8.3",
+    "axios": "^1.8.4",
     "bech32-converting": "^1.0.9",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
