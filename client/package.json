@@ -93,7 +93,7 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^8.3.0",
     "eslint-config-react-app": "^7.0.1",
-    "eslint-webpack-plugin": "^4.2.0",
+    "eslint-webpack-plugin": "^5.0.0",
     "postcss": "^8.4.49",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^8.1.1",
