@@ -32,7 +32,9 @@ export default function Connected({
           </div>
         ) : (
           <>
-            {wallet ? <img src={wallet.icon} className="h-5" alt="wallet icon"></img> : null}
+            {wallet ? (
+              <img src={wallet.icon} className="h-5" alt="wallet icon"></img>
+            ) : null}
             <p>{address ? abbreviateAddress(address) : ""}</p>
           </>
         )}
