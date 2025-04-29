@@ -13,32 +13,40 @@ export function useWalletConnector() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchNetworkId = async () => {
+    const fetchDetails = async () => {
       if (wallet) {
-        getAddress((address: string) => {
-          setAddress(address);
-          dispatch(setWalletDetails({ address, networkId, wallet }));
-        });
-
         try {
-          const id = await wallet.getNetworkId();
-          setNetworkId(id);
-          dispatch(setWalletDetails({ address, networkId: id, wallet }));
+          const [fetchedAddress, fetchedNetworkId] = await Promise.all([
+            new Promise<string>((resolve) => getAddress(resolve)),
+            wallet.getNetworkId(),
+          ]);
+
+          setAddress(fetchedAddress);
+          setNetworkId(fetchedNetworkId);
+          dispatch(
+            setWalletDetails({
+              address: fetchedAddress,
+              networkId: fetchedNetworkId,
+            }),
+          );
         } catch (error) {
-          console.log("Failed to retrieve network ID:", error);
+          console.error("Failed to retrieve wallet details:", error);
+
+          dispatch(
+            setWalletDetails({ address: null, networkId: null }),
+          );
         }
       } else {
         setAddress(null);
         setNetworkId(null);
-        console.log("Wallet is not connected");
         dispatch(
-          setWalletDetails({ address: null, networkId: null, wallet: null }),
+          setWalletDetails({ address: null, networkId: null }),
         );
       }
     };
 
-    fetchNetworkId();
-  }, [wallet, getAddress, dispatch, address, networkId]);
+    fetchDetails();
+  }, [wallet, getAddress, dispatch]);
 
   return { address, networkId, wallet };
 }
