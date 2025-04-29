@@ -1,5 +1,7 @@
 import { KeyboardEvent } from "react";
 import Spinner from "src/components/Spinner";
+import { useDispatch } from "react-redux";
+import { setWalletDetails } from "src/reducers/walletSlice";
 
 interface Props {
   searchAddress: string;
@@ -18,6 +20,8 @@ export default function CheckRewardInput({
   isRewardLoading,
   cancelClaim,
 }: Props) {
+  const dispatch = useDispatch();
+
   function handleCheckReward(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
       checkRewards();
@@ -25,7 +29,12 @@ export default function CheckRewardInput({
   }
 
   function handleInput(e: KeyboardEvent<HTMLInputElement>) {
-    setSearchAddress((e.target as HTMLInputElement).value);
+    const inputAddress = (e.target as HTMLInputElement).value;
+    setSearchAddress(inputAddress);
+    dispatch(setWalletDetails({
+      address: inputAddress,
+      networkId: null,
+    }));
   }
 
   return (

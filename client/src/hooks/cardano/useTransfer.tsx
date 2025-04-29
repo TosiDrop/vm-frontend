@@ -9,7 +9,7 @@ export default function useTransfer() {
   const { handleError } = useErrorHandler();
   const { wallet } = useWalletConnector();
   const { address } = useSelector((state: any) => state.wallet);
-  console.log("wallet from useTransfer", address);
+
 
   async function transfer(
     { toAddress, amountToSend }: { toAddress: string; amountToSend: string },
@@ -18,16 +18,16 @@ export default function useTransfer() {
     setLoading(true);
     try {
       if (!wallet) {
-        console.log("wallet is null");
+
         throw new Error("Please connect your wallet to transfer");
       }
       if (!address) {
-        console.log("address is null");
+
         throw new Error(
           "From address is not available. Please ensure your wallet is connected.",
         );
       }
-      console.log("address from useTransfer", address);
+
       const { witness, txBody } = await createTransferTx({
         fromAddress: address,
         toAddress,
