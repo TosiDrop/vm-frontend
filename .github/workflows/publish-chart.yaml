@@ -1,0 +1,33 @@
+name: publish-vm-frontend-helm-chart
+
+on:
+  push:
+    branches: ['master']
+    paths: ['charts/vm-frontend/**','.github/workflows/publish-vm-frontend-helm-chart.yml']
+
+jobs:
+  build-and-push-vm-frontend-helm-chart:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+      - name: Package and upload chart
+        shell: bash
+        env:
+          REGISTRY: "ghcr.io"
+          REPOSITORY: ${{ github.repository == 'TosiDrop/vm-frontend' && 'tosidrop/vm-frontend' || github.repository }}
+          TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          USER: "${{ github.repository_owner }}"
+        run: |
+          rm -rf dist
+          mkdir dist
+          helm package charts/vm-frontend/ -d dist/
+          echo "${TOKEN}" | helm registry login "${REGISTRY}" -u "${USER}" --password-stdin
+          for file in dist/*; do
+            helm push "$file" "oci://${REGISTRY}/${REPOSITORY,,}/charts"
+          done
+

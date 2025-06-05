@@ -1,0 +1,9 @@
+apiVersion: v2
+name: vm-frontend
+description: A Helm chart for deploying the vm-frontend API
+type: application
+version: 0.1.0
+appVersion: "master"
+maintainers:
+  - name: wolf31o2
+    email: wolf31o2@blinklabs.io
