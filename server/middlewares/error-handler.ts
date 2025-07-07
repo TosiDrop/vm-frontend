@@ -26,7 +26,7 @@ export default async function errorHandlerMiddleware(
     errorMessage = JSON.stringify(error);
     LoggerService.error(`Error at ${req.url}: ${errorMessage}`);
   }
-  return res.status(statusCode).send(createErrorResponse(errorMessage));
+  return void res.status(statusCode).send(createErrorResponse(errorMessage));
 }
 
 export const errorHandlerWrapper =
