@@ -42,7 +42,6 @@ environment:
 
 service:
   type: ClusterIP
-  externalTrafficPolicy: Cluster
   port: 80
 
 ingress:
