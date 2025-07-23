@@ -31,10 +31,12 @@ export default function CheckRewardInput({
   function handleInput(e: KeyboardEvent<HTMLInputElement>) {
     const inputAddress = (e.target as HTMLInputElement).value;
     setSearchAddress(inputAddress);
-    dispatch(setWalletDetails({
-      address: inputAddress,
-      networkId: null,
-    }));
+    dispatch(
+      setWalletDetails({
+        address: inputAddress,
+        networkId: null,
+      }),
+    );
   }
 
   return (

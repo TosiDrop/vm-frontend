@@ -32,16 +32,12 @@ export function useWalletConnector() {
         } catch (error) {
           console.error("Failed to retrieve wallet details:", error);
 
-          dispatch(
-            setWalletDetails({ address: null, networkId: null }),
-          );
+          dispatch(setWalletDetails({ address: null, networkId: null }));
         }
       } else {
         setAddress(null);
         setNetworkId(null);
-        dispatch(
-          setWalletDetails({ address: null, networkId: null }),
-        );
+        dispatch(setWalletDetails({ address: null, networkId: null }));
       }
     };
 

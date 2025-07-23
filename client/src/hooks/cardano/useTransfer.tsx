@@ -10,7 +10,6 @@ export default function useTransfer() {
   const { wallet } = useWalletConnector();
   const { address } = useSelector((state: any) => state.wallet);
 
-
   async function transfer(
     { toAddress, amountToSend }: { toAddress: string; amountToSend: string },
     callback?: (txId?: string) => void,
@@ -18,11 +17,9 @@ export default function useTransfer() {
     setLoading(true);
     try {
       if (!wallet) {
-
         throw new Error("Please connect your wallet to transfer");
       }
       if (!address) {
-
         throw new Error(
           "From address is not available. Please ensure your wallet is connected.",
         );
