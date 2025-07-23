@@ -81,6 +81,15 @@ app.get(
 );
 
 app.get(
+  "/",
+  errorHandlerWrapper((_req: Request, res: Response) => {
+    res.status(200).json({
+      status: "UP",
+    });
+  }),
+);
+
+app.get(
   "/health",
   errorHandlerWrapper((_req: Request, res: Response) => {
     res.status(200).json({
