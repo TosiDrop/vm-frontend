@@ -42,7 +42,8 @@ environment:
 
 service:
   type: ClusterIP
-  port: 3000
+  externalTrafficPolicy: Cluster
+  port: 80
 
 ingress:
   enabled: false
