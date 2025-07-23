@@ -30,19 +30,19 @@ securityContext: {}
   # runAsUser: 1000
 
 environment:
-  # CARDANO_NETWORK
+  CARDANO_NETWORK: mainnet
   # CLOUDFLARE_PSK
-  # LOG_TYPE
-  # PORT
-  # TOSIFEE
+  KOIOS_URL: https://koios.tosidrop.me/api/v1
+  LOG_TYPE: combined
+  PORT: 3000
+  TOSIFEE: 1000000
   # TOSIFEE_WHITELIST
   # VM_API_TOKEN
-  # VM_KOIOS_URL
-  # VM_URL
+  VM_URL: https://vm.adaseal.eu
 
 service:
   type: ClusterIP
-  port: 3000
+  port: 80
 
 ingress:
   enabled: false
