@@ -35,7 +35,7 @@ environment:
   KOIOS_URL: https://koios.tosidrop.me/api/v1
   LOG_TYPE: combined
   PORT: 3000
-  TOSIFEE: 1000000
+  # TOSIFEE
   # TOSIFEE_WHITELIST
   # VM_API_TOKEN
   VM_URL: https://vm.adaseal.eu
