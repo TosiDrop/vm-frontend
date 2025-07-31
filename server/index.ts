@@ -52,7 +52,7 @@ export const TOSIDROP_ADMIN_KEY =
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const LOG_TYPE = process.env.LOG_TYPE || "dev";
 const PORT = process.env.PORT || 3000;
-const TOSIFEE = process.env.TOSIFEE || 500000;
+const TOSIFEE = process.env.TOSIFEE || 1000000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 
 const app = express();
