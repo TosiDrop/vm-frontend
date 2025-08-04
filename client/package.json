@@ -101,7 +101,7 @@
     "postcss-preset-env": "^10.2.4",
     "tailwindcss": "^3.3.5",
     "ts-node": "^10.9.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "jest": {
     "roots": [
