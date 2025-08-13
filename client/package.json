@@ -88,7 +88,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@babel/runtime": "^7.27.6",
+    "@babel/runtime": "^7.28.2",
     "@testing-library/jest-dom": "^6.6.4",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.3.0",
