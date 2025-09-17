@@ -9,7 +9,7 @@
   "dependencies": {
     "@babel/core": "^7.28.4",
     "@fortawesome/fontawesome-svg-core": "^7.0.0",
-    "@fortawesome/free-brands-svg-icons": "^6.5.1",
+    "@fortawesome/free-brands-svg-icons": "^7.0.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.3",
     "@newm.io/cardano-dapp-wallet-connector": "^1.5.4",
