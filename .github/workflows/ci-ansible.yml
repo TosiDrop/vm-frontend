@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: ansible/ansible-lint@v25.9.1
+      - uses: ansible/ansible-lint@v25.9.2
         with:
           args: "ansible"
       - run: 'echo "VM_TOKEN=foo" > .env'
