@@ -39,6 +39,6 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/lodash": "^4.17.20",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.11"
   }
 }
