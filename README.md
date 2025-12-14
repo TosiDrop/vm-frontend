@@ -6,25 +6,13 @@ Welcome to the Tosidrop VM Frontend!
 The code is split into two projects, an Express API which serves as a backend
 for the frontend, and a React UI which is built into static assets.
 
-This is intended for use via Docker.
-
-Within this repository is an Ansible playbook to install Docker on the local
-machine and run the containers. You can disable installing Docker by setting
-`MANAGE_DOCKER=false` in `.env`.
-
-## Usage
-
-```bash
-./runme.sh
-```
-
 ## Dev usage
 
 You can run `npm install` and `npm run` from the client, server, and root
 folders as needed. The preferred way for testing us `npm run dev` from the
 root folder. There's a readme on the client folder you should check out.
 
-Project uses NPM version 16. Most accurate results are obtained runnning
+Project uses NPM version 24. Most accurate results are obtained runnning
 the docker image.
 
 ### Logging
