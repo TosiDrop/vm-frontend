@@ -9,4 +9,4 @@ docker run --rm -ti \
 	--user $(id -u) \
 	--name vm-frontend \
 	--entrypoint bash \
-	node:23 ${@:--c 'npm i && cd server && npm i && cd ../client && npm i && cd .. && npm run dev'}
+	node:24 ${@:--c 'npm i && cd server && npm i && cd ../client && npm i && cd .. && npm run dev'}

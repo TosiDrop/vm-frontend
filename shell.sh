@@ -9,4 +9,4 @@ docker run --rm -ti \
 	--user $(id -u) \
 	--name vm-frontend-shell \
 	--entrypoint bash \
-	node:23
+	node:24
