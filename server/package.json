@@ -38,7 +38,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/lodash": "^4.17.21",
+    "@types/lodash": "^4.17.23",
     "nodemon": "^3.1.11"
   }
 }
