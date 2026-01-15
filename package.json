@@ -20,6 +20,6 @@
     "concurrently": "^9.2.1"
   },
   "dependencies": {
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.3.5"
   }
 }
