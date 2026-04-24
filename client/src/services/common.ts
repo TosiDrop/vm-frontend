@@ -77,11 +77,11 @@ export async function createStakeTx(
   return response.data;
 }
 
-export async function createTransferTx(
-  params: Dto.CreateTransferTx["body"],
-): Promise<Dto.CreateTransferTx["response"]> {
-  const response = await axios.post<Dto.CreateTransferTx["response"]>(
-    `${API_URL}/api/tx/transfer`,
+export async function createClaimTx(
+  params: Dto.CreateClaimTx["body"],
+): Promise<Dto.CreateClaimTx["response"]> {
+  const response = await axios.post<Dto.CreateClaimTx["response"]>(
+    `${API_URL}/api/tx/claim`,
     params,
   );
   return response.data;
