@@ -1,7 +1,7 @@
 import QRCode from "react-qr-code";
 import Copyable from "src/components/Copyable";
 import Spinner from "src/components/Spinner";
-import useTransfer from "src/hooks/cardano/useTransfer";
+import useClaim from "src/hooks/cardano/claim/useClaim";
 import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
 import { lovelaceToAda } from "src/utils";
 
@@ -24,7 +24,7 @@ const SendAdaInfo = ({
   setTransactionStatus,
 }: Params) => {
   const { wallet } = useWalletConnector();
-  const { transfer, loading: transferLoading } = useTransfer();
+  const { claim, loading: claimLoading } = useClaim();
 
   /**
    * render QR Code
@@ -45,7 +45,6 @@ const SendAdaInfo = ({
    */
   const renderSendAdaButton = () => {
     if (wallet) {
-      console.log("wallet", wallet);
       return (
         <div className="w-full flex justify-center">
           <button
@@ -53,7 +52,7 @@ const SendAdaInfo = ({
             onClick={sendADA}
           >
             Send ADA
-            {transferLoading ? (
+            {claimLoading ? (
               <div className="ml-2.5">
                 <Spinner></Spinner>
               </div>
@@ -68,13 +67,9 @@ const SendAdaInfo = ({
 
   const sendADA = async () => {
     if (txDetail == null) {
-      console.log("txDetail is null");
       throw new Error("Transaction not found");
     }
-    console.log("txDetail", txDetail);
-    console.log("txDetail.withdrawal_address", txDetail.withdrawal_address);
-    console.log("txDetail.deposit", txDetail.deposit);
-    await transfer(
+    await claim(
       {
         toAddress: txDetail.withdrawal_address,
         amountToSend: txDetail.deposit.toString(),

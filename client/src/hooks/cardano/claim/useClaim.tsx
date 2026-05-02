@@ -1,23 +1,24 @@
 import { useState } from "react";
-import { createTransferTx, submitStakeTx } from "src/services/common";
-import useErrorHandler from "../useErrorHandler";
-import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
 import { useSelector } from "react-redux";
+import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
+import { createClaimTx, submitStakeTx } from "src/services/common";
+import { RootState } from "src/store";
+import useErrorHandler from "../../useErrorHandler";
 
-export default function useTransfer() {
+export default function useClaim() {
   const [loading, setLoading] = useState(false);
   const { handleError } = useErrorHandler();
   const { wallet } = useWalletConnector();
-  const { address } = useSelector((state: any) => state.wallet);
+  const { address } = useSelector((state: RootState) => state.wallet);
 
-  async function transfer(
+  async function claim(
     { toAddress, amountToSend }: { toAddress: string; amountToSend: string },
     callback?: (txId?: string) => void,
   ) {
     setLoading(true);
     try {
       if (!wallet) {
-        throw new Error("Please connect your wallet to transfer");
+        throw new Error("Please connect your wallet to claim");
       }
       if (!address) {
         throw new Error(
@@ -25,13 +26,13 @@ export default function useTransfer() {
         );
       }
 
-      const { witness, txBody } = await createTransferTx({
+      const { witness, txBody, auxData } = await createClaimTx({
         fromAddress: address,
         toAddress,
         amountToSend,
       });
       const signedWitness = await wallet.signTx(witness);
-      const { tx } = await submitStakeTx({ signedWitness, txBody });
+      const { tx } = await submitStakeTx({ signedWitness, txBody, auxData });
       const txId = await wallet.submitTx(tx);
       if (callback != null) {
         callback(txId);
@@ -44,7 +45,7 @@ export default function useTransfer() {
   }
 
   return {
-    transfer,
+    claim,
     loading,
   };
 }
