@@ -61,6 +61,12 @@ const ALLOWED_CORS_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || "")
   .map((origin) => origin.trim())
   .filter((origin) => origin.length > 0);
 
+if (ALLOWED_CORS_ORIGINS.length === 0) {
+  console.warn(
+    "Warning: CORS_ALLOWED_ORIGINS is not set or empty. All browser cross-origin requests will be blocked.",
+  );
+}
+
 app.use(express.json());
 app.use(require("morgan")(LOG_TYPE));
 app.use(
