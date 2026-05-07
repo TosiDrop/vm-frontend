@@ -56,9 +56,24 @@ const TOSIFEE = process.env.TOSIFEE || 1000000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 
 const app = express();
+const ALLOWED_CORS_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter((origin) => origin.length > 0);
+
 app.use(express.json());
 app.use(require("morgan")(LOG_TYPE));
-app.use(cors({ origin: "*" }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      return callback(
+        null,
+        ALLOWED_CORS_ORIGINS.includes(origin),
+      );
+    },
+  }),
+);
 
 app.use("/api/tx", TxRouter);
 app.use("/api/util", UtilRouter);
