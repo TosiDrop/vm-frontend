@@ -63,7 +63,7 @@ const ALLOWED_CORS_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || "")
 
 if (ALLOWED_CORS_ORIGINS.length === 0) {
   console.warn(
-    "Warning: CORS_ALLOWED_ORIGINS is not set or empty. All browser cross-origin requests will be blocked.",
+    "Warning: CORS_ALLOWED_ORIGINS is not set or empty. Cross-origin requests will not receive CORS headers and browser clients may fail.",
   );
 }
 
