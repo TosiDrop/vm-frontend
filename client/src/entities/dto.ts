@@ -55,20 +55,6 @@ export namespace Dto {
     };
   }
 
-  export interface CreateClaimTx extends Base {
-    body: {
-      fromAddress: string;
-      toAddress: string;
-      amountToSend: string;
-    };
-
-    response: {
-      witness: string;
-      txBody: string;
-      auxData?: string;
-    };
-  }
-
   export interface CreateDelegationTx extends Base {
     body: {
       poolId: string;
@@ -85,7 +71,6 @@ export namespace Dto {
     body: {
       signedWitness: string;
       txBody: string;
-      auxData?: string;
     };
 
     response: {
