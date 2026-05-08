@@ -56,9 +56,30 @@ const TOSIFEE = process.env.TOSIFEE || 1000000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 
 const app = express();
+const ALLOWED_CORS_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter((origin) => origin.length > 0);
+
+if (ALLOWED_CORS_ORIGINS.length === 0) {
+  console.warn(
+    "Warning: CORS_ALLOWED_ORIGINS is not set or empty. Cross-origin requests will not receive CORS headers and will be blocked by browsers.",
+  );
+}
+
 app.use(express.json());
 app.use(require("morgan")(LOG_TYPE));
-app.use(cors({ origin: "*" }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      return callback(
+        null,
+        ALLOWED_CORS_ORIGINS.includes(origin),
+      );
+    },
+  }),
+);
 
 app.use("/api/tx", TxRouter);
 app.use("/api/util", UtilRouter);
