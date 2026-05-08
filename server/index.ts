@@ -56,10 +56,13 @@ const TOSIFEE = process.env.TOSIFEE || 1000000;
 const TOSIFEE_WHITELIST = process.env.TOSIFEE_WHITELIST;
 
 const app = express();
-const ALLOWED_CORS_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || "")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter((origin) => origin.length > 0);
+const ALLOWED_CORS_ORIGINS = process.env.CORS_ALLOWED_ORIGINS
+  ? process.env.CORS_ALLOWED_ORIGINS.split(",")
+      .map((origin) => origin.trim())
+      .filter((origin) => origin.length > 0)
+  : process.env.NODE_ENV === "development"
+    ? []
+    : ["https://tosidrop.me"];
 
 if (ALLOWED_CORS_ORIGINS.length === 0) {
   console.warn(
@@ -73,10 +76,7 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-      return callback(
-        null,
-        ALLOWED_CORS_ORIGINS.includes(origin),
-      );
+      return callback(null, ALLOWED_CORS_ORIGINS.includes(origin));
     },
   }),
 );
