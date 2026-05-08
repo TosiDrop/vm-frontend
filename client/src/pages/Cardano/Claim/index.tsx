@@ -5,7 +5,6 @@ import { useConnectWallet } from "@newm.io/cardano-dapp-wallet-connector";
 import useClaimReward from "src/hooks/cardano/claim/useClaimReward";
 import { useQueue } from "src/hooks/cardano/claim/useQueue";
 import {
-  setFailed,
   setLoading,
   setWalletDetails,
 } from "src/reducers/walletSlice";
