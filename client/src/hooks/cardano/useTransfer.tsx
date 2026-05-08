@@ -1,24 +1,23 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { createTransferTx, submitStakeTx } from "src/services/common";
+import useErrorHandler from "../useErrorHandler";
 import { useWalletConnector } from "src/pages/Cardano/Claim/useWalletConnector";
-import { createClaimTx, submitStakeTx } from "src/services/common";
-import { RootState } from "src/store";
-import useErrorHandler from "../../useErrorHandler";
+import { useSelector } from "react-redux";
 
-export default function useClaim() {
+export default function useTransfer() {
   const [loading, setLoading] = useState(false);
   const { handleError } = useErrorHandler();
   const { wallet } = useWalletConnector();
-  const { address } = useSelector((state: RootState) => state.wallet);
+  const { address } = useSelector((state: any) => state.wallet);
 
-  async function claim(
+  async function transfer(
     { toAddress, amountToSend }: { toAddress: string; amountToSend: string },
     callback?: (txId?: string) => void,
   ) {
     setLoading(true);
     try {
       if (!wallet) {
-        throw new Error("Please connect your wallet to claim");
+        throw new Error("Please connect your wallet to transfer");
       }
       if (!address) {
         throw new Error(
@@ -26,13 +25,13 @@ export default function useClaim() {
         );
       }
 
-      const { witness, txBody, auxData } = await createClaimTx({
+      const { witness, txBody } = await createTransferTx({
         fromAddress: address,
         toAddress,
         amountToSend,
       });
       const signedWitness = await wallet.signTx(witness);
-      const { tx } = await submitStakeTx({ signedWitness, txBody, auxData });
+      const { tx } = await submitStakeTx({ signedWitness, txBody });
       const txId = await wallet.submitTx(tx);
       if (callback != null) {
         callback(txId);
@@ -45,7 +44,7 @@ export default function useClaim() {
   }
 
   return {
-    claim,
+    transfer,
     loading,
   };
 }

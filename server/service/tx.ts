@@ -1,6 +1,5 @@
 import {
   Address,
-  AuxiliaryData,
   BigNum,
   Certificate,
   Certificates,
@@ -30,9 +29,6 @@ enum PaymentCredential {
   PaymentKeyHash = 0,
   PaymentScriptHash = 1,
 }
-
-const CIP20_METADATUM_LABEL = "674";
-const TOSIDROP_CLAIM_MESSAGE = "TosiDrop claim";
 
 export namespace TxService {
   export async function createDelegationTx(
@@ -89,45 +85,22 @@ export namespace TxService {
     };
   }
 
-  export async function createTxToSubmit(
-    witness: string,
-    txBody: string,
-    auxData?: string
-  ) {
+  export async function createTxToSubmit(witness: string, txBody: string) {
     const tx = Transaction.new(
       TransactionBody.from_hex(txBody),
-      TransactionWitnessSet.from_hex(witness),
-      auxData ? AuxiliaryData.from_hex(auxData) : undefined
+      TransactionWitnessSet.from_hex(witness)
     );
     return tx.to_hex();
   }
 
-  export async function createTransferTx(params: {
-    fromAddress: string;
-    toAddress: string;
-    amountToSend: string;
-  }) {
-    return buildTransferBase({ ...params, attachClaimMetadata: false });
-  }
-
-  export async function createClaimTx(params: {
-    fromAddress: string;
-    toAddress: string;
-    amountToSend: string;
-  }) {
-    return buildTransferBase({ ...params, attachClaimMetadata: true });
-  }
-
-  async function buildTransferBase({
+  export async function createTransferTx({
     fromAddress,
     toAddress,
     amountToSend,
-    attachClaimMetadata,
   }: {
     fromAddress: string;
     toAddress: string;
     amountToSend: string;
-    attachClaimMetadata: boolean;
   }) {
     const txBuilder = await createTxBuilder();
 
@@ -139,32 +112,17 @@ export namespace TxService {
         .build()
     );
 
-    if (attachClaimMetadata) {
-      txBuilder.add_json_metadatum(
-        BigNum.from_str(CIP20_METADATUM_LABEL),
-        JSON.stringify({ msg: [TOSIDROP_CLAIM_MESSAGE] })
-      );
-    }
-
     const availableUtxos = await getAvailableUtxos(fromAddress);
     txBuilder.add_inputs_from(availableUtxos, 0);
 
     txBuilder.add_change_if_needed(Address.from_bech32(fromAddress));
 
-    const fullTx = txBuilder.build_tx();
-    const txBody = fullTx.body();
-    const auxiliaryData = fullTx.auxiliary_data();
-
-    const unsignedTx = Transaction.new(
-      txBody,
-      TransactionWitnessSet.new(),
-      auxiliaryData
-    );
+    const txBody = txBuilder.build();
+    const transaction = Transaction.new(txBody, TransactionWitnessSet.new());
 
     return {
-      witness: unsignedTx.to_hex(),
+      witness: transaction.to_hex(),
       txBody: txBody.to_hex(),
-      auxData: auxiliaryData ? auxiliaryData.to_hex() : undefined,
     };
   }
 
