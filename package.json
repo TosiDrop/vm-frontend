@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/TosiDrop/vm-frontend#readme",
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^10.0.1"
   },
   "dependencies": {
     "styled-components": "^6.4.2"
