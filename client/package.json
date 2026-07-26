@@ -95,7 +95,7 @@
     "eslint": "^8.3.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-webpack-plugin": "^4.2.0",
-    "postcss": "^8.5.12",
+    "postcss": "^8.5.23",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^8.2.0",
     "postcss-normalize": "^13.0.1",
