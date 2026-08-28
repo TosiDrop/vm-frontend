@@ -9,12 +9,19 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": [
+    "*.ts",
+    "middlewares/**/*.ts",
+    "routes/**/*.ts",
+    "service/**/*.ts",
+    "types/**/*.ts",
+    "utils/**/*.ts"
+  ]
 }

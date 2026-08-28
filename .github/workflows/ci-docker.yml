@@ -21,7 +21,7 @@ jobs:
       - id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.GHCR_IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: build
         uses: docker/build-push-action@v7
         with:

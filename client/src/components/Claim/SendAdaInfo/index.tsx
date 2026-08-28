@@ -45,7 +45,6 @@ const SendAdaInfo = ({
    */
   const renderSendAdaButton = () => {
     if (wallet) {
-      console.log("wallet", wallet);
       return (
         <div className="w-full flex justify-center">
           <button
@@ -68,12 +67,8 @@ const SendAdaInfo = ({
 
   const sendADA = async () => {
     if (txDetail == null) {
-      console.log("txDetail is null");
       throw new Error("Transaction not found");
     }
-    console.log("txDetail", txDetail);
-    console.log("txDetail.withdrawal_address", txDetail.withdrawal_address);
-    console.log("txDetail.deposit", txDetail.deposit);
     await transfer(
       {
         toAddress: txDetail.withdrawal_address,

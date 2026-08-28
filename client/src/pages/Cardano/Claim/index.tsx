@@ -46,11 +46,9 @@ function Claim() {
           });
 
           dispatch(setWalletDetails({ address, networkId }));
-        } catch (error) {
-          console.log("Failed to fetch wallet details:", error);
+        } catch {
+          dispatch(setFailed());
         }
-      } else {
-        console.log("Wallet not connected");
       }
     };
 

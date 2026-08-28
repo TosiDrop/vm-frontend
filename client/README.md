@@ -13,7 +13,7 @@ We use basic `create-react-app` for the `client`.
 - React components
 
 `src/entities`
-- TypeScrip interfaces
+- TypeScript interfaces
 
 `src/hooks`
 - Reusable React Hooks
@@ -31,9 +31,10 @@ We use basic `create-react-app` for the `client`.
 - axios services
 
 `src/utils`
-- utilities function
+- Utility functions
 
-> p.s. you might see some inconsistencies, but that is the direction we are heading in. The code will be refactored to slowly merge to the idea. 
+You may see some inconsistencies while the code is gradually refactored toward
+this structure.
 
 ## Formatting
 
@@ -41,7 +42,7 @@ Please run `npm run format` before committing. There is no linting yet.
 
 ## Testing
 
-No testing as of now, might be introduced in the future.
+There are currently no client tests.
 
 ## CSS
 

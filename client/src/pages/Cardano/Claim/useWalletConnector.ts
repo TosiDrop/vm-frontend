@@ -29,9 +29,7 @@ export function useWalletConnector() {
               networkId: fetchedNetworkId,
             }),
           );
-        } catch (error) {
-          console.error("Failed to retrieve wallet details:", error);
-
+        } catch {
           dispatch(setWalletDetails({ address: null, networkId: null }));
         }
       } else {
