@@ -34,25 +34,35 @@ function Claim() {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
+    let active = true;
+
     const fetchWalletDetails = async () => {
+      if (!wallet) {
+        dispatch(setWalletDetails({ address: null, networkId: null }));
+        return;
+      }
+
       dispatch(setLoading());
+      try {
+        const networkId = await wallet.getNetworkId();
 
-      if (wallet) {
-        try {
-          const networkId = await wallet.getNetworkId();
+        const address = await new Promise<string>((resolve) => {
+          getAddress((addr: string) => resolve(addr));
+        });
 
-          const address = await new Promise<string>((resolve) => {
-            getAddress((addr: string) => resolve(addr));
-          });
-
-          dispatch(setWalletDetails({ address, networkId }));
-        } catch {
-          dispatch(setFailed());
-        }
+        if (!active) return;
+        dispatch(setWalletDetails({ address, networkId }));
+      } catch {
+        if (!active) return;
+        dispatch(setWalletDetails({ address: null, networkId: null }));
+        dispatch(setFailed());
       }
     };
 
     fetchWalletDetails();
+    return () => {
+      active = false;
+    };
   }, [wallet, getAddress, dispatch]);
 
   return (
