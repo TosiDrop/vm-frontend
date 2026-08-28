@@ -5,7 +5,7 @@ WORKDIR /code/client
 COPY client .
 WORKDIR /code/server
 COPY server .
-RUN npm run build
+RUN npm ci && npm run build
 
 FROM base AS final
 WORKDIR /app

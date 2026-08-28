@@ -8,12 +8,12 @@ for the frontend, and a React UI which is built into static assets.
 
 ## Dev usage
 
-You can run `npm install` and `npm run` from the client, server, and root
-folders as needed. The preferred way for testing us `npm run dev` from the
-root folder. There's a readme on the client folder you should check out.
+Run `npm ci` in the client, server, and root folders to install the locked
+dependencies. The preferred development command is `npm run dev` from the
+root folder. See the client README for frontend-specific guidance.
 
-Project uses NPM version 24. Most accurate results are obtained runnning
-the docker image.
+The project requires Node.js 22 or newer and npm 9 or newer. The most accurate
+runtime results come from the Docker image.
 
 ### Logging
 Access logging is enabled in the server. It uses Morgan and the type of logs

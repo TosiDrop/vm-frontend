@@ -7,12 +7,12 @@
     "url": "git://github.com/TosiDrop/vm-frontend.git"
   },
   "engines": {
-    "node": ">=18",
+    "node": ">=22",
     "npm": ">=9"
   },
   "main": "index.ts",
   "scripts": {
-    "build": "npm install",
+    "build": "tsc --noEmit",
     "clean": "rm -rf node_modules",
     "start": "node --inspect -r ts-node/register index.ts",
     "start-dev": "NODE_ENV=development nodemon index.ts",

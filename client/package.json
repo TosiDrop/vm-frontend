@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "TosiDrop Frontend React App",
   "engines": {
-    "node": ">=18",
+    "node": ">=22",
     "npm": ">=9"
   },
   "dependencies": {
@@ -65,7 +65,7 @@
   "scripts": {
     "start": "PORT=3001 node --max-old-space-size=8192 scripts/start.js",
     "clean": "rm -rf build/* node_modules",
-    "build": "npm install && node --max_old_space_size=8192 scripts/build.js",
+    "build": "node --max_old_space_size=8192 scripts/build.js",
     "test": "node scripts/test.js --passWithNoTests",
     "format": "npx prettier --write src"
   },

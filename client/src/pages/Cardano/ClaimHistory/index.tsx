@@ -13,7 +13,6 @@ function ClaimHistory() {
 
   useEffect(() => {
     if (address) {
-      console.log("history address", address);
       setSearchAddress(address);
     }
   }, [address]);
