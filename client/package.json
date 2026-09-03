@@ -3,23 +3,23 @@
   "version": "1.0.0",
   "description": "TosiDrop Frontend React App",
   "engines": {
-    "node": ">=18",
+    "node": ">=22",
     "npm": ">=9"
   },
   "dependencies": {
-    "@babel/core": "^7.28.4",
+    "@babel/core": "^7.29.6",
     "@fortawesome/fontawesome-svg-core": "^7.0.0",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^3.1.0",
     "@newm.io/cardano-dapp-wallet-connector": "^1.5.5",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.3",
     "@reduxjs/toolkit": "^2.8.2",
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^24.3.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
-    "axios": "^1.15.2",
+    "axios": "^1.18.0",
     "babel-jest": "^30.0.5",
     "babel-loader": "^10.0.0",
     "babel-plugin-named-asset-import": "^0.3.8",
@@ -46,7 +46,7 @@
     "react-qr-code": "^2.0.18",
     "react-redux": "^9.2.0",
     "react-refresh": "^0.17.0",
-    "react-router-dom": "^7.12.0",
+    "react-router-dom": "^7.18.2",
     "resolve": "^1.20.0",
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.89.2",
@@ -58,14 +58,14 @@
     "terser-webpack-plugin": "^5.5.0",
     "web-vitals": "^3.5.0",
     "webpack": "^5.105.0",
-    "webpack-dev-server": "^5.2.2",
+    "webpack-dev-server": "^6.0.0",
     "webpack-manifest-plugin": "^5.0.1",
     "workbox-webpack-plugin": "^7.4.1"
   },
   "scripts": {
     "start": "PORT=3001 node --max-old-space-size=8192 scripts/start.js",
     "clean": "rm -rf build/* node_modules",
-    "build": "npm install && node --max_old_space_size=8192 scripts/build.js",
+    "build": "node --max_old_space_size=8192 scripts/build.js",
     "test": "node scripts/test.js --passWithNoTests",
     "format": "npx prettier --write src"
   },
@@ -95,7 +95,7 @@
     "eslint": "^8.3.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-webpack-plugin": "^4.2.0",
-    "postcss": "^8.5.12",
+    "postcss": "^8.5.23",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^8.2.0",
     "postcss-normalize": "^13.0.1",
@@ -122,7 +122,7 @@
       "brace-expansion": "2.1.4"
     },
     "@istanbuljs/load-nyc-config": {
-      "js-yaml": "3.15.0"
+      "js-yaml": "3.15.2"
     },
     "@eslint/eslintrc": {
       "js-yaml": "4.3.1"

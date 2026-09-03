@@ -13,6 +13,8 @@ export function useWalletConnector() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    let active = true;
+
     const fetchDetails = async () => {
       if (wallet) {
         try {
@@ -21,6 +23,7 @@ export function useWalletConnector() {
             wallet.getNetworkId(),
           ]);
 
+          if (!active) return;
           setAddress(fetchedAddress);
           setNetworkId(fetchedNetworkId);
           dispatch(
@@ -29,9 +32,10 @@ export function useWalletConnector() {
               networkId: fetchedNetworkId,
             }),
           );
-        } catch (error) {
-          console.error("Failed to retrieve wallet details:", error);
-
+        } catch {
+          if (!active) return;
+          setAddress(null);
+          setNetworkId(null);
           dispatch(setWalletDetails({ address: null, networkId: null }));
         }
       } else {
@@ -42,6 +46,9 @@ export function useWalletConnector() {
     };
 
     fetchDetails();
+    return () => {
+      active = false;
+    };
   }, [wallet, getAddress, dispatch]);
 
   return { address, networkId, wallet };

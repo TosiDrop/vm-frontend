@@ -3,7 +3,7 @@ name: publish-vm-frontend-helm-chart
 on:
   push:
     branches: ['master']
-    paths: ['charts/vm-frontend/**','.github/workflows/publish-vm-frontend-helm-chart.yml']
+    paths: ['charts/vm-frontend/**','.github/workflows/publish-chart.yaml']
 
 jobs:
   build-and-push-vm-frontend-helm-chart:
@@ -12,7 +12,7 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install Helm
         uses: azure/setup-helm@v5
       - name: Package and upload chart
@@ -30,4 +30,3 @@ jobs:
           for file in dist/*; do
             helm push "$file" "oci://${REGISTRY}/${REPOSITORY,,}/charts"
           done
-

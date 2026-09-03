@@ -1,11 +1,11 @@
-FROM node:24 AS base
+FROM node:26 AS base
 
 FROM base AS builder
 WORKDIR /code/client
 COPY client .
 WORKDIR /code/server
 COPY server .
-RUN npm run build
+RUN npm ci && npm run build
 
 FROM base AS final
 WORKDIR /app
