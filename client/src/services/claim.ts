@@ -8,9 +8,8 @@ const API_URL = process.env.REACT_APP_CLAIM_API || "http://localhost:3000";
 export async function getRewards(
   address: string,
 ): Promise<GetRewardsDto | undefined> {
-  const response = await axios.get(
-    `${API_URL}/api/getrewards?address=${address}`,
-  );
+  const params = new URLSearchParams({ address });
+  const response = await axios.get(`${API_URL}/api/getrewards?${params}`);
   if (response && response.data) {
     return response.data;
   }
@@ -22,9 +21,14 @@ export async function getCustomRewards(
   session_id: string,
   selected: string,
 ): Promise<GetCustomRewards | undefined> {
-  const response = await axios.get(
-    `${API_URL}/api/getcustomrewards?staking_address=${staking_address}&session_id=${session_id}&selected=${selected}&unlock=true&native=false`,
-  );
+  const params = new URLSearchParams({
+    staking_address,
+    session_id,
+    selected,
+    unlock: "true",
+    native: "false",
+  });
+  const response = await axios.get(`${API_URL}/api/getcustomrewards?${params}`);
   if (response && response.data) {
     return response.data;
   }
@@ -34,8 +38,9 @@ export async function getCustomRewards(
 export async function getDeliveredRewards(
   stakingAddress: string,
 ): Promise<GetDeliveredRewardsDto> {
+  const params = new URLSearchParams({ staking_address: stakingAddress });
   const response = await axios.get(
-    `${API_URL}/api/getdeliveredrewards?staking_address=${stakingAddress}`,
+    `${API_URL}/api/getdeliveredrewards?${params}`,
   );
   return response.data;
 }
@@ -43,8 +48,9 @@ export async function getDeliveredRewards(
 export async function getTransactionStatus(
   txHash: string,
 ): Promise<TransactionStatus[] | undefined> {
+  const params = new URLSearchParams({ txHash });
   const response = await axios.get(
-    `${API_URL}/api/gettransactionstatus?txHash=${txHash}`,
+    `${API_URL}/api/gettransactionstatus?${params}`,
   );
   if (response && response.data) {
     return response.data;
@@ -53,8 +59,7 @@ export async function getTransactionStatus(
 }
 
 export async function getTxStatus(request_id: string, session_id: string) {
-  const response = await axios.get(
-    `${API_URL}/api/txstatus?request_id=${request_id}&session_id=${session_id}`,
-  );
+  const params = new URLSearchParams({ request_id, session_id });
+  const response = await axios.get(`${API_URL}/api/txstatus?${params}`);
   return response.data;
 }

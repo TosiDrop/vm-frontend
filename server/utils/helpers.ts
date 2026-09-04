@@ -218,7 +218,9 @@ export async function getPoolMetadata(accountInfo: any) {
 
 export async function getRewards(stakeAddress: string) {
   let [getRewardsResponse, tokens] = await Promise.all([
-    getFromVM<GetRewardsDto>(`get_rewards&staking_address=${stakeAddress}`),
+    getFromVM<GetRewardsDto>(
+      `get_rewards&staking_address=${encodeURIComponent(stakeAddress)}`,
+    ),
     getTokens(),
   ]);
 
@@ -229,57 +231,55 @@ export async function getRewards(stakeAddress: string) {
   const consolidatedAvailableReward: { [key: string]: number } = {};
 
   /** handle regular tokens */
-  const regularRewards: Record<string, number> = {
-    ...getRewardsResponse.consolidated_promises,
-    ...getRewardsResponse.consolidated_rewards,
-  };
-
-  Object.entries(regularRewards).forEach(([assetId, amount]) => {
-    if (consolidatedAvailableReward[assetId]) {
-      consolidatedAvailableReward[assetId] += amount;
-    } else {
-      consolidatedAvailableReward[assetId] = amount;
-    }
-  });
+  for (const rewards of [
+    getRewardsResponse.consolidated_promises,
+    getRewardsResponse.consolidated_rewards,
+  ]) {
+    Object.entries(rewards ?? {}).forEach(([assetId, amount]) => {
+      consolidatedAvailableReward[assetId] =
+        (consolidatedAvailableReward[assetId] ?? 0) + amount;
+    });
+  }
 
   /** handle locked tokens */
-  const lockedRewards: Record<string, number> = {
-    ...(getRewardsResponse.project_locked_rewards?.consolidated_promises ?? {}),
-    ...(getRewardsResponse.project_locked_rewards?.consolidated_rewards ?? {}),
-  };
+  for (const rewards of [
+    getRewardsResponse.project_locked_rewards?.consolidated_promises,
+    getRewardsResponse.project_locked_rewards?.consolidated_rewards,
+  ]) {
+    Object.entries(rewards ?? {}).forEach(([assetId, amount]) => {
+      consolidatedAvailableReward[assetId] =
+        (consolidatedAvailableReward[assetId] ?? 0) + amount;
+    });
+  }
 
-  Object.entries(lockedRewards).forEach(([assetId, amount]) => {
-    if (consolidatedAvailableReward[assetId]) {
-      consolidatedAvailableReward[assetId] += amount;
-    } else {
-      consolidatedAvailableReward[assetId] = amount;
-    }
-  });
-
-  /** if there is no token info in the map, flush the cache and re-fetch token info */
+  /*
+   * Refresh once when the VM returns a token that is not in the cache. The
+   * token may still be unknown after the refresh, so skip it rather than
+   * throwing while destructuring an undefined entry.
+   */
   for (const assetId of [...Object.keys(consolidatedAvailableReward)]) {
     const token = tokens[assetId];
     if (token == null) {
       tokens = await getTokens({ flushCache: true });
+      break;
     }
   }
 
   Object.keys(consolidatedAvailableReward).forEach((assetId) => {
     const token = tokens[assetId];
-    /** add default values just to be safe */
+    if (!token) return;
+
     const { decimals: tokenDecimals = 0, logo = "", ticker = "" } = token;
     const decimals = Number(tokenDecimals);
     const amount =
       consolidatedAvailableReward[assetId] / Math.pow(10, decimals);
-    if (token) {
-      claimableTokens.push({
-        assetId,
-        ticker,
-        logo,
-        decimals,
-        amount,
-      });
-    }
+    claimableTokens.push({
+      assetId,
+      ticker,
+      logo,
+      decimals,
+      amount,
+    });
   });
 
   return claimableTokens;
@@ -318,7 +318,7 @@ export async function getDeliveredRewards(
 ): Promise<DeliveredReward[]> {
   const [vmDeliveredRewards, tokenInfo] = await Promise.all([
     getFromVM<VmDeliveredReward[]>(
-      `delivered_rewards&staking_address=${stakingAddress}`,
+      `delivered_rewards&staking_address=${encodeURIComponent(stakingAddress)}`,
     ),
     getTokens(),
   ]);

@@ -22,9 +22,8 @@ export async function getStakeKey(addr: string) {
   if (addr.slice(0, 5) === "stake") {
     return { staking_address: addr };
   }
-  const response = await axios.get(
-    `${API_URL}/api/getstakekey?address=${addr}`,
-  );
+  const params = new URLSearchParams({ address: addr });
+  const response = await axios.get(`${API_URL}/api/getstakekey?${params}`);
   return response.data;
 }
 
@@ -103,7 +102,7 @@ export async function getBech32Address({
   Dto.GetBech32Address["response"]["addressInBech32"]
 > {
   const response = await axios.get<Dto.GetBech32Address["response"]>(
-    `${API_URL}/api/util/bech32-address?addressInHex=${addressInHex}`,
+    `${API_URL}/api/util/bech32-address?${new URLSearchParams({ addressInHex })}`,
   );
   return response.data.addressInBech32;
 }
