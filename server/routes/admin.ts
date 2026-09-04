@@ -11,14 +11,14 @@ router.post(
   typedErrorHandlerWrapper<Dto.PostBannerText>(async (req, res) => {
     const { adminKey, text } = req.body;
 
-    if (adminKey !== TOSIDROP_ADMIN_KEY) {
+    if (!TOSIDROP_ADMIN_KEY || adminKey !== TOSIDROP_ADMIN_KEY) {
       throw createErrorWithCode(HttpStatusCode.UNAUTHORIZED, "Wrong admin key");
     }
 
     persistentCache.set("banner", text);
 
     return res.status(200).send({});
-  })
+  }),
 );
 
 router.get(
@@ -28,7 +28,7 @@ router.get(
     return res.status(200).send({
       text: text ?? "",
     });
-  })
+  }),
 );
 
 export default router;

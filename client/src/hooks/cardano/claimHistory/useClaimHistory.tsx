@@ -22,6 +22,7 @@ export default function useClaimHistory() {
     }
 
     try {
+      setClaimHistory([]);
       setLoading(true);
       const address = await getStakeKey(searchAddress);
       const stakingAddress = address.staking_address;
@@ -30,7 +31,6 @@ export default function useClaimHistory() {
 
       if (getRewardsHistory.deliveredRewards.length) {
         setClaimHistory(getRewardsHistory.deliveredRewards);
-        setLoading(false);
       } else {
         dispatch(
           showModal({
