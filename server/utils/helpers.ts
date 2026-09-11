@@ -260,7 +260,10 @@ export async function getRewards(stakeAddress: string) {
   for (const assetId of [...Object.keys(consolidatedAvailableReward)]) {
     const token = tokens[assetId];
     if (token == null) {
-      tokens = await getTokens({ flushCache: true });
+      const refreshedTokens = await getTokens({ flushCache: true });
+      if (refreshedTokens != null) {
+        tokens = refreshedTokens;
+      }
       break;
     }
   }
