@@ -35,12 +35,10 @@ export default function useClaimReward() {
 
   useEffect(() => {
     setNumberOfSelectedTokens(
-      claimableTokens.reduce((agg, i) => {
-        if (i.selected && i.ticker !== "ADA") {
-          agg += 1;
-        }
-        return agg;
-      }, 0),
+      claimableTokens.reduce(
+        (count, token) => count + (token.selected ? 1 : 0),
+        0,
+      ),
     );
   }, [claimableTokens]);
 
@@ -49,7 +47,13 @@ export default function useClaimReward() {
 
     if (
       !updatedClaimableTokens[position].selected &&
-      numberOfSelectedTokens === maxTokenSelected
+      numberOfSelectedTokens -
+        (claimableTokens.some(
+          (token) => token.ticker === "ADA" && token.selected,
+        )
+          ? 1
+          : 0) >=
+        maxTokenSelected
     ) {
       showInfoModal(
         `You have selected the maximum number of tokens to claim (${maxTokenSelected}).
@@ -67,27 +71,24 @@ export default function useClaimReward() {
   };
 
   const selectAll = () => {
-    const updatedClaimableTokens = [...claimableTokens];
-    updatedClaimableTokens.forEach((_) => (_.selected = false));
-    // const limit = Math.min(maxTokenSelected, claimableTokens.length);
-    // if (numberOfSelectedTokens !== limit) {
-    //   for (let i = 0; i < limit; i++) {
-    //     updatedClaimableTokens[i].selected = true;
-    //   }
-    // }
+    const updatedClaimableTokens = claimableTokens.map((token) => ({
+      ...token,
+      selected: token.ticker === "ADA",
+    }));
     setClaimableTokens(updatedClaimableTokens);
   };
 
   const selectRandomTokens = () => {
-    const positions = shuffleArray([
-      ...Array(claimableTokens.length).keys(),
-    ]).slice(0, maxTokenSelected);
-
-    const updatedClaimableTokens = [...claimableTokens];
-    updatedClaimableTokens.forEach((token) => (token.selected = false));
-    positions.forEach(
-      (position) => (updatedClaimableTokens[position].selected = true),
-    );
+    const randomPositions = shuffleArray(
+      claimableTokens
+        .map((token, position) => (token.ticker === "ADA" ? -1 : position))
+        .filter((position) => position >= 0),
+    ).slice(0, maxTokenSelected);
+    const selectedPositions = new Set(randomPositions);
+    const updatedClaimableTokens = claimableTokens.map((token, position) => ({
+      ...token,
+      selected: token.ticker === "ADA" || selectedPositions.has(position),
+    }));
 
     setClaimableTokens(updatedClaimableTokens);
   };

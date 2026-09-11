@@ -47,8 +47,7 @@ export const VM_KOIOS_URL =
   process.env.KOIOS_URL_TESTNET || process.env.KOIOS_URL;
 export const CARDANO_NETWORK =
   process.env.CARDANO_NETWORK || CardanoNetwork.preview;
-export const TOSIDROP_ADMIN_KEY =
-  process.env.TOSIDROP_ADMIN_KEY || "admin key is not set";
+export const TOSIDROP_ADMIN_KEY = process.env.TOSIDROP_ADMIN_KEY;
 const CLOUDFLARE_PSK = process.env.CLOUDFLARE_PSK;
 const LOG_TYPE = process.env.LOG_TYPE || "dev";
 const PORT = process.env.PORT || 3000;
@@ -265,7 +264,9 @@ app.get(
 
     let claimableTokens = await getRewards(stakeAddress);
     const accountsInfo = await getAccountsInfo(stakeAddress);
-    const poolInfo = await getPoolMetadata(accountsInfo[0]);
+    const poolInfo = accountsInfo[0]
+      ? await getPoolMetadata(accountsInfo[0])
+      : null;
 
     if (poolInfo != null) {
       poolInfo.isWhitelisted = false;
@@ -290,7 +291,7 @@ app.get(
   errorHandlerWrapper(async (req: Request, res: Response) => {
     const queryObject = url.parse(req.url, true).query;
     const { staking_address: stakeAddress, session_id, selected } = queryObject;
-    let vmArgs = `custom_request&staking_address=${stakeAddress}&session_id=${session_id}&selected=${selected}&xwallet=true`;
+    let vmArgs = `custom_request&staking_address=${encodeURIComponent(String(stakeAddress))}&session_id=${encodeURIComponent(String(session_id ?? ""))}&selected=${encodeURIComponent(String(selected ?? ""))}&xwallet=true`;
     let isWhitelisted = false;
 
     if (!stakeAddress) {
@@ -308,10 +309,10 @@ app.get(
         vmArgs += "&unlocks_special=true";
         isWhitelisted = true;
       } else {
-        vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
+        vmArgs += `&overhead_fee=${encodeURIComponent(String(TOSIFEE))}&unlocks_special=true`;
       }
     } else {
-      vmArgs += `&overhead_fee=${TOSIFEE}&unlocks_special=true`;
+      vmArgs += `&overhead_fee=${encodeURIComponent(String(TOSIFEE))}&unlocks_special=true`;
     }
 
     const submitCustomReward: any = await getFromVM(vmArgs);
@@ -380,7 +381,7 @@ app.get(
     }
 
     const txStatus = await getFromVM(
-      `check_status_custom_request&request_id=${request_id}&session_id=${session_id}`,
+      `check_status_custom_request&request_id=${encodeURIComponent(String(request_id))}&session_id=${encodeURIComponent(String(session_id))}`,
     );
     return res.send(txStatus);
   }),
