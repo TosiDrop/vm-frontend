@@ -27,7 +27,23 @@ jobs:
         with:
           context: .
           push: false
+          load: true
           ### TODO: test multiple platforms
           # platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: vm-frontend:smoke
           labels: ${{ steps.meta.outputs.labels }}
+      - name: smoke test
+        run: |
+          docker run -d --name vm-frontend-smoke vm-frontend:smoke
+          trap 'docker logs vm-frontend-smoke; docker rm -f vm-frontend-smoke' EXIT
+          for attempt in $(seq 1 30); do
+            if docker exec vm-frontend-smoke node -e 'fetch("http://127.0.0.1:3000/health").then(async r => { if (!r.ok || (await r.json()).status !== "UP") process.exit(1); }).catch(() => process.exit(1))'; then
+              exit 0
+            fi
+            if [ "$(docker inspect -f '{{.State.Running}}' vm-frontend-smoke)" != true ]; then
+              exit 1
+            fi
+            echo "Waiting for server health (attempt $attempt/30)"
+            sleep 2
+          done
+          exit 1
