@@ -5,6 +5,9 @@ on:
     branches: [ master ]
     paths: [ 'Dockerfile','server/**','docker-entrypoint.sh','.github/workflows/ci-docker.yml' ]
 
+permissions:
+  contents: read
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -37,7 +40,7 @@ jobs:
           docker run -d --name vm-frontend-smoke vm-frontend:smoke
           trap 'docker logs vm-frontend-smoke; docker rm -f vm-frontend-smoke' EXIT
           for attempt in $(seq 1 30); do
-            if docker exec vm-frontend-smoke node -e 'fetch("http://127.0.0.1:3000/health").then(async r => { if (!r.ok || (await r.json()).status !== "UP") process.exit(1); }).catch(() => process.exit(1))'; then
+            if docker exec vm-frontend-smoke node -e 'fetch("http://127.0.0.1:3000/health", { signal: AbortSignal.timeout(2000) }).then(async r => { if (!r.ok || (await r.json()).status !== "UP") process.exit(1); }).catch(() => process.exit(1))'; then
               exit 0
             fi
             if [ "$(docker inspect -f '{{.State.Running}}' vm-frontend-smoke)" != true ]; then
