@@ -25,3 +25,7 @@ updates:
     directory: "/server"
     schedule:
       interval: "weekly"
+    ignore:
+      # ts-node requires the JavaScript compiler API removed in TypeScript 7.
+      - dependency-name: "typescript"
+        versions: [">=7"]
